@@ -1,15 +1,8 @@
-<<<<<<< HEAD
-
-=======
->>>>>>> MolSim/test1
 #include "FileReader.h"
 #include "outputWriter/XYZWriter.h"
 #include "utils/ArrayUtils.h"
 
-<<<<<<< HEAD
-#include <iostream>
-#include <list>
-=======
+
 #include <defs/Particle.h>
 #include <array>
 #include <iostream>
@@ -19,18 +12,13 @@
 #include "calc/Verlet.h"
 #include "forces/gravity.h"
 #include "outputWriter/VTKWriter.h"
->>>>>>> MolSim/test1
 
 /**** forward declaration of the calculation functions ****/
 
 /**
  * calculate the force for all particles
  */
-<<<<<<< HEAD
-=======
 
-
->>>>>>> MolSim/test1
 void calculateF();
 
 /**
@@ -46,11 +34,8 @@ void calculateV();
 /**
  * plot the particles to a xyz-file
  */
-<<<<<<< HEAD
-void plotParticles(int iteration);
-=======
-void plotParticles(int iteration, outputWriter::VTKWriter& writer, ParticleContainer& particle_container);
->>>>>>> MolSim/test1
+
+void plotParticles(int iteration, outputWriter::VTKWriter& vtkWriter, ParticleContainer& particle_container);
 
 constexpr double start_time = 0;
 constexpr double end_time = 1000;
@@ -58,15 +43,11 @@ constexpr double delta_t = 0.014;
 
 // TODO: what data structure to pick?
 std::list<Particle> particles;
-<<<<<<< HEAD
 
-int main(int argc, char *argsv[]) {
-
-=======
 Gravity gravity;
 
 int main(int argc, char* argsv[]) {
->>>>>>> MolSim/test1
+
   std::cout << "Hello from MolSim for PSE!" << std::endl;
   if (argc != 2) {
     std::cout << "Erroneous programme call! " << std::endl;
@@ -75,12 +56,10 @@ int main(int argc, char* argsv[]) {
 
   FileReader fileReader;
   fileReader.readFile(particles, argsv[1]);
-<<<<<<< HEAD
-=======
+
   ParticleContainer particle_container(particles);
   VerletIntegrator verlet_integrator(gravity, delta_t);
   outputWriter::VTKWriter writer;
->>>>>>> MolSim/test1
 
   double current_time = start_time;
 
@@ -89,8 +68,7 @@ int main(int argc, char* argsv[]) {
   // for this loop, we assume: current x, current f and current v are known
   while (current_time < end_time) {
     // calculate new x
-<<<<<<< HEAD
-=======
+
     /*
 >>>>>>> MolSim/test1
     calculateX();
@@ -110,7 +88,6 @@ int main(int argc, char* argsv[]) {
     iteration++;
     if (iteration % 50 == 0) {
       plotParticles(iteration, writer, particle_container);
->>>>>>> MolSim/test1
     }
     std::cout << "Iteration " << iteration << " finished." << std::endl;
 
@@ -121,7 +98,7 @@ int main(int argc, char* argsv[]) {
   return 0;
 }
 
-<<<<<<< HEAD
+/*
 void calculateF() {
   std::list<Particle>::iterator iterator;
   iterator = particles.begin();
@@ -129,7 +106,6 @@ void calculateF() {
   for (auto &p1 : particles) {
     for (auto &p2 : particles) {
       // @TODO: insert calculation of forces here!
-=======
 /*
 void calculateF() {
   std::list<Particle>::iterator iterator;
@@ -223,5 +199,4 @@ void plotParticles(int iteration, outputWriter::VTKWriter& vtkWriter, ParticleCo
   }
 
   vtkWriter.writeFile("MD_vtk", iteration);
->>>>>>> MolSim/test1
 }
