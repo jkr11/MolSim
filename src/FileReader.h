@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "Particle.h"
+#include "defs/Particle.h"
 
 #include <list>
 
