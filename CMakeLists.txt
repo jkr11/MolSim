@@ -1,7 +1,11 @@
 cmake_minimum_required(VERSION 3.10)
 
 # define project name, version
+<<<<<<< HEAD
 project(PSEMolDyn VERSION 0.0.1)
+=======
+project(PSEMolDyn_GroupA VERSION 0.0.1)
+>>>>>>> MolSim/test1
 
 # let ccmake and cmake-gui offer the default build type options
 set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug;Release;RelWithDebInfo;MinSizeRel")
@@ -20,7 +24,14 @@ file(GLOB_RECURSE MY_SRC
 )
 
 # create make target
+<<<<<<< HEAD
 add_executable(MolSim ${MY_SRC})
+=======
+add_executable(MolSim ${MY_SRC}
+        src/calc/Verlet.h
+        src/calc/Verlet.cpp
+        src/defs/ParticleContainer.cpp)
+>>>>>>> MolSim/test1
 
 # set cxx standard. You may raise this if you want.
 target_compile_features(MolSim

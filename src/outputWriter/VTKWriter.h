@@ -7,7 +7,11 @@
 
 #pragma once
 
+<<<<<<< HEAD
 #include "Particle.h"
+=======
+#include "defs/Particle.h"
+>>>>>>> MolSim/test1
 #include "outputWriter/vtk-unstructured.h"
 
 #include <list>

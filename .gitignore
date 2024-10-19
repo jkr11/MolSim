@@ -34,7 +34,31 @@
 # IDE Stuff
 .idea/
 .vscode/
+<<<<<<< HEAD
 
 # Build folders.
 # This rule ignores any folder in the project root that contains "build"
 /*build*/
+=======
+.cache/
+.cache
+CMakeFiles
+cmake-build-debug
+build/
+.cmake/
+cmake_install.cmake
+CMakeCache.txt
+Testing
+Makefile
+# for now this is the executable
+MolSim
+#--------------------------------
+# Build folders.
+# This rule ignores any folder in the project root that contains "build"
+/*build*/
+
+# IMPORTANT ELSE 1 BILLION VTU FILES
+*.vtu
+*.xyz
+.vtu
+>>>>>>> MolSim/test1
