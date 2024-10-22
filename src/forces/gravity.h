@@ -1,9 +1,7 @@
+#pragma once
 #include "../defs/Particle.h"
 #include "../utils/ArrayUtils.h"
 #include "force.h"
-#pragma once
-
-dvec3 gForce(const Particle& p1, const Particle& p2);
 
 class Gravity final : public Force {
 private:

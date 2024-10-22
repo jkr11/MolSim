@@ -58,17 +58,17 @@ public:
 
   virtual ~Particle();
 
-  const std::array<double, 3>& getX() const;
+  [[nodiscard]] const std::array<double, 3>& getX() const;
 
-  const std::array<double, 3>& getV() const;
+  [[nodiscard]] const std::array<double, 3>& getV() const;
 
-  const std::array<double, 3>& getF() const;
+  [[nodiscard]] const std::array<double, 3>& getF() const;
 
-  const std::array<double, 3>& getOldF() const;
+  [[nodiscard]] const std::array<double, 3>& getOldF() const;
 
-  double getM() const;
+  [[nodiscard]] double getM() const;
 
-  int getType() const;
+  [[nodiscard]] int getType() const;
 
   void setF(const std::array<double, 3>& F);
 
@@ -80,7 +80,7 @@ public:
 
   bool operator==(const Particle& other) const;
 
-  std::string toString() const;
+  [[nodiscard]] std::string toString() const;
 };
 
 std::ostream& operator<<(std::ostream& stream, Particle& p);

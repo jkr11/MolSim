@@ -1,3 +1,4 @@
+#pragma once
 #include "Particle.h"
 #include <cstddef>
 #include <list>
@@ -11,9 +12,9 @@ private:
 public:
   ParticleContainer();
 
-  ParticleContainer(const std::vector<Particle>& particles);
+  explicit ParticleContainer(const std::vector<Particle>& particles);
 
-  ParticleContainer(const std::list<Particle>& particles);
+  explicit ParticleContainer(const std::list<Particle>& particles);
 
   ~ParticleContainer();
 
@@ -37,7 +38,7 @@ public:
     return particles;
   }
 
-  std::size_t size() const {
+  [[nodiscard]] std::size_t size() const {
     return particles.size();
   }
 
