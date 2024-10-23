@@ -1,7 +1,8 @@
-#include "Verlet.h"
 //
 // Created by jkr on 10/18/24.
 //
+#include "Verlet.h"
+
 void VerletIntegrator::step(ParticleContainer& particle_container) {
   //update X -> F -> V
   //[this] needs to be captured everywhere since delta_t is a class constant

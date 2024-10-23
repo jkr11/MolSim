@@ -43,6 +43,7 @@
 .cache
 CMakeFiles
 cmake-build-debug
+cmake
 build/
 .cmake/
 cmake_install.cmake
@@ -58,3 +59,5 @@ MolSim
 *.vtu
 *.xyz
 .vtu
+
+doxys_documentation/
