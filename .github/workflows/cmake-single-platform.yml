@@ -4,9 +4,13 @@ name: CMake on a single platform
 
 on:
   push:
-    branches: [ "main" ]
+    branches: 
+      - 'main'
+      - 'week*'
   pull_request:
-    branches: [ "main" ]
+    branches: 
+      - 'main'
+      - 'week*'
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -33,7 +37,7 @@ jobs:
       
     - name: Build
       # Build your program with the given configuration
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+      run: cmake CMakeLists.txt . && make
 
     - name: Test
       working-directory: ${{github.workspace}}/build
