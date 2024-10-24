@@ -4,18 +4,19 @@
 
 
 #include <defs/Particle.h>
-#include <array>
 #include <iostream>
 #include <list>
 #include <vector>
 #include <filesystem>
+#include <getopt.h>
 
 #include "calc/Verlet.h"
 #include "forces/gravity.h"
 #include "outputWriter/VTKWriter.h"
 
-/**** forward declaration of the calculation functions ****/
+constexpr std::string USAGE = "Usage: ./MolSim -f <filename> [-t <t_end>] [-d <delta_t>]";
 
+/**** forward declaration of the calculation functions ****/
 void plotParticles(int iteration, outputWriter::VTKWriter& vtkWriter, ParticleContainer& particle_container);
 
 constexpr int output_interval = 10000; // seems to be a decent rate, can be changed to arbitrary numbers
@@ -24,7 +25,7 @@ double t_end = 100;
 double delta_t = 0.014;
 
 const std::string output = "output/";
-std::string output_directory;
+std::string output_directory = "./output/";
 
 const std::string red = "\033[31m";
 const std::string reset = "\033[0m";
@@ -34,39 +35,54 @@ std::list<Particle> particles;
 
 Gravity gravity;
 
-int main(int argc, char* argsv[]) {
+int main(const int argc, char* argsv[]) {
   std::cout << "Hello from MolSim for PSE!" << std::endl;
-
-  // safety checks
-  if (argc < 2) {
-    std::cout << red << "Erroneous programme call! " << reset << std::endl;
-    std::cout << "./molsym <filename> [<t_end>] [<delta_t>]" << std::endl;
-    exit(1);
+  std::string input_file;
+  int opt;
+  while ((opt = getopt(argc, argsv, "f:t:d:")) != -1) {
+    switch (opt) {
+    case'f':
+      input_file = optarg;
+      break;
+    case 't':
+      t_end = std::stod(optarg);
+      break;
+    case 'd':
+      delta_t = std::stod(optarg);
+      break;
+    default:
+      std::cout << USAGE << std::endl;
+      exit(EXIT_FAILURE);
+    }
   }
 
-  // prepare output directory
-  const std::string input_file = argsv[1];
-  output_directory = output + input_file;
+  if (input_file.empty()) {
+    std::cout << "Erroneous programme call, input_file empty!" << std::endl;
+    std::cout << USAGE << std::endl;
+    exit(EXIT_FAILURE);
+  }
+
+  // so we cant really do that incase the input is a directory
+  // output_directory += input_file;
   const std::filesystem::path output_directory_path = output_directory;
 
   if (!std::filesystem::exists(input_file)) {
-    std::cout << red << "Input File '" << argsv[1] << "' does not exist" << reset << std::endl;
+    std::cout << red << "Input File '" << input_file << "' does not exist" << reset << std::endl;
     exit(1);
   }
 
+  // TODO: fix make this project specific, else just pass in the output path
   if (!is_directory(output_directory_path)) {
     create_directories(output_directory_path);
     std::cout << "Created directory for output: " << output_directory_path << std::endl;
   }
 
   // further arguments
-  if (argc == 4) {
-    t_end = std::stod(argsv[2]);
-    delta_t = std::stod(argsv[3]);
-  }
+  //check here if defaults have been used, optional type is c++17 sadly, so double copy??
+  std::cout << "t_end: " << t_end << ", delta_t: " << delta_t << std::endl;
 
   FileReader fileReader;
-  fileReader.readFile(particles, argsv[1]);
+  fileReader.readFile(particles,  input_file.c_str());
 
 
   ParticleContainer particle_container(particles);
@@ -87,14 +103,14 @@ int main(int argc, char* argsv[]) {
 
     if (iteration % output_interval == 0) {
       // clean up print if DEBUG is enabled
-      #ifdef DEBUG
+#ifdef DEBUG
       std::cout << "Iteration " << iteration << " finished." << std::endl;
-      #else
+#else
       const double completion_percentage = 100 * current_time / t_end;
       const std::string output_string = "\r[" + std::to_string(completion_percentage) + " %]: "
         + std::to_string(iteration) + " iterations finished";
       std::cout << output_string << std::flush;
-      #endif
+#endif
     }
 
 
@@ -103,9 +119,9 @@ int main(int argc, char* argsv[]) {
 
   std::cout << std::endl;
   std::cout << "output written. Terminating..." << std::endl;
-  #ifdef DEBUG
-    std::cout << "DEBUG WAS ENABLED" << std::endl;
-  #endif
+#ifdef DEBUG
+  std::cout << "DEBUG WAS ENABLED" << std::endl;
+#endif
 
   return 0;
 }
