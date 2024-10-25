@@ -29,7 +29,9 @@ file(GLOB_RECURSE MY_SRC
 add_executable(MolSim ${MY_SRC}
         src/calc/Verlet.h
         src/calc/Verlet.cpp
-        src/defs/ParticleContainer.cpp)
+        src/defs/ParticleContainer.cpp
+        src/forces/lennardJones.h
+        src/forces/lennardJones.cpp)
 
 # set cxx standard. You may raise this if you want.
 target_compile_features(MolSim

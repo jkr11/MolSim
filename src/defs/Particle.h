@@ -45,6 +45,10 @@ private:
    */
   int type{};
 
+  double sigma{};
+
+  double epsilon{};
+
 public:
   explicit Particle(int type = 0);
 
@@ -53,7 +57,7 @@ public:
   Particle(
     // for visualization, we need always 3 coordinates
     // -> in case of 2d, we use only the first and the second
-    const std::array<double, 3>& x_arg, const std::array<double, 3>& v_arg, double m_arg,
+    const std::array<double, 3>& x_arg, const std::array<double, 3>& v_arg, double m_arg, double sigma, double epsilon,
     int type = 0);
 
   virtual ~Particle();
@@ -69,6 +73,10 @@ public:
   [[nodiscard]] double getM() const;
 
   [[nodiscard]] int getType() const;
+
+ [[nodiscard]] double getSigma() const;
+
+ [[nodiscard]] double getEpsilon() const;
 
   void setF(const std::array<double, 3>& F);
 
