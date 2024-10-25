@@ -1,8 +1,10 @@
+//
+// Created by jkr on 10/18/24.
+//
 #pragma once
-#include "../defs/Particle.h"
 #include "../defs/ParticleContainer.h"
 #include "../forces/force.h"
-#include "../utils/ArrayUtils.h"
+
 /**
  * @brief Interface for different types of integrators, computing one step in time
  */

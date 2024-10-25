@@ -1,8 +1,12 @@
+//
+// Created by jkr on 10/18/24.
+//
 #pragma once
 #include "Particle.h"
 #include <cstddef>
 #include <list>
 #include <vector>
+
 
 /**
  * @brief Particle Container managing a vector of Particles and providing two functions for single and pair iteration
