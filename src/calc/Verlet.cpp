@@ -3,6 +3,10 @@
 //
 #include "Verlet.h"
 
+/**
+ * @brief does one step in time using the Verlet integration method on the particle_container, updating X -> F -> V
+ * @param particle_container Reference to the current particle-system
+ */
 void VerletIntegrator::step(ParticleContainer& particle_container) {
   //update X -> F -> V
   //[this] needs to be captured everywhere since delta_t is a class constant
@@ -10,12 +14,12 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
     const dvec3 new_x = p.getX() + delta_t * p.getV() + (delta_t * delta_t / (2 * p.getM())) * (p.getF());
     p.setX(new_x);
   });
-
+  // We move ahead one step in time, the old F_{t} -> F_{t-1}, F_{t} <- 0
   particle_container.single_iterator([this](Particle& p) {
     p.setOldF(p.getF());
     p.setF({0, 0, 0});
   });
-
+  // This updates the force, F_{t}
   particle_container.pairIterator([this](Particle& p1, Particle& p2) {
     const dvec3 g12 = force.directionalForce(p1, p2);
     p1.setF(p1.getF() + g12); // this is basically F_i = \sum_j F_ij
@@ -23,7 +27,7 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
     // maybe we should only do one direction since other is covered before optimizing
     // also later on maybe force isn't bidirectional anymore? what then?
   });
-
+  // Now we use F_t and F_{t-1} to calculate the current velocity
   particle_container.single_iterator([this](Particle& p) {
     const dvec3 new_v = p.getV() + (delta_t / (2 * p.getM()) * (p.getOldF() + p.getF()));
     p.setV(new_v);

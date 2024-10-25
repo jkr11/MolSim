@@ -4,7 +4,9 @@
 #include <list>
 #include <vector>
 
-
+/**
+ * @brief Particle Container managing a vector of Particles and providing two functions for single and pair iteration
+ */
 class ParticleContainer {
 private:
   std::vector<Particle> particles;
@@ -42,6 +44,11 @@ public:
     return particles.size();
   }
 
+  /**
+   * Templating is faster than directly passing a function or a reference to one as it avoids copying and allowins inlining
+   * @tparam UnOp Single parameter function taking a Particle as input
+   * @param f instantiation of the UnOp Type
+   */
   template <typename UnOp>
   void single_iterator(const UnOp &f) {
     for (auto& p : particles) {
