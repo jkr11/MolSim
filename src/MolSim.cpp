@@ -14,7 +14,8 @@
 #include "forces/gravity.h"
 #include "outputWriter/VTKWriter.h"
 
-constexpr std::string USAGE = "Usage: ./MolSim -f <filename> [-t <t_end>] [-d <delta_t>]";
+
+const std::string USAGE = "Usage: ./MolSim -f <filename> [-t <t_end>] [-d <delta_t>]";
 
 /**** forward declaration of the calculation functions ****/
 void plotParticles(int iteration, outputWriter::VTKWriter& vtkWriter, ParticleContainer& particle_container);
@@ -82,7 +83,7 @@ int main(const int argc, char* argsv[]) {
   std::cout << "t_end: " << t_end << ", delta_t: " << delta_t << std::endl;
 
   FileReader fileReader;
-  fileReader.readFile(particles,  input_file.c_str());
+  fileReader.readFile(particles,  input_file);
 
 
   ParticleContainer particle_container(particles);
