@@ -1,9 +1,11 @@
+//
+// Created by jkr on 10/18/24.
+//
 #pragma once
 #include "Particle.h"
 #include <cstddef>
 #include <list>
 #include <vector>
-
 
 class ParticleContainer {
 private:

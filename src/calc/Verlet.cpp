@@ -2,6 +2,7 @@
 // Created by jkr on 10/18/24.
 //
 #include "Verlet.h"
+#include "../utils/ArrayUtils.h"
 
 void VerletIntegrator::step(ParticleContainer& particle_container) {
   //update X -> F -> V

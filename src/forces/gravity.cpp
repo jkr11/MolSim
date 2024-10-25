@@ -1,3 +1,6 @@
+//
+// Created by jkr on 10/18/24.
+//
 #include "gravity.h"
 
 // This is the force in direction 1 -> 2, so F_{12}

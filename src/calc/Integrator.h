@@ -1,8 +1,9 @@
-#include "../defs/Particle.h"
+//
+// Created by jkr on 10/18/24.
+//
+#pragma once
 #include "../defs/ParticleContainer.h"
 #include "../forces/force.h"
-#include "../utils/ArrayUtils.h"
-#pragma once
 
 class Integrator {
 protected:

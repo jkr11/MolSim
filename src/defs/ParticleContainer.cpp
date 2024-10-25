@@ -3,9 +3,6 @@
 //
 #include "ParticleContainer.h"
 
-#include <iostream>
-#include <ostream>
-
 ParticleContainer::ParticleContainer() = default;
 
 ParticleContainer::~ParticleContainer() = default;
