@@ -9,7 +9,7 @@
 
 
 /**
- * @brief Particle Container managing a vector of Particles and providing two functions for single and pair iteration
+ * @brief A wrapper for a std::vector<Particle> providing single and pairwise iterators
  */
 class ParticleContainer {
 private:
@@ -17,42 +17,49 @@ private:
 
 public:
   ParticleContainer();
-
   explicit ParticleContainer(const std::vector<Particle>& particles);
-
   explicit ParticleContainer(const std::list<Particle>& particles);
 
   ~ParticleContainer();
 
-  void addParticle(const Particle& p) {
-    particles.push_back(p);
-  }
-
-  auto begin() {
-    return particles.begin();
-  }
-
-  auto end() {
-    return particles.end();
-  }
-
-  auto operator[](const int n) {
-    return particles[n];
-  }
-
-  auto getParticles() {
-    return particles;
-  }
-
-  [[nodiscard]] std::size_t size() const {
-    return particles.size();
-  }
+  /**
+   * Add particle into the particle-system
+   * @param p particle to be added
+   */
+  void addParticle(const Particle& p);
 
   /**
-   * Templating is faster than directly passing a function or a reference to one as it avoids copying and allowins inlining
-   * @tparam UnOp Single parameter function taking a Particle as input
-   * @param f instantiation of the UnOp Type
+   * @return Iterator start
    */
+  auto begin();
+
+  /**
+   * @return Iterator end
+   */
+  auto end();
+
+  /**
+   * @param n index of particle to be accessed
+   * @return particle at index
+   */
+  Particle operator[](int n);
+
+  /**
+   * @return returns all particles
+   */
+  std::vector<Particle> getParticles();
+
+  /**
+   * @return number of particles in the container
+   */
+  [[nodiscard]] std::size_t size() const;
+
+  /**
+   * Iterator over single particles p
+   * @tparam UnOp Single parameter lambda taking a particle as input
+   * @param f Lambda that's applied to (p)
+   */
+  //this is defined in the .h in order for it to be instantiable everywhere
   template <typename UnOp>
   void single_iterator(const UnOp &f) {
     for (auto& p : particles) {
@@ -60,11 +67,16 @@ public:
     }
   }
 
-  // From what I understand, passing a std::function<void(Particle&, Particle&)> &f here prevents inlining, so we send an anonymous callable thats able to be inlined
-  // probably doesn't even matter
+  /**
+   * Iterator over unique pairs (i.e. (p1, p2) == (p2, p1))
+   * @tparam BinOp Double parameter lambda taking two particles as input
+   * @param f Lambda that's applied to (p1, p2)
+   */
+  //this is defined in the .h in order for it to be instantiable everywhere
   template <typename BinOp>
   void pairIterator(const BinOp &f) {
-    for (size_t i = 0; i < particles.size(); ++i) {
+    //note that the upper tri-diag matrix is iterated over
+    for (size_t i = 0; i < particles.size(); ++i) { //TODO: I assume the last iteration of the outer loop is unnecessary
       for (size_t j = i + 1; j < particles.size(); ++j) {
         f(particles[i], particles[j]);
       }
