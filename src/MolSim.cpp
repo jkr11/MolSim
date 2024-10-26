@@ -83,7 +83,7 @@ int main(const int argc, char* argsv[]) {
   std::cout << "t_end: " << t_end << ", delta_t: " << delta_t << std::endl;
 
   FileReader fileReader;
-  fileReader.readFile(particles,  input_file.c_str());
+  fileReader.readFile(particles,  input_file);
 
   //setup Simulation
   ParticleContainer particle_container(particles);
