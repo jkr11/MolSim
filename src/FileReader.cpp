@@ -16,16 +16,13 @@ FileReader::FileReader() = default;
 
 FileReader::~FileReader() = default;
 
-void FileReader::readFile(std::list<Particle> &particles, char *filename) {
-  std::array<double, 3> x;
-  std::array<double, 3> v;
-  double m;
-  int num_particles = 0;
-
-  std::ifstream input_file(filename);
-  std::string tmp_string;
-
-  if (input_file.is_open()) {
+void FileReader::readFile(std::list<Particle> &particles,  const std::string& filename) {
+  if (std::ifstream input_file(filename); input_file.is_open()) {
+    std::string tmp_string;
+    int num_particles = 0;
+    double m;
+    std::array<double, 3> v{};
+    std::array<double, 3> x{};
 
     getline(input_file, tmp_string);
     std::cout << "Read line: " << tmp_string << std::endl;
