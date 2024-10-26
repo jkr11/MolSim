@@ -3,8 +3,12 @@
 //
 #pragma once
 #include "../defs/Particle.h"
-//Force is a class as we have at least one more "Type" of force (Lennard-Jones) coming up. Maybe also include self
-//potentials, so split in (p,q) interactions and self interactions
+
+/**
+ * @brief Interface for different types of forces
+ * @note Force is a class as we have at least one more "Type" of force (Lennard-Jones) coming up. Maybe also include self
+         potentials, so split in (p,q) interactions and self interactions
+ */
 class Force {
 public:
   virtual ~Force() = default;
