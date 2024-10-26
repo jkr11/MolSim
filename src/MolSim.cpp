@@ -36,12 +36,13 @@ std::list<Particle> particles;
 Gravity gravity;
 
 int main(const int argc, char* argsv[]) {
-  std::cout << "Hello from MolSim for PSE!" << std::endl;
+  //read optional arguments
   std::string input_file;
   int opt;
+
   while ((opt = getopt(argc, argsv, "f:t:d:")) != -1) {
     switch (opt) {
-    case'f':
+    case 'f':
       input_file = optarg;
       break;
     case 't':
@@ -57,7 +58,7 @@ int main(const int argc, char* argsv[]) {
   }
 
   if (input_file.empty()) {
-    std::cout << "Erroneous programme call, input_file empty!" << std::endl;
+    std::cout << "Erroneous program call, input_file empty!" << std::endl;
     std::cout << USAGE << std::endl;
     exit(EXIT_FAILURE);
   }
@@ -84,7 +85,7 @@ int main(const int argc, char* argsv[]) {
   FileReader fileReader;
   fileReader.readFile(particles,  input_file.c_str());
 
-
+  //setup Simulation
   ParticleContainer particle_container(particles);
   VerletIntegrator verlet_integrator(gravity, delta_t);
   outputWriter::VTKWriter writer;
