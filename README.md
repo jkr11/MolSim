@@ -6,6 +6,8 @@ The Molecular Dynamics teaching code.
 
 GroupA 
 
+Workflow test
+
 # Build Instructions
 
 ```bash

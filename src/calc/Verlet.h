@@ -1,7 +1,7 @@
 //
 // Created by jkr on 10/18/24.
 //
-#pragma once
+
 #ifndef VERLET_H
 #define VERLET_H
 #include "Integrator.h"
