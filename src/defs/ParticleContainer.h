@@ -2,20 +2,21 @@
 // Created by jkr on 10/18/24.
 //
 #pragma once
-#include "Particle.h"
 #include <cstddef>
 #include <list>
 #include <vector>
 
+#include "Particle.h"
 
 /**
- * @brief A wrapper for a std::vector<Particle> providing single and pairwise iterators
+ * @brief A wrapper for a std::vector<Particle> providing single and pairwise
+ * iterators
  */
 class ParticleContainer {
-private:
+ private:
   std::vector<Particle> particles;
 
-public:
+ public:
   ParticleContainer();
   explicit ParticleContainer(const std::vector<Particle>& particles);
   explicit ParticleContainer(const std::list<Particle>& particles);
@@ -59,9 +60,9 @@ public:
    * @tparam UnOp Single parameter lambda taking a particle as input
    * @param f Lambda that's applied to (p)
    */
-  //this is defined in the .h in order for it to be instantiable everywhere
+  // this is defined in the .h in order for it to be instantiable everywhere
   template <typename UnOp>
-  void single_iterator(const UnOp &f) {
+  void single_iterator(const UnOp& f) {
     for (auto& p : particles) {
       f(p);
     }
@@ -72,11 +73,13 @@ public:
    * @tparam BinOp Double parameter lambda taking two particles as input
    * @param f Lambda that's applied to (p1, p2)
    */
-  //this is defined in the .h in order for it to be instantiable everywhere
+  // this is defined in the .h in order for it to be instantiable everywhere
   template <typename BinOp>
-  void pairIterator(const BinOp &f) {
-    //note that the upper tri-diag matrix is iterated over
-    for (size_t i = 0; i < particles.size(); ++i) { //TODO: I assume the last iteration of the outer loop is unnecessary
+  void pairIterator(const BinOp& f) {
+    // note that the upper tri-diag matrix is iterated over
+    for (size_t i = 0; i < particles.size();
+         ++i) {  // TODO: I assume the last iteration of the outer loop is
+                 // unnecessary
       for (size_t j = i + 1; j < particles.size(); ++j) {
         f(particles[i], particles[j]);
       }

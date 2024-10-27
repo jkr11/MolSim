@@ -6,18 +6,20 @@
  */
 
 #include "FileReader.h"
-#include "debug/debug_print.h"
 
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
 #include <sstream>
 
+#include "debug/debug_print.h"
+
 FileReader::FileReader() = default;
 
 FileReader::~FileReader() = default;
 
-void FileReader::readFile(std::list<Particle> &particles,  const std::string& filename) {
+void FileReader::readFile(std::list<Particle> &particles,
+                          const std::string &filename) {
   if (std::ifstream input_file(filename); input_file.is_open()) {
     std::string tmp_string;
     int num_particles = 0;
@@ -35,7 +37,7 @@ void FileReader::readFile(std::list<Particle> &particles,  const std::string& fi
 
     std::istringstream numstream(tmp_string);
     numstream >> num_particles;
-    DEBUG_PRINT("Reading " + num_particles + "." + "\n");
+    DEBUG_PRINT("Reading " + std::to_string(num_particles) + "." + "\n");
     getline(input_file, tmp_string);
     DEBUG_PRINT("Read line: " + tmp_string + "\n");
 

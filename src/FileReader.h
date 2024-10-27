@@ -7,16 +7,15 @@
 
 #pragma once
 
+#include <list>
 
 #include "defs/Particle.h"
 
-#include <list>
-
 class FileReader {
-
-public:
+ public:
   FileReader();
   virtual ~FileReader();
 
-  static void readFile(std::list<Particle> &particles, const std::string& filename);
+  static void readFile(std::list<Particle>& particles,
+                       const std::string& filename);
 };

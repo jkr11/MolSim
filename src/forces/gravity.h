@@ -10,7 +10,7 @@
  * // Gravitational force F_{1,2}
  */
 class Gravity final : public Force {
-public:
+ public:
   /**
    * Compute the gravitational force between two particles p1 and p2
    * @param p1 Particle1

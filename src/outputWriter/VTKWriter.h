@@ -7,11 +7,10 @@
 
 #pragma once
 
+#include <list>
 
 #include "../defs/Particle.h"
 #include "vtk-unstructured.h"
-
-#include <list>
 
 namespace outputWriter {
 
@@ -20,8 +19,7 @@ namespace outputWriter {
  * particles.
  */
 class VTKWriter {
-
-public:
+ public:
   VTKWriter();
 
   virtual ~VTKWriter();
@@ -47,8 +45,8 @@ public:
    */
   void writeFile(const std::string &filename, int iteration);
 
-private:
+ private:
   VTKFile_t *vtkFile;
 };
 
-} // namespace outputWriter
+}  // namespace outputWriter
