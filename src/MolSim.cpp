@@ -14,10 +14,10 @@
 #include "forces/gravity.h"
 #include "outputWriter/VTKWriter.h"
 
-std::string USAGE = "Usage: ./MolSim -f <filename> [-t <t_end>] [-d <delta_t>]";
 
 /**** forward declaration of the calculation functions ****/
 void plotParticles(int iteration, outputWriter::VTKWriter& vtkWriter, ParticleContainer& particle_container);
+void printUsage(const std::string& additionalNote, const std::string& programName);
 
 constexpr int output_interval = 10000; // seems to be a decent rate, can be changed to arbitrary numbers
 constexpr double start_time = 0;
@@ -42,25 +42,32 @@ int main(const int argc, char* argsv[]) {
 
   while ((opt = getopt(argc, argsv, "f:t:d:")) != -1) {
     switch (opt) {
+    case 'h':
+      printUsage("Display Help page, no execution", argsv[0]);
     case 'f':
       input_file = optarg;
       break;
-    case 't':
-      t_end = std::stod(optarg);
+      case 't':
+      try {
+        t_end = std::stod(optarg);
+      } catch (...) {
+        printUsage("Invalid argument '" + std::string(optarg) + "' for [-t <double>]", argsv[0]);
+      }
       break;
     case 'd':
-      delta_t = std::stod(optarg);
+      try {
+        delta_t = std::stod(optarg);
+      } catch (...) {
+        printUsage("Invalid argument '" + std::string(optarg) + "' for [-d <double>]", argsv[0]);
+      }
       break;
     default:
-      std::cout << USAGE << std::endl;
-      exit(EXIT_FAILURE);
+      printUsage("unsupported flag detected", argsv[0]);
     }
   }
 
   if (input_file.empty()) {
-    std::cout << "Erroneous program call, input_file empty!" << std::endl;
-    std::cout << USAGE << std::endl;
-    exit(EXIT_FAILURE);
+    printUsage("Erroneous program call, input_file empty!", argsv[0]);
   }
 
   // so we cant really do that incase the input is a directory
@@ -68,8 +75,7 @@ int main(const int argc, char* argsv[]) {
   const std::filesystem::path output_directory_path = output_directory;
 
   if (!std::filesystem::exists(input_file)) {
-    std::cout << red << "Input File '" << input_file << "' does not exist" << reset << std::endl;
-    exit(1);
+    printUsage("Input File '" + input_file + "' does not exist", argsv[0]);
   }
 
   // TODO: fix make this project specific, else just pass in the output path
@@ -79,7 +85,7 @@ int main(const int argc, char* argsv[]) {
   }
 
   // further arguments
-  //check here if defaults have been used, optional type is c++17 sadly, so double copy??
+  // check here if defaults have been used, optional type is c++17 sadly, so double copy??
   std::cout << "t_end: " << t_end << ", delta_t: " << delta_t << std::endl;
 
   FileReader fileReader;
@@ -120,9 +126,6 @@ int main(const int argc, char* argsv[]) {
 
   std::cout << std::endl;
   std::cout << "output written. Terminating..." << std::endl;
-#ifdef DEBUG
-  std::cout << "DEBUG WAS ENABLED" << std::endl;
-#endif
 
   return 0;
 }
@@ -135,4 +138,18 @@ void plotParticles(const int iteration, outputWriter::VTKWriter& vtkWriter, Part
   }
 
   vtkWriter.writeFile(output_directory + "/MD_vtk", iteration);
+}
+
+void printUsage(const std::string& additionalNote, const std::string& programName) {
+  std::cerr << red << "[Error:] " << additionalNote << reset << "\n";
+  std::cout << "Usage: " << programName << " [options]\n"
+              << "Options:\n"
+              << "  -h                Show this help message\n"
+              << "  -f <filename>     Specify the input file\n"
+              << "  [-t <double>]     Specify the simulation end time (t_end))\n"
+              << "  [-d <double>]     Specify the simulation delta time (t_delta)\n"
+              << "\nExample:\n"
+              << "  " << programName << " -f ./input/eingabe-sonne.txt -t 100 -d 0.14\n";
+
+  exit(EXIT_FAILURE);
 }

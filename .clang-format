@@ -1,0 +1,10 @@
+BasedOnStyle: Google
+IndentWidth: 2
+UseTab: Never
+ColumnLimit: 80
+BreakBeforeBraces: Attach
+AllowShortBlocksOnASingleLine: false
+AllowShortCaseLabelsOnASingleLine: false
+SpacesBeforeTrailingComments: 2
+SpaceBeforeParens: ControlStatements
+PenaltyBreakComment: 100
