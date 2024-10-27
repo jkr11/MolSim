@@ -35,7 +35,7 @@ void FileReader::readFile(std::list<Particle> &particles,  const std::string& fi
 
     std::istringstream numstream(tmp_string);
     numstream >> num_particles;
-    DEBUG_PRINT("Reading " + num_particles + "." + "\n");
+    DEBUG_PRINT("Reading " + std::to_string(num_particles) + "." + "\n");
     getline(input_file, tmp_string);
     DEBUG_PRINT("Read line: " + tmp_string + "\n");
 
