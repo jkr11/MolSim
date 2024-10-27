@@ -51,15 +51,14 @@ int main(const int argc, char* argsv[]) {
       try {
         t_end = std::stod(optarg);
       } catch (...) {
-        printUsage("Invalid argument for [-t <double>]", argsv[0]);
+        printUsage("Invalid argument '" + std::string(optarg) + "' for [-t <double>]", argsv[0]);
       }
-
       break;
     case 'd':
       try {
         delta_t = std::stod(optarg);
       } catch (...) {
-        printUsage("Invalid argument for [-d <double>]", argsv[0]);
+        printUsage("Invalid argument '" + std::string(optarg) + "' for [-d <double>]", argsv[0]);
       }
       break;
     default:
