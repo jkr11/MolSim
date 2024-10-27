@@ -6,18 +6,20 @@
  */
 
 #include "FileReader.h"
-#include "debug/debug_print.h"
 
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
 #include <sstream>
 
+#include "debug/debug_print.h"
+
 FileReader::FileReader() = default;
 
 FileReader::~FileReader() = default;
 
-void FileReader::readFile(std::list<Particle> &particles,  const std::string& filename) {
+void FileReader::readFile(std::list<Particle> &particles,
+                          const std::string &filename) {
   if (std::ifstream input_file(filename); input_file.is_open()) {
     std::string tmp_string;
     int num_particles = 0;

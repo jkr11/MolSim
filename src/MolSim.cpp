@@ -1,25 +1,26 @@
-#include "FileReader.h"
-#include "outputWriter/XYZWriter.h"
-#include "utils/ArrayUtils.h"
-
-
 #include <defs/Particle.h>
+#include <getopt.h>
+
+#include <filesystem>
 #include <iostream>
 #include <list>
 #include <vector>
-#include <filesystem>
-#include <getopt.h>
 
+#include "FileReader.h"
 #include "calc/Verlet.h"
 #include "forces/gravity.h"
 #include "outputWriter/VTKWriter.h"
-
+#include "outputWriter/XYZWriter.h"
+#include "utils/ArrayUtils.h"
 
 /**** forward declaration of the calculation functions ****/
-void plotParticles(int iteration, outputWriter::VTKWriter& vtkWriter, ParticleContainer& particle_container);
-void printUsage(const std::string& additionalNote, const std::string& programName);
+void plotParticles(int iteration, outputWriter::VTKWriter& vtkWriter,
+                   ParticleContainer& particle_container);
+void printUsage(const std::string& additionalNote,
+                const std::string& programName);
 
-constexpr int output_interval = 10000; // seems to be a decent rate, can be changed to arbitrary numbers
+constexpr int output_interval =
+    10000;  // seems to be a decent rate, can be changed to arbitrary numbers
 constexpr double start_time = 0;
 double t_end = 100;
 double delta_t = 0.014;
@@ -36,33 +37,37 @@ std::list<Particle> particles;
 Gravity gravity;
 
 int main(const int argc, char* argsv[]) {
-  //read optional arguments
+  // read optional arguments
   std::string input_file;
   int opt;
 
   while ((opt = getopt(argc, argsv, "f:t:d:")) != -1) {
     switch (opt) {
-    case 'h':
-      printUsage("Display Help page, no execution", argsv[0]);
-    case 'f':
-      input_file = optarg;
-      break;
+      case 'h':
+        printUsage("Display Help page, no execution", argsv[0]);
+      case 'f':
+        input_file = optarg;
+        break;
       case 't':
-      try {
-        t_end = std::stod(optarg);
-      } catch (...) {
-        printUsage("Invalid argument '" + std::string(optarg) + "' for [-t <double>]", argsv[0]);
-      }
-      break;
-    case 'd':
-      try {
-        delta_t = std::stod(optarg);
-      } catch (...) {
-        printUsage("Invalid argument '" + std::string(optarg) + "' for [-d <double>]", argsv[0]);
-      }
-      break;
-    default:
-      printUsage("unsupported flag detected", argsv[0]);
+        try {
+          t_end = std::stod(optarg);
+        } catch (...) {
+          printUsage("Invalid argument '" + std::string(optarg) +
+                         "' for [-t <double>]",
+                     argsv[0]);
+        }
+        break;
+      case 'd':
+        try {
+          delta_t = std::stod(optarg);
+        } catch (...) {
+          printUsage("Invalid argument '" + std::string(optarg) +
+                         "' for [-d <double>]",
+                     argsv[0]);
+        }
+        break;
+      default:
+        printUsage("unsupported flag detected", argsv[0]);
     }
   }
 
@@ -81,17 +86,19 @@ int main(const int argc, char* argsv[]) {
   // TODO: fix make this project specific, else just pass in the output path
   if (!is_directory(output_directory_path)) {
     create_directories(output_directory_path);
-    std::cout << "Created directory for output: " << output_directory_path << std::endl;
+    std::cout << "Created directory for output: " << output_directory_path
+              << std::endl;
   }
 
   // further arguments
-  // check here if defaults have been used, optional type is c++17 sadly, so double copy??
+  // check here if defaults have been used, optional type is c++17 sadly, so
+  // double copy??
   std::cout << "t_end: " << t_end << ", delta_t: " << delta_t << std::endl;
 
   FileReader fileReader;
-  fileReader.readFile(particles,  input_file);
+  fileReader.readFile(particles, input_file);
 
-  //setup Simulation
+  // setup Simulation
   ParticleContainer particle_container(particles);
   VerletIntegrator verlet_integrator(gravity, delta_t);
   outputWriter::VTKWriter writer;
@@ -114,12 +121,12 @@ int main(const int argc, char* argsv[]) {
       std::cout << "Iteration " << iteration << " finished." << std::endl;
 #else
       const double completion_percentage = 100 * current_time / t_end;
-      const std::string output_string = "\r[" + std::to_string(completion_percentage) + " %]: "
-        + std::to_string(iteration) + " iterations finished";
+      const std::string output_string =
+          "\r[" + std::to_string(completion_percentage) +
+          " %]: " + std::to_string(iteration) + " iterations finished";
       std::cout << output_string << std::flush;
 #endif
     }
-
 
     current_time += delta_t;
   }
@@ -130,7 +137,8 @@ int main(const int argc, char* argsv[]) {
   return 0;
 }
 
-void plotParticles(const int iteration, outputWriter::VTKWriter& vtkWriter, ParticleContainer& particle_container) {
+void plotParticles(const int iteration, outputWriter::VTKWriter& vtkWriter,
+                   ParticleContainer& particle_container) {
   vtkWriter.initializeOutput(static_cast<int>(particle_container.size()));
 
   for (auto& p : particle_container.getParticles()) {
@@ -140,16 +148,19 @@ void plotParticles(const int iteration, outputWriter::VTKWriter& vtkWriter, Part
   vtkWriter.writeFile(output_directory + "/MD_vtk", iteration);
 }
 
-void printUsage(const std::string& additionalNote, const std::string& programName) {
+void printUsage(const std::string& additionalNote,
+                const std::string& programName) {
   std::cerr << red << "[Error:] " << additionalNote << reset << "\n";
-  std::cout << "Usage: " << programName << " [options]\n"
-              << "Options:\n"
-              << "  -h                Show this help message\n"
-              << "  -f <filename>     Specify the input file\n"
-              << "  [-t <double>]     Specify the simulation end time (t_end))\n"
-              << "  [-d <double>]     Specify the simulation delta time (t_delta)\n"
-              << "\nExample:\n"
-              << "  " << programName << " -f ./input/eingabe-sonne.txt -t 100 -d 0.14\n";
+  std::cout
+      << "Usage: " << programName << " [options]\n"
+      << "Options:\n"
+      << "  -h                Show this help message\n"
+      << "  -f <filename>     Specify the input file\n"
+      << "  [-t <double>]     Specify the simulation end time (t_end))\n"
+      << "  [-d <double>]     Specify the simulation delta time (t_delta)\n"
+      << "\nExample:\n"
+      << "  " << programName
+      << " -f ./input/eingabe-sonne.txt -t 100 -d 0.14\n";
 
   exit(EXIT_FAILURE);
 }
