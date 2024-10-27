@@ -1,5 +1,9 @@
 name: clang-format Check
 on: 
+  push:
+    branches: 
+      - 'main'
+      - 'Assignment*'
   pull_request:
     branches: 
       - main
