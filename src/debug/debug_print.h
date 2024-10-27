@@ -9,9 +9,10 @@
 #include <iostream>
 
 #ifdef DEBUG
-#define DEBUG_PRINT(msg) std::cout<< "\t\033[38;2;255;165;0m " << msg << "\033[0m" << std::endl
+#define DEBUG_PRINT(msg) \
+  std::cout << "\t\033[38;2;255;165;0m " << msg << "\033[0m" << std::endl
 #else
 #define DEBUG_PRINT(msg)
 #endif
 
-#endif //DEBUG_H
+#endif  // DEBUG_H

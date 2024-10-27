@@ -6,6 +6,7 @@
  */
 
 #include "VTKWriter.h"
+
 #include <debug/debug_print.h>
 
 #include <cstdlib>
@@ -21,7 +22,6 @@ VTKWriter::VTKWriter() = default;
 VTKWriter::~VTKWriter() = default;
 
 void VTKWriter::initializeOutput(int numParticles) {
-
   vtkFile = new VTKFile_t("UnstructuredGrid");
 
   // per point, we add type, position, velocity and force
@@ -35,14 +35,14 @@ void VTKWriter::initializeOutput(int numParticles) {
   pointData.DataArray().push_back(forces);
   pointData.DataArray().push_back(type);
 
-  CellData cellData; // we don't have cell data => leave it empty
+  CellData cellData;  // we don't have cell data => leave it empty
 
   // 3 coordinates
   Points points;
   DataArray_t pointCoordinates(type::Float32, "points", 3);
   points.DataArray().push_back(pointCoordinates);
 
-  Cells cells; // we don't have cells, => leave it empty
+  Cells cells;  // we don't have cells, => leave it empty
   // for some reasons, we have to add a dummy entry for paraview
   DataArray_t cells_data(type::Float32, "types", 0);
   cells.DataArray().push_back(cells_data);
@@ -55,7 +55,8 @@ void VTKWriter::initializeOutput(int numParticles) {
 
 void VTKWriter::writeFile(const std::string &filename, int iteration) {
   std::stringstream strstr;
-  strstr << filename << "_" << std::setfill('0') << std::setw(4) << iteration << ".vtu";
+  strstr << filename << "_" << std::setfill('0') << std::setw(4) << iteration
+         << ".vtu";
 
   std::ofstream file(strstr.str().c_str());
   VTKFile(file, *vtkFile);
@@ -99,4 +100,4 @@ void VTKWriter::plotParticle(Particle &p) {
   pointsIterator->push_back(p.getX()[2]);
 }
 
-} // namespace outputWriter
+}  // namespace outputWriter
