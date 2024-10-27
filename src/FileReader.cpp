@@ -6,6 +6,7 @@
  */
 
 #include "FileReader.h"
+#include "debug/debug_print.h"
 
 #include <cstdlib>
 #include <fstream>
@@ -25,18 +26,18 @@ void FileReader::readFile(std::list<Particle> &particles,  const std::string& fi
     std::array<double, 3> x{};
 
     getline(input_file, tmp_string);
-    std::cout << "Read line: " << tmp_string << std::endl;
+    DEBUG_PRINT("Read line: " + tmp_string + "\n");
 
     while (tmp_string.empty() or tmp_string[0] == '#') {
       getline(input_file, tmp_string);
-      std::cout << "Read line: " << tmp_string << std::endl;
+      DEBUG_PRINT("Read line: " + tmp_string + "\n");
     }
 
     std::istringstream numstream(tmp_string);
     numstream >> num_particles;
-    std::cout << "Reading " << num_particles << "." << std::endl;
+    DEBUG_PRINT("Reading " + num_particles + "." + "\n");
     getline(input_file, tmp_string);
-    std::cout << "Read line: " << tmp_string << std::endl;
+    DEBUG_PRINT("Read line: " + tmp_string + "\n");
 
     for (int i = 0; i < num_particles; i++) {
       std::istringstream datastream(tmp_string);
