@@ -43,43 +43,35 @@ int main(const int argc, char* argsv[]) {
   std::string input_file;
   int opt;
 
-  while ((opt = getopt(argc, argsv, "f:t:d:s:")) != -1) {
-    switch (opt) {
-      case 'h':
-        printUsage("Display Help page, no execution", argsv[0]);
-      case 'f':
-        input_file = optarg;
-        break;
-      case 't':
-        try {
+  while ((opt = getopt(argc, argsv, "hf:t:d:s:")) != -1) {
+    try {
+      switch (opt) {
+        case 'h':
+          printUsage("Display Help page, no execution", argsv[0]);
+        case 'f':
+          input_file = optarg;
+          break;
+        case 't':
           t_end = std::stod(optarg);
-        } catch (...) {
-          printUsage("Invalid argument '" + std::string(optarg) +
-                         "' for [-t <double>]",
-                     argsv[0]);
-        }
-        break;
-      case 'd':
-        try {
+          break;
+        case 'd':
           delta_t = std::stod(optarg);
-        } catch (...) {
-          printUsage("Invalid argument '" + std::string(optarg) +
-                         "' for [-d <double>]",
-                     argsv[0]);
-        }
-        break;
-      case 's':
-        try {
+          break;
+        case 's':
           output_time_step_size = std::stod(optarg);
-        } catch (...) {
-          printUsage("Invalid argument '" + std::string(optarg) +
-                         "' for [-s <double>]",
+          break;
+        default:
+          printUsage("unsupported flag '-" + std::string(optarg) + "' detected",
                      argsv[0]);
-        }
-        break;
-      default:
-        printUsage("unsupported flag '-" + std::string(optarg) + "' detected",
-                   argsv[0]);
+      }
+    } catch (const std::invalid_argument&) {
+      printUsage("Invalid arg for option -" + std::string(1, opt) + ": '" +
+                     std::string(optarg) + "'",
+                 argsv[0]);
+    } catch (const std::out_of_range&) {
+      printUsage("Out-of-range value for option -" + std::string(1, opt) +
+                     ": '" + std::string(optarg) + "'",
+                 argsv[0]);
     }
   }
 
