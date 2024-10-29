@@ -1,11 +1,11 @@
 #include <defs/Particle.h>
 #include <getopt.h>
 
+#include <chrono>
 #include <filesystem>
 #include <iostream>
 #include <list>
 #include <vector>
-#include <chrono>
 
 #include "FileReader.h"
 #include "calc/Verlet.h"
@@ -63,9 +63,9 @@ int main(const int argc, char* argsv[]) {
         try {
           delta_t = std::stod(optarg);
         } catch (...) {
-          printUsage(
-              "Invalid argument '" + std::string(optarg) +
-              "' for [-d <double>]", argsv[0]);
+          printUsage("Invalid argument '" + std::string(optarg) +
+                     "' for [-d <double>]",
+                     argsv[0]);
         }
         break;
       case 's':
@@ -91,8 +91,9 @@ int main(const int argc, char* argsv[]) {
   }
 
   prepareOutputDirectory(argc, argsv);
-  std::cout << "t_end: " << t_end << ", delta_t: " << delta_t <<
-      ", output_time_step_size: " << output_time_step_size << std::endl;
+  std::cout << "t_end: " << t_end << ", delta_t: " << delta_t
+      << ", output_time_step_size: " << output_time_step_size
+      << std::endl;
 
   FileReader fileReader;
   fileReader.readFile(particles, input_file);
@@ -152,19 +153,21 @@ void plotParticles(const int iteration, outputWriter::VTKWriter& vtkWriter,
   vtkWriter.writeFile(output_directory + "/MD_vtk", iteration);
 }
 
-
 void printUsage(const std::string& additionalNote,
                 const std::string& programName) {
   std::cerr << red << "[Error:] " << additionalNote << reset << "\n";
-  std::cout
-      << "Usage: " << programName << " [options]\n"
+  std::cout << "Usage: " << programName << " [options]\n"
       << "Options:\n"
       << "  -h                Show this help message\n"
       << "  -f <filename>     Specify the input file\n"
-      << "  [-t <double>]     Specify the simulation end time (t_end), default=100\n"
-      << "  [-d <double>]     Specify the simulation delta time (t_delta), default=0.014\n"
-      << "  [-s <double>]     Specify how often the output will be written (step_size), default=50\n"
-      << "                    note that this is independent of the time resolution (t_delta) and dependent of the simulation time"
+      << "  [-t <double>]     Specify the simulation end time (t_end), "
+      "default=100\n"
+      << "  [-d <double>]     Specify the simulation delta time "
+      "(t_delta), default=0.014\n"
+      << "  [-s <double>]     Specify how often the output will be "
+      "written (step_size), default=50\n"
+      << "                    note that this is independent of the time "
+      "resolution (t_delta) and dependent of the simulation time"
       << "\nExample:\n"
       << "  " << programName
       << " -f ./input/eingabe-sonne.txt -t 100 -d 0.14\n";
@@ -172,12 +175,11 @@ void printUsage(const std::string& additionalNote,
   exit(EXIT_FAILURE);
 }
 
-
 void prepareOutputDirectory(const int argsc, char* argv[]) {
-  // source for getting time: https://stackoverflow.com/questions/997946/how-to-get-current-time-and-date-in-c
+  // source for getting time:
+  // https://stackoverflow.com/questions/997946/how-to-get-current-time-and-date-in-c
   const auto currentTime = std::chrono::high_resolution_clock::now();
-  const std::time_t now =
-      std::chrono::system_clock::to_time_t(currentTime);
+  const std::time_t now = std::chrono::system_clock::to_time_t(currentTime);
   const std::tm localTime = *std::localtime(&now);
   std::ostringstream timeString;
 
@@ -190,11 +192,9 @@ void prepareOutputDirectory(const int argsc, char* argv[]) {
       output_directory + output_sub_directory;
   output_directory = std::string(output_directory_path);
 
-  if (!is_directory(
-      output_directory_path)) {
+  if (!is_directory(output_directory_path)) {
     create_directories(output_directory_path);
-    std::cout << "Output at: " << output_directory_path
-        << std::endl;
+    std::cout << "Output at: " << output_directory_path << std::endl;
   }
 
   // save configuration (input) for future use
