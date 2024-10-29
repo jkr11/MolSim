@@ -21,7 +21,7 @@ void printUsage(const std::string& additionalNote,
                 const std::string& programName);
 void prepareOutputDirectory(int argsc, char* argv[]);
 
-int output_interval = 10; // in relation to vtk writes, seems to be decent
+int output_interval = 10;  // in relation to vtk writes, seems to be decent
 constexpr double start_time = 0;
 double t_end = 100;
 double delta_t = 0.014;
@@ -55,7 +55,7 @@ int main(const int argc, char* argsv[]) {
           t_end = std::stod(optarg);
         } catch (...) {
           printUsage("Invalid argument '" + std::string(optarg) +
-                     "' for [-t <double>]",
+                         "' for [-t <double>]",
                      argsv[0]);
         }
         break;
@@ -64,7 +64,7 @@ int main(const int argc, char* argsv[]) {
           delta_t = std::stod(optarg);
         } catch (...) {
           printUsage("Invalid argument '" + std::string(optarg) +
-                     "' for [-d <double>]",
+                         "' for [-d <double>]",
                      argsv[0]);
         }
         break;
@@ -73,7 +73,7 @@ int main(const int argc, char* argsv[]) {
           output_time_step_size = std::stod(optarg);
         } catch (...) {
           printUsage("Invalid argument '" + std::string(optarg) +
-                     "' for [-s <double>]",
+                         "' for [-s <double>]",
                      argsv[0]);
         }
         break;
@@ -161,7 +161,7 @@ void printUsage(const std::string& additionalNote,
             << "  -h                Show this help message\n"
             << "  -f <filename>     Specify the input file\n"
             << "  [-t <double>]     Specify the simulation end time (t_end), "
-            "default=100\n"
+               "default=100\n"
             << "  [-d <double>]     Specify the simulation delta time "
                "(t_delta), default=0.014\n"
             << "  [-s <double>]     Specify how often the output will be "
