@@ -1,4 +1,3 @@
-#include <defs/Particle.h>
 #include <getopt.h>
 
 #include <chrono>
@@ -9,6 +8,7 @@
 
 #include "FileReader.h"
 #include "calc/Verlet.h"
+#include "defs/Particle.h"
 #include "forces/gravity.h"
 #include "outputWriter/VTKWriter.h"
 #include "outputWriter/XYZWriter.h"
@@ -21,11 +21,12 @@ void printUsage(const std::string& additionalNote,
                 const std::string& programName);
 void prepareOutputDirectory(int argsc, char* argv[]);
 
-int output_interval = 10;  // in relation to vtk writes, seems to be decent
+constexpr int output_interval = 32;
+// print every x vtk writes, seems to be decent
 constexpr double start_time = 0;
 double t_end = 100;
 double delta_t = 0.014;
-double output_time_step_size = 0.01;
+double output_time_step_size = 1;
 
 // parent directory, subdirectory will be appended at runtime
 std::string output_directory = "./output/";
@@ -45,6 +46,10 @@ int main(const int argc, char* argsv[]) {
 
   while ((opt = getopt(argc, argsv, "hf:t:d:s:")) != -1) {
     try {
+      if (optarg == nullptr) {
+        throw std::logic_error("missing option after flag");
+      }
+
       switch (opt) {
         case 'h':
           printUsage("Display Help page, no execution", argsv[0]);
@@ -61,21 +66,27 @@ int main(const int argc, char* argsv[]) {
           output_time_step_size = std::stod(optarg);
           break;
         default:
-          printUsage("unsupported flag '-" + std::string(optarg) + "' detected",
+          printUsage("unsupported flag '-" +
+                         std::string(1, static_cast<char>(opt)) + "' detected",
                      argsv[0]);
       }
     } catch (const std::invalid_argument&) {
-      printUsage("Invalid arg for option -" + std::string(1, opt) + ": '" +
+      printUsage("Invalid arg for option -" +
+                     std::string(1, static_cast<char>(opt)) + ": '" +
                      std::string(optarg) + "'",
                  argsv[0]);
     } catch (const std::out_of_range&) {
-      printUsage("Out-of-range value for option -" + std::string(1, opt) +
-                     ": '" + std::string(optarg) + "'",
+      printUsage("Out-of-range value for option -" +
+                     std::string(1, static_cast<char>(opt)) + ": '" +
+                     std::string(optarg) + "'",
                  argsv[0]);
+    } catch (const std::logic_error&) {
+      printUsage(" ^^", argsv[0]);
     }
   }
 
-  if (!std::filesystem::exists(input_file)) {
+  if (!std::filesystem::exists(input_file) ||
+      std::filesystem::is_directory(input_file)) {
     printUsage("Input File '" + input_file + "' does not exist", argsv[0]);
   }
   if (input_file.empty()) {
@@ -87,8 +98,7 @@ int main(const int argc, char* argsv[]) {
             << ", output_time_step_size: " << output_time_step_size
             << std::endl;
 
-  FileReader fileReader;
-  fileReader.readFile(particles, input_file);
+  FileReader::readFile(particles, input_file);
 
   // setup Simulation
   ParticleContainer particle_container(particles);
@@ -96,28 +106,25 @@ int main(const int argc, char* argsv[]) {
   outputWriter::VTKWriter writer;
 
   double current_time = start_time;
-  double next_output_time = start_time;
 
   int iteration = 0;
   int writes = 0;
 
   // for this loop, we assume: current x, current f and current v are known
-  while (current_time < t_end) {
+  while (current_time <= t_end) {
     verlet_integrator.step(particle_container);
-    iteration++;
-    if (current_time >= next_output_time) {
+    if (current_time >= writes * output_time_step_size) {
       plotParticles(iteration, writer, particle_container);
-      next_output_time = current_time + output_time_step_size;
 
       if (writes % output_interval == 0) {
-        // clean up print if DEBUG is enabled
 #ifdef DEBUG
         std::cout << "Iteration " << iteration << " finished." << std::endl;
 #else
         const double completion_percentage = 100 * current_time / t_end;
         const std::string output_string =
             "\r[" + std::to_string(completion_percentage) +
-            " %]: " + std::to_string(iteration) + " iterations finished";
+            " %]: " + std::to_string(iteration) +
+            " iterations finished at t=" + std::to_string(current_time);
         std::cout << output_string << std::flush;
 #endif
       }
@@ -125,7 +132,8 @@ int main(const int argc, char* argsv[]) {
       writes++;
     }
 
-    current_time += delta_t;
+    iteration++;
+    current_time = start_time + delta_t * iteration;
   }
 
   std::cout << std::endl;
@@ -157,9 +165,9 @@ void printUsage(const std::string& additionalNote,
             << "  [-d <double>]     Specify the simulation delta time "
                "(t_delta), default=0.014\n"
             << "  [-s <double>]     Specify how often the output will be "
-               "written (step_size), default=50\n"
+               "written (step_size), default=1\n"
             << "                    note that this is independent of the time "
-               "resolution (t_delta) and dependent of the simulation time"
+               "resolution (t_delta) and dependent on the simulation time"
             << "\nExample:\n"
             << "  " << programName
             << " -f ./input/eingabe-sonne.txt -t 100 -d 0.14\n";
@@ -179,7 +187,6 @@ void prepareOutputDirectory(const int argsc, char* argv[]) {
   std::string output_sub_directory = timeString.str();
 
   // output at outputdirectory/currentTime
-  // if init due to code style
   const std::filesystem::path output_directory_path =
       output_directory + output_sub_directory;
   output_directory = std::string(output_directory_path);
