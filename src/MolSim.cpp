@@ -102,3 +102,4 @@ void plotParticles(int iteration) {
   outputWriter::XYZWriter writer;
   writer.plotParticles(particles, out_name, iteration);
 }
+
