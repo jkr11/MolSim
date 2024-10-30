@@ -34,7 +34,6 @@ std::string output_directory = "./output/";
 const std::string red = "\033[31m";
 const std::string reset = "\033[0m";
 
-// TODO: what data structure to pick?
 std::list<Particle> particles;
 
 Gravity gravity;

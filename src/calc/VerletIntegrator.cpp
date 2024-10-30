@@ -29,11 +29,6 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
     const dvec3 g12 = force.directionalForce(p1, p2);
     p1.setF(p1.getF() + g12);  // F_i = \sum_j F_ij
     p2.setF(p2.getF() - g12);  // g12 = -g21
-
-    // TODO: what does this even mean?
-    //  maybe we should only do one direction since other is covered before
-    //  optimizing also later on maybe force isn't bidirectional anymore? what
-    //  then?
   });
   // Now we use F_t and F_{t-1} to calculate the current velocity
   particle_container.single_iterator([this](Particle& p) {

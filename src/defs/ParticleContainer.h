@@ -24,7 +24,7 @@ class ParticleContainer {
 
   /**
    * @brief Create particle container from vector of particles
-   * @param particles
+   * @param particles is the vector of Particles to be used
    * @note A new vector is initialized to hold the references to the passed
    * particles
    */
@@ -32,7 +32,7 @@ class ParticleContainer {
 
   /**
    * @brief Create particle container from list of particles
-   * @param particles
+   * @param particles is the list of Particles to be used
    * @note A new vector is initialized to hold the references to the passed
    * particles
    */
@@ -102,9 +102,7 @@ class ParticleContainer {
   template <typename BinOp>
   void pairIterator(const BinOp& f) {
     // note that the upper tri-diag matrix is iterated over
-    for (size_t i = 0; i < particles.size();
-         ++i) {  // TODO: I assume the last iteration of the outer loop is
-                 // unnecessary
+    for (size_t i = 0; i < particles.size(); ++i) {
       for (size_t j = i + 1; j < particles.size(); ++j) {
         f(particles[i], particles[j]);
       }
