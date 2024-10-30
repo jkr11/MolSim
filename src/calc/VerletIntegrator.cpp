@@ -5,11 +5,6 @@
 
 #include "../utils/ArrayUtils.h"
 
-/**
- * @brief does one step in time using the Verlet integration method on the
- * particle_container, updating X -> F -> V
- * @param particle_container Reference to the current particle-system
- */
 void VerletIntegrator::step(ParticleContainer& particle_container) {
   // update positions
   particle_container.single_iterator([this](Particle& p) {
