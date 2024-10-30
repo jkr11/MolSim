@@ -1,4 +1,3 @@
-#include <defs/Particle.h>
 #include <getopt.h>
 
 #include <chrono>
@@ -9,6 +8,7 @@
 
 #include "FileReader.h"
 #include "calc/Verlet.h"
+#include "defs/Particle.h"
 #include "forces/gravity.h"
 #include "outputWriter/VTKWriter.h"
 #include "outputWriter/XYZWriter.h"
@@ -26,7 +26,7 @@ constexpr int output_interval = 32;
 constexpr double start_time = 0;
 double t_end = 100;
 double delta_t = 0.014;
-double output_time_step_size = 0.01;
+double output_time_step_size = 1;
 
 // parent directory, subdirectory will be appended at runtime
 std::string output_directory = "./output/";
@@ -46,6 +46,10 @@ int main(const int argc, char* argsv[]) {
 
   while ((opt = getopt(argc, argsv, "hf:t:d:s:")) != -1) {
     try {
+      if (optarg == nullptr) {
+        throw std::logic_error("missing option after flag");
+      }
+
       switch (opt) {
         case 'h':
           printUsage("Display Help page, no execution", argsv[0]);
@@ -62,21 +66,27 @@ int main(const int argc, char* argsv[]) {
           output_time_step_size = std::stod(optarg);
           break;
         default:
-          printUsage("unsupported flag '-" + std::string(optarg) + "' detected",
+          printUsage("unsupported flag '-" +
+                         std::string(1, static_cast<char>(opt)) + "' detected",
                      argsv[0]);
       }
     } catch (const std::invalid_argument&) {
-      printUsage("Invalid arg for option -" + std::string(optarg) + ": '" +
+      printUsage("Invalid arg for option -" +
+                     std::string(1, static_cast<char>(opt)) + ": '" +
                      std::string(optarg) + "'",
                  argsv[0]);
     } catch (const std::out_of_range&) {
-      printUsage("Out-of-range value for option -" + std::string(optarg) +
-                     ": '" + std::string(optarg) + "'",
+      printUsage("Out-of-range value for option -" +
+                     std::string(1, static_cast<char>(opt)) + ": '" +
+                     std::string(optarg) + "'",
                  argsv[0]);
+    } catch (const std::logic_error&) {
+      printUsage(" ^^", argsv[0]);
     }
   }
 
-  if (!std::filesystem::exists(input_file)) {
+  if (!std::filesystem::exists(input_file) ||
+      std::filesystem::is_directory(input_file)) {
     printUsage("Input File '" + input_file + "' does not exist", argsv[0]);
   }
   if (input_file.empty()) {
@@ -107,7 +117,6 @@ int main(const int argc, char* argsv[]) {
       plotParticles(iteration, writer, particle_container);
 
       if (writes % output_interval == 0) {
-        // clean up print if DEBUG is enabled
 #ifdef DEBUG
         std::cout << "Iteration " << iteration << " finished." << std::endl;
 #else
@@ -124,7 +133,7 @@ int main(const int argc, char* argsv[]) {
     }
 
     iteration++;
-    current_time = delta_t * iteration;
+    current_time = start_time + delta_t * iteration;
   }
 
   std::cout << std::endl;
@@ -156,9 +165,9 @@ void printUsage(const std::string& additionalNote,
             << "  [-d <double>]     Specify the simulation delta time "
                "(t_delta), default=0.014\n"
             << "  [-s <double>]     Specify how often the output will be "
-               "written (step_size), default=50\n"
+               "written (step_size), default=1\n"
             << "                    note that this is independent of the time "
-               "resolution (t_delta) and dependent of the simulation time"
+               "resolution (t_delta) and dependent on the simulation time"
             << "\nExample:\n"
             << "  " << programName
             << " -f ./input/eingabe-sonne.txt -t 100 -d 0.14\n";
@@ -178,7 +187,6 @@ void prepareOutputDirectory(const int argsc, char* argv[]) {
   std::string output_sub_directory = timeString.str();
 
   // output at outputdirectory/currentTime
-  // if init due to code style
   const std::filesystem::path output_directory_path =
       output_directory + output_sub_directory;
   output_directory = std::string(output_directory_path);
