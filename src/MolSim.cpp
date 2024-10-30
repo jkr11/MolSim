@@ -21,7 +21,8 @@ void printUsage(const std::string& additionalNote,
                 const std::string& programName);
 void prepareOutputDirectory(int argsc, char* argv[]);
 
-int output_interval = 10;  // in relation to vtk writes, seems to be decent
+constexpr int output_interval = 32;
+// print every x vtk writes, seems to be decent
 constexpr double start_time = 0;
 double t_end = 100;
 double delta_t = 0.014;
@@ -65,11 +66,11 @@ int main(const int argc, char* argsv[]) {
                      argsv[0]);
       }
     } catch (const std::invalid_argument&) {
-      printUsage("Invalid arg for option -" + std::string(1, opt) + ": '" +
+      printUsage("Invalid arg for option -" + std::string(optarg) + ": '" +
                      std::string(optarg) + "'",
                  argsv[0]);
     } catch (const std::out_of_range&) {
-      printUsage("Out-of-range value for option -" + std::string(1, opt) +
+      printUsage("Out-of-range value for option -" + std::string(optarg) +
                      ": '" + std::string(optarg) + "'",
                  argsv[0]);
     }
@@ -87,8 +88,7 @@ int main(const int argc, char* argsv[]) {
             << ", output_time_step_size: " << output_time_step_size
             << std::endl;
 
-  FileReader fileReader;
-  fileReader.readFile(particles, input_file);
+  FileReader::readFile(particles, input_file);
 
   // setup Simulation
   ParticleContainer particle_container(particles);
@@ -96,18 +96,15 @@ int main(const int argc, char* argsv[]) {
   outputWriter::VTKWriter writer;
 
   double current_time = start_time;
-  double next_output_time = start_time;
 
   int iteration = 0;
   int writes = 0;
 
   // for this loop, we assume: current x, current f and current v are known
-  while (current_time < t_end) {
+  while (current_time <= t_end) {
     verlet_integrator.step(particle_container);
-    iteration++;
-    if (current_time >= next_output_time) {
+    if (current_time >= writes * output_time_step_size) {
       plotParticles(iteration, writer, particle_container);
-      next_output_time = current_time + output_time_step_size;
 
       if (writes % output_interval == 0) {
         // clean up print if DEBUG is enabled
@@ -117,7 +114,8 @@ int main(const int argc, char* argsv[]) {
         const double completion_percentage = 100 * current_time / t_end;
         const std::string output_string =
             "\r[" + std::to_string(completion_percentage) +
-            " %]: " + std::to_string(iteration) + " iterations finished";
+            " %]: " + std::to_string(iteration) +
+            " iterations finished at t=" + std::to_string(current_time);
         std::cout << output_string << std::flush;
 #endif
       }
@@ -125,7 +123,8 @@ int main(const int argc, char* argsv[]) {
       writes++;
     }
 
-    current_time += delta_t;
+    iteration++;
+    current_time = delta_t * iteration;
   }
 
   std::cout << std::endl;
