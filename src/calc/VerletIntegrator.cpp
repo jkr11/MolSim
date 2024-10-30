@@ -1,7 +1,7 @@
 //
 // Created by jkr on 10/18/24.
 //
-#include "Verlet.h"
+#include "VerletIntegrator.h"
 
 #include "../utils/ArrayUtils.h"
 

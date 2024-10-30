@@ -4,13 +4,18 @@
 #pragma once
 #include "../defs/Particle.h"
 #include "../utils/ArrayUtils.h"
-#include "force.h"
+#include "Force.h"
 
 /**
- * // Gravitational force F_{1,2}
+ * @brief Gravitational force F_{1,2}
  */
-class Gravity final : public Force {
+class Gravity : public Force {
  public:
+  /**
+   *
+   */
+  Gravity() = default;
+
   /**
    * Compute the gravitational force between two particles p1 and p2
    * @param p1 Particle1

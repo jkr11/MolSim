@@ -13,15 +13,19 @@
 class VerletIntegrator : public Integrator {
  public:
   /**
+   * @brief Create VerletIntegrator object
    * @param force Reference to the type of force applied each iteration
    * @param delta_t Delta time
    */
-  VerletIntegrator(Force& force, const double delta_t)
-      : Integrator(force, delta_t) {}
+  VerletIntegrator(Force& force, double delta_t) : Integrator(force, delta_t) {}
+
+  /**
+   * @brief Destructor
+   */
   ~VerletIntegrator() override = default;
 
   /**
-   * Advance particle-system by one time-step.
+   * @brief Advance particle-system by one time-step.
    * @note Update order: \n
    *   1) Particle positions \n
    *   2) Intra particular forces \n

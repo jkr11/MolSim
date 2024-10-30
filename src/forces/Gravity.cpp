@@ -1,7 +1,7 @@
 //
 // Created by jkr on 10/18/24.
 //
-#include "gravity.h"
+#include "Gravity.h"
 
 dvec3 Gravity::directionalForce(Particle& p1, Particle& p2) const {
   const dvec3 r = p2.getX() - p1.getX();
