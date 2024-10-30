@@ -1,8 +1,9 @@
 //
 // Created by jkr on 10/18/24.
 //
-#include "../utils/ArrayUtils.h"
 #include "VerletIntegrator.h"
+
+#include "../utils/ArrayUtils.h"
 
 /**
  * @brief does one step in time using the Verlet integration method on the

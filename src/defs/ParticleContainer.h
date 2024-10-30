@@ -25,14 +25,16 @@ class ParticleContainer {
   /**
    * @brief Create particle container from vector of particles
    * @param particles
-   * @note A new vector is initialized to hold the references to the passed particles
+   * @note A new vector is initialized to hold the references to the passed
+   * particles
    */
   explicit ParticleContainer(const std::vector<Particle>& particles);
 
   /**
    * @brief Create particle container from list of particles
    * @param particles
-   * @note A new vector is initialized to hold the references to the passed particles
+   * @note A new vector is initialized to hold the references to the passed
+   * particles
    */
   explicit ParticleContainer(const std::list<Particle>& particles);
 
