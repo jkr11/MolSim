@@ -17,7 +17,7 @@ class VerletIntegrator : public Integrator {
    * @param force Reference to the type of force applied each iteration
    * @param delta_t Delta time
    */
-  VerletIntegrator(Force& force, const double delta_t)
+  VerletIntegrator(Force& force, double delta_t)
       : Integrator(force, delta_t) {}
 
   /**

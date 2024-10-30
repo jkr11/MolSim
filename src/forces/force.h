@@ -16,7 +16,7 @@ class Force {
    * @brief Create Force object
    * @note Since this is an interface, it's invalid
    */
-  Force() = delete;
+  Force() = default;
 
   /**
    * @brief Virtual destructor for all Force inheritors

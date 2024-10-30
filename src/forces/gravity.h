@@ -12,6 +12,11 @@
 class Gravity : public Force {
  public:
   /**
+   *
+   */
+  Gravity() = default;
+
+  /**
    * Compute the gravitational force between two particles p1 and p2
    * @param p1 Particle1
    * @param p2 Particle2

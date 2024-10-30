@@ -19,7 +19,7 @@ class Integrator {
    * @param delta_t Delta time
    * @note Since this is an interface, it's invalid
    */
-  Integrator(Force& force, double delta_t);
+  Integrator(Force& force, double delta_t) : force(force), delta_t(delta_t) {};
 
   /**
    * @brief Virtual destructor for all Integrator inheritors
