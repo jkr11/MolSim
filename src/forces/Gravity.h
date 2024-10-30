@@ -4,7 +4,7 @@
 #pragma once
 #include "../defs/Particle.h"
 #include "../utils/ArrayUtils.h"
-#include "force.h"
+#include "Force.h"
 
 /**
  * @brief Gravitational force F_{1,2}

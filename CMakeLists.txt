@@ -27,8 +27,8 @@ file(GLOB_RECURSE MY_SRC
 
 # create make target
 add_executable(MolSim ${MY_SRC}
-        src/calc/Verlet.h
-        src/calc/Verlet.cpp
+        src/calc/VerletIntegrator.h
+        src/calc/VerletIntegrator.cpp
         src/defs/ParticleContainer.cpp)
 
 # set cxx standard. You may raise this if you want.

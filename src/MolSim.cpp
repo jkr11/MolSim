@@ -7,9 +7,9 @@
 #include <vector>
 
 #include "FileReader.h"
-#include "calc/Verlet.h"
+#include "calc/VerletIntegrator.h"
 #include "defs/Particle.h"
-#include "forces/gravity.h"
+#include "forces/Gravity.h"
 #include "outputWriter/VTKWriter.h"
 #include "outputWriter/XYZWriter.h"
 #include "utils/ArrayUtils.h"

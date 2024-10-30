@@ -1,6 +1,6 @@
 #include "../defs/Particle.h"
 #include "../defs/ParticleContainer.h"
-#include "../forces/force.h"
+#include "../forces/Force.h"
 #include "../utils/ArrayUtils.h"
 #pragma once
 
