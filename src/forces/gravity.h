@@ -7,9 +7,9 @@
 #include "force.h"
 
 /**
- * // Gravitational force F_{1,2}
+ * @brief Gravitational force F_{1,2}
  */
-class Gravity final : public Force {
+class Gravity : public Force {
  public:
   /**
    * Compute the gravitational force between two particles p1 and p2
