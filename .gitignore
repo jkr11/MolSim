@@ -53,6 +53,8 @@ cmake_install.cmake
 CMakeCache.txt
 Testing
 Makefile
+CMakeDoxyfile.in
+CMakeDoxygenDefaults.cmake
 # for now this is the executable
 MolSim
 #--------------------------------
@@ -64,3 +66,4 @@ MolSim
 .vtu
 
 doxys_documentation/
+coverage/

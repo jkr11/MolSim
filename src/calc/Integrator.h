@@ -1,18 +1,34 @@
 #include "../defs/Particle.h"
 #include "../defs/ParticleContainer.h"
-#include "../forces/force.h"
+#include "../forces/Force.h"
 #include "../utils/ArrayUtils.h"
 #pragma once
 
+/**
+ * @brief Interface for different types of integrators
+ */
 class Integrator {
-protected:
+ protected:
   Force& force;
   double delta_t;
 
-public:
-  Integrator() = delete;
-  Integrator(Force& _force, const double _delta_t) : force{_force}, delta_t{_delta_t} {}
-  virtual ~Integrator() {}
-  // maybe don't use environment here, I think we only need dt and other things can both be pair or single forces eg Gravity, lennard_jones etc
+ public:
+  /**
+   * @brief Create Integrator object
+   * @param force Reference to the type of force applied each iteration
+   * @param delta_t Delta time
+   * @note Since this is an interface, it's invalid
+   */
+  Integrator(Force& force, double delta_t) : force(force), delta_t(delta_t){};
+
+  /**
+   * @brief Virtual destructor for all Integrator inheritors
+   */
+  virtual ~Integrator() = default;
+
+  /**
+   * @brief Virtual method to advance time by one step
+   * @param particle_container
+   */
   virtual void step(ParticleContainer& particle_container) = 0;
 };

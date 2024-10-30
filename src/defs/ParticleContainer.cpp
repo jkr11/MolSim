@@ -22,22 +22,12 @@ void ParticleContainer::addParticle(const Particle& p) {
   particles.push_back(p);
 }
 
-auto ParticleContainer::begin() {
-  return particles.begin();
-}
+auto ParticleContainer::begin() { return particles.begin(); }
 
-auto ParticleContainer::end() {
-  return particles.end();
-}
+auto ParticleContainer::end() { return particles.end(); }
 
-Particle ParticleContainer::operator[](const int n) {
-  return particles[n];
-}
+Particle ParticleContainer::operator[](const int n) { return particles[n]; }
 
-std::vector<Particle> ParticleContainer::getParticles() {
-  return particles;
-}
+std::vector<Particle> ParticleContainer::getParticles() { return particles; }
 
-std::size_t ParticleContainer::size() const {
-  return particles.size();
-}
+std::size_t ParticleContainer::size() const { return particles.size(); }
