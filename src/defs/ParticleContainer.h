@@ -75,6 +75,12 @@ class ParticleContainer {
   std::vector<Particle> getParticles();
 
   /**
+   * @brief Get reference to vector of all particles in the container
+   * @return reference to vector of all particles
+   */
+  std::vector<Particle>& getParticlesReference();
+
+  /**
    * @brief Get the number of particles in the container
    * @return number of particles in the container
    */

@@ -30,4 +30,6 @@ Particle ParticleContainer::operator[](const int n) { return particles[n]; }
 
 std::vector<Particle> ParticleContainer::getParticles() { return particles; }
 
+std::vector<Particle>& ParticleContainer::getParticlesReference() { return particles; }
+
 std::size_t ParticleContainer::size() const { return particles.size(); }
