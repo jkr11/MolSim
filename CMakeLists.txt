@@ -34,7 +34,9 @@ add_executable(MolSim ${MY_SRC}
         src/forces/LennardJones.cpp
         src/defs/ParticleGenerator.h
         src/defs/CuboidGenerator.h
-        src/defs/CuboidGenerator.cpp)
+        src/defs/CuboidGenerator.cpp
+        src/utils/CuboidReader.h
+        src/utils/CuboidReader.cpp)
 
 # set cxx standard. You may raise this if you want.
 target_compile_features(MolSim

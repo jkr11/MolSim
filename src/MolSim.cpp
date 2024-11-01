@@ -13,6 +13,7 @@
 #include "outputWriter/VTKWriter.h"
 #include "outputWriter/XYZWriter.h"
 #include "utils/ArrayUtils.h"
+#include "utils/CuboidReader.h"
 
 /**** forward declaration of the calculation functions ****/
 void plotParticles(int iteration, outputWriter::VTKWriter& vtkWriter,
@@ -97,13 +98,13 @@ int main(const int argc, char* argsv[]) {
             << ", output_time_step_size: " << output_time_step_size
             << std::endl;
 
-  FileReader::readFile(particles, input_file);
+  //FileReader::readFile(particles, input_file);
 
   // setup Simulation
   ParticleContainer particle_container(particles);
   VerletIntegrator verlet_integrator(gravity, delta_t);
   outputWriter::VTKWriter writer;
-
+  CuboidReader::readCuboidFile(particle_container, input_file);
   double current_time = start_time;
 
   int iteration = 0;
@@ -147,6 +148,7 @@ void plotParticles(const int iteration, outputWriter::VTKWriter& vtkWriter,
 
   for (auto& p : particle_container.getParticles()) {
     vtkWriter.plotParticle(p);
+    std::cout << "particles plotted\n" << std::endl;
   }
 
   vtkWriter.writeFile(output_directory + "/MD_vtk", iteration);

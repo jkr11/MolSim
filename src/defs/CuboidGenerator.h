@@ -38,7 +38,7 @@ class CuboidGenerator : public ParticleGenerator {
    * @param container particlecontainer which contains the vector in which this
    * cuboid is saved
    */
-  void generate(ParticleContainer &container) const override = 0;
+  void generate(ParticleContainer &container) const override;
 };
 
 #endif  // CUBOIDGENERATOR_H

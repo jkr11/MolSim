@@ -87,6 +87,12 @@ class ParticleContainer {
   [[nodiscard]] std::size_t size() const;
 
   /**
+   * @brief setter for the vector of particles
+   * @param particles particles to be set in the container
+   */
+  void setParticles(const std::vector<Particle>& particles);
+
+  /**
    * @brief Iterator over single particles p
    * @tparam UnOp Single parameter lambda taking a particle as input
    * @param f Lambda that's applied to (p)

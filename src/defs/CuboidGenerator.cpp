@@ -3,6 +3,8 @@
 //
 #include "CuboidGenerator.h"
 
+#include <iostream>
+#include <ostream>
 CuboidGenerator::CuboidGenerator(const dvec3 &corner,
                                  const std::array<int, 3> &dimensions,
                                  const double h, const double m,
@@ -20,13 +22,16 @@ void CuboidGenerator::generate(ParticleContainer &container) const {
   std::vector<Particle> particles = container.getParticlesReference();
   particles.reserve(
       static_cast<int>(dimensions[0] * dimensions[1] * dimensions[2]));
+  std::cout << "reserved: " << dimensions[0] * dimensions[1] * dimensions[2] << std::endl;
   for (int i = 0; i < dimensions[0]; i++) {
     for (int j = 0; j < dimensions[1]; j++) {
       for (int k = 0; k < dimensions[2]; k++) {
         dvec3 position = {corner[0] + i * h, corner[1] + j * h,
                           corner[2] + k * h};
-        particles.emplace_back(position, initialVelocity, m, 1.0, 1.0);
+        particles.emplace_back(position, initialVelocity, m, 1.0, 1.0, type);
       }
     }
   }
+  container.setParticles(particles);
+  std::cout << "particles: " << particles.size() << std::endl;
 }
