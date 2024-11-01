@@ -152,22 +152,24 @@ void plotParticles(const int iteration, outputWriter::VTKWriter& vtkWriter,
 
 void printUsage(const std::string& additionalNote,
                 const std::string& programName) {
-  std::cerr << red << "[Error:] " << additionalNote << reset << "\n";
-  std::cout << "Usage: " << programName << " [options]\n"
-            << "Options:\n"
-            << "  -h                Show this help message\n"
-            << "  -f <filename>     Specify the input file\n"
-            << "  [-t <double>]     Specify the simulation end time (t_end), "
-               "default=100\n"
-            << "  [-d <double>]     Specify the simulation delta time "
-               "(t_delta), default=0.014\n"
-            << "  [-s <double>]     Specify how often the output will be "
-               "written (step_size), default=1\n"
-            << "                    note that this is independent of the time "
-               "resolution (t_delta) and dependent on the simulation time"
-            << "\nExample:\n"
-            << "  " << programName
-            << " -f ./input/eingabe-sonne.txt -t 100 -d 0.14\n";
+  // std::cerr << red << "[Error:] " << additionalNote << reset << "\n";
+  SpdWrapper::get()->error("{}",additionalNote);
+  SpdWrapper::get()->info(
+      "Usage: {} [options]\n"
+      "Options:\n"
+      "  -h                Show this help message\n"
+      "  -f <filename>     Specify the input file\n"
+      "  [-t <double>]     Specify the simulation end time (t_end), "
+      "default=100\n"
+      "  [-d <double>]     Specify the simulation delta time (t_delta), "
+      "default=0.014\n"
+      "  [-s <double>]     Specify how often the output will be written "
+      "(step_size), default=1\n"
+      "                    note that this is independent of the time "
+      "resolution (t_delta) and dependent on the simulation time\n"
+      "Example:\n"
+      "  {} -f ./input/eingabe-sonne.txt -t 100 -d 0.14\n",
+      programName, programName);
 
   exit(EXIT_FAILURE);
 }
@@ -190,7 +192,8 @@ void prepareOutputDirectory(const int argsc, char* argv[]) {
 
   if (!is_directory(output_directory_path)) {
     create_directories(output_directory_path);
-    std::cout << "Output at: " << output_directory_path << std::endl;
+    // std::cout << "Output at: " << output_directory_path << std::endl;
+    SpdWrapper::get()->info("Output at {}", output_directory_path.string());
   }
 
   // save configuration (input) for future use
