@@ -153,7 +153,7 @@ void plotParticles(const int iteration, outputWriter::VTKWriter& vtkWriter,
 void printUsage(const std::string& additionalNote,
                 const std::string& programName) {
   // std::cerr << red << "[Error:] " << additionalNote << reset << "\n";
-  SpdWrapper::get()->error("{}",additionalNote);
+  SpdWrapper::get()->error("{}", additionalNote);
   SpdWrapper::get()->info(
       "Usage: {} [options]\n"
       "Options:\n"
