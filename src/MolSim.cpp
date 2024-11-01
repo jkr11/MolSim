@@ -13,6 +13,7 @@
 #include "outputWriter/VTKWriter.h"
 #include "outputWriter/XYZWriter.h"
 #include "utils/ArrayUtils.h"
+#include "utils/SpdWrapper.h"
 
 /**** forward declaration of the calculation functions ****/
 void plotParticles(int iteration, outputWriter::VTKWriter& vtkWriter,
@@ -42,7 +43,7 @@ int main(const int argc, char* argsv[]) {
   // read optional arguments
   std::string input_file;
   int opt;
-
+  SpdWrapper::get()->info("Application started");
   while ((opt = getopt(argc, argsv, "hf:t:d:s:")) != -1) {
     try {
       if (optarg == nullptr) {
@@ -93,9 +94,8 @@ int main(const int argc, char* argsv[]) {
   }
 
   prepareOutputDirectory(argc, argsv);
-  std::cout << "t_end: " << t_end << ", delta_t: " << delta_t
-            << ", output_time_step_size: " << output_time_step_size
-            << std::endl;
+  SpdWrapper::get()->info("t_end: {}, delta_t: {}, output_time_step_size: {}",
+                          t_end, delta_t, output_time_step_size);
 
   FileReader::readFile(particles, input_file);
 
@@ -117,7 +117,7 @@ int main(const int argc, char* argsv[]) {
 
       if (writes % output_interval == 0) {
 #ifdef DEBUG
-        std::cout << "Iteration " << iteration << " finished." << std::endl;
+        SpdWrapper::get()->debug("Iteration {} finished.", iteration);
 #else
         const double completion_percentage = 100 * current_time / t_end;
         const std::string output_string =
@@ -134,9 +134,7 @@ int main(const int argc, char* argsv[]) {
     iteration++;
     current_time = start_time + delta_t * iteration;
   }
-
-  std::cout << std::endl;
-  std::cout << "output written. Terminating..." << std::endl;
+  SpdWrapper::get()->info("Output written. Terminating...");
 
   return 0;
 }
