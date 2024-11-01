@@ -10,6 +10,8 @@
 #include "calc/VerletIntegrator.h"
 #include "defs/Particle.h"
 #include "forces/Gravity.h"
+#include "forces/Force.h"
+#include "forces/LennardJones.h"
 #include "outputWriter/VTKWriter.h"
 #include "outputWriter/XYZWriter.h"
 #include "utils/ArrayUtils.h"
@@ -38,6 +40,7 @@ const std::string reset = "\033[0m";
 std::list<Particle> particles;
 
 Gravity gravity;
+LennardJones lennardjones;
 
 int main(const int argc, char* argsv[]) {
   // read optional arguments
@@ -102,7 +105,7 @@ int main(const int argc, char* argsv[]) {
 
   // setup Simulation
   ParticleContainer particle_container(particles);
-  VerletIntegrator verlet_integrator(gravity, delta_t);
+  VerletIntegrator verlet_integrator(lennardjones, delta_t);
   outputWriter::VTKWriter writer;
   CuboidReader::readCuboidFile(particle_container, input_file);
   double current_time = start_time;
@@ -113,10 +116,10 @@ int main(const int argc, char* argsv[]) {
   // for this loop, we assume: current x, current f and current v are known
   while (current_time <= t_end) {
     verlet_integrator.step(particle_container);
-    if (current_time >= writes * output_time_step_size) {
-      plotParticles(iteration, writer, particle_container);
+    //if (current_time >= writes * output_time_step_size) {
 
       if (writes % output_interval == 0) {
+        plotParticles(iteration, writer, particle_container);
 #ifdef DEBUG
         std::cout << "Iteration " << iteration << " finished." << std::endl;
 #else
@@ -128,9 +131,8 @@ int main(const int argc, char* argsv[]) {
         std::cout << output_string << std::flush;
 #endif
       }
-
       writes++;
-    }
+    //}
 
     iteration++;
     current_time = start_time + delta_t * iteration;

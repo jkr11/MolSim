@@ -34,4 +34,7 @@ std::vector<Particle>& ParticleContainer::getParticlesReference() { return parti
 
 std::size_t ParticleContainer::size() const { return particles.size(); }
 
+void ParticleContainer::resize(std::size_t size) { particles.resize(size); }
+
+
 void ParticleContainer::setParticles(const std::vector<Particle>& Particles) { particles = Particles; }

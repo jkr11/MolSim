@@ -13,7 +13,9 @@ class CuboidGenerator : public ParticleGenerator {
   double h;
   double m;
   const dvec3 initialVelocity;
-  double temp;
+  double mv;
+  double epsilon;
+  double sigma;
   const int type{};
 
  public:
@@ -25,13 +27,15 @@ class CuboidGenerator : public ParticleGenerator {
    * @param m mass of the particles in the cuboid
    * @param initialVelocity velocity (imagine this as a net-zero movement of all
    * particles) given by the predefined maxwell-boltzmann generator
-   * @param temperature temperature of our system
+   * @param epsilon lj - epsilon
+   * @param sigma lj - sigma
+   * @param mv temperature of our system
    * @param type type of the particle in the system
    */
   CuboidGenerator(const dvec3 &corner, const std::array<int, 3> &dimensions,
                   const double h, const double m,
                   const std::array<double, 3> &initialVelocity,
-                  const double temperature, const int type);
+                  const double mv, const double epsilon,const double sigma, const int type);
 
   /**
    * @brief generates particles in the shape of a cuboid

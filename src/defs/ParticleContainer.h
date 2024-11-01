@@ -93,6 +93,12 @@ class ParticleContainer {
   void setParticles(const std::vector<Particle>& particles);
 
   /**
+   * @brief resizes particles to the desires size, allows for faster additions
+   * @param size desired size of the vector
+   */
+  void resize(std::size_t size);
+
+  /**
    * @brief Iterator over single particles p
    * @tparam UnOp Single parameter lambda taking a particle as input
    * @param f Lambda that's applied to (p)
