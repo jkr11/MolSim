@@ -29,7 +29,7 @@ void CuboidReader::readCuboidFile(ParticleContainer& particle_container,
       getline(inputfile, line);
       std::cout << "Read line: " + line << std::endl;
     }
-    //sstd::getline(inputfile, line);
+    // std::getline(inputfile, line);
     std::istringstream numstream(line);
     numstream >> ncubes;
     std::cout << "Reading " << ncubes << " cuboids from file " << fileName

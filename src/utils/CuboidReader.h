@@ -8,8 +8,8 @@
 #include "defs/ParticleContainer.h"
 class CuboidReader {
   public:
-  CuboidReader();
-  ~CuboidReader();
+  CuboidReader() = default;
+  ~CuboidReader() = default;
   static void readCuboidFile(ParticleContainer& particle_container, std::string& fileName);
 };
 #endif //CUBOIDREADER_H
