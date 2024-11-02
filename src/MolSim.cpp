@@ -13,7 +13,6 @@
 #include "outputWriter/VTKWriter.h"
 #include "outputWriter/XYZWriter.h"
 #include "utils/ArrayUtils.h"
-#include "utils/SpdWrapper.h"
 
 /**** forward declaration of the calculation functions ****/
 void plotParticles(int iteration, outputWriter::VTKWriter& vtkWriter,
@@ -43,10 +42,11 @@ int main(const int argc, char* argsv[]) {
   // read optional arguments
   std::string input_file;
   int opt;
-  SpdWrapper::get()->info("Application started");
+
   while ((opt = getopt(argc, argsv, "hf:t:d:s:")) != -1) {
     try {
-      if (optarg == nullptr) {
+      if ((opt == 'f' || opt == 't' || opt == 'd' || opt == 's') &&
+          optarg == nullptr) {
         throw std::logic_error("missing option after flag");
       }
 
@@ -94,8 +94,9 @@ int main(const int argc, char* argsv[]) {
   }
 
   prepareOutputDirectory(argc, argsv);
-  SpdWrapper::get()->info("t_end: {}, delta_t: {}, output_time_step_size: {}",
-                          t_end, delta_t, output_time_step_size);
+  std::cout << "t_end: " << t_end << ", delta_t: " << delta_t
+            << ", output_time_step_size: " << output_time_step_size
+            << std::endl;
 
   FileReader::readFile(particles, input_file);
 
@@ -117,7 +118,7 @@ int main(const int argc, char* argsv[]) {
 
       if (writes % output_interval == 0) {
 #ifdef DEBUG
-        SpdWrapper::get()->debug("Iteration {} finished.", iteration);
+        std::cout << "Iteration " << iteration << " finished." << std::endl;
 #else
         const double completion_percentage = 100 * current_time / t_end;
         const std::string output_string =
@@ -134,7 +135,9 @@ int main(const int argc, char* argsv[]) {
     iteration++;
     current_time = start_time + delta_t * iteration;
   }
-  SpdWrapper::get()->info("Output written. Terminating...");
+
+  std::cout << std::endl;
+  std::cout << "output written. Terminating..." << std::endl;
 
   return 0;
 }
@@ -152,24 +155,22 @@ void plotParticles(const int iteration, outputWriter::VTKWriter& vtkWriter,
 
 void printUsage(const std::string& additionalNote,
                 const std::string& programName) {
-  // std::cerr << red << "[Error:] " << additionalNote << reset << "\n";
-  SpdWrapper::get()->error("{}", additionalNote);
-  SpdWrapper::get()->info(
-      "Usage: {} [options]\n"
-      "Options:\n"
-      "  -h                Show this help message\n"
-      "  -f <filename>     Specify the input file\n"
-      "  [-t <double>]     Specify the simulation end time (t_end), "
-      "default=100\n"
-      "  [-d <double>]     Specify the simulation delta time (t_delta), "
-      "default=0.014\n"
-      "  [-s <double>]     Specify how often the output will be written "
-      "(step_size), default=1\n"
-      "                    note that this is independent of the time "
-      "resolution (t_delta) and dependent on the simulation time\n"
-      "Example:\n"
-      "  {} -f ./input/eingabe-sonne.txt -t 100 -d 0.14\n",
-      programName, programName);
+  std::cerr << red << "[Error:] " << additionalNote << reset << "\n";
+  std::cout << "Usage: " << programName << " [options]\n"
+            << "Options:\n"
+            << "  -h                Show this help message\n"
+            << "  -f <filename>     Specify the input file\n"
+            << "  [-t <double>]     Specify the simulation end time (t_end), "
+               "default=100\n"
+            << "  [-d <double>]     Specify the simulation delta time "
+               "(t_delta), default=0.014\n"
+            << "  [-s <double>]     Specify how often the output will be "
+               "written (step_size), default=1\n"
+            << "                    note that this is independent of the time "
+               "resolution (t_delta) and dependent on the simulation time"
+            << "\nExample:\n"
+            << "  " << programName
+            << " -f ./input/eingabe-sonne.txt -t 100 -d 0.14\n";
 
   exit(EXIT_FAILURE);
 }
@@ -192,8 +193,7 @@ void prepareOutputDirectory(const int argsc, char* argv[]) {
 
   if (!is_directory(output_directory_path)) {
     create_directories(output_directory_path);
-    // std::cout << "Output at: " << output_directory_path << std::endl;
-    SpdWrapper::get()->info("Output at {}", output_directory_path.string());
+    std::cout << "Output at: " << output_directory_path << std::endl;
   }
 
   // save configuration (input) for future use
