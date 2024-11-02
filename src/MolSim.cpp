@@ -45,7 +45,8 @@ int main(const int argc, char* argsv[]) {
 
   while ((opt = getopt(argc, argsv, "hf:t:d:s:")) != -1) {
     try {
-      if (optarg == nullptr) {
+      if ((opt == 'f' || opt == 't' || opt == 'd' || opt == 's') &&
+          optarg == nullptr) {
         throw std::logic_error("missing option after flag");
       }
 
