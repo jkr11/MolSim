@@ -6,7 +6,6 @@
 #include <list>
 #include <vector>
 
-#include "FileReader.h"
 #include "calc/VerletIntegrator.h"
 #include "defs/Particle.h"
 #include "forces/Gravity.h"

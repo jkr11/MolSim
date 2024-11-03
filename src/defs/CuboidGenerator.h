@@ -6,7 +6,11 @@
 #define CUBOIDGENERATOR_H
 #include "ParticleGenerator.h"
 
-class CuboidGenerator : public ParticleGenerator {
+/**
+ * Generates Particles to a container in the shape of a cuboid [dim1, dim2,
+ * dim3]
+ */
+class CuboidGenerator final : public ParticleGenerator {
  private:
   dvec3 corner;
   std::array<int, 3> dimensions;
