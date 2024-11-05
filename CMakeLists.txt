@@ -31,7 +31,14 @@ add_executable(MolSim ${MY_SRC}
         src/calc/VerletIntegrator.cpp
         src/defs/ParticleContainer.cpp
         src/utils/SpdWrapper.h
-        src/utils/SpdWrapper.cpp)
+        src/utils/SpdWrapper.cpp
+        src/forces/LennardJones.h
+        src/forces/LennardJones.cpp
+        src/defs/ParticleGenerator.h
+        src/defs/CuboidGenerator.h
+        src/defs/CuboidGenerator.cpp
+        src/utils/CuboidReader.h
+        src/utils/CuboidReader.cpp)
 
 # set cxx standard. You may raise this if you want.
 target_compile_features(MolSim

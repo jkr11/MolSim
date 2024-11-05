@@ -75,10 +75,28 @@ class ParticleContainer {
   std::vector<Particle> getParticles();
 
   /**
+   * @brief Get reference to vector of all particles in the container
+   * @return reference to vector of all particles
+   */
+  std::vector<Particle>& getParticlesReference();
+
+  /**
    * @brief Get the number of particles in the container
    * @return number of particles in the container
    */
   [[nodiscard]] std::size_t size() const;
+
+  /**
+   * @brief setter for the vector of particles
+   * @param particles particles to be set in the container
+   */
+  void setParticles(const std::vector<Particle>& particles);
+
+  /**
+   * @brief resizes particles to the desires size, allows for faster additions
+   * @param size desired size of the vector
+   */
+  void resize(std::size_t size);
 
   /**
    * @brief Iterator over single particles p

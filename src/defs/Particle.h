@@ -45,6 +45,18 @@ class Particle {
    */
   int type{};
 
+  /**
+   * depth at which the potential well \n
+   * used in the caluclation of lennard-jones force
+   */
+  double epsilon{};
+
+  /**
+   * distance at which the particle to particle potential energy is zero \n
+   * used in the calculation of lennard-jones force
+   */
+  double sigma{};
+
  public:
   explicit Particle(int type = 0);
 
@@ -54,7 +66,7 @@ class Particle {
       // for visualization, we need always 3 coordinates
       // -> in case of 2d, we use only the first and the second
       const std::array<double, 3>& x_arg, const std::array<double, 3>& v_arg,
-      double m_arg, int type = 0);
+      double m_arg, double _epsilon, double _sigma, int type = 0);
 
   virtual ~Particle();
 
@@ -70,6 +82,10 @@ class Particle {
 
   [[nodiscard]] int getType() const;
 
+  [[nodiscard]] double getEpsilon() const;
+
+  [[nodiscard]] double getSigma() const;
+
   void setF(const std::array<double, 3>& F);
 
   void setX(const std::array<double, 3>& X);
@@ -77,6 +93,10 @@ class Particle {
   void setV(const std::array<double, 3>& V);
 
   void setOldF(const dvec3& oF);
+
+  void setEpsilon(const double& epsilon);
+
+  void setSigma(const double& sigma);
 
   bool operator==(const Particle& other) const;
 
