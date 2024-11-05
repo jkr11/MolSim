@@ -30,6 +30,8 @@ add_executable(MolSim ${MY_SRC}
         src/calc/VerletIntegrator.h
         src/calc/VerletIntegrator.cpp
         src/defs/ParticleContainer.cpp
+        src/utils/SpdWrapper.h
+        src/utils/SpdWrapper.cpp
         src/forces/LennardJones.h
         src/forces/LennardJones.cpp
         src/defs/ParticleGenerator.h
@@ -55,8 +57,9 @@ target_link_libraries(MolSim
         # stuff that is used in headers and source files
         PUBLIC
         xerces-c
+        spdlog::spdlog
 )
-
+add_subdirectory(spdlog)
 # activate all compiler warnings. Clean up your code :P
 # depending on the compiler different flags are used
 target_compile_options(MolSim
