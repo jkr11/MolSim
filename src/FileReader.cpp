@@ -13,6 +13,7 @@
 #include <sstream>
 
 #include "debug/debug_print.h"
+#include "utils/SpdWrapper.h"
 
 FileReader::FileReader() = default;
 
@@ -29,18 +30,18 @@ void FileReader::readFile(std::list<Particle> &particles,
     int type;
 
     getline(input_file, tmp_string);
-    DEBUG_PRINT("Read line: " + tmp_string + "\n");
+    SpdWrapper::get()->debug("Read line: {}", tmp_string);
 
     while (tmp_string.empty() or tmp_string[0] == '#') {
       getline(input_file, tmp_string);
-      DEBUG_PRINT("Read line: " + tmp_string + "\n");
+      SpdWrapper::get()->debug("Read line: {}", tmp_string);
     }
 
     std::istringstream numstream(tmp_string);
     numstream >> num_particles;
-    DEBUG_PRINT("Reading " + std::to_string(num_particles) + "." + "\n");
+    SpdWrapper::get()->debug("Reading {}", num_particles);
     getline(input_file, tmp_string);
-    DEBUG_PRINT("Read line: " + tmp_string + "\n");
+    SpdWrapper::get()->debug("Read line: {}", tmp_string);
 
     for (int i = 0; i < num_particles; i++) {
       std::istringstream datastream(tmp_string);
@@ -52,20 +53,18 @@ void FileReader::readFile(std::list<Particle> &particles,
         datastream >> vj;
       }
       if (datastream.eof()) {
-        std::cout
-            << "Error reading file: eof reached unexpectedly reading from line "
-            << i << std::endl;
+        SpdWrapper::get()->error("Error reading file: eof reached");
         exit(-1);
       }
       datastream >> m;
       datastream >> type;
-      particles.emplace_back(x, v, m, 1.0,1.0, type);
+      particles.emplace_back(x, v, m, 1.0, 1.0, type);
 
       getline(input_file, tmp_string);
-      std::cout << "Read line: " << tmp_string << std::endl;
+      SpdWrapper::get()->debug("Read line: {}", tmp_string);
     }
   } else {
-    std::cout << "Error: could not open file " << filename << std::endl;
+    SpdWrapper::get()->error("Error opening file {}", filename);
     exit(-1);
   }
 }

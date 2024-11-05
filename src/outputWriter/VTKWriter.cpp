@@ -15,6 +15,8 @@
 #include <iostream>
 #include <string>
 
+#include "utils/SpdWrapper.h"
+
 namespace outputWriter {
 
 VTKWriter::VTKWriter() = default;
@@ -65,9 +67,9 @@ void VTKWriter::writeFile(const std::string &filename, int iteration) {
 
 void VTKWriter::plotParticle(Particle &p) {
   if (vtkFile->UnstructuredGrid().present()) {
-    DEBUG_PRINT("UnstructuredGrid is present");
+    SpdWrapper::get()->debug("UnstructuredGrid is present");
   } else {
-    DEBUG_PRINT("ERROR: No UnstructuredGrid present");
+    SpdWrapper::get()->debug("No UnstructuredGrid present");
   }
 
   PointData::DataArray_sequence &pointDataSequence =

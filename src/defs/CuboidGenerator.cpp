@@ -8,6 +8,8 @@
 
 #include "../utils/ArrayUtils.h"
 #include "../utils/MaxwellBoltzmannDistribution.h"
+#include "../utils/SpdWrapper.h"
+
 CuboidGenerator::CuboidGenerator(const dvec3 &corner,
                                  const std::array<int, 3> &dimensions,
                                  const double h, const double m,
@@ -27,8 +29,8 @@ void CuboidGenerator::generate(ParticleContainer &container) const {
   std::vector<Particle> particles = container.getParticlesReference();
   particles.reserve(
       static_cast<int>(dimensions[0] * dimensions[1] * dimensions[2]));
-  std::cout << "reserved: " << dimensions[0] * dimensions[1] * dimensions[2]
-            << std::endl;
+  int res = dimensions[0] * dimensions[1] * dimensions[2];
+  SpdWrapper::get()->debug("reserved: {}", res);
   for (int i = 0; i < dimensions[0]; i++) {
     for (int j = 0; j < dimensions[1]; j++) {
       for (int k = 0; k < dimensions[2]; k++) {
@@ -44,5 +46,5 @@ void CuboidGenerator::generate(ParticleContainer &container) const {
     }
   }
   // xcontainer.setParticles(particles);
-  std::cout << "particles: " << particles.size() << std::endl;
+  SpdWrapper::get()->debug("particles: {}", particles.size());
 }

@@ -6,17 +6,17 @@
 #include <list>
 #include <vector>
 
+#include "FileReader.h"
 #include "calc/VerletIntegrator.h"
 #include "defs/Particle.h"
-#include "forces/Gravity.h"
 #include "forces/Force.h"
+#include "forces/Gravity.h"
 #include "forces/LennardJones.h"
 #include "outputWriter/VTKWriter.h"
 #include "outputWriter/XYZWriter.h"
 #include "utils/ArrayUtils.h"
-#include "utils/SpdWrapper.h"
 #include "utils/CuboidReader.h"
-
+#include "utils/SpdWrapper.h"
 
 /**** forward declaration of the calculation functions ****/
 void plotParticles(int iteration, outputWriter::VTKWriter& vtkWriter,
@@ -95,8 +95,11 @@ int main(const int argc, char* argsv[]) {
       std::filesystem::is_directory(input_file)) {
     printUsage("Input File '" + input_file + "' does not exist", argsv[0]);
   }
-  if (input_file.empty()) {
+
+  auto iss = std::ifstream(input_file);
+  if (iss.peek() == std::ifstream::traits_type::eof()) {
     printUsage("input file " + input_file + " is empty!", argsv[0]);
+    exit(EXIT_FAILURE);
   }
 
   prepareOutputDirectory(argc, argsv);
@@ -110,6 +113,7 @@ int main(const int argc, char* argsv[]) {
   VerletIntegrator verlet_integrator(lennardjones, delta_t);
   outputWriter::VTKWriter writer;
   CuboidReader::readCuboidFile(particle_container, input_file);
+  //FileReader::readFile(particles, input_file);
   double current_time = start_time;
 
   int iteration = 0;
@@ -151,7 +155,7 @@ void plotParticles(const int iteration, outputWriter::VTKWriter& vtkWriter,
 
   for (auto& p : particle_container.getParticles()) {
     vtkWriter.plotParticle(p);
-    std::cout << "particles plotted\n" << std::endl;
+    //SpdWrapper::get()->info("Plotted");
   }
 
   vtkWriter.writeFile(output_directory + "/MD_vtk", iteration);

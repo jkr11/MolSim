@@ -9,9 +9,11 @@
 
 #include "../defs/CuboidGenerator.h"
 #include "../defs/Particle.h"
+#include "../utils/SpdWrapper.h"
 void CuboidReader::readCuboidFile(ParticleContainer& particle_container,
                                   std::string& fileName) {
   std::ifstream inputfile(fileName);
+  SpdWrapper::get()->debug("Reading cuboid file {}", fileName);
   if (inputfile.is_open()) {
     dvec3 corner{};
     dvec3 velocity{};
@@ -27,13 +29,16 @@ void CuboidReader::readCuboidFile(ParticleContainer& particle_container,
     std::getline(inputfile, line);
     while (line.empty() or line[0] == '#') {
       getline(inputfile, line);
-      std::cout << "Read line: " + line << std::endl;
+      SpdWrapper::get()->debug("Reading line {}", line);
     }
     // std::getline(inputfile, line);
     std::istringstream numstream(line);
     numstream >> ncubes;
-    std::cout << "Reading " << ncubes << " cuboids from file " << fileName
-              << std::endl;
+    SpdWrapper::get()->debug("Reading {} cuboids from file {}", ncubes,
+                             fileName);
+    if (ncubes == 0) {
+      SpdWrapper::get()->error("No cuboids in file {}", fileName);
+    }
     for (int i = 0; i < ncubes; i++) {
       std::getline(inputfile, line);
       std::istringstream linestream(line);
@@ -46,22 +51,27 @@ void CuboidReader::readCuboidFile(ParticleContainer& particle_container,
       for (auto& d : dimensions) {
         linestream >> d;
       }
+      if (linestream.eof()) {
+        SpdWrapper::get()->error("Error reading file: eof reached");
+        exit(-1);
+      }
       linestream >> mass;
-      std::cout << "mass: " << mass << std::endl;
+      SpdWrapper::get()->debug("mass {}", mass);
       linestream >> type;
-      std::cout << "type: " << type << std::endl;
+      SpdWrapper::get()->debug("type: {}", type);
       linestream >> h;
-      std::cout << "h: " << h << std::endl;
+      SpdWrapper::get()->debug("h: {}", h);
       linestream >> mv;
-      std::cout << "mv: " << mv << std::endl;
+      SpdWrapper::get()->debug("mv: {}", mv);
       linestream >> epsilon;
-      std::cout << "epsilon: " << epsilon << std::endl;
+      SpdWrapper::get()->debug("epsilon: {}", epsilon);
       linestream >> sigma;
-      std::cout << "sigma: " << sigma << std::endl;
+      SpdWrapper::get()->debug("sigma: {}", sigma);
       CuboidGenerator cg(corner, dimensions, h, mass, velocity, mv, epsilon,
                          sigma, type);
       cg.generate(particle_container);
-      std::cout << particle_container.size() << std::endl;
+      SpdWrapper::get()->debug("particle container size {}",
+                               particle_container.size());
     }
   }
 }
