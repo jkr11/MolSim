@@ -38,11 +38,11 @@ int main(const int argc, char* argv[]) {
   SpdWrapper::get()->info("Application started");
 
   struct Arguments arguments = {
-      "",     // file
-      100,    // t_end
-      0.014,  // delta_t
-      1,      // output_time_step_size
-      0,      // logging_level -> TODO
+      "",      // file
+      100,     // t_end
+      0.014,   // delta_t
+      1,       // output_time_step_size
+      "info",  // logLevel
   };
 
   if (CLArgumentParser::parse(argc, argv, arguments) != 0) {
@@ -54,8 +54,6 @@ int main(const int argc, char* argv[]) {
   SpdWrapper::get()->info(arguments.delta_t);
   SpdWrapper::get()->info(arguments.output_time_step_size);
   SpdWrapper::get()->info(arguments.loggingLevel);*/
-
-  // TODO: Change spdLogLevel / parse properly
 
   prepareOutputDirectory(argc, argv);
   SpdWrapper::get()->info("t_end: {}, delta_t: {}, output_time_step_size: {}",

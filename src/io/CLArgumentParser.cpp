@@ -21,7 +21,7 @@ int CLArgumentParser::parse(int argc, char* argv[], Arguments& arguments) {
       {"t_end", required_argument, nullptr, 't'},
       {"delta_t", required_argument, nullptr, 'd'},
       {"step_size", required_argument, nullptr, 's'},
-      {"logging", required_argument, nullptr, 'l'},
+      {"loglevel", required_argument, nullptr, 'l'},
       {nullptr, 0, nullptr, 0}};
 
   char opt;
@@ -52,8 +52,7 @@ int CLArgumentParser::parse(int argc, char* argv[], Arguments& arguments) {
           arguments.output_time_step_size = std::stod(optarg);
           break;
         case 'l':
-          // convert string with level to int / enum TODO
-          arguments.loggingLevel = std::atoi(optarg);
+          arguments.logLevel = optarg;
           break;
         default:
           printUsage("unsupported flag '-" +
@@ -83,8 +82,6 @@ int CLArgumentParser::parse(int argc, char* argv[], Arguments& arguments) {
   // validate input file (move to IO validator?)
   if (!std::filesystem::exists(arguments.inputFile) ||
       std::filesystem::is_directory(arguments.inputFile)) {
-    // this seems kinda weird, it has to do with input, but not with parsing =>
-    // extract printUsage to somewhere else?
     CLArgumentParser::printUsage(
         "Input File '" + arguments.inputFile + "' does not exist", argv[0]);
     return -1;
@@ -92,10 +89,14 @@ int CLArgumentParser::parse(int argc, char* argv[], Arguments& arguments) {
 
   auto iss = std::ifstream(arguments.inputFile);
   if (iss.peek() == std::ifstream::traits_type::eof()) {
-    // this seems kinda weird, it has to do with input, but not with parsing =>
-    // extract printUsage to somewhere else?
     CLArgumentParser::printUsage(
         "input file " + arguments.inputFile + " is empty!", argv[0]);
+    return -1;
+  }
+
+  // change loglevel
+  if (SpdWrapper::setLogLevel(arguments.logLevel) != 0) {
+    printUsage("Log level invalid.", argv[0]);
     return -1;
   }
 
@@ -105,20 +106,27 @@ int CLArgumentParser::parse(int argc, char* argv[], Arguments& arguments) {
 void CLArgumentParser::printUsage(const std::string& additionalNote,
                                   const std::string& programName) {
   // std::cerr << red << "[Error:] " << additionalNote << reset << "\n";
+
+  SpdWrapper::get()->set_level(spdlog::level::err);
   SpdWrapper::get()->error(additionalNote);
-  SpdWrapper::get()->info(
+  SpdWrapper::get()->error(
       "Usage: {} [options]\n"
       "Options:\n"
-      "  -h                Show this help message\n"
-      "  -f <filename>     Specify the input file\n"
-      "  [-t <double>]     Specify the simulation end time (t_end), "
+      "  --help                     Show this help message\n"
+      "  --file <filename>          Specify the input file\n"
+      "  [--t_end <double>]         Specify the simulation end time (t_end), "
       "default=100\n"
-      "  [-d <double>]     Specify the simulation delta time (t_delta), "
+      "  [--delta_t <double>]       Specify the simulation delta time "
+      "(t_delta), "
       "default=0.014\n"
-      "  [-s <double>]     Specify how often the output will be written "
+      "  [--step_size <double>]     Specify how often the output will be "
+      "written "
       "(step_size), default=1\n"
-      "                    note that this is independent of the time "
+      "                               Note that this is independent of the "
+      "time "
       "resolution (t_delta) and dependent on the simulation time\n"
+      "  [--loglevel <level>]       Specify the log level, default=info, "
+      "valid=[off, error, warn, info, debug, trace]\n"
       "Example:\n"
       "  {} -f ./input/eingabe-sonne.txt -t 100 -d 0.14\n",
       programName, programName);

@@ -15,9 +15,11 @@
 class SpdWrapper {
  public:
   static std::shared_ptr<spdlog::logger> get();
+  static int setLogLevel(std::string level);
 
  private:
   static std::shared_ptr<spdlog::logger> configure();
   static std::shared_ptr<spdlog::logger> instance;
 };
+
 #endif  // SPDWRAPPER_H
