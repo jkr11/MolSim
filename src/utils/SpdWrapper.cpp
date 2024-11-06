@@ -28,7 +28,7 @@ std::shared_ptr<spdlog::logger> SpdWrapper::configure() {
 
 int SpdWrapper::setLogLevel(std::string level) {
   std::transform(level.begin(), level.end(), level.begin(),
-                 [](unsigned char c) { return std::tolower(c); });
+                 [](const unsigned char c) { return std::tolower(c); });
 
   if (level == "trace") {
     instance->set_level(spdlog::level::trace);

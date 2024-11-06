@@ -1,9 +1,6 @@
-#include <getopt.h>
-
 #include <chrono>
 #include <filesystem>
 #include <iostream>
-#include <list>
 #include <vector>
 
 #include "calc/VerletIntegrator.h"
@@ -12,38 +9,35 @@
 #include "forces/Gravity.h"
 #include "forces/LennardJones.h"
 #include "io/CLArgumentParser.h"
+#include "io/file/CuboidReader.h"
 #include "outputWriter/VTKWriter.h"
 #include "outputWriter/XYZWriter.h"
 #include "utils/ArrayUtils.h"
 #include "utils/SpdWrapper.h"
 
-#include "io/file/FileReader.h"
-#include "io/file/CuboidReader.h"
-
 /**** forward declaration of the calculation functions ****/
-void plotParticles(int iteration, outputWriter::VTKWriter& vtkWriter,
-                   ParticleContainer& particle_container);
-void prepareOutputDirectory(int argsc, char* argv[]);
+void plotParticles(int iteration, outputWriter::VTKWriter &vtkWriter,
+                   ParticleContainer &particle_container);
+
+void prepareOutputDirectory(int argc, char *argv[]);
 
 constexpr int output_interval = 32;
 
 // parent directory, subdirectory will be appended at runtime
 std::string output_directory = "./output/";
 
-std::list<Particle> particles;
-
 Gravity gravity;
 LennardJones lennardjones;
 
-int main(const int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
   SpdWrapper::get()->info("Application started");
 
-  struct Arguments arguments = {
-      "",      // file
-      100,     // t_end
-      0.014,   // delta_t
-      1,       // output_time_step_size
-      "info",  // logLevel
+  Arguments arguments = {
+    "", // file
+    100, // t_end
+    0.014, // delta_t
+    1, // output_time_step_size
+    "info", // logLevel
   };
 
   if (CLArgumentParser::parse(argc, argv, arguments) != 0) {
@@ -58,25 +52,27 @@ int main(const int argc, char* argv[]) {
   // FileReader::readFile(particles, input_file);
 
   // setup Simulation
-  ParticleContainer particle_container(particles);
+  ParticleContainer particleContainer;
+  CuboidReader::read(particleContainer.getParticlesReference(),
+                     arguments.inputFile);
+
   VerletIntegrator verlet_integrator(lennardjones, arguments.delta_t);
   outputWriter::VTKWriter writer;
-  CuboidReader::readCuboidFile(particle_container, arguments.inputFile);
   // FileReader::readFile(particles, input_file);
 
   // current_time = start_time, but start_time couldn't be changed by the user
-  // anyways
+  // anyway
   double current_time = 0;
   int iteration = 0;
   int writes = 0;
 
   // for this loop, we assume: current x, current f and current v are known
   while (current_time <= arguments.t_end) {
-    verlet_integrator.step(particle_container);
+    verlet_integrator.step(particleContainer);
     // if (current_time >= writes * output_time_step_size) {
 
     if (writes % output_interval == 0) {
-      plotParticles(iteration, writer, particle_container);
+      plotParticles(iteration, writer, particleContainer);
 #ifdef DEBUG
       SpdWrapper::get()->debug("Iteration {} finished.", iteration);
 #else
@@ -101,11 +97,11 @@ int main(const int argc, char* argv[]) {
   return 0;
 }
 
-void plotParticles(const int iteration, outputWriter::VTKWriter& vtkWriter,
-                   ParticleContainer& particle_container) {
+void plotParticles(const int iteration, outputWriter::VTKWriter &vtkWriter,
+                   ParticleContainer &particle_container) {
   vtkWriter.initializeOutput(static_cast<int>(particle_container.size()));
 
-  for (auto& p : particle_container.getParticles()) {
+  for (auto &p: particle_container.getParticles()) {
     vtkWriter.plotParticle(p);
     // SpdWrapper::get()->info("Plotted");
   }
@@ -113,7 +109,7 @@ void plotParticles(const int iteration, outputWriter::VTKWriter& vtkWriter,
   vtkWriter.writeFile(output_directory + "/MD_vtk", iteration);
 }
 
-void prepareOutputDirectory(const int argsc, char* argv[]) {
+void prepareOutputDirectory(int argc, char *argv[]) {
   // source for getting time:
   // https://stackoverflow.com/questions/997946/how-to-get-current-time-and-date-in-c
   const auto currentTime = std::chrono::high_resolution_clock::now();
@@ -136,7 +132,7 @@ void prepareOutputDirectory(const int argsc, char* argv[]) {
 
   // save configuration (input) for future use
   std::ofstream config(output_directory + "configuration.txt");
-  for (int i = 0; i < argsc; i++) {
+  for (int i = 0; i < argc; i++) {
     config << argv[i] << " ";
   }
   config << std::endl;

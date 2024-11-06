@@ -13,7 +13,7 @@
 using dvec3 = std::array<double, 3>;
 
 class Particle {
- private:
+private:
   /**
    * Position of the particle
    */
@@ -57,26 +57,26 @@ class Particle {
    */
   double sigma{};
 
- public:
+public:
   explicit Particle(int type = 0);
 
-  Particle(const Particle& other);
+  Particle(const Particle &other);
 
   Particle(
-      // for visualization, we need always 3 coordinates
-      // -> in case of 2d, we use only the first and the second
-      const std::array<double, 3>& x_arg, const std::array<double, 3>& v_arg,
-      double m_arg, double _epsilon, double _sigma, int type = 0);
+    // for visualization, we need always 3 coordinates
+    // -> in case of 2d, we use only the first and the second
+    const std::array<double, 3> &x_arg, const std::array<double, 3> &v_arg,
+    double m_arg, const double _epsilon, const double _sigma, int type = 0);
 
   virtual ~Particle();
 
-  [[nodiscard]] const std::array<double, 3>& getX() const;
+  [[nodiscard]] const std::array<double, 3> &getX() const;
 
-  [[nodiscard]] const std::array<double, 3>& getV() const;
+  [[nodiscard]] const std::array<double, 3> &getV() const;
 
-  [[nodiscard]] const std::array<double, 3>& getF() const;
+  [[nodiscard]] const std::array<double, 3> &getF() const;
 
-  [[nodiscard]] const std::array<double, 3>& getOldF() const;
+  [[nodiscard]] const std::array<double, 3> &getOldF() const;
 
   [[nodiscard]] double getM() const;
 
@@ -86,21 +86,21 @@ class Particle {
 
   [[nodiscard]] double getSigma() const;
 
-  void setF(const std::array<double, 3>& F);
+  void setF(const std::array<double, 3> &F);
 
-  void setX(const std::array<double, 3>& X);
+  void setX(const std::array<double, 3> &X);
 
-  void setV(const std::array<double, 3>& V);
+  void setV(const std::array<double, 3> &V);
 
-  void setOldF(const dvec3& oF);
+  void setOldF(const dvec3 &oF);
 
-  void setEpsilon(const double& epsilon);
+  void setEpsilon(const double &epsilon);
 
-  void setSigma(const double& sigma);
+  void setSigma(const double &sigma);
 
-  bool operator==(const Particle& other) const;
+  bool operator==(const Particle &other) const;
 
   [[nodiscard]] std::string toString() const;
 };
 
-std::ostream& operator<<(std::ostream& stream, Particle& p);
+std::ostream &operator<<(std::ostream &stream, Particle &p);

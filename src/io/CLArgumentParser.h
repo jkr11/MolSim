@@ -23,23 +23,25 @@ struct Arguments {
  * @note Does also set the logging level
  */
 class CLArgumentParser {
- public:
+public:
   /**
-   * @brief Fills the passed arguments struct with the parsed arguments from the CLI
+   * @brief Fills the passed arguments struct with the parsed arguments from the
+   * CLI
    * @note prints usage if failed
    * @param argc Directly from main
-   * @param arv Directly from main
+   * @param argv Directly from main
    * @param arguments argument struct (should hold default arguments)
    * @return -1 Failure, 0 Success
    */
-  static int parse(int argc, char* argv[], Arguments& arguments);
+  static int parse(int argc, char *argv[], Arguments &arguments);
+
   /**
    * @brief print usage
    * @param additionalNote additional info to customize printout
    * @param programName name of the program (argv[0])
    */
-  static void printUsage(const std::string& additionalNote,
-                         const std::string& programName);
+  static void printUsage(const std::string &additionalNote,
+                         const std::string &programName);
 };
 
 #endif  // CLARGUMENTPARSER_H

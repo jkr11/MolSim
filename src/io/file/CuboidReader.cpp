@@ -11,8 +11,8 @@
 #include "defs/Particle.h"
 #include "utils/SpdWrapper.h"
 
-void CuboidReader::readCuboidFile(ParticleContainer& particle_container,
-                                  std::string& fileName) {
+void CuboidReader::read(std::vector<Particle>& particles,
+                                  const std::string& fileName) {
   std::ifstream inputfile(fileName);
   SpdWrapper::get()->debug("Reading cuboid file {}", fileName);
   if (inputfile.is_open()) {
@@ -70,9 +70,10 @@ void CuboidReader::readCuboidFile(ParticleContainer& particle_container,
       SpdWrapper::get()->debug("sigma: {}", sigma);
       CuboidGenerator cg(corner, dimensions, h, mass, velocity, mv, epsilon,
                          sigma, type);
-      cg.generate(particle_container);
+
+      cg.generate(particles);
       SpdWrapper::get()->debug("particle container size {}",
-                               particle_container.size());
+                               particles.size());
     }
   }
 }

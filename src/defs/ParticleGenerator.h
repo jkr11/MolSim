@@ -6,14 +6,16 @@
 #define PARTICLEGENERATOR_H
 #include "ParticleContainer.h"
 
+// TODO
 class ParticleGenerator {
- public:
+public:
   virtual ~ParticleGenerator() = default;
+
   /**
    * @brief spawns particles in a given shape
-   * @param container container holding the vector of particles
+   * @param particles vector of particles
    */
-  virtual void generate(ParticleContainer &container) const = 0;
+  virtual void generate(std::vector<Particle> &particles) = 0;
 };
 
 #endif  // PARTICLEGENERATOR_H
