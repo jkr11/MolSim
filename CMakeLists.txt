@@ -38,7 +38,9 @@ add_executable(MolSim ${MY_SRC}
         src/defs/CuboidGenerator.h
         src/defs/CuboidGenerator.cpp
         src/utils/CuboidReader.h
-        src/utils/CuboidReader.cpp)
+        src/utils/CuboidReader.cpp
+        src/io/CLArgumentParser.h
+        src/io/CLArgumentParser.cpp)
 
 # set cxx standard. You may raise this if you want.
 target_compile_features(MolSim
