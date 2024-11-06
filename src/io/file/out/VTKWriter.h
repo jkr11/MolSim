@@ -9,7 +9,7 @@
 
 #include <list>
 
-#include "../defs/Particle.h"
+#include "defs/Particle.h"
 #include "vtk-unstructured.h"
 
 namespace outputWriter {

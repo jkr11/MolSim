@@ -9,9 +9,9 @@
 #include "forces/Gravity.h"
 #include "forces/LennardJones.h"
 #include "io/CLArgumentParser.h"
-#include "io/file/CuboidReader.h"
-#include "outputWriter/VTKWriter.h"
-#include "outputWriter/XYZWriter.h"
+#include "io/file/in/CuboidReader.h"
+#include "io/file/out/VTKWriter.h"
+#include "io/file/out/XYZWriter.h"
 #include "utils/ArrayUtils.h"
 #include "utils/SpdWrapper.h"
 

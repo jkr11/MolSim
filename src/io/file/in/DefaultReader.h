@@ -9,7 +9,7 @@
 
 #include <vector>
 #include "defs/Particle.h"
-#include "io/file/FileReader.h"
+#include "io/file/in/FileReader.h"
 
 class DefaultReader : FileReader {
  public:

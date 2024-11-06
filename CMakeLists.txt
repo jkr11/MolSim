@@ -37,8 +37,8 @@ add_executable(MolSim ${MY_SRC}
         src/defs/ParticleGenerator.h
         src/defs/CuboidGenerator.h
         src/defs/CuboidGenerator.cpp
-        src/io/file/CuboidReader.h
-        src/io/file/CuboidReader.cpp
+        src/io/file/in/CuboidReader.h
+        src/io/file/in/CuboidReader.cpp
         src/io/CLArgumentParser.h
         src/io/CLArgumentParser.cpp)
 

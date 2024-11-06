@@ -7,7 +7,7 @@
 
 #include <string>
 #include "defs/ParticleContainer.h"
-#include "io/file/FileReader.h"
+#include "io/file/in/FileReader.h"
 
 /**
  * @brief Reads files describing cuboids (.txt, .cuboid) in the following format
