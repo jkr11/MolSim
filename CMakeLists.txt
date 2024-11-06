@@ -40,7 +40,8 @@ add_executable(MolSim ${MY_SRC}
         src/io/file/in/CuboidReader.h
         src/io/file/in/CuboidReader.cpp
         src/io/CLArgumentParser.h
-        src/io/CLArgumentParser.cpp)
+        src/io/CLArgumentParser.cpp
+        src/io/file/out/OutputHelper.h)
 
 # set cxx standard. You may raise this if you want.
 target_compile_features(MolSim
