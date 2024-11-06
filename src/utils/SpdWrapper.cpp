@@ -5,6 +5,8 @@
 
 #include <spdlog/sinks/stdout_color_sinks.h>
 
+#include <algorithm>
+
 std::shared_ptr<spdlog::logger> SpdWrapper::instance = SpdWrapper::configure();
 
 std::shared_ptr<spdlog::logger> SpdWrapper::get() { return instance; }
