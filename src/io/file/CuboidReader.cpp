@@ -7,9 +7,10 @@
 #include <iostream>
 #include <sstream>
 
-#include "../defs/CuboidGenerator.h"
-#include "../defs/Particle.h"
-#include "../utils/SpdWrapper.h"
+#include "defs/CuboidGenerator.h"
+#include "defs/Particle.h"
+#include "utils/SpdWrapper.h"
+
 void CuboidReader::readCuboidFile(ParticleContainer& particle_container,
                                   std::string& fileName) {
   std::ifstream inputfile(fileName);

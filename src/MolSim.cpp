@@ -6,7 +6,6 @@
 #include <list>
 #include <vector>
 
-#include "FileReader.h"
 #include "calc/VerletIntegrator.h"
 #include "defs/Particle.h"
 #include "forces/Force.h"
@@ -16,8 +15,10 @@
 #include "outputWriter/VTKWriter.h"
 #include "outputWriter/XYZWriter.h"
 #include "utils/ArrayUtils.h"
-#include "utils/CuboidReader.h"
 #include "utils/SpdWrapper.h"
+
+#include "io/file/FileReader.h"
+#include "io/file/CuboidReader.h"
 
 /**** forward declaration of the calculation functions ****/
 void plotParticles(int iteration, outputWriter::VTKWriter& vtkWriter,
@@ -48,12 +49,6 @@ int main(const int argc, char* argv[]) {
   if (CLArgumentParser::parse(argc, argv, arguments) != 0) {
     exit(EXIT_FAILURE);
   }
-
-  /*SpdWrapper::get()->info(arguments.inputFile);
-  SpdWrapper::get()->info(arguments.t_end);
-  SpdWrapper::get()->info(arguments.delta_t);
-  SpdWrapper::get()->info(arguments.output_time_step_size);
-  SpdWrapper::get()->info(arguments.loggingLevel);*/
 
   prepareOutputDirectory(argc, argv);
   SpdWrapper::get()->info("t_end: {}, delta_t: {}, output_time_step_size: {}",
