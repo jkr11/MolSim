@@ -5,6 +5,8 @@
 
 #include <spdlog/sinks/stdout_color_sinks.h>
 
+#include <algorithm>
+
 std::shared_ptr<spdlog::logger> SpdWrapper::instance = SpdWrapper::configure();
 
 std::shared_ptr<spdlog::logger> SpdWrapper::get() { return instance; }
@@ -28,7 +30,7 @@ std::shared_ptr<spdlog::logger> SpdWrapper::configure() {
 
 int SpdWrapper::setLogLevel(std::string level) {
   std::transform(level.begin(), level.end(), level.begin(),
-                 [](unsigned char c) { return std::tolower(c); });
+                 [](const unsigned char c) { return std::tolower(c); });
 
   if (level == "trace") {
     instance->set_level(spdlog::level::trace);
