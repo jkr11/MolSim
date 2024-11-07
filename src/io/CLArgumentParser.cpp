@@ -83,8 +83,8 @@ int CLArgumentParser::parse(int argc, char *argv[], Arguments &arguments) {
     return -1;
   }
 
-  auto iss = std::ifstream(arguments.inputFile);
-  if (iss.peek() == std::ifstream::traits_type::eof()) {
+  if (auto iss = std::ifstream(arguments.inputFile);
+      iss.peek() == std::ifstream::traits_type::eof()) {
     printUsage("input file " + arguments.inputFile + " is empty!", argv[0]);
     return -1;
   }

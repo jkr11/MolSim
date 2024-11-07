@@ -1,4 +1,3 @@
-#include <chrono>
 #include <filesystem>
 #include <iostream>
 
@@ -24,7 +23,7 @@ int main(int argc, char *argv[]) {
 
   Arguments arguments = {
       "",      // file
-      100,     // t_end
+      10,      // t_end
       0.014,   // delta_t
       1,       // output_time_step_size
       "info",  // logLevel
@@ -47,7 +46,8 @@ int main(int argc, char *argv[]) {
   VerletIntegrator verlet_integrator(lennardjones, arguments.delta_t);
   outputWriter::VTKWriter writer;
 
-  const std::string outputDirectory = createOutputDirectory("./output/", argc, argv);
+  const std::string outputDirectory =
+      createOutputDirectory("./output/", argc, argv);
 
   double current_time = 0;  // start time is always 0
   int iteration = 0;

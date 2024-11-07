@@ -7,7 +7,7 @@
 
 #include <algorithm>
 
-std::shared_ptr<spdlog::logger> SpdWrapper::instance = SpdWrapper::configure();
+std::shared_ptr<spdlog::logger> SpdWrapper::instance = configure();
 
 std::shared_ptr<spdlog::logger> SpdWrapper::get() { return instance; }
 

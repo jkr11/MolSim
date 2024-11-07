@@ -6,7 +6,6 @@
 #define SPDWRAPPER_H
 
 #include <spdlog/async.h>
-#include <spdlog/sinks/stdout_sinks.h>
 #include <spdlog/spdlog.h>
 
 #include <string>
