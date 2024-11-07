@@ -8,12 +8,12 @@
 #include "forces/LennardJones.h"
 #include "io/CLArgumentParser.h"
 #include "io/file/in/CuboidReader.h"
+#include "io/file/out/OutputHelper.h"
 #include "io/file/out/VTKWriter.h"
 #include "utils/ArrayUtils.h"
 #include "utils/SpdWrapper.h"
-#include "io/file/out/OutputHelper.h"
 
-//TODO: move
+// TODO: move
 constexpr int output_interval = 32;
 
 Gravity gravity;
@@ -23,11 +23,11 @@ int main(int argc, char *argv[]) {
   SpdWrapper::get()->info("Application started");
 
   Arguments arguments = {
-    "", // file
-    100, // t_end
-    0.014, // delta_t
-    1, // output_time_step_size
-    "info", // logLevel
+      "",      // file
+      100,     // t_end
+      0.014,   // delta_t
+      1,       // output_time_step_size
+      "info",  // logLevel
   };
 
   if (CLArgumentParser::parse(argc, argv, arguments) != 0) {
@@ -47,9 +47,9 @@ int main(int argc, char *argv[]) {
   VerletIntegrator verlet_integrator(lennardjones, arguments.delta_t);
   outputWriter::VTKWriter writer;
 
-  std::string outputDirectory = createOutputDirectory("./output/", argc, argv);
+  const std::string outputDirectory = createOutputDirectory("./output/", argc, argv);
 
-  double current_time = 0; //start time is always 0
+  double current_time = 0;  // start time is always 0
   int iteration = 0;
   int writes = 0;
 
@@ -74,11 +74,10 @@ int main(int argc, char *argv[]) {
     //}
 
     iteration++;
-    current_time = arguments.delta_t * iteration; // + start_time
+    current_time = arguments.delta_t * iteration;  // + start_time
   }
 
   SpdWrapper::get()->info("Output written. Terminating...");
 
   return 0;
 }
-

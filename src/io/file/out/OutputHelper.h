@@ -1,15 +1,21 @@
 //
 // Created by mcarn on 11/6/24.
 //
-
+#pragma once
 #ifndef OUTPUTHELPER_H
 #define OUTPUTHELPER_H
+#include <fstream>
 
-inline void plotParticles(const std::string &outputDirectory, const int iteration, outputWriter::VTKWriter &vtkWriter,
+#include "VTKWriter.h"
+#include "utils/SpdWrapper.h"
+
+inline void plotParticles(const std::string &outputDirectory,
+                          const int iteration,
+                          outputWriter::VTKWriter &vtkWriter,
                           ParticleContainer &particle_container) {
   vtkWriter.initializeOutput(static_cast<int>(particle_container.size()));
 
-  for (auto &p: particle_container.getParticles()) {
+  for (auto &p : particle_container.getParticles()) {
     vtkWriter.plotParticle(p);
     // SpdWrapper::get()->info("Plotted");
   }
@@ -17,7 +23,8 @@ inline void plotParticles(const std::string &outputDirectory, const int iteratio
   vtkWriter.writeFile(outputDirectory + "/MD_vtk", iteration);
 }
 
-inline std::string createOutputDirectory(const std::string &outputDirectory, int argc, char *argv[]) {
+inline std::string createOutputDirectory(const std::string &outputDirectory,
+                                         int argc, char *argv[]) {
   // source for getting time:
   // https://stackoverflow.com/questions/997946/how-to-get-current-time-and-date-in-c
   const auto currentTime = std::chrono::high_resolution_clock::now();
@@ -25,9 +32,10 @@ inline std::string createOutputDirectory(const std::string &outputDirectory, int
   const std::tm localTime = *std::localtime(&now);
   std::ostringstream timeString;
 
-  //output into 'outputDirectory/current_time/'
+  // output into 'outputDirectory/current_time/'
   timeString << std::put_time(&localTime, "%Y-%m-%d %H:%M:%S/");
-  const std::filesystem::path output_directory_path = outputDirectory + timeString.str();
+  const std::filesystem::path output_directory_path =
+      outputDirectory + timeString.str();
 
   if (!is_directory(output_directory_path)) {
     create_directories(output_directory_path);
@@ -45,4 +53,4 @@ inline std::string createOutputDirectory(const std::string &outputDirectory, int
   return output_directory_path.string();
 }
 
-#endif //OUTPUTHELPER_H
+#endif  // OUTPUTHELPER_H

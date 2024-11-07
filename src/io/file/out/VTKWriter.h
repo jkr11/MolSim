@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include <list>
-
 #include "defs/Particle.h"
 #include "vtk-unstructured.h"
 
@@ -18,11 +16,11 @@ namespace outputWriter {
  * This class implements the functionality to generate vtk output from
  * particles.
  */
-class VTKWriter {
+class VTKWriter final {
  public:
   VTKWriter();
 
-  virtual ~VTKWriter();
+  ~VTKWriter();
 
   /**
    * set up internal data structures and prepare to plot a particle.
@@ -34,7 +32,7 @@ class VTKWriter {
    *
    * @note: initializeOutput() must have been called before.
    */
-  void plotParticle(Particle &p);
+  void plotParticle(const Particle &p) const;
 
   /**
    * writes the final output file.
@@ -43,10 +41,10 @@ class VTKWriter {
    * @param iteration the number of the current iteration,
    *        which is used to generate an unique filename
    */
-  void writeFile(const std::string &filename, int iteration);
+  void writeFile(const std::string &filename, int iteration) const;
 
  private:
-  VTKFile_t *vtkFile;
+  VTKFile_t *vtkFile{};
 };
 
 }  // namespace outputWriter

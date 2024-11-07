@@ -12,17 +12,15 @@
 #include "utils/SpdWrapper.h"
 
 int CLArgumentParser::parse(int argc, char *argv[], Arguments &arguments) {
-  const option long_options[] = {
-    {"help", no_argument, nullptr, 'h'},
-    {"file", required_argument, nullptr, 'f'},
-    {"t_end", required_argument, nullptr, 't'},
-    {"delta_t", required_argument, nullptr, 'd'},
-    {"step_size", required_argument, nullptr, 's'},
-    {"loglevel", required_argument, nullptr, 'l'},
-    {nullptr, 0, nullptr, 0}
-  };
+  const option long_options[] = {{"help", no_argument, nullptr, 'h'},
+                                 {"file", required_argument, nullptr, 'f'},
+                                 {"t_end", required_argument, nullptr, 't'},
+                                 {"delta_t", required_argument, nullptr, 'd'},
+                                 {"step_size", required_argument, nullptr, 's'},
+                                 {"loglevel", required_argument, nullptr, 'l'},
+                                 {nullptr, 0, nullptr, 0}};
 
-  char opt;
+  int opt;
   int option_index = 0;
 
   while ((opt = getopt_long(argc, argv, "hf:t:d:s:l:", long_options,
@@ -54,20 +52,20 @@ int CLArgumentParser::parse(int argc, char *argv[], Arguments &arguments) {
           break;
         default:
           printUsage("unsupported flag '-" +
-                     std::string(1, static_cast<char>(opt)) + "' detected",
+                         std::string(1, static_cast<char>(opt)) + "' detected",
                      argv[0]);
           return -1;
       }
     } catch (const std::invalid_argument &) {
       printUsage("Invalid arg for option -" +
-                 std::string(1, static_cast<char>(opt)) + ": '" +
-                 std::string(optarg) + "'",
+                     std::string(1, static_cast<char>(opt)) + ": '" +
+                     std::string(optarg) + "'",
                  argv[0]);
       return -1;
     } catch (const std::out_of_range &) {
       printUsage("Out-of-range value for option -" +
-                 std::string(1, static_cast<char>(opt)) + ": '" +
-                 std::string(optarg) + "'",
+                     std::string(1, static_cast<char>(opt)) + ": '" +
+                     std::string(optarg) + "'",
                  argv[0]);
 
       return -1;
@@ -107,24 +105,24 @@ void CLArgumentParser::printUsage(const std::string &additionalNote,
   SpdWrapper::get()->set_level(spdlog::level::err);
   SpdWrapper::get()->error(additionalNote);
   SpdWrapper::get()->error(
-    "Usage: {} [options]\n"
-    "Options:\n"
-    "  --help                     Show this help message\n"
-    "  --file <filename>          Specify the input file\n"
-    "  [--t_end <double>]         Specify the simulation end time (t_end), "
-    "default=100\n"
-    "  [--delta_t <double>]       Specify the simulation delta time "
-    "(t_delta), "
-    "default=0.014\n"
-    "  [--step_size <double>]     Specify how often the output will be "
-    "written "
-    "(step_size), default=1\n"
-    "                               Note that this is independent of the "
-    "time "
-    "resolution (t_delta) and dependent on the simulation time\n"
-    "  [--loglevel <level>]       Specify the log level, default=info, "
-    "valid=[off, error, warn, info, debug, trace]\n"
-    "Example:\n"
-    "  {} -f ./input/eingabe-sonne.txt -t 100 -d 0.14\n",
-    programName, programName);
+      "Usage: {} [options]\n"
+      "Options:\n"
+      "  --help                     Show this help message\n"
+      "  --file <filename>          Specify the input file\n"
+      "  [--t_end <double>]         Specify the simulation end time (t_end), "
+      "default=100\n"
+      "  [--delta_t <double>]       Specify the simulation delta time "
+      "(t_delta), "
+      "default=0.014\n"
+      "  [--step_size <double>]     Specify how often the output will be "
+      "written "
+      "(step_size), default=1\n"
+      "                               Note that this is independent of the "
+      "time "
+      "resolution (t_delta) and dependent on the simulation time\n"
+      "  [--loglevel <level>]       Specify the log level, default=info, "
+      "valid=[off, error, warn, info, debug, trace]\n"
+      "Example:\n"
+      "  {} -f ./input/eingabe-sonne.txt -t 100 -d 0.14\n",
+      programName, programName);
 }

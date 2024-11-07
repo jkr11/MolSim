@@ -13,7 +13,7 @@
 using dvec3 = std::array<double, 3>;
 
 class Particle {
-private:
+ private:
   /**
    * Position of the particle
    */
@@ -57,16 +57,16 @@ private:
    */
   double sigma{};
 
-public:
+ public:
   explicit Particle(int type = 0);
 
   Particle(const Particle &other);
 
   Particle(
-    // for visualization, we need always 3 coordinates
-    // -> in case of 2d, we use only the first and the second
-    const std::array<double, 3> &x_arg, const std::array<double, 3> &v_arg,
-    double m_arg, const double _epsilon, const double _sigma, int type = 0);
+      // for visualization, we need always 3 coordinates
+      // -> in case of 2d, we use only the first and the second
+      const std::array<double, 3> &x_arg, const std::array<double, 3> &v_arg,
+      double m_arg, const double _epsilon, const double _sigma, int type = 0);
 
   virtual ~Particle();
 
@@ -103,4 +103,4 @@ public:
   [[nodiscard]] std::string toString() const;
 };
 
-std::ostream &operator<<(std::ostream &stream, Particle &p);
+std::ostream &operator<<(std::ostream &stream, const Particle &p);

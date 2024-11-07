@@ -11,7 +11,7 @@
  * dim3]
  */
 class CuboidGenerator final : public ParticleGenerator {
-private:
+ private:
   dvec3 corner;
   std::array<int, 3> dimensions;
   double h;
@@ -22,7 +22,7 @@ private:
   double sigma;
   const int type{};
 
-public:
+ public:
   /**
    * @brief Constructor for the particle generator
    * @param corner Lower left corner / origin of the shape
@@ -43,10 +43,10 @@ public:
 
   /**
    * @brief generates particles in the shape of a cuboid
-   * @param container particlecontainer which contains the vector in which this
-   * cuboid is saved
+   * @param particles vector from container which contains the vector in which
+   * this cuboid is saved in
    */
-  void generate(std::vector<Particle> &particles);
+  void generate(std::vector<Particle> &particles) override;
 };
 
 #endif  // CUBOIDGENERATOR_H

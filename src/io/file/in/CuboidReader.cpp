@@ -12,7 +12,7 @@
 #include "utils/SpdWrapper.h"
 
 void CuboidReader::read(std::vector<Particle>& particles,
-                                  const std::string& fileName) {
+                        const std::string& fileName) {
   std::ifstream inputfile(fileName);
   SpdWrapper::get()->debug("Reading cuboid file {}", fileName);
   if (inputfile.is_open()) {
@@ -72,8 +72,7 @@ void CuboidReader::read(std::vector<Particle>& particles,
                          sigma, type);
 
       cg.generate(particles);
-      SpdWrapper::get()->debug("particle container size {}",
-                               particles.size());
+      SpdWrapper::get()->debug("particle container size {}", particles.size());
     }
   }
 }

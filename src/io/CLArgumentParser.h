@@ -23,7 +23,7 @@ struct Arguments {
  * @note Does also set the logging level
  */
 class CLArgumentParser {
-public:
+ public:
   /**
    * @brief Fills the passed arguments struct with the parsed arguments from the
    * CLI

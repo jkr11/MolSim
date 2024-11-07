@@ -6,11 +6,11 @@
  * @brief Interface for different types of integrators
  */
 class Integrator {
-protected:
+ protected:
   Force &force;
   double delta_t;
 
-public:
+ public:
   /**
    * @brief Create Integrator object
    * @param force Reference to the type of force applied each iteration
@@ -18,8 +18,7 @@ public:
    * @note Since this is an interface, it's invalid
    */
   Integrator(Force &force, const double delta_t)
-    : force(force), delta_t(delta_t) {
-  };
+      : force(force), delta_t(delta_t){};
 
   /**
    * @brief Virtual destructor for all Integrator inheritors

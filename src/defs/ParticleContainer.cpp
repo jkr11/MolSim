@@ -8,13 +8,13 @@ ParticleContainer::ParticleContainer() { this->particles = {}; };
 ParticleContainer::~ParticleContainer() = default;
 
 ParticleContainer::ParticleContainer(const std::list<Particle> &particles) {
-  for (const auto &particle: particles) {
+  for (const auto &particle : particles) {
     this->particles.push_back(particle);
   }
 }
 
 ParticleContainer::ParticleContainer(const std::vector<Particle> &particles) {
-  for (const auto &particle: particles) {
+  for (const auto &particle : particles) {
     this->particles.push_back(particle);
   }
 }

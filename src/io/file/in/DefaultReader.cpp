@@ -12,11 +12,10 @@
 #include <iostream>
 #include <sstream>
 
-#include "debug/debug_print.h"
 #include "utils/SpdWrapper.h"
 
 void DefaultReader::read(std::vector<Particle> &particles,
-                          const std::string& filename) {
+                         const std::string &filename) {
   if (std::ifstream input_file(filename); input_file.is_open()) {
     std::string tmp_string;
     int num_particles = 0;

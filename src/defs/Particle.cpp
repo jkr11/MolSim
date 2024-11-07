@@ -7,10 +7,7 @@
 
 #include "Particle.h"
 
-#include <iostream>
-
 #include "../utils/ArrayUtils.h"
-#include "debug/debug_print.h"
 #include "spdlog/spdlog.h"
 #include "utils/SpdWrapper.h"
 
@@ -80,7 +77,7 @@ void Particle::setSigma(const double &Sigma) { sigma = Sigma; }
 std::string Particle::toString() const {
   std::stringstream stream;
   stream << "Particle: X:" << x << " v: " << v << " f: " << f
-      << " old_f: " << old_f << " type: " << type;
+         << " old_f: " << old_f << " type: " << type;
   return stream.str();
 }
 
@@ -89,7 +86,7 @@ bool Particle::operator==(const Particle &other) const {
          (type == other.type) and (m == other.m) and (old_f == other.old_f);
 }
 
-std::ostream &operator<<(std::ostream &stream, Particle &p) {
+std::ostream &operator<<(std::ostream &stream, const Particle &p) {
   stream << p.toString();
   return stream;
 }

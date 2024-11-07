@@ -13,10 +13,10 @@
  * iterators
  */
 class ParticleContainer {
-private:
+ private:
   std::vector<Particle> particles;
 
-public:
+ public:
   /**
    * @brief Initialize empty particle container
    */
@@ -104,9 +104,9 @@ public:
    * @param f Lambda that's applied to (p)
    */
   // this is defined in the .h in order for it to be instantiable everywhere
-  template<typename UnOp>
+  template <typename UnOp>
   void single_iterator(const UnOp &f) {
-    for (auto &p: particles) {
+    for (auto &p : particles) {
       f(p);
     }
   }
@@ -117,7 +117,7 @@ public:
    * @param f Lambda that's applied to (p1, p2)
    */
   // this is defined in the .h in order for it to be instantiable everywhere
-  template<typename BinOp>
+  template <typename BinOp>
   void pairIterator(const BinOp &f) {
     // note that the upper tri-diag matrix is iterated over
     for (size_t i = 0; i < particles.size(); ++i) {
