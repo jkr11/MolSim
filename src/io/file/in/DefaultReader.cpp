@@ -1,26 +1,21 @@
 /*
- * FileReader.cpp
+ * DefaultReader.cpp
  *
  *  Created on: 23.02.2010
  *      Author: eckhardw
  */
 
-#include "FileReader.h"
+#include "DefaultReader.h"
 
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
 #include <sstream>
 
-#include "debug/debug_print.h"
 #include "utils/SpdWrapper.h"
 
-FileReader::FileReader() = default;
-
-FileReader::~FileReader() = default;
-
-void FileReader::readFile(std::list<Particle> &particles,
-                          const std::string &filename) {
+void DefaultReader::read(std::vector<Particle> &particles,
+                         const std::string &filename) {
   if (std::ifstream input_file(filename); input_file.is_open()) {
     std::string tmp_string;
     int num_particles = 0;

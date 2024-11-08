@@ -38,15 +38,15 @@ class CuboidGenerator final : public ParticleGenerator {
    */
   CuboidGenerator(const dvec3 &corner, const std::array<int, 3> &dimensions,
                   const double h, const double m,
-                  const std::array<double, 3> &initialVelocity,
-                  const double mv, const double epsilon,const double sigma, const int type);
+                  const std::array<double, 3> &initialVelocity, const double mv,
+                  const double epsilon, const double sigma, const int type);
 
   /**
    * @brief generates particles in the shape of a cuboid
-   * @param container particlecontainer which contains the vector in which this
-   * cuboid is saved
+   * @param particles vector from container which contains the vector in which
+   * this cuboid is saved in
    */
-  void generate(ParticleContainer &container) const override;
+  void generate(std::vector<Particle> &particles) override;
 };
 
 #endif  // CUBOIDGENERATOR_H

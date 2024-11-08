@@ -1,15 +1,13 @@
-#include "../defs/Particle.h"
+#pragma once
 #include "../defs/ParticleContainer.h"
 #include "../forces/Force.h"
-#include "../utils/ArrayUtils.h"
-#pragma once
 
 /**
  * @brief Interface for different types of integrators
  */
 class Integrator {
  protected:
-  Force& force;
+  Force &force;
   double delta_t;
 
  public:
@@ -19,7 +17,8 @@ class Integrator {
    * @param delta_t Delta time
    * @note Since this is an interface, it's invalid
    */
-  Integrator(Force& force, double delta_t) : force(force), delta_t(delta_t){};
+  Integrator(Force &force, const double delta_t)
+      : force(force), delta_t(delta_t){};
 
   /**
    * @brief Virtual destructor for all Integrator inheritors
@@ -30,5 +29,5 @@ class Integrator {
    * @brief Virtual method to advance time by one step
    * @param particle_container
    */
-  virtual void step(ParticleContainer& particle_container) = 0;
+  virtual void step(ParticleContainer &particle_container) = 0;
 };

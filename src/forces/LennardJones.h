@@ -4,7 +4,6 @@
 #pragma once
 #ifndef LENNARDJONES_H
 #define LENNARDJONES_H
-#include "../utils/ArrayUtils.h"
 #include "Force.h"
 /**
  * @brief class exposing calculation of the lennard jones force

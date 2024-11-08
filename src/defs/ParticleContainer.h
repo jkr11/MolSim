@@ -28,7 +28,7 @@ class ParticleContainer {
    * @note A new vector is initialized to hold the references to the passed
    * particles
    */
-  explicit ParticleContainer(const std::vector<Particle>& particles);
+  explicit ParticleContainer(const std::vector<Particle> &particles);
 
   /**
    * @brief Create particle container from list of particles
@@ -36,7 +36,7 @@ class ParticleContainer {
    * @note A new vector is initialized to hold the references to the passed
    * particles
    */
-  explicit ParticleContainer(const std::list<Particle>& particles);
+  explicit ParticleContainer(const std::list<Particle> &particles);
 
   /**
    * @brief Destructor
@@ -47,7 +47,7 @@ class ParticleContainer {
    * @brief Add particle into the particle-system
    * @param p particle to be added
    */
-  void addParticle(const Particle& p);
+  void addParticle(const Particle &p);
 
   /**
    * @brief Get the beginning of the iterator
@@ -78,7 +78,7 @@ class ParticleContainer {
    * @brief Get reference to vector of all particles in the container
    * @return reference to vector of all particles
    */
-  std::vector<Particle>& getParticlesReference();
+  std::vector<Particle> &getParticlesReference();
 
   /**
    * @brief Get the number of particles in the container
@@ -90,7 +90,7 @@ class ParticleContainer {
    * @brief setter for the vector of particles
    * @param particles particles to be set in the container
    */
-  void setParticles(const std::vector<Particle>& particles);
+  void setParticles(const std::vector<Particle> &particles);
 
   /**
    * @brief resizes particles to the desires size, allows for faster additions
@@ -105,8 +105,8 @@ class ParticleContainer {
    */
   // this is defined in the .h in order for it to be instantiable everywhere
   template <typename UnOp>
-  void single_iterator(const UnOp& f) {
-    for (auto& p : particles) {
+  void single_iterator(const UnOp &f) {
+    for (auto &p : particles) {
       f(p);
     }
   }
@@ -118,7 +118,7 @@ class ParticleContainer {
    */
   // this is defined in the .h in order for it to be instantiable everywhere
   template <typename BinOp>
-  void pairIterator(const BinOp& f) {
+  void pairIterator(const BinOp &f) {
     // note that the upper tri-diag matrix is iterated over
     for (size_t i = 0; i < particles.size(); ++i) {
       for (size_t j = i + 1; j < particles.size(); ++j) {

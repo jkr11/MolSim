@@ -1,216 +1,83 @@
-#include <getopt.h>
-
-#include <chrono>
 #include <filesystem>
 #include <iostream>
-#include <list>
-#include <vector>
 
-#include "FileReader.h"
 #include "calc/VerletIntegrator.h"
-#include "defs/Particle.h"
 #include "forces/Force.h"
 #include "forces/Gravity.h"
 #include "forces/LennardJones.h"
-#include "outputWriter/VTKWriter.h"
-#include "outputWriter/XYZWriter.h"
+#include "io/CLArgumentParser.h"
+#include "io/file/in/CuboidReader.h"
+#include "io/file/out/OutputHelper.h"
+#include "io/file/out/VTKWriter.h"
 #include "utils/ArrayUtils.h"
-#include "utils/CuboidReader.h"
 #include "utils/SpdWrapper.h"
 
-/**** forward declaration of the calculation functions ****/
-void plotParticles(int iteration, outputWriter::VTKWriter& vtkWriter,
-                   ParticleContainer& particle_container);
-void printUsage(const std::string& additionalNote,
-                const std::string& programName);
-void prepareOutputDirectory(int argsc, char* argv[]);
-
+// TODO: move
 constexpr int output_interval = 32;
-// print every x vtk writes, seems to be decent
-constexpr double start_time = 0;
-double t_end = 100;
-double delta_t = 0.014;
-double output_time_step_size = 1;
-
-// parent directory, subdirectory will be appended at runtime
-std::string output_directory = "./output/";
-
-const std::string red = "\033[31m";
-const std::string reset = "\033[0m";
-
-std::list<Particle> particles;
 
 Gravity gravity;
 LennardJones lennardjones;
 
-int main(const int argc, char* argsv[]) {
-  // read optional arguments
+int main(int argc, char *argv[]) {
   SpdWrapper::get()->info("Application started");
-  std::string input_file;
-  int opt;
 
-  while ((opt = getopt(argc, argsv, "hf:t:d:s:")) != -1) {
-    try {
-      if ((opt == 'f' || opt == 't' || opt == 'd' || opt == 's') &&
-          optarg == nullptr) {
-        throw std::logic_error("missing option after flag");
-      }
+  Arguments arguments = {
+      "",      // file
+      10,      // t_end
+      0.014,   // delta_t
+      1,       // output_time_step_size
+      "info",  // logLevel
+  };
 
-      switch (opt) {
-        case 'h':
-          printUsage("Display Help page, no execution", argsv[0]);
-        case 'f':
-          input_file = optarg;
-          break;
-        case 't':
-          t_end = std::stod(optarg);
-          break;
-        case 'd':
-          delta_t = std::stod(optarg);
-          break;
-        case 's':
-          output_time_step_size = std::stod(optarg);
-          break;
-        default:
-          printUsage("unsupported flag '-" +
-                         std::string(1, static_cast<char>(opt)) + "' detected",
-                     argsv[0]);
-      }
-    } catch (const std::invalid_argument&) {
-      printUsage("Invalid arg for option -" +
-                     std::string(1, static_cast<char>(opt)) + ": '" +
-                     std::string(optarg) + "'",
-                 argsv[0]);
-    } catch (const std::out_of_range&) {
-      printUsage("Out-of-range value for option -" +
-                     std::string(1, static_cast<char>(opt)) + ": '" +
-                     std::string(optarg) + "'",
-                 argsv[0]);
-    } catch (const std::logic_error&) {
-      printUsage(" ^^", argsv[0]);
-    }
-  }
-
-  if (!std::filesystem::exists(input_file) ||
-      std::filesystem::is_directory(input_file)) {
-    printUsage("Input File '" + input_file + "' does not exist", argsv[0]);
-  }
-
-  auto iss = std::ifstream(input_file);
-  if (iss.peek() == std::ifstream::traits_type::eof()) {
-    printUsage("input file " + input_file + " is empty!", argsv[0]);
+  if (CLArgumentParser::parse(argc, argv, arguments) != 0) {
     exit(EXIT_FAILURE);
   }
 
-  prepareOutputDirectory(argc, argsv);
   SpdWrapper::get()->info("t_end: {}, delta_t: {}, output_time_step_size: {}",
-                        t_end, delta_t, output_time_step_size);
-
-  //FileReader::readFile(particles, input_file);
+                          arguments.t_end, arguments.delta_t,
+                          arguments.output_time_step_size);
 
   // setup Simulation
-  ParticleContainer particle_container(particles);
-  VerletIntegrator verlet_integrator(lennardjones, delta_t);
-  outputWriter::VTKWriter writer;
-  CuboidReader::readCuboidFile(particle_container, input_file);
-  //FileReader::readFile(particles, input_file);
-  double current_time = start_time;
+  // FileReader::readFile(particles, input_file);
+  ParticleContainer particleContainer;
+  CuboidReader::read(particleContainer.getParticlesReference(),
+                     arguments.inputFile);
 
+  VerletIntegrator verlet_integrator(lennardjones, arguments.delta_t);
+  outputWriter::VTKWriter writer;
+
+  const std::string outputDirectory =
+      createOutputDirectory("./output/", argc, argv);
+
+  double current_time = 0;  // start time is always 0
   int iteration = 0;
   int writes = 0;
 
-  // for this loop, we assume: current x, current f and current v are known
-  while (current_time <= t_end) {
-    verlet_integrator.step(particle_container);
-    //if (current_time >= writes * output_time_step_size) {
+  while (current_time <= arguments.t_end) {
+    verlet_integrator.step(particleContainer);
+    // if (current_time >= writes * output_time_step_size) {
 
-      if (writes % output_interval == 0) {
-        plotParticles(iteration, writer, particle_container);
+    if (writes % output_interval == 0) {
+      plotParticles(outputDirectory, iteration, writer, particleContainer);
 #ifdef DEBUG
-        SpdWrapper::get()->debug("Iteration {} finished.", iteration);
+      SpdWrapper::get()->debug("Iteration {} finished.", iteration);
 #else
-        const double completion_percentage = 100 * current_time / t_end;
-        const std::string output_string =
-            "\r[" + std::to_string(completion_percentage) +
-            " %]: " + std::to_string(iteration) +
-            " iterations finished at t=" + std::to_string(current_time);
-        std::cout << output_string << std::flush;
+      const double completion_percentage = 100 * current_time / arguments.t_end;
+      const std::string output_string =
+          "\r[" + std::to_string(completion_percentage) +
+          " %]: " + std::to_string(iteration) +
+          " iterations finished at t=" + std::to_string(current_time);
+      std::cout << output_string << std::flush;
 #endif
-      }
-      writes++;
+    }
+    writes++;
     //}
 
     iteration++;
-    current_time = start_time + delta_t * iteration;
+    current_time = arguments.delta_t * iteration;  // + start_time
   }
 
   SpdWrapper::get()->info("Output written. Terminating...");
 
   return 0;
-}
-
-void plotParticles(const int iteration, outputWriter::VTKWriter& vtkWriter,
-                   ParticleContainer& particle_container) {
-  vtkWriter.initializeOutput(static_cast<int>(particle_container.size()));
-
-  for (auto& p : particle_container.getParticles()) {
-    vtkWriter.plotParticle(p);
-    //SpdWrapper::get()->info("Plotted");
-  }
-
-  vtkWriter.writeFile(output_directory + "/MD_vtk", iteration);
-}
-
-void printUsage(const std::string& additionalNote,
-                const std::string& programName) {
-  // std::cerr << red << "[Error:] " << additionalNote << reset << "\n";
-  SpdWrapper::get()->error(additionalNote);
-  SpdWrapper::get()->info(
-      "Usage: {} [options]\n"
-      "Options:\n"
-      "  -h                Show this help message\n"
-      "  -f <filename>     Specify the input file\n"
-      "  [-t <double>]     Specify the simulation end time (t_end), "
-      "default=100\n"
-      "  [-d <double>]     Specify the simulation delta time (t_delta), "
-      "default=0.014\n"
-      "  [-s <double>]     Specify how often the output will be written "
-      "(step_size), default=1\n"
-      "                    note that this is independent of the time "
-      "resolution (t_delta) and dependent on the simulation time\n"
-      "Example:\n"
-      "  {} -f ./input/eingabe-sonne.txt -t 100 -d 0.14\n",
-      programName, programName);
-
-  exit(EXIT_FAILURE);
-}
-
-void prepareOutputDirectory(const int argsc, char* argv[]) {
-  // source for getting time:
-  // https://stackoverflow.com/questions/997946/how-to-get-current-time-and-date-in-c
-  const auto currentTime = std::chrono::high_resolution_clock::now();
-  const std::time_t now = std::chrono::system_clock::to_time_t(currentTime);
-  const std::tm localTime = *std::localtime(&now);
-  std::ostringstream timeString;
-
-  timeString << std::put_time(&localTime, "%Y-%m-%d %H:%M:%S/");
-  std::string output_sub_directory = timeString.str();
-
-  // output at outputdirectory/currentTime
-  const std::filesystem::path output_directory_path =
-      output_directory + output_sub_directory;
-  output_directory = std::string(output_directory_path);
-
-  if (!is_directory(output_directory_path)) {
-    create_directories(output_directory_path);
-    SpdWrapper::get()->info("Output at {}", output_directory_path.string());
-  }
-
-  // save configuration (input) for future use
-  std::ofstream config(output_directory + "configuration.txt");
-  for (int i = 0; i < argsc; i++) {
-    config << argv[i] << " ";
-  }
-  config << std::endl;
-  config.close();
 }
