@@ -69,3 +69,4 @@ doxys_documentation/
 coverage/
 spdlog
 spdlog/
+_deps

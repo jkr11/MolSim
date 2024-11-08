@@ -7,16 +7,16 @@ project(PSEMolDyn_GroupA VERSION 0.0.1)
 set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug;Release;RelWithDebInfo;MinSizeRel")
 
 # debug
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_compile_definitions(DEBUG)
     message("Debug mode is enabled")
-endif()
+endif ()
 
 # set Release as the default build type if it is not yet set.
-if(NOT CMAKE_BUILD_TYPE)
+if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING
             "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel." FORCE)
-endif(NOT CMAKE_BUILD_TYPE)
+endif (NOT CMAKE_BUILD_TYPE)
 
 # collect all cpp files
 file(GLOB_RECURSE MY_SRC
@@ -24,6 +24,16 @@ file(GLOB_RECURSE MY_SRC
         # header don't need to be included but this might be necessary for some IDEs
         "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h"
 )
+
+include(FetchContent)
+
+FetchContent_Declare(
+        spdlog
+        GIT_REPOSITORY https://github.com/gabime/spdlog.git
+        GIT_TAG v1.14.1
+)
+
+FETCHCONTENT_MAKEAVAILABLE(spdlog)
 
 # create make target
 add_executable(MolSim ${MY_SRC}
@@ -62,7 +72,7 @@ target_link_libraries(MolSim
         xerces-c
         spdlog::spdlog
 )
-add_subdirectory(spdlog)
+
 # activate all compiler warnings. Clean up your code :P
 # depending on the compiler different flags are used
 target_compile_options(MolSim
