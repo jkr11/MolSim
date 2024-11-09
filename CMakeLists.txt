@@ -8,7 +8,7 @@ set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug;Release;RelWithDebIn
 
 # check for memory leaks with asan (run time) and clang-tidy (compile time)
 if(CMAKE_BUILD_TYPE STREQUAL "asan")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -g")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer -g")
     set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS} -fsanitize=address -g")
     set(CMAKE_CXX_CLANG_TIDY "clang-tidy;-checks=clang-analyzer-*")
     execute_process(COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target clean)
@@ -17,7 +17,7 @@ endif()
 
 # check for memory leaks with asan (run time) and clang-tidy (compile time), for github
 if(CMAKE_BUILD_TYPE STREQUAL "asan-quiet")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -g")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer -g")
     set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS} -fsanitize=address -g")
     set(CMAKE_CXX_CLANG_TIDY "clang-tidy;-checks=clang-analyzer-*;--quiet")
     execute_process(COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target clean)
