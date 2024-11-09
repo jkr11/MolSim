@@ -9,6 +9,9 @@
 #include <filesystem>
 #include <fstream>
 
+#include "forces/Gravity.h"
+#include "forces/LennardJones.h"
+#include "spdlog/fmt/bundled/chrono.h"
 #include "utils/SpdWrapper.h"
 
 int CLArgumentParser::parse(int argc, char *argv[], Arguments &arguments) {
@@ -18,12 +21,13 @@ int CLArgumentParser::parse(int argc, char *argv[], Arguments &arguments) {
                                  {"delta_t", required_argument, nullptr, 'd'},
                                  {"step_size", required_argument, nullptr, 's'},
                                  {"loglevel", required_argument, nullptr, 'l'},
+                                 {"force", required_argument, nullptr, 'F'},
                                  {nullptr, 0, nullptr, 0}};
 
   int opt;
   int option_index = 0;
 
-  while ((opt = getopt_long(argc, argv, "hf:t:d:s:l:", long_options,
+  while ((opt = getopt_long(argc, argv, "hf:t:d:s:l:F", long_options,
                             &option_index)) != -1) {
     try {
       if ((opt == 'f' || opt == 't' || opt == 'd' || opt == 's') &&
@@ -50,11 +54,22 @@ int CLArgumentParser::parse(int argc, char *argv[], Arguments &arguments) {
         case 'l':
           arguments.logLevel = optarg;
           break;
+        case 'F': { // scope is required here
+          if (const std::string f = toLower(optarg); f == "lennardjones") {
+            arguments.force = std::make_unique<LennardJones>();
+          } else if (f == "gravity") {
+            arguments.force = std::make_unique<Gravity>();
+          } else {
+            SpdWrapper::get()->error("Unknown Force Type: {}", f);
+            exit(EXIT_FAILURE);
+          }
+          break;
+        }
         default:
           printUsage("unsupported flag '-" +
                          std::string(1, static_cast<char>(opt)) + "' detected",
                      argv[0]);
-          return -1;
+          exit(EXIT_FAILURE);
       }
     } catch (const std::invalid_argument &) {
       printUsage("Invalid arg for option -" +

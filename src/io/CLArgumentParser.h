@@ -5,7 +5,10 @@
 #ifndef CLARGUMENTPARSER_H
 #define CLARGUMENTPARSER_H
 
-#include <iostream>
+#include <algorithm>
+#include <memory>
+
+#include "forces/Force.h"
 
 /**
  * @brief struct to hold command line arguments
@@ -16,6 +19,7 @@ struct Arguments {
   double delta_t;
   double output_time_step_size;
   std::string logLevel;
+  std::unique_ptr<Force> force;
 };
 
 /**
@@ -43,5 +47,12 @@ class CLArgumentParser {
   static void printUsage(const std::string &additionalNote,
                          const std::string &programName);
 };
+
+inline std::string toLower(const std::string &s) {
+  std::string res = s;
+  std::transform(res.begin(), res.end(), res.begin(),
+                 [](const unsigned char c) { return std::tolower(c); });
+  return res;
+}
 
 #endif  // CLARGUMENTPARSER_H
