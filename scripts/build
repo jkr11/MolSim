@@ -1,0 +1,77 @@
+#!/bin/bash
+
+help() {
+  printf "\033[31minvalid CMAKE_BUILD_TYPE '%s' specified!\033[0m\n" "$1"
+  echo "builds the project in /buildDir/<CMAKE_BUILD_TYPE> and exports the path to the executable in \$BUILD"
+  echo "Usage: source build.sh <CMAKE_BUILD_TYPE>"
+  exit 1
+}
+
+# check for valid CMAKE_BUILD_TYPE
+if [ "$#" -ne 1 ] || [ "$1" != "Debug" ] && [ "$1" != "Release" ]
+then
+  help "$1"
+fi
+
+printf "\033[32mbuilding '%s'\033[0m\n" "$1"
+
+# create buildDir if needed
+if [ -d "../buildDir/$1" ]
+then
+  printf "\033[32mdetected existing 'buildDir/%s'\033[0m\n" "$1"
+else
+  mkdir -p ../buildDir/"$1"
+  echo "created 'buildDir/$1'"
+fi
+
+echo ""
+printf "\033[32m--- CMAKE: ---\033[0m\n"
+echo ""
+
+# setup cmake
+start_time=$(date +%s%N)
+cd ../buildDir/"$1" || exit 1
+cmake ../../CMakeLists.txt
+cmake -DCMAKE_BUILD_TYPE="$1" .
+
+echo ""
+printf "\033[32m--- BUILDING: ---\033[0m\n"
+echo ""
+
+# build with make
+if ! make; then
+  printf "\033[31mbuild failed!\033[0m\n"
+  return
+fi
+
+echo ""
+printf "\033[32m--- NOTE: ---\033[0m\n"
+echo ""
+
+# timing
+end_time=$(date +%s%N)
+elapsed_ns=$((end_time - start_time))
+elapsed_sec=$((elapsed_ns / 1000000000))
+elapsed_ms=$(((elapsed_ns % 1000000000) / 1000000))
+
+echo "Time to build:"
+echo "[${elapsed_sec}s ${elapsed_ms}ms]"
+
+(return 0 2>/dev/null) && sourced=1 || sourced=0
+
+if [ "$sourced" -eq 0 ]
+then
+  echo "no \$BUILD variable created since script was not sourced!"
+  exit 0
+fi
+
+BUILD_FILE=$(dirname "$(realpath "$0")")"/MolSim"
+export BUILD="$BUILD_FILE"
+
+# navigate back since this is should have been executed with the same shell
+cd ../../scripts || return
+
+echo ""
+printf "\033[32mpath to executable is stored in \$BUILD:\033[0m\n"
+echo "$BUILD"
+echo ""
