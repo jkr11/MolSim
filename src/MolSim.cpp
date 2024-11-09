@@ -2,8 +2,6 @@
 #include <iostream>
 
 #include "calc/VerletIntegrator.h"
-#include "forces/Force.h"
-#include "forces/Gravity.h"
 #include "forces/LennardJones.h"
 #include "io/CLArgumentParser.h"
 #include "io/file/in/CuboidReader.h"
@@ -15,18 +13,19 @@
 // TODO: move
 constexpr int output_interval = 32;
 
-Gravity gravity;
-LennardJones lennardjones;
+// Gravity gravity;
+// LennardJones lennardjones;
 
 int main(int argc, char *argv[]) {
   SpdWrapper::get()->info("Application started");
 
   Arguments arguments = {
-      "",      // file
-      10,      // t_end
-      0.014,   // delta_t
-      1,       // output_time_step_size
-      "info",  // logLevel
+      "",                                // file
+      10,                                // t_end
+      0.014,                             // delta_t
+      1,                                 // output_time_step_size
+      "info",                            // logLevel
+      std::make_unique<LennardJones>(),  // force
   };
 
   if (CLArgumentParser::parse(argc, argv, arguments) != 0) {
@@ -43,7 +42,7 @@ int main(int argc, char *argv[]) {
   CuboidReader::read(particleContainer.getParticlesReference(),
                      arguments.inputFile);
 
-  VerletIntegrator verlet_integrator(lennardjones, arguments.delta_t);
+  VerletIntegrator verlet_integrator(*arguments.force, arguments.delta_t);
   outputWriter::VTKWriter writer;
 
   const std::string outputDirectory =
@@ -76,7 +75,9 @@ int main(int argc, char *argv[]) {
     iteration++;
     current_time = arguments.delta_t * iteration;  // + start_time
   }
-
+  // This would be necessary for loading bar
+  // We cant have a loading bar with spdlog
+  std::cout << std::endl;
   SpdWrapper::get()->info("Output written. Terminating...");
 
   return 0;
