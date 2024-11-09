@@ -4,13 +4,14 @@ help() {
   printf "\033[31minvalid CMAKE_BUILD_TYPE '%s' specified!\033[0m\n" "$1"
   echo "builds the project in /buildDir/<CMAKE_BUILD_TYPE> and exports the path to the executable in \$BUILD"
   echo "Usage: source build.sh <CMAKE_BUILD_TYPE>"
-  exit 1
+  return
 }
 
 # check for valid CMAKE_BUILD_TYPE
-if [ "$#" -ne 1 ] || [ "$1" != "Debug" ] && [ "$1" != "Release" ]
+if [[ "$#" -ne 1 || ( "$1" != "Debug"  &&  "$1" != "Release"  &&  "$1" != "asan"  &&  "$1" != "asan-strict" ) ]]
 then
   help "$1"
+  return 127
 fi
 
 printf "\033[32mbuilding '%s'\033[0m\n" "$1"
@@ -38,10 +39,22 @@ echo ""
 printf "\033[32m--- BUILDING: ---\033[0m\n"
 echo ""
 
-# build with make
-if ! make; then
+# build with cmake and all cores
+if ! cmake --build . -- -"j$(nproc)"; then
   printf "\033[31mbuild failed!\033[0m\n"
-  return
+  cd ../../scripts || return 127 # navigate back
+  return 127
+fi
+
+echo ""
+printf "\033[32m--- TESTING: ---\033[0m\n"
+echo ""
+
+# test
+if ! ctest; then
+  printf "\033[31mtests failed!\033[0m\n"
+  cd ../../scripts || return 127 # navigate back
+  return 127
 fi
 
 echo ""
@@ -54,7 +67,7 @@ elapsed_ns=$((end_time - start_time))
 elapsed_sec=$((elapsed_ns / 1000000000))
 elapsed_ms=$(((elapsed_ns % 1000000000) / 1000000))
 
-echo "Time to build:"
+echo "Time to build & test:"
 echo "[${elapsed_sec}s ${elapsed_ms}ms]"
 
 (return 0 2>/dev/null) && sourced=1 || sourced=0
@@ -62,14 +75,14 @@ echo "[${elapsed_sec}s ${elapsed_ms}ms]"
 if [ "$sourced" -eq 0 ]
 then
   echo "no \$BUILD variable created since script was not sourced!"
-  exit 0
+  return
 fi
 
 BUILD_FILE=$(dirname "$(realpath "$0")")"/MolSim"
 export BUILD="$BUILD_FILE"
 
 # navigate back since this is should have been executed with the same shell
-cd ../../scripts || return
+cd ../../scripts || return 127
 
 echo ""
 printf "\033[32mpath to executable is stored in \$BUILD:\033[0m\n"
