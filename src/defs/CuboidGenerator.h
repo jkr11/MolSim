@@ -7,9 +7,8 @@
 #include "ParticleGenerator.h"
 
 /**
- * @brief
- * Generates Particles to a container in the shape of a cuboid [dim1, dim2,
- * dim3]
+ * @brief Generates Particles to a container in the shape of a cuboid [dim1,
+ * dim2, dim3]
  */
 class CuboidGenerator final : public ParticleGenerator {
  private:
