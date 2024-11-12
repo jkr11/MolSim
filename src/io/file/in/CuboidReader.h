@@ -12,7 +12,8 @@
 
 /**
  * @brief Reads files describing cuboids (.txt, .cuboid) in the following format
- * [TODO: format]
+ * [number of cuboids : int]
+ * [corner, velocity, dimensions, mass, type, h, mean_velocity, epsilon, sigma]
  */
 class CuboidReader : FileReader {
  public:

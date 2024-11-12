@@ -54,7 +54,7 @@ int CLArgumentParser::parse(int argc, char *argv[], Arguments &arguments) {
         case 'l':
           arguments.logLevel = optarg;
           break;
-        case 'F': { // scope is required here
+        case 'F': {  // scope is required here
           if (const std::string f = toLower(optarg); f == "lennardjones") {
             arguments.force = std::make_unique<LennardJones>();
           } else if (f == "gravity") {
@@ -137,6 +137,9 @@ void CLArgumentParser::printUsage(const std::string &additionalNote,
       "resolution (t_delta) and dependent on the simulation time\n"
       "  [--loglevel <level>]       Specify the log level, default=info, "
       "valid=[off, error, warn, info, debug, trace]\n"
+      "  [--force <forceType>]      Specify what force to use, "
+      "default=lennardjones, "
+      "forceType=[lennardjones,gravity]\n"
       "Example:\n"
       "  {} -f ./input/eingabe-sonne.txt -t 100 -d 0.14\n",
       programName, programName);
