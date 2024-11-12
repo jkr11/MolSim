@@ -6,6 +6,24 @@ project(PSEMolDyn_GroupA VERSION 0.0.1)
 # let ccmake and cmake-gui offer the default build type options
 set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug;Release;RelWithDebInfo;MinSizeRel")
 
+# check for memory leaks with asan (run time) and clang-tidy (compile time)
+if(CMAKE_BUILD_TYPE STREQUAL "asan")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer -g")
+    set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS} -fsanitize=address -g")
+    set(CMAKE_CXX_CLANG_TIDY "clang-tidy;-checks=clang-analyzer-*;-extra-arg=-std=c++17")
+    execute_process(COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target clean)
+    message("Check mode is enabled (sanitize address, clang-tidy), clean build")
+endif()
+
+# check for memory leaks with asan (run time) and clang-tidy (compile time), for github
+if(CMAKE_BUILD_TYPE STREQUAL "asan-quiet")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer -g")
+    set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS} -fsanitize=address -g")
+    set(CMAKE_CXX_CLANG_TIDY "clang-tidy;-checks=clang-analyzer-*;-std=c++17;--quiet;-extra-arg=-std=c++17")
+    execute_process(COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target clean)
+    message("Check mode is enabled (sanitize address, clang-tidy), clean build, quiet")
+endif()
+
 # debug
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_compile_definitions(DEBUG)
