@@ -48,6 +48,11 @@ class CLArgumentParser {
                          const std::string &programName);
 };
 
+/**
+ * @brief return the lowercase version of any (valid) string inputted
+ * @param s reference to the input string
+ * @return lowercase version of s
+ */
 inline std::string toLower(const std::string &s) {
   std::string res = s;
   std::transform(res.begin(), res.end(), res.begin(),

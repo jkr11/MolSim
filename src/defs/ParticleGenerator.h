@@ -6,9 +6,12 @@
 #define PARTICLEGENERATOR_H
 #include "ParticleContainer.h"
 
-// TODO
+/**
+ * @brief virtual class for ParticleGenerators writing a specific shape /
+ * arrangement of particles into the container
+ */
 class ParticleGenerator {
-public:
+ public:
   virtual ~ParticleGenerator() = default;
 
   /**
