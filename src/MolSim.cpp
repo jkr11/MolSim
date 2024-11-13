@@ -2,19 +2,16 @@
 #include <iostream>
 
 #include "calc/VerletIntegrator.h"
+#include "debug/debug_print.h"
 #include "forces/LennardJones.h"
 #include "io/CLArgumentParser.h"
 #include "io/file/in/CuboidReader.h"
 #include "io/file/out/OutputHelper.h"
 #include "io/file/out/VTKWriter.h"
+#include "spdlog/stopwatch.h"
 #include "utils/ArrayUtils.h"
 #include "utils/SpdWrapper.h"
 
-// TODO: move
-constexpr int output_interval = 32;
-
-// Gravity gravity;
-// LennardJones lennardjones;
 
 int main(int argc, char *argv[]) {
   SpdWrapper::get()->info("Application started");
@@ -26,6 +23,7 @@ int main(int argc, char *argv[]) {
       1,                                 // output_time_step_size
       "info",                            // logLevel
       std::make_unique<LennardJones>(),  // force
+      std::make_unique<CuboidReader>(),  // Reader
   };
 
   if (CLArgumentParser::parse(argc, argv, arguments) != 0) {
@@ -39,8 +37,8 @@ int main(int argc, char *argv[]) {
   // setup Simulation
   // FileReader::readFile(particles, input_file);
   ParticleContainer particleContainer;
-  CuboidReader::read(particleContainer.getParticlesReference(),
-                     arguments.inputFile);
+  arguments.reader->read(particleContainer.getParticlesReference(),
+                         arguments.inputFile);
 
   VerletIntegrator verlet_integrator(*arguments.force, arguments.delta_t);
   outputWriter::VTKWriter writer;
@@ -48,35 +46,31 @@ int main(int argc, char *argv[]) {
   const std::string outputDirectory =
       createOutputDirectory("./output/", argc, argv);
 
+  const spdlog::stopwatch sw;
   double current_time = 0;  // start time is always 0
   int iteration = 0;
   int writes = 0;
+  int percentage = 0;
+  double next_output_time = 0;
 
   while (current_time <= arguments.t_end) {
     verlet_integrator.step(particleContainer);
-    // if (current_time >= writes * output_time_step_size) {
 
-    if (writes % output_interval == 0) {
+    if (current_time >= next_output_time) {
       plotParticles(outputDirectory, iteration, writer, particleContainer);
-#ifdef DEBUG
-      SpdWrapper::get()->debug("Iteration {} finished.", iteration);
-#else
-      const double completion_percentage = 100 * current_time / arguments.t_end;
-      const std::string output_string =
-          "\r[" + std::to_string(completion_percentage) +
-          " %]: " + std::to_string(iteration) +
-          " iterations finished at t=" + std::to_string(current_time);
-      std::cout << output_string << std::flush;
-#endif
+      writes++;
+      next_output_time = writes * arguments.output_time_step_size;
+
+      // cgeck if next percentage complete
+      if (const double t = 100 * current_time / arguments.t_end; t >= percentage) {
+        percentage++;
+        SpdWrapper::get()->info("[{:.0f} %]: Iteration {}", 100 * current_time / arguments.t_end, iteration);
+      }
     }
-    writes++;
-    //}
 
     iteration++;
     current_time = arguments.delta_t * iteration;  // + start_time
   }
-  // This would be necessary for loading bar
-  // We cant have a loading bar with spdlog
   std::cout << std::endl;
   SpdWrapper::get()->info("Output written. Terminating...");
 

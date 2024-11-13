@@ -7,6 +7,7 @@
 #include <iostream>
 #include <sstream>
 
+#include "debug/debug_print.h"
 #include "defs/CuboidGenerator.h"
 #include "defs/Particle.h"
 #include "utils/SpdWrapper.h"
@@ -14,7 +15,7 @@
 void CuboidReader::read(std::vector<Particle>& particles,
                         const std::string& fileName) {
   std::ifstream inputfile(fileName);
-  SpdWrapper::get()->debug("Reading cuboid file {}", fileName);
+  DEBUG_PRINT("Reading cuboids from file " + fileName);
   if (inputfile.is_open()) {
     dvec3 corner{};
     dvec3 velocity{};
@@ -33,13 +34,14 @@ void CuboidReader::read(std::vector<Particle>& particles,
     while (line.empty() or line[0] == '#') {
       getline(inputfile, line);
       lineNum++;
-      SpdWrapper::get()->debug("Reading line {}: {}", lineNum, line);
+      DEBUG_PRINT("Reading line " + std::to_string(lineNum) + ":" + line);
     }
     // std::getline(inputfile, line);
     std::istringstream numstream(line);
     numstream >> ncubes;
-    SpdWrapper::get()->debug("Reading {} cuboids from file {}", ncubes,
-                             fileName);
+    DEBUG_PRINT("Reading " + std::to_string(ncubes) + " cuboids from file " +
+                fileName);
+
     if (ncubes == 0) {
       SpdWrapper::get()->error("No cuboids in file {}", fileName);
       exit(EXIT_FAILURE);
@@ -59,7 +61,7 @@ void CuboidReader::read(std::vector<Particle>& particles,
                                    lineNum);
           exit(EXIT_FAILURE);
         }
-        SpdWrapper::get()->debug("Reading coordinates {}", c);
+        DEBUG_PRINT("Reading coordinates " + std::to_string(c));
       }
       // SpdWrapper::get()->debug("corner: {}", corner);
 
@@ -69,7 +71,7 @@ void CuboidReader::read(std::vector<Particle>& particles,
                                    lineNum);
           exit(EXIT_FAILURE);
         }
-        SpdWrapper::get()->debug("Reading velocity {}", v);
+        DEBUG_PRINT("Reading velocity " + std::to_string(v));
       }
       // SpdWrapper::get()->debug("velocity {}", velocity);
 
@@ -79,7 +81,7 @@ void CuboidReader::read(std::vector<Particle>& particles,
                                    lineNum);
           exit(EXIT_FAILURE);
         }
-        SpdWrapper::get()->debug("Reading dimensions {}", d);
+        DEBUG_PRINT("Reading dimensions " + std::to_string(d));
       }
       // SpdWrapper::get()->debug("dimensions: {}", dimensions);
 
@@ -87,7 +89,8 @@ void CuboidReader::read(std::vector<Particle>& particles,
         SpdWrapper::get()->error("Error reading mass at line {}", lineNum);
         exit(EXIT_FAILURE);
       }
-      SpdWrapper::get()->debug("mass {} at line {}", mass, lineNum);
+      DEBUG_PRINT("mass" + std::to_string(mass) + " at line " +
+                  std::to_string(lineNum));
 
       if (!(linestream >> type)) {
         SpdWrapper::get()->error("Error reading type at line {}", lineNum);
@@ -98,31 +101,35 @@ void CuboidReader::read(std::vector<Particle>& particles,
         SpdWrapper::get()->error("Error reading h at line {}", lineNum);
         exit(EXIT_FAILURE);
       }
-      SpdWrapper::get()->debug("h: {} at line {}", h, lineNum);
+      DEBUG_PRINT("h: " + std::to_string(h) + " at line " +
+                  std::to_string(lineNum));
 
       if (!(linestream >> mv)) {
         SpdWrapper::get()->error("Error reading mv at line {}", lineNum);
         exit(EXIT_FAILURE);
       }
-      SpdWrapper::get()->debug("mv: {} at line {}", mv, lineNum);
+      DEBUG_PRINT("mv: " + std::to_string(mv) + " at line " +
+                  std::to_string(lineNum));
 
       if (!(linestream >> epsilon)) {
         SpdWrapper::get()->error("Error reading epsilon at line {}", lineNum);
         exit(EXIT_FAILURE);
       }
-      SpdWrapper::get()->debug("epsilon: {} at line {}", epsilon, lineNum);
+      DEBUG_PRINT("epsilon: " + std::to_string(epsilon) + " at line " +
+                  std::to_string(lineNum));
 
       if (!(linestream >> sigma)) {
         SpdWrapper::get()->error("Error reading sigma at line {}", lineNum);
         exit(EXIT_FAILURE);
       }
-      SpdWrapper::get()->debug("sigma: {} at line {}", sigma, lineNum);
+      DEBUG_PRINT("sigma: " + std::to_string(sigma) + " at line " +
+                  std::to_string(lineNum));
 
       CuboidGenerator cg(corner, dimensions, h, mass, velocity, mv, epsilon,
                          sigma, type);
 
       cg.generate(particles);
-      SpdWrapper::get()->debug("particle container size {}", particles.size());
+      DEBUG_PRINT("particle container size " + particles.size());
     }
   }
 }

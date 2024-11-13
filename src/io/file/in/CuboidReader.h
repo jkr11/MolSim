@@ -15,7 +15,7 @@
  * [number of cuboids : int]
  * [corner, velocity, dimensions, mass, type, h, mean_velocity, epsilon, sigma]
  */
-class CuboidReader : FileReader {
+class CuboidReader final : public FileReader {
  public:
   /**
    * @brief reads the file description of a cuboid into its vector form
@@ -23,7 +23,7 @@ class CuboidReader : FileReader {
    * particle container, storing the cuboid
    * @param fileName location of the cuboid file
    */
-  static void read(std::vector<Particle>& particles,
-                   const std::string& fileName);
+  void read(std::vector<Particle>& particles,
+                   const std::string& fileName) override;
 };
 #endif  // CUBOIDREADER_H

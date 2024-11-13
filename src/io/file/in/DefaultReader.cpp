@@ -12,6 +12,7 @@
 #include <iostream>
 #include <sstream>
 
+#include "debug/debug_print.h"
 #include "utils/SpdWrapper.h"
 
 void DefaultReader::read(std::vector<Particle> &particles,
@@ -25,18 +26,18 @@ void DefaultReader::read(std::vector<Particle> &particles,
     int type;
 
     getline(input_file, tmp_string);
-    SpdWrapper::get()->debug("Read line: {}", tmp_string);
+    DEBUG_PRINT("Read line: " + tmp_string);
 
     while (tmp_string.empty() or tmp_string[0] == '#') {
       getline(input_file, tmp_string);
-      SpdWrapper::get()->debug("Read line: {}", tmp_string);
+      DEBUG_PRINT("Read line: " + tmp_string);
     }
 
     std::istringstream numstream(tmp_string);
     numstream >> num_particles;
-    SpdWrapper::get()->debug("Reading {}", num_particles);
+    DEBUG_PRINT("Reading " + num_particles);
     getline(input_file, tmp_string);
-    SpdWrapper::get()->debug("Read line: {}", tmp_string);
+    DEBUG_PRINT("Read line: " + tmp_string);
 
     for (int i = 0; i < num_particles; i++) {
       std::istringstream datastream(tmp_string);
@@ -56,7 +57,7 @@ void DefaultReader::read(std::vector<Particle> &particles,
       particles.emplace_back(x, v, m, 1.0, 1.0, type);
 
       getline(input_file, tmp_string);
-      SpdWrapper::get()->debug("Read line: {}", tmp_string);
+      DEBUG_PRINT("Read line: " + tmp_string);
     }
   } else {
     SpdWrapper::get()->error("Error opening file {}", filename);

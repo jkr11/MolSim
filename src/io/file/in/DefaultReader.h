@@ -16,13 +16,13 @@
  * @brief reads files in the default format, so single line particles, use this
  * for week 1
  */
-class DefaultReader : FileReader {
+class DefaultReader final : public FileReader {
  public:
   /**
    * @brief reads files in the default format
    * @param particles vector passed by particle_container
    * @param filename path to the file to be read
    */
-  static void read(std::vector<Particle>& particles,
-                   const std::string& filename);
+  void read(std::vector<Particle>& particles,
+                   const std::string& filename) override;
 };

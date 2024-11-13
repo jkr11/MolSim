@@ -9,6 +9,8 @@
 #include <filesystem>
 #include <fstream>
 
+#include "file/in/CuboidReader.h"
+#include "file/in/DefaultReader.h"
 #include "forces/Gravity.h"
 #include "forces/LennardJones.h"
 #include "spdlog/fmt/bundled/chrono.h"
@@ -22,12 +24,13 @@ int CLArgumentParser::parse(int argc, char *argv[], Arguments &arguments) {
                                  {"step_size", required_argument, nullptr, 's'},
                                  {"loglevel", required_argument, nullptr, 'l'},
                                  {"force", required_argument, nullptr, 'F'},
+                                 {"reader", required_argument, nullptr, 'R'},
                                  {nullptr, 0, nullptr, 0}};
 
   int opt;
   int option_index = 0;
 
-  while ((opt = getopt_long(argc, argv, "hf:t:d:s:l:F", long_options,
+  while ((opt = getopt_long(argc, argv, "hf:t:d:s:l:F:R:", long_options,
                             &option_index)) != -1) {
     try {
       if ((opt == 'f' || opt == 't' || opt == 'd' || opt == 's') &&
@@ -54,13 +57,24 @@ int CLArgumentParser::parse(int argc, char *argv[], Arguments &arguments) {
         case 'l':
           arguments.logLevel = optarg;
           break;
-        case 'F': {  // scope is required here
+        case 'F': {
           if (const std::string f = toLower(optarg); f == "lennardjones") {
             arguments.force = std::make_unique<LennardJones>();
           } else if (f == "gravity") {
             arguments.force = std::make_unique<Gravity>();
           } else {
             SpdWrapper::get()->error("Unknown Force Type: {}", f);
+            exit(EXIT_FAILURE);
+          }
+          break;
+        }
+        case 'R': {
+          if (const std::string r = toLower(optarg); r == "cuboidreader") {
+            arguments.reader = std::make_unique<CuboidReader>();
+          } else if (r == "defaultreader") {
+            arguments.reader = std::make_unique<DefaultReader>();
+          } else {
+            SpdWrapper::get()->error("Unknown Reader Type: {}", r);
             exit(EXIT_FAILURE);
           }
           break;
@@ -84,13 +98,13 @@ int CLArgumentParser::parse(int argc, char *argv[], Arguments &arguments) {
                  argv[0]);
 
       return -1;
-    } catch (const std::logic_error &) {
-      printUsage(" ^^", argv[0]);
+    } catch (const std::logic_error &e) {
+      printUsage(e.what(), argv[0]);
       return -1;
     }
   }
 
-  // validate input file (move to IO validator?)
+  // validate input file
   if (!std::filesystem::exists(arguments.inputFile) ||
       std::filesystem::is_directory(arguments.inputFile)) {
     printUsage("Input File '" + arguments.inputFile + "' does not exist",
@@ -122,24 +136,28 @@ void CLArgumentParser::printUsage(const std::string &additionalNote,
   SpdWrapper::get()->error(
       "Usage: {} [options]\n"
       "Options:\n"
-      "  --help                     Show this help message\n"
-      "  --file <filename>          Specify the input file\n"
-      "  [--t_end <double>]         Specify the simulation end time (t_end), "
+      "  --help | -h                     Show this help message\n"
+      "  --file | -f <filename>          Specify the input file\n"
+      "  [--t_end | -t <double>]         Specify the simulation end time "
+      "(t_end), "
       "default=100\n"
-      "  [--delta_t <double>]       Specify the simulation delta time "
+      "  [--delta_t | -d <double>]       Specify the simulation delta time "
       "(t_delta), "
       "default=0.014\n"
-      "  [--step_size <double>]     Specify how often the output will be "
-      "written "
+      "  [--step_size | -s <double>]     Specify how often the output will be "
+      "written wrt. time"
       "(step_size), default=1\n"
-      "                               Note that this is independent of the "
+      "                                  Note that this is independent of the "
       "time "
       "resolution (t_delta) and dependent on the simulation time\n"
-      "  [--loglevel <level>]       Specify the log level, default=info, "
+      "  [--loglevel | -l <level>]       Specify the log level, default=info, "
       "valid=[off, error, warn, info, debug, trace]\n"
-      "  [--force <forceType>]      Specify what force to use, "
+      "  [--force | -F <forceType>]      Specify what force to use, "
       "default=lennardjones, "
       "forceType=[lennardjones,gravity]\n"
+      "  [--reader | -R <readerType>]    Specify reader type, "
+      "default=cuboidreader, "
+      "readerType=[cuboidreader,defaultreader]"
       "Example:\n"
       "  {} -f ./input/eingabe-sonne.txt -t 100 -d 0.14\n",
       programName, programName);

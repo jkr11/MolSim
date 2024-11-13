@@ -6,6 +6,7 @@
 #include "../utils/ArrayUtils.h"
 #include "../utils/MaxwellBoltzmannDistribution.h"
 #include "../utils/SpdWrapper.h"
+#include "debug/debug_print.h"
 
 CuboidGenerator::CuboidGenerator(const dvec3 &corner,
                                  const std::array<int, 3> &dimensions,
@@ -24,9 +25,9 @@ CuboidGenerator::CuboidGenerator(const dvec3 &corner,
       type(type) {}
 
 void CuboidGenerator::generate(std::vector<Particle> &particles) {
-  int size = (dimensions[0] * dimensions[1] * dimensions[2]);
+  const int size = (dimensions[0] * dimensions[1] * dimensions[2]);
   particles.reserve(size);
-  SpdWrapper::get()->debug("reserved: {}", size);
+  DEBUG_PRINT("reserved: " + size);
 
   for (int i = 0; i < dimensions[0]; i++) {
     for (int j = 0; j < dimensions[1]; j++) {
@@ -40,5 +41,5 @@ void CuboidGenerator::generate(std::vector<Particle> &particles) {
       }
     }
   }
-  SpdWrapper::get()->debug("particles: {}", particles.size());
+  DEBUG_PRINT("particles: " + particles.size());
 }
