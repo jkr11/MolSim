@@ -9,6 +9,7 @@
 #include <memory>
 
 #include "forces/Force.h"
+#include "io/file/in/FileReader.h"
 
 /**
  * @brief struct to hold command line arguments
@@ -20,6 +21,7 @@ struct Arguments {
   double output_time_step_size;
   std::string logLevel;
   std::unique_ptr<Force> force;
+  std::unique_ptr<FileReader> reader;
 };
 
 /**

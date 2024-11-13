@@ -12,6 +12,7 @@
 #include <iomanip>
 #include <string>
 
+#include "debug/debug_print.h"
 #include "utils/SpdWrapper.h"
 
 namespace outputWriter {
@@ -63,11 +64,13 @@ void VTKWriter::writeFile(const std::string &filename, int iteration) const {
 }
 
 void VTKWriter::plotParticle(const Particle &p) const {
+#ifdef DEBUG
   if (vtkFile->UnstructuredGrid().present()) {
-    SpdWrapper::get()->debug("UnstructuredGrid is present");
+    DEBUG_PRINT("UnstructuredGrid is present");
   } else {
-    SpdWrapper::get()->debug("No UnstructuredGrid present");
+    DEBUG_PRINT("No UnstructuredGrid present");
   }
+#endif
 
   PointData::DataArray_sequence &pointDataSequence =
       vtkFile->UnstructuredGrid()->Piece().PointData().DataArray();

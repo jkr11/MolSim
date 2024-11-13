@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "defs/Particle.h"
 
 /**
@@ -7,11 +9,12 @@
  */
 class FileReader {
  public:
+  virtual ~FileReader() = default;
   /**
    * @brief reads the file into the vector provided by the container
    * @param particles vector passed from particle_container
    * @param filepath path of the file to be read
    */
-  static void read(std::vector<Particle> &particles,
-                   const std::string &filepath);
+  virtual void read(std::vector<Particle> &particles,
+                    const std::string &filepath) = 0;
 };
