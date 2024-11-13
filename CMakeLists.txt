@@ -7,22 +7,22 @@ project(PSEMolDyn_GroupA VERSION 0.0.1)
 set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug;Release;RelWithDebInfo;MinSizeRel")
 
 # check for memory leaks with asan (run time) and clang-tidy (compile time)
-if(CMAKE_BUILD_TYPE STREQUAL "asan")
+if (CMAKE_BUILD_TYPE STREQUAL "asan")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer -g")
     set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS} -fsanitize=address -g")
     set(CMAKE_CXX_CLANG_TIDY "clang-tidy;-checks=clang-analyzer-*;-extra-arg=-std=c++17")
     execute_process(COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target clean)
     message("Check mode is enabled (sanitize address, clang-tidy), clean build")
-endif()
+endif ()
 
 # check for memory leaks with asan (run time) and clang-tidy (compile time), for github
-if(CMAKE_BUILD_TYPE STREQUAL "asan-quiet")
+if (CMAKE_BUILD_TYPE STREQUAL "asan-quiet")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer -g")
     set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS} -fsanitize=address -g")
     set(CMAKE_CXX_CLANG_TIDY "clang-tidy;-checks=clang-analyzer-*;-std=c++17;--quiet;-extra-arg=-std=c++17")
     execute_process(COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target clean)
     message("Check mode is enabled (sanitize address, clang-tidy), clean build, quiet")
-endif()
+endif ()
 
 # debug
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -53,6 +53,16 @@ FetchContent_Declare(
 
 FETCHCONTENT_MAKEAVAILABLE(spdlog)
 
+
+include(FetchContent)
+FetchContent_Declare(
+        googletest
+        GIT_REPOSITORY https://github.com/google/googletest.git
+        GIT_TAG v1.15.1
+)
+
+FetchContent_MakeAvailable(googletest)
+
 # create make target
 add_executable(MolSim ${MY_SRC}
         src/calc/VerletIntegrator.h
@@ -69,7 +79,8 @@ add_executable(MolSim ${MY_SRC}
         src/io/file/in/CuboidReader.cpp
         src/io/CLArgumentParser.h
         src/io/CLArgumentParser.cpp
-        src/io/file/out/OutputHelper.h)
+        src/io/file/out/OutputHelper.h
+        tests/tests.cpp)
 
 # set cxx standard. You may raise this if you want.
 target_compile_features(MolSim
@@ -84,11 +95,14 @@ target_include_directories(MolSim
         ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
+enable_testing()
+
 target_link_libraries(MolSim
         # stuff that is used in headers and source files
         PUBLIC
         xerces-c
         spdlog::spdlog
+        GTest::gtest_main
 )
 
 # activate all compiler warnings. Clean up your code :P
@@ -100,6 +114,11 @@ target_compile_options(MolSim
         $<$<CXX_COMPILER_ID:Intel>:-w3 -wd383,981,1418,1572,2259>
 )
 
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -ffast-math -march=native")
+
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
 include(doxygen)
+
+include(GoogleTest)
+gtest_discover_tests(MolSim)
