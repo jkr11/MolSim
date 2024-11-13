@@ -25,16 +25,16 @@ if(CMAKE_BUILD_TYPE STREQUAL "asan-quiet")
 endif()
 
 # debug
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_compile_definitions(DEBUG)
     message("Debug mode is enabled")
-endif()
+endif ()
 
 # set Release as the default build type if it is not yet set.
-if(NOT CMAKE_BUILD_TYPE)
+if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING
             "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel." FORCE)
-endif(NOT CMAKE_BUILD_TYPE)
+endif (NOT CMAKE_BUILD_TYPE)
 
 # collect all cpp files
 file(GLOB_RECURSE MY_SRC
@@ -43,11 +43,33 @@ file(GLOB_RECURSE MY_SRC
         "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h"
 )
 
+include(FetchContent)
+
+FetchContent_Declare(
+        spdlog
+        GIT_REPOSITORY https://github.com/gabime/spdlog.git
+        GIT_TAG v1.14.1
+)
+
+FETCHCONTENT_MAKEAVAILABLE(spdlog)
+
 # create make target
 add_executable(MolSim ${MY_SRC}
         src/calc/VerletIntegrator.h
         src/calc/VerletIntegrator.cpp
-        src/defs/ParticleContainer.cpp)
+        src/defs/ParticleContainer.cpp
+        src/utils/SpdWrapper.h
+        src/utils/SpdWrapper.cpp
+        src/forces/LennardJones.h
+        src/forces/LennardJones.cpp
+        src/defs/ParticleGenerator.h
+        src/defs/CuboidGenerator.h
+        src/defs/CuboidGenerator.cpp
+        src/io/file/in/CuboidReader.h
+        src/io/file/in/CuboidReader.cpp
+        src/io/CLArgumentParser.h
+        src/io/CLArgumentParser.cpp
+        src/io/file/out/OutputHelper.h)
 
 # set cxx standard. You may raise this if you want.
 target_compile_features(MolSim
@@ -66,6 +88,7 @@ target_link_libraries(MolSim
         # stuff that is used in headers and source files
         PUBLIC
         xerces-c
+        spdlog::spdlog
 )
 
 # activate all compiler warnings. Clean up your code :P
