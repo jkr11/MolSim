@@ -141,6 +141,6 @@ void CLArgumentParser::printUsage(const std::string &additionalNote,
       "default=lennardjones, "
       "forceType=[lennardjones,gravity]\n"
       "Example:\n"
-      "  {} -f ./input/eingabe-sonne.txt -t 100 -d 0.14\n",
+      "  {} -f ../input/test.cuboid -t 5 -d 0.0002 -s 0.01\n",
       programName, programName);
 }
