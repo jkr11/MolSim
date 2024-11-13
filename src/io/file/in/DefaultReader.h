@@ -24,5 +24,5 @@ class DefaultReader final : public FileReader {
    * @param filename path to the file to be read
    */
   void read(std::vector<Particle>& particles,
-                   const std::string& filename) override;
+            const std::string& filename) override;
 };

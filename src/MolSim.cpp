@@ -12,7 +12,6 @@
 #include "utils/ArrayUtils.h"
 #include "utils/SpdWrapper.h"
 
-
 int main(int argc, char *argv[]) {
   SpdWrapper::get()->info("Application started");
 
@@ -62,9 +61,12 @@ int main(int argc, char *argv[]) {
       next_output_time = writes * arguments.output_time_step_size;
 
       // cgeck if next percentage complete
-      if (const double t = 100 * current_time / arguments.t_end; t >= percentage) {
+      if (const double t = 100 * current_time / arguments.t_end;
+          t >= percentage) {
         percentage++;
-        SpdWrapper::get()->info("[{:.0f} %]: Iteration {}", 100 * current_time / arguments.t_end, iteration);
+        SpdWrapper::get()->info("[{:.0f} %]: Iteration {}",
+                                100 * current_time / arguments.t_end,
+                                iteration);
       }
     }
 

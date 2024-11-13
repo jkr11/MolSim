@@ -9,9 +9,7 @@
 #include <iostream>
 
 #ifdef DEBUG
-#define      \
-  DEBUG_PRINT(msg) \
-  SpdWrapper::get()->debug(msg);
+#define DEBUG_PRINT(msg) SpdWrapper::get()->debug(msg);
 #else
 #define DEBUG_PRINT(msg)
 #endif

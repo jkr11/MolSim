@@ -24,6 +24,6 @@ class CuboidReader final : public FileReader {
    * @param fileName location of the cuboid file
    */
   void read(std::vector<Particle>& particles,
-                   const std::string& fileName) override;
+            const std::string& fileName) override;
 };
 #endif  // CUBOIDREADER_H
