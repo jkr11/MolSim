@@ -3,6 +3,8 @@
 //
 #include "VerletIntegrator.h"
 
+#include <iostream>
+
 #include "../utils/ArrayUtils.h"
 
 void VerletIntegrator::step(ParticleContainer& particle_container) {
