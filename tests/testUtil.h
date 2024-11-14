@@ -23,12 +23,12 @@ inline void DVEC3_NEAR(const dvec3& a, const dvec3& b, const std::string& error,
  * @tparam T generic object type
  */
 template <typename T>
-void ASSERT_VECTOR_EQ(const std::vector<T>& list1,
+void EXPECT_VECTOR_EQ(const std::vector<T>& list1,
                       const std::vector<T>& list2) {
-  ASSERT_EQ(list1.size(), list2.size()) << "Lists are of different sizes";
+  EXPECT_EQ(list1.size(), list2.size()) << "Lists are of different sizes";
 
   for (size_t i = 0; i < list1.size(); ++i) {
-    ASSERT_EQ(list1[i], list2[i])
+    EXPECT_EQ(list1[i], list2[i])
         << "Elements at index " << i << " are not equal";
   }
 }

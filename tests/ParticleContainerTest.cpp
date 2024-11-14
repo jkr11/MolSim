@@ -39,7 +39,7 @@ TEST(ParticleContainer, single_iterator) {
   std::vector<Particle> vec = {};
   container.single_iterator([&vec](Particle& p) { vec.push_back(p); });
 
-  ASSERT_VECTOR_EQ(vec, {p1, p2, p3});
+  EXPECT_VECTOR_EQ(vec, {p1, p2, p3});
 }
 
 /*
