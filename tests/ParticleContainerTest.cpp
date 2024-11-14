@@ -1,24 +1,14 @@
-//
-// Created by jkr on 11/13/24.
-//
 #include <gtest/gtest.h>
 
 #include <vector>
 
-#include "../src/calc/VerletIntegrator.h"
 #include "../src/defs/ParticleContainer.h"
-#include "../src/forces/LennardJones.h"
 #include "testUtil.h"
-
-/*
-  All tests (should) follow this convention:
-  TEST(<Class>, <Function/Method>)
-*/
 
 /*
  * Add particle changes internal vector length
  */
-TEST(ParticleContainer, addParticle) {
+TEST(ParticleContainer, addParticleAndSize) {
   ParticleContainer container;
   Particle particle;
 
@@ -71,7 +61,7 @@ TEST(ParticleContainer, pair_iterator) {
   std::vector<std::pair<Particle*, Particle*>> pairs;
 
   container.pairIterator(
-      [&pairs](Particle& p1, Particle& p2) { pairs.push_back({&p1, &p2}); });
+      [&pairs](Particle& p1, Particle& p2) { pairs.emplace_back(&p1, &p2); });
 
   ASSERT_EQ(pairs.size(), 3);
 
@@ -83,42 +73,4 @@ TEST(ParticleContainer, pair_iterator) {
 
   ASSERT_TRUE(*pairs[2].first == container[1]);
   ASSERT_TRUE(*pairs[2].second == container[2]);
-}
-
-/*
- * LennardJones directional forces is correct
- */
-TEST(LennardJones, directionalForce) {
-  Particle p({1, 0, 0}, {0, 0, 0}, 1, 1, 1);
-  Particle q({0, 1, 0}, {0, 0, 0}, 1, 1, 1);
-  LennardJones lj;
-
-  dvec3 f = lj.directionalForce(p, q);
-  DVEC3_NEAR(f, {-1.125f, 1.125f, 0}, "Directional force wrong", 1e-5f);
-}
-
-/*
- * Positions correct after one step
- */
-TEST(VerletIntegrator, step) {
-  ParticleContainer container;
-  Particle p({1, 0, 0}, {1, 0, 0}, 1, 1, 1);
-  LennardJones lj;
-  VerletIntegrator integrator(lj, 0.01f);
-
-  p.setF({0, 1, 0});
-  container.addParticle(p);
-  ASSERT_EQ(container.size(), 1);
-
-  integrator.step(container);
-
-  // this iterator is important, since ParticleContainer is a vector
-  //  therefore it necessarily copies the particle and the refrence
-  //  of our p is invalid
-  container.single_iterator([](Particle& p) {
-    DVEC3_NEAR(p.getX(), {1.01, 0.00005, 0}, "Position wrong.", 1e-5f);
-    DVEC3_NEAR(p.getOldF(), {0, 1, 0}, "Old force wrong.", 1e-5f);
-    DVEC3_NEAR(p.getF(), {0, 0, 0}, "New F wrong.", 1e-5f);
-    DVEC3_NEAR(p.getV(), {1, 0.005, 0}, "Velocity wrong.", 1e-5f);
-  });
 }

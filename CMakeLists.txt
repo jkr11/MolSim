@@ -109,7 +109,9 @@ target_link_libraries(MolSim
 enable_testing()
 
 add_executable(MolSimTest
-    tests/tests.cpp
+    tests/ParticleContainerTest.cpp
+    tests/VerletIntegratorTest.cpp
+    tests/LennardJonesTest.cpp
 )
 
 target_link_libraries(MolSimTest
