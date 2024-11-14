@@ -8,7 +8,7 @@
 #include "testUtil.h"
 
 /*
- * Positions correct after one step, abitrary example 1
+ * Positions correct after one step, arbitrary example 1
  */
 TEST(VerletIntegrator, step1) {
   ParticleContainer container;
@@ -22,19 +22,15 @@ TEST(VerletIntegrator, step1) {
 
   integrator.step(container);
 
-  // this iterator is important, since ParticleContainer is a vector
-  //  therefore it necessarily copies the particle and the refrence
-  //  of our p is invalid
-  container.single_iterator([](Particle& p) {
-    DVEC3_NEAR(p.getX(), {1.01, 0.00005, 0}, "Position wrong.", 1e-5f);
-    DVEC3_NEAR(p.getOldF(), {0, 1, 0}, "Old force wrong.", 1e-5f);
-    DVEC3_NEAR(p.getF(), {0, 0, 0}, "New F wrong.", 1e-5f);
-    DVEC3_NEAR(p.getV(), {1, 0.005, 0}, "Velocity wrong.", 1e-5f);
-  });
+  p = container.getParticles()[0];
+  DVEC3_NEAR(p.getX(), {1.01, 0.00005, 0}, "Position wrong.", 1e-5f);
+  DVEC3_NEAR(p.getOldF(), {0, 1, 0}, "Old force wrong.", 1e-5f);
+  DVEC3_NEAR(p.getF(), {0, 0, 0}, "New F wrong.", 1e-5f);
+  DVEC3_NEAR(p.getV(), {1, 0.005, 0}, "Velocity wrong.", 1e-5f);
 }
 
 /*
- * Positions correct after one step, abitrary example 2
+ * Positions correct after one step, arbitrary example 2
  */
 TEST(VerletIntegrator, step2) {
   ParticleContainer container;

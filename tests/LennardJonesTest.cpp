@@ -7,7 +7,7 @@
 #include "testUtil.h"
 
 /*
- * LennardJones directional force, abitrary example 2
+ * LennardJones directional force, arbitrary example 2
  */
 TEST(LennardJones, directionalForce1) {
   Particle p({1, 0, 0}, {0, 0, 0}, 1, 1, 1);
@@ -19,7 +19,7 @@ TEST(LennardJones, directionalForce1) {
 }
 
 /*
- * LennardJones directional force, abitrary example 2
+ * LennardJones directional force, arbitrary example 2
  */
 TEST(LennardJones, directionalForce2) {
   Particle p({1, 2, 3}, {0, 0, 0}, 7, 8, 9);
@@ -32,7 +32,7 @@ TEST(LennardJones, directionalForce2) {
 }
 
 /*
- * LennardJones directional force, abitrary example 3
+ * LennardJones directional force, arbitrary example 3
  */
 TEST(LennardJones, directionalForce3) {
   Particle p({0, 0, 0}, {0, 0, 0}, 0, 0, 0);
@@ -44,7 +44,7 @@ TEST(LennardJones, directionalForce3) {
 }
 
 /*
- * LennardJones directional force, abitrary example 4
+ * LennardJones directional force, arbitrary example 4
  */
 TEST(LennardJones, directionalForce4) {
   Particle p({0.1, 1.0, 0.7}, {0, 0, 0}, 0.5, 0.9, 1.2);
