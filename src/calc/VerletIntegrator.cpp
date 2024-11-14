@@ -27,7 +27,6 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
     p2.setF(p2.getF() - g12);  // g12 = -g21
   });
 
-
   /*
   // alternative Iterator
   std::vector<Particle> particles = particle_container.getParticles();
@@ -43,7 +42,6 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
   }
   particle_container.setParticles(particles);
   */
-
 
   // Now we use F_t and F_{t-1} to calculate the current velocity
   particle_container.single_iterator([this](Particle& p) {
