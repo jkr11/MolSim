@@ -1,6 +1,6 @@
 # This starter workflow is for a CMake project running on a single platform. There is a different starter workflow if you need cross-platform coverage.
 # See: https://github.com/actions/starter-workflows/blob/main/ci/cmake-multi-platform.yml
-name: CMake on a single platform
+name: CMake Build & Test
 
 on:
   push:
@@ -10,6 +10,7 @@ on:
   pull_request:
     branches: 
       - 'main'
+      - 'master'
       - 'Assignment*'
 
 env:
@@ -25,23 +26,19 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    
+    - name: Install Dependencies
+      run: sudo apt install libxerces-c-dev
+    
+    - name: Setup buildDir
+      run: mkdir buildDir && cd buildDir && mkdir Release && cd Release
 
     - name: Configure CMake
-      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
-      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      run: cd buildDir/Release && cmake ../../CMakeLists.txt && cmake -DCMAKE_BUILD_TYPE=Release .
 
-    - name: Install Dependecies
-      # install libxerces
-      run: sudo apt install libxerces-c-dev
-      
     - name: Build
-      # Build your program with the given configuration
-      run: cmake CMakeLists.txt . && make
+      run: cd buildDir/Release && cmake --build . -- -"j$(nproc)"
 
     - name: Test
-      working-directory: ${{github.workspace}}/build
-      # Execute tests defined by the CMake configuration.
-      # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-      run: ctest -C ${{env.BUILD_TYPE}}
+      run: cd buildDir/Release && ctest
 

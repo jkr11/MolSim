@@ -9,7 +9,7 @@
 /**
  * @brief Gravitational force F_{1,2}
  */
-class Gravity : public Force {
+class Gravity final : public Force {
  public:
   /**
    *
