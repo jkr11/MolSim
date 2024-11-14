@@ -21,7 +21,7 @@ MolSim - Group A
   ```bash
   git clone https://github.com/jkr11/MolSim.git
   ```
-- Build the project using the provided script by using source
+- Build & test the project using the provided script by using source
   ```bash
   cd MolSim/scripts
   source build <CMAKE_BUILD_TYPE= Release | Debug | asan | asan-quiet>
