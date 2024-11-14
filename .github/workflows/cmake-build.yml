@@ -25,8 +25,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Where are we??
-      run: ls -lAh && mkdir buildDir && cd buildDir && mkdir Release && cd Release
+    
+    - name: Install Dependencies
+      run: sudo apt install libxerces-c-dev
+    
+    - name: Setup buildDir
+      run: mkdir buildDir && cd buildDir && mkdir Release && cd Release
 
     - name: Configure CMake
       run: cd buildDir/Release && cmake ../../CMakeLists.txt && cmake -DCMAKE_BUILD_TYPE=Release .
