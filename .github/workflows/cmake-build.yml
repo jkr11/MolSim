@@ -25,9 +25,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: Where are we??
+      run: ls -lAh && mkdir buildDir && cd buildDir && mkdir Release && cd Release
 
     - name: Configure CMake
-      run: mkdir buildDir && cd buildDir && mkdir Release && cmake ../..CMakeLists.txt && cmake -DCMAKE_BUILD_TYPE=Release .
+      run: cmake ../..CMakeLists.txt && cmake -DCMAKE_BUILD_TYPE=Release .
 
     - name: Build
       run: cmake --build . -- -"j$(nproc)"
