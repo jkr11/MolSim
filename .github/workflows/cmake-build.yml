@@ -29,10 +29,10 @@ jobs:
       run: ls -lAh && mkdir buildDir && cd buildDir && mkdir Release && cd Release
 
     - name: Configure CMake
-      run: cmake ../../CMakeLists.txt && cmake -DCMAKE_BUILD_TYPE=Release .
+      run: cd buildDir/Release && cmake ../../CMakeLists.txt && cmake -DCMAKE_BUILD_TYPE=Release .
 
     - name: Build
-      run: cmake --build . -- -"j$(nproc)"
+      run: cd buildDir/Release && cmake --build . -- -"j$(nproc)"
 
     - name: Test
       run: ctest
