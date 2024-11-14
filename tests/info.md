@@ -1,7 +1,7 @@
 # Structure
 All tests (should) follow this convention:
 ```cpp
-// <ClassToTest>.cpp file
+// <ClassToTest>Test.cpp file
 /**
  * <What this test specifically checks>
  */

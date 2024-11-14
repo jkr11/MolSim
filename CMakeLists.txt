@@ -113,6 +113,7 @@ add_executable(MolSimTest
     tests/ParticleContainerTest.cpp
     tests/VerletIntegratorTest.cpp
     tests/LennardJonesTest.cpp
+    tests/CLArgumentParserTest.cpp
 )
 
 target_link_libraries(MolSimTest
