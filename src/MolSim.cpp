@@ -60,7 +60,7 @@ int main(int argc, char *argv[]) {
       writes++;
       next_output_time = writes * arguments.output_time_step_size;
 
-      // cgeck if next percentage complete
+      // check if next percentage complete
       if (const double t = 100 * current_time / arguments.t_end;
           t >= percentage) {
         percentage++;

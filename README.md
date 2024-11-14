@@ -34,9 +34,9 @@ MolSim - Group A
 - Running the program
   ```bash
   $BUILD <options>
-  ```
-  
+  ``` 
 Please note that $BUILD is only available if the script is executed via source and contains the path to the last compiled executable
+
 ### Options
 
 ```console

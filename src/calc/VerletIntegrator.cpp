@@ -28,12 +28,12 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
   });
 
 
-  // this would save around more
   /*
+  // alternative Iterator
   std::vector<Particle> particles = particle_container.getParticles();
-  for (int i = 0; i < particle_container.size(); i++) {;
+  for (std::size_t i = 0; i < particle_container.size(); i++) {;
     dvec3 acc = particles[i].getF();
-    for (int j = i+1; j < particle_container.size(); j++) {
+    for (std::size_t j = i+1; j < particle_container.size(); j++) {
       const dvec3 g12 = force.directionalForce(particles[i],particles[j]);
       acc = acc + g12;
       const dvec3 p2F = particles[j].getF() - g12;
@@ -43,6 +43,7 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
   }
   particle_container.setParticles(particles);
   */
+
 
   // Now we use F_t and F_{t-1} to calculate the current velocity
   particle_container.single_iterator([this](Particle& p) {

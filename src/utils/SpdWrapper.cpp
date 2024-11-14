@@ -21,7 +21,7 @@ std::shared_ptr<spdlog::logger> SpdWrapper::configure() {
   colorConsoleSink->set_color(spdlog::level::trace, colorConsoleSink->green);
   spdlog::init_thread_pool(8192, 1);
   auto asyncLogger = std::make_shared<spdlog::async_logger>(
-      "asnycLogger", spdlog::sinks_init_list{colorConsoleSink},
+      "asyncLogger", spdlog::sinks_init_list{colorConsoleSink},
       spdlog::thread_pool(), spdlog::async_overflow_policy::block);
   asyncLogger->set_level(spdlog::level::info);
   spdlog::register_logger(asyncLogger);
