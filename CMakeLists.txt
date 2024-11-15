@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
 
-# define project name, version
 project(PSEMolDyn_GroupA VERSION 0.0.3 LANGUAGES CXX)
 
 # let ccmake and cmake-gui offer the default build type options
@@ -41,7 +40,7 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_compile_definitions(DEBUG)
     message("Debug mode is enabled")
 endif ()
-#
+
 # set Release as the default build type if it is not yet set.
 if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING
@@ -49,14 +48,5 @@ if (NOT CMAKE_BUILD_TYPE)
 endif (NOT CMAKE_BUILD_TYPE)
 
 
-##### Build MolSim.exe #####
-#add_executable(MolSim
-#        src/MolSim.cpp
-#)
-
-#target_link_libraries(MolSim
-#        PRIVATE MolSimLib
-#)
-#add_subdirectory(libs/libxsd)
 add_subdirectory(src)
 add_subdirectory(tests)
