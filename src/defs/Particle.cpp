@@ -7,7 +7,7 @@
 
 #include "Particle.h"
 
-#include "../utils/ArrayUtils.h"
+#include "utils/ArrayUtils.h"
 #include "debug/debug_print.h"
 #include "spdlog/spdlog.h"
 #include "utils/SpdWrapper.h"

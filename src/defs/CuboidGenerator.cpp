@@ -3,9 +3,9 @@
 //
 #include "CuboidGenerator.h"
 
-#include "../utils/ArrayUtils.h"
-#include "../utils/MaxwellBoltzmannDistribution.h"
-#include "../utils/SpdWrapper.h"
+#include "utils/ArrayUtils.h"
+#include "utils/MaxwellBoltzmannDistribution.h"
+#include "utils/SpdWrapper.h"
 #include "debug/debug_print.h"
 
 CuboidGenerator::CuboidGenerator(const dvec3 &corner,

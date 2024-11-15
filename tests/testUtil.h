@@ -1,5 +1,5 @@
-
-#include "defs/Particle.h"
+#pragma once
+#include "../src/defs/Particle.h"
 #include "gtest/gtest.h"
 
 /**

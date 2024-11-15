@@ -3,18 +3,32 @@
 help() {
   printf "\033[31minvalid CMAKE_BUILD_TYPE '%s' specified!\033[0m\n" "$1"
   echo "builds the project in /buildDir/<CMAKE_BUILD_TYPE> and exports the path to the executable in \$BUILD"
-  echo "Usage: source build.sh <CMAKE_BUILD_TYPE>"
+  echo "Usage: source build.sh <CMAKE_BUILD_TYPE> [BUILD_TESTS=<ON|OFF>]"
   return
 }
 
 # check for valid CMAKE_BUILD_TYPE
-if [[ "$#" -ne 1 || ( "$1" != "Debug"  &&  "$1" != "Release"  &&  "$1" != "asan"  &&  "$1" != "asan-strict" ) ]]
+if [[ "$#" -lt 1 || ( "$1" != "Debug"  &&  "$1" != "Release"  &&  "$1" != "asan"  &&  "$1" != "asan-strict" ) ]]
 then
   help "$1"
   return 127
 fi
 
-printf "\033[32mbuilding '%s'\033[0m\n" "$1"
+# Default value for BUILD_TESTS
+BUILD_TESTS="OFF"
+
+# Check if BUILD_TESTS is passed as an argument
+for arg in "$@"; do
+  if [[ "$arg" =~ ^BUILD_TESTS= ]]; then
+    BUILD_TESTS="${arg#*=}"
+    if [[ "$BUILD_TESTS" != "ON" && "$BUILD_TESTS" != "OFF" ]]; then
+      help "$1"
+      return 127
+    fi
+  fi
+done
+
+printf "\033[32mbuilding '%s' with BUILD_TESTS='%s'\033[0m\n" "$1" "$BUILD_TESTS"
 
 # create buildDir if needed
 if [ -d "../buildDir/$1" ]
@@ -32,8 +46,8 @@ echo ""
 # setup cmake
 start_time=$(date +%s%N)
 cd ../buildDir/"$1" || exit 1
-cmake ../../CMakeLists.txt
-cmake -DCMAKE_BUILD_TYPE="$1" .
+cmake ../../CMakeLists.txt -DCMAKE_BUILD_TYPE="$1" -DBUILD_TESTS="$BUILD_TESTS"
+cmake .
 
 echo ""
 printf "\033[32m--- BUILDING: ---\033[0m\n"
@@ -50,11 +64,13 @@ echo ""
 printf "\033[32m--- TESTING: ---\033[0m\n"
 echo ""
 
-# test
-if ! ctest; then
-  printf "\033[31mtests failed!\033[0m\n"
-  cd ../../scripts || return 127 # navigate back
-  return 127
+# test if BUILD_TESTS is ON
+if [[ "$BUILD_TESTS" == "ON" ]]; then
+  if ! ctest; then
+    printf "\033[31mtests failed!\033[0m\n"
+    cd ../../scripts || return 127 # navigate back
+    return 127
+  fi
 fi
 
 echo ""
