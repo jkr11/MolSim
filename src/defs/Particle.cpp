@@ -7,7 +7,7 @@
 
 #include "Particle.h"
 
-#include "../utils/ArrayUtils.h"
+#include "utils/ArrayUtils.h"
 #include "debug/debug_print.h"
 #include "spdlog/spdlog.h"
 #include "utils/SpdWrapper.h"
@@ -45,7 +45,7 @@ Particle::Particle(const std::array<double, 3> &x_arg,
   DEBUG_PRINT("Particle generated!");
 }
 
-Particle::~Particle() { DEBUG_PRINT("Particle generated!"); }
+Particle::~Particle() { DEBUG_PRINT("Particle destructed!"); }
 
 const std::array<double, 3> &Particle::getX() const { return x; }
 

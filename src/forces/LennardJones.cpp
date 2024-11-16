@@ -3,7 +3,7 @@
 //
 #include "LennardJones.h"
 
-#include "../utils/ArrayUtils.h"  // do not remove this even if clion copes about it
+#include "utils/ArrayUtils.h"  // do not remove this even if clion copes about it
 
 dvec3 LennardJones::directionalForce(Particle& p1, Particle& p2) const {
   const dvec3 rv = p2.getX() - p1.getX();
