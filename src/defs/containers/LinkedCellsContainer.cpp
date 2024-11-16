@@ -1,4 +1,8 @@
-/*#pragma once
+//
+// created by mcarn on 11/15/24
+//
+/*
+#pragma once
 #include <cmath>
 #include <cstddef>
 #include <functional>
@@ -26,7 +30,8 @@ class LinkedCellsContainer : public ParticleContainer {
   LinkedCellsContainer() : ParticleContainer() {
 
   };
-  LinkedCellsContainer(const std::vector<Particle> &particles) : ParticleContainer(particles) {};
+  LinkedCellsContainer(const std::vector<Particle> &particles) :
+ParticleContainer(particles) {};
 
   LinkedCellsContainer(dvec3 domain, double cutoff /*boundary types*) {
     cellCount = {std::max(static_cast<int>(std::floor(domain[0] / cutoff)), 1),
@@ -94,4 +99,5 @@ class LinkedCellsContainer : public ParticleContainer {
     return cellX * (cellCount[1] * cellCount[2]) + cellY * (cellCount[2]) +
            cellZ;
   }
-};*/
+};
+*/

@@ -39,7 +39,8 @@ target_include_directories(MolSimLib PUBLIC
         ${PROJECT_SOURCE_DIR}/utils
 )
 
-add_executable(MolSim MolSim.cpp)
+add_executable(MolSim MolSim.cpp
+        defs/containers/DirectSumContainer.cpp)
 target_link_libraries(MolSim PUBLIC MolSimLib)
 
 target_compile_options(MolSimLib
