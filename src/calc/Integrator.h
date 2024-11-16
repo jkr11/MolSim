@@ -1,5 +1,5 @@
 #pragma once
-#include "../defs/ParticleContainer.h"
+#include "../defs/containers/ParticleContainer.h"
 #include "../forces/Force.h"
 
 /**

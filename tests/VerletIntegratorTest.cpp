@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "../src/calc/VerletIntegrator.h"
-#include "../src/defs/ParticleContainer.h"
+#include "../src/defs/containers/DirectSumContainer.h"
 #include "../src/forces/LennardJones.h"
 #include "testUtil.h"
 
@@ -11,7 +11,7 @@
  * Positions correct after one step, arbitrary example 1
  */
 TEST(VerletIntegrator, step1) {
-  ParticleContainer container;
+  DirectSumContainer container;
   Particle p({1, 0, 0}, {1, 0, 0}, 1, 1, 1);
   LennardJones lj;
   VerletIntegrator integrator(lj, 0.01f);
@@ -33,7 +33,7 @@ TEST(VerletIntegrator, step1) {
  * Positions correct after one step, arbitrary example 2
  */
 TEST(VerletIntegrator, step2) {
-  ParticleContainer container;
+  DirectSumContainer container;
   Particle p({1, 0, 0}, {0, 0, 0}, 1, 1, 1);
   Particle q({0, 1, 0}, {0, 0, 0}, 1, 1, 1);
   LennardJones lj;

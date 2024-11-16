@@ -11,6 +11,7 @@
 #include "spdlog/stopwatch.h"
 #include "utils/ArrayUtils.h"
 #include "utils/SpdWrapper.h"
+#include "defs/containers/DirectSumContainer.h"
 
 int main(int argc, char *argv[]) {
   SpdWrapper::get()->info("Application started");
@@ -35,9 +36,9 @@ int main(int argc, char *argv[]) {
 
   // setup Simulation
   // FileReader::readFile(particles, input_file);
-  ParticleContainer particleContainer;
-  arguments.reader->read(particleContainer.getParticlesReference(),
-                         arguments.inputFile);
+  DirectSumContainer container;
+  /*TODO: arguments.reader->read(particleContainer.getParticlesReference(),
+                         arguments.inputFile);*/
 
   VerletIntegrator verlet_integrator(*arguments.force, arguments.delta_t);
   outputWriter::VTKWriter writer;
@@ -53,10 +54,10 @@ int main(int argc, char *argv[]) {
   double next_output_time = 0;
 
   while (current_time <= arguments.t_end) {
-    verlet_integrator.step(particleContainer);
+    verlet_integrator.step(container);
 
     if (current_time >= next_output_time) {
-      plotParticles(outputDirectory, iteration, writer, particleContainer);
+      plotParticles(outputDirectory, iteration, writer, container);
       writes++;
       next_output_time = writes * arguments.output_time_step_size;
 

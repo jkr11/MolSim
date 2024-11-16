@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "../src/defs/ParticleContainer.h"
+#include "../src/defs/containers/ParticleContainer.h"
 #include "../src/forces/LennardJones.h"
 #include "testUtil.h"
 
