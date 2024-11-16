@@ -1,3 +1,5 @@
+cmake_policy(SET CMP0079 NEW)
+
 enable_testing()
 include_directories(
         ${PROJECT_SOURCE_DIR}/src
@@ -10,9 +12,7 @@ option(BUILD_TESTS "Build tests executable" OFF)
 
 if (BUILD_TESTS)
     add_executable(MolSimTest ${MOLSIM_TEST})
-
-
-    target_link_libraries(MolSimTest MOlSimLib GTest::gtest_main)
+    target_link_libraries(MolSimTest MolSimLib GTest::gtest_main)
     include(GoogleTest)
     gtest_discover_tests(MolSimTest)
 endif ()
