@@ -44,7 +44,7 @@
 .cache
 CMakeFiles
 cmake-build-debug
-cmake
+#cmake
 build/
 .cmake/
 output/
@@ -67,7 +67,7 @@ MolSim
 
 doxys_documentation/
 coverage/
-spdlog
+# spdlog
 spdlog/
 _deps
 

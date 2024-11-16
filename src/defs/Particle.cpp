@@ -45,7 +45,7 @@ Particle::Particle(const std::array<double, 3> &x_arg,
   DEBUG_PRINT("Particle generated!");
 }
 
-Particle::~Particle() { DEBUG_PRINT("Particle generated!"); }
+Particle::~Particle() { DEBUG_PRINT("Particle destructed!"); }
 
 const std::array<double, 3> &Particle::getX() const { return x; }
 
