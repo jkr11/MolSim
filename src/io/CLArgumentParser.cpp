@@ -11,6 +11,7 @@
 
 #include "file/in/CuboidReader.h"
 #include "file/in/DefaultReader.h"
+#include "file/in/XmlReader.h"
 #include "forces/Gravity.h"
 #include "forces/LennardJones.h"
 #include "spdlog/fmt/bundled/chrono.h"
@@ -73,6 +74,8 @@ int CLArgumentParser::parse(int argc, char *argv[], Arguments &arguments) {
             arguments.reader = std::make_unique<CuboidReader>();
           } else if (r == "defaultreader") {
             arguments.reader = std::make_unique<DefaultReader>();
+          } else if (r == "xmlreader") {
+            arguments.reader = std::make_unique<XmlReader>();
           } else {
             SpdWrapper::get()->error("Unknown Reader Type: {}", r);
             exit(EXIT_FAILURE);

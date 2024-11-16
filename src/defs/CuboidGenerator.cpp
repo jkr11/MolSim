@@ -3,10 +3,10 @@
 //
 #include "CuboidGenerator.h"
 
+#include "debug/debug_print.h"
 #include "utils/ArrayUtils.h"
 #include "utils/MaxwellBoltzmannDistribution.h"
 #include "utils/SpdWrapper.h"
-#include "debug/debug_print.h"
 
 CuboidGenerator::CuboidGenerator(const dvec3 &corner,
                                  const std::array<int, 3> &dimensions,
@@ -22,7 +22,21 @@ CuboidGenerator::CuboidGenerator(const dvec3 &corner,
       mv(mv),
       epsilon(epsilon),
       sigma(sigma),
-      type(type) {}
+      type(type) {
+  SpdWrapper::get()->info("CuboidGenerator created with parameters:");
+  SpdWrapper::get()->info("corner: ({}, {}, {})", corner[0], corner[1],
+                          corner[2]);
+  SpdWrapper::get()->info("dimensions: ({}, {}, {})", dimensions[0],
+                          dimensions[1], dimensions[2]);
+  SpdWrapper::get()->info("h: {}", h);
+  SpdWrapper::get()->info("m: {}", m);
+  SpdWrapper::get()->info("initialVelocity: ({}, {}, {})", initialVelocity[0],
+                          initialVelocity[1], initialVelocity[2]);
+  SpdWrapper::get()->info("mv: {}", mv);
+  SpdWrapper::get()->info("epsilon: {}", epsilon);
+  SpdWrapper::get()->info("sigma: {}", sigma);
+  SpdWrapper::get()->info("type: {}", type);
+}
 
 void CuboidGenerator::generate(std::vector<Particle> &particles) {
   const int size = (dimensions[0] * dimensions[1] * dimensions[2]);

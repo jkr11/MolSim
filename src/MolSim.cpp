@@ -3,15 +3,16 @@
 
 #include "calc/VerletIntegrator.h"
 #include "debug/debug_print.h"
+#include "defs/containers/DirectSumContainer.h"
 #include "forces/LennardJones.h"
 #include "io/CLArgumentParser.h"
 #include "io/file/in/CuboidReader.h"
+#include "io/file/in/XmlReader.h"
 #include "io/file/out/OutputHelper.h"
 #include "io/file/out/VTKWriter.h"
 #include "spdlog/stopwatch.h"
 #include "utils/ArrayUtils.h"
 #include "utils/SpdWrapper.h"
-#include "defs/containers/DirectSumContainer.h"
 
 int main(int argc, char *argv[]) {
   SpdWrapper::get()->info("Application started");
@@ -23,7 +24,7 @@ int main(int argc, char *argv[]) {
       1,                                 // output_time_step_size
       "info",                            // logLevel
       std::make_unique<LennardJones>(),  // force
-      std::make_unique<CuboidReader>(),  // Reader
+      std::make_unique<XmlReader>(),     // Reader
   };
 
   if (CLArgumentParser::parse(argc, argv, arguments) != 0) {
@@ -37,8 +38,9 @@ int main(int argc, char *argv[]) {
   // setup Simulation
   // FileReader::readFile(particles, input_file);
   DirectSumContainer container;
-  /*TODO: arguments.reader->read(particleContainer.getParticlesReference(),
-                         arguments.inputFile);*/
+  std::vector<Particle> particles;
+  TODO: arguments.reader->read(particles,
+                         arguments.inputFile);
 
   VerletIntegrator verlet_integrator(*arguments.force, arguments.delta_t);
   outputWriter::VTKWriter writer;
