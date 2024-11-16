@@ -2,14 +2,14 @@
 
 #include <vector>
 
-#include "../src/defs/ParticleContainer.h"
+#include "../src/defs/containers/DirectSumContainer.cpp"
 #include "testUtil.h"
 
 /*
  * Add particle changes internal vector length
  */
-TEST(ParticleContainer, addParticleAndSize) {
-  ParticleContainer container;
+TEST(DirectSumContainer, addParticleAndSize) {
+  DirectSumContainer container;
   Particle particle;
 
   ASSERT_EQ(container.size(), 0)
@@ -21,10 +21,10 @@ TEST(ParticleContainer, addParticleAndSize) {
 }
 
 /*
- * single_iterator iterates over each distinct particle exactly once
+ * singleIterator iterates over each distinct particle exactly once
  */
-TEST(ParticleContainer, single_iterator) {
-  ParticleContainer container;
+TEST(DirectSumContainer, singleIterator) {
+  DirectSumContainer container;
   Particle p1;
   Particle p2;
   Particle p3;
@@ -37,7 +37,7 @@ TEST(ParticleContainer, single_iterator) {
                                     "matching after adding 3 particles.";
 
   std::vector<Particle> vec = {};
-  container.single_iterator([&vec](Particle& p) { vec.push_back(p); });
+  container.singleIterator([&vec](Particle& p) { vec.push_back(p); });
 
   EXPECT_VECTOR_EQ(vec, {p1, p2, p3});
 }
@@ -45,8 +45,8 @@ TEST(ParticleContainer, single_iterator) {
 /*
  * pair_iterator iterates over each distinct pair of particles exactly once
  */
-TEST(ParticleContainer, pair_iterator) {
-  ParticleContainer container;
+TEST(DirectSumContainer, pair_iterator) {
+  DirectSumContainer container;
   Particle p1;
   Particle p2;
   Particle p3;
@@ -65,12 +65,12 @@ TEST(ParticleContainer, pair_iterator) {
 
   ASSERT_EQ(pairs.size(), 3);
 
-  ASSERT_TRUE(*pairs[0].first == container[0]);
-  ASSERT_TRUE(*pairs[0].second == container[1]);
+  ASSERT_TRUE(*pairs[0].first == container.getParticles()[0]);
+  ASSERT_TRUE(*pairs[0].second == container.getParticles()[1]);
 
-  ASSERT_TRUE(*pairs[1].first == container[0]);
-  ASSERT_TRUE(*pairs[1].second == container[2]);
+  ASSERT_TRUE(*pairs[1].first == container.getParticles()[0]);
+  ASSERT_TRUE(*pairs[1].second == container.getParticles()[2]);
 
-  ASSERT_TRUE(*pairs[2].first == container[1]);
-  ASSERT_TRUE(*pairs[2].second == container[2]);
+  ASSERT_TRUE(*pairs[2].first == container.getParticles()[1]);
+  ASSERT_TRUE(*pairs[2].second == container.getParticles()[2]);
 }
