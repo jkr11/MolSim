@@ -2,7 +2,7 @@
 #include <iostream>
 
 #include "calc/VerletIntegrator.h"
-#include "debug/debug_print.h"
+#include "defs/containers/DirectSumContainer.h"
 #include "forces/LennardJones.h"
 #include "io/CLArgumentParser.h"
 #include "io/file/in/CuboidReader.h"
@@ -11,7 +11,6 @@
 #include "spdlog/stopwatch.h"
 #include "utils/ArrayUtils.h"
 #include "utils/SpdWrapper.h"
-#include "defs/containers/DirectSumContainer.h"
 
 int main(int argc, char *argv[]) {
   SpdWrapper::get()->info("Application started");
