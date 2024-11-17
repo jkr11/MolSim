@@ -43,7 +43,8 @@ add_executable(MolSim MolSim.cpp
         io/file/in/xml/input.cxx
         defs/Generators/ParticleGenerator.h
         defs/Generators/SpheroidGenerator.h
-        defs/Generators/SpheroidGenerator.cpp)
+        defs/Generators/SpheroidGenerator.cpp
+)
 target_link_libraries(MolSim PUBLIC MolSimLib)
 
 target_compile_options(MolSimLib

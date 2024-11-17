@@ -6,6 +6,7 @@
 #define XMLREADER_H
 #pragma once
 #include "io/file/in/FileReader.h"
+#include "defs/Simulation.h"
 
 /**
  * @brief class for reading xml files specified by input.xsd in /input/
@@ -14,15 +15,24 @@
  * optional as it is currently handled by CLArgumentParser
  */
 class XmlReader final : public FileReader {
+  private:
+  Simulation simulation_parameters;
  public:
-  XmlReader() = default;
+  explicit XmlReader(const Simulation &_simulation_parameters) {
+    simulation_parameters = _simulation_parameters;
+  };
 
   /**
    * @brief supports reading cuboids and sphereoids as specified in input.xsd
    * @param particles particles in which we store the configuration passed
    * @param filepath path at which the xml file is located
    */
-  void read(std::vector<Particle> &particles,
-            const std::string &filepath) override;
+  void read(std::vector<Particle> &particles, const std::string &filepath) override;
+
+  /**
+   * @brief passes the struct to other classes
+   * @return struct with Simulation parameters
+   */
+  [[nodiscard]] Simulation pass() const;
 };
 #endif  // XMLREADER_H

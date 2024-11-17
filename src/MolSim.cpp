@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "calc/VerletIntegrator.h"
+#include "defs/Simulation.h"
 #include "defs/containers/DirectSumContainer.h"
 #include "forces/LennardJones.h"
 #include "io/CLArgumentParser.h"
@@ -15,30 +16,42 @@
 
 int main(int argc, char *argv[]) {
   SpdWrapper::get()->info("Application started");
+  // ok so this is really ugly but i think we can merge both structs into one
+  // we dont need additional file readers anymore so we can just use XMLReader
+  Simulation simulation_params = {
+      .delta_t = 0.014,
+      .t_end = 10,
+      .cutoff_radius = 0.05,
+      .domain = {10, 10, 10},
+  };
 
   Arguments arguments = {
-      "",                                // file
-      10,                                // t_end
-      0.014,                             // delta_t
-      1,                                 // output_time_step_size
-      "info",                            // logLevel
-      std::make_unique<LennardJones>(),  // force
-      std::make_unique<XmlReader>(),     // Reader
+      "",                                              // file
+      10,                                              // t_end
+      0.014,                                           // delta_t
+      1,                                               // output_time_step_size
+      "info",                                          // logLevel
+      std::make_unique<LennardJones>(),                // force
+      std::make_unique<XmlReader>(simulation_params),  // Reader
   };
 
   if (CLArgumentParser::parse(argc, argv, arguments) != 0) {
     exit(EXIT_FAILURE);
   }
 
-  SpdWrapper::get()->info("t_end: {}, delta_t: {}, output_time_step_size: {}",
-                          arguments.t_end, arguments.delta_t,
-                          arguments.output_time_step_size);
+  // SpdWrapper::get()->info("t_end: {}, delta_t: {}, output_time_step_size:
+  // {}",
+  //                         arguments.t_end, arguments.delta_t,
+  //                        arguments.output_time_step_size);
 
   std::vector<Particle> particles;
   arguments.reader->read(particles, arguments.inputFile);
+  simulation_params = dynamic_cast<XmlReader *>(arguments.reader.get())->pass();
+  SpdWrapper::get()->info("t_end after: {}", simulation_params.t_end);
   DirectSumContainer container(particles);
   SpdWrapper::get()->info("particles.size: {}", particles.size());
-  VerletIntegrator verlet_integrator(*arguments.force, arguments.delta_t);
+  VerletIntegrator verlet_integrator(*arguments.force,
+                                     simulation_params.delta_t);
   outputWriter::VTKWriter writer;
 
   const std::string outputDirectory =
@@ -51,7 +64,7 @@ int main(int argc, char *argv[]) {
   int percentage = 0;
   double next_output_time = 0;
 
-  while (current_time <= arguments.t_end) {
+  while (current_time <= simulation_params.t_end) {
     verlet_integrator.step(container);
 
     if (current_time >= next_output_time) {

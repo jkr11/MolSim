@@ -14,6 +14,9 @@ void XmlReader::read(std::vector<Particle>& particles,
   try {
     const std::unique_ptr< ::simulation> config = simulation_(filepath);
     SpdWrapper::get()->info("Reading XML file {}", filepath);
+    simulation_parameters.delta_t = config->metadata()->delta_t().get();
+    simulation_parameters.t_end = config->metadata()->t_end().get();
+
     if (config->cuboids() != nullptr) {
       for (const auto& cubes : config->cuboids()->cuboid()) {
         const auto& _corner = cubes.corner();
@@ -52,3 +55,5 @@ void XmlReader::read(std::vector<Particle>& particles,
     SpdWrapper::get()->error("Error reading XML file: {}", e.what());
   }
 }
+
+Simulation XmlReader::pass() const { return simulation_parameters; }

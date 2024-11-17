@@ -9,6 +9,7 @@
 #include <filesystem>
 #include <fstream>
 
+#include "defs/Simulation.h"
 #include "file/in/CuboidReader.h"
 #include "file/in/DefaultReader.h"
 #include "file/in/xml/XmlReader.h"
@@ -75,7 +76,7 @@ int CLArgumentParser::parse(int argc, char *argv[], Arguments &arguments) {
           } else if (r == "defaultreader") {
             arguments.reader = std::make_unique<DefaultReader>();
           } else if (r == "xmlreader") {
-            arguments.reader = std::make_unique<XmlReader>();
+            arguments.reader = std::make_unique<XmlReader>(Simulation{});
           } else {
             SpdWrapper::get()->error("Unknown Reader Type: {}", r);
             exit(EXIT_FAILURE);
