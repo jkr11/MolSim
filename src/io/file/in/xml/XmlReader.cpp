@@ -34,11 +34,11 @@ void XmlReader::read(std::vector<Particle>& particles,
       const auto& _velocity = spheres.velocity();
       dvec3 origin = {_origin.x(), _origin.y(), _origin.z()};
       dvec3 velocity = {_velocity.x(), _velocity.y(), _velocity.z()};
-      int radius = spheres.radius();
+      const int radius = spheres.radius();
 
       SpheroidGenerator sg(origin, radius, spheres.h(), spheres.mass(),
                            velocity, spheres.epsilon(), spheres.sigma(),
-                           spheres.type());
+                           spheres.type(), true);
 
       sg.generate(particles);
     }

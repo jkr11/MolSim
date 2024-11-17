@@ -7,7 +7,7 @@
 #include "ParticleGenerator.h"
 
 /**
- * @brief generates particles in a 1,2 or 3-sphere.
+ * @brief generates particles in a 1 or 2 sphere
  */
 class SpheroidGenerator final : public ParticleGenerator {
  private:
@@ -24,12 +24,18 @@ class SpheroidGenerator final : public ParticleGenerator {
   double epsilon{};
   double sigma{};
   const int type{};
+  const bool threeD{};
 
  public:
   SpheroidGenerator(const dvec3 &origin, int radius, double h, double m,
                     const dvec3 &initialVelocity, double epsilon, double sigma,
-                    int type);
+                    int type, bool threeD);
 
+  /**
+   * @brief generates a 1 or 2 sphere of particles, vector size is approximated
+   * by volume of 2-sphere as disk is contained.
+   * @param particles particles into which the spheroid is place
+   */
   void generate(std::vector<Particle> &particles) override;
 };
 
