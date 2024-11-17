@@ -11,7 +11,7 @@ SpheroidGenerator::SpheroidGenerator(const dvec3& origin, const int radius,
                                      const double h, const double m,
                                      const dvec3& initialVelocity,
                                      const double epsilon, const double sigma,
-                                     const int type, const bool threeD)
+                                     const int type, const bool twoD)
     : origin(origin),
       radius(radius),
       h(h),
@@ -20,7 +20,7 @@ SpheroidGenerator::SpheroidGenerator(const dvec3& origin, const int radius,
       epsilon(epsilon),
       sigma(sigma),
       type(type),
-      threeD(threeD) {
+      twoD(twoD) {
   SpdWrapper::get()->info("CuboidGenerator created with parameters:");
   SpdWrapper::get()->info("origin: ({}, {}, {})", origin[0], origin[1],
                           origin[2]);
@@ -44,16 +44,17 @@ void SpheroidGenerator::generate(std::vector<Particle>& particles) {
   for (int i = -radius; i <= radius; i++) {
     for (int j = -radius; j <= radius; j++) {
       for (int k = -radius; k <= radius; k++) {
-        if (threeD && k == 0) {
-          const double spaceRadius = radius * h;
-          dvec3 point = {i * h, j * h, k * h};
-          if (const double dist = ArrayUtils::L2Norm((1 / spaceRadius) * point);
-              dist <= 1.0) {
-            dvec3 position = origin + point;
-            dvec3 V =
-                initialVelocity + maxwellBoltzmannDistributedVelocity(mv, 3);
-            particles.emplace_back(position, V, m, epsilon, sigma, type);
-          }
+        if (twoD && k != 0) {
+          continue;
+        }
+        const double spaceRadius = radius * h;
+        dvec3 point = {i * h, j * h, k * h};
+        if (const double dist = ArrayUtils::L2Norm((1 / spaceRadius) * point);
+            dist <= 1.0) {
+          dvec3 position = origin + point;
+          dvec3 V =
+              initialVelocity + maxwellBoltzmannDistributedVelocity(mv, 3);
+          particles.emplace_back(position, V, m, epsilon, sigma, type);
         }
       }
     }

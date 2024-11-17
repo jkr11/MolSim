@@ -24,12 +24,15 @@ class SpheroidGenerator final : public ParticleGenerator {
   double epsilon{};
   double sigma{};
   const int type{};
-  const bool threeD{};
+  /**
+   * only if this is passed with true, spheres will be two Dimensional
+   */
+  const bool twoD{};
 
  public:
   SpheroidGenerator(const dvec3 &origin, int radius, double h, double m,
                     const dvec3 &initialVelocity, double epsilon, double sigma,
-                    int type, bool threeD);
+                    int type, bool twoD);
 
   /**
    * @brief generates a 1 or 2 sphere of particles, vector size is approximated
