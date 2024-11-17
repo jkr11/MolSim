@@ -494,15 +494,29 @@ class spheroidType : public ::xml_schema::type {
 
   void sigma(const sigma_type& x);
 
+  // twoD
+  //
+  typedef ::xml_schema::boolean twoD_type;
+  typedef ::xsd::cxx::tree::traits<twoD_type, char> twoD_traits;
+
+  const twoD_type& twoD() const;
+
+  twoD_type& twoD();
+
+  void twoD(const twoD_type& x);
+
+  static twoD_type twoD_default_value();
+
   // Constructors.
   //
   spheroidType(const velocity_type&, const origin_type&, const radius_type&,
                const type_type&, const h_type&, const mass_type&,
-               const epsilon_type&, const sigma_type&);
+               const epsilon_type&, const sigma_type&, const twoD_type&);
 
   spheroidType(::std::auto_ptr<velocity_type>, ::std::auto_ptr<origin_type>,
                const radius_type&, const type_type&, const h_type&,
-               const mass_type&, const epsilon_type&, const sigma_type&);
+               const mass_type&, const epsilon_type&, const sigma_type&,
+               const twoD_type&);
 
   spheroidType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
                ::xml_schema::container* c = 0);
@@ -531,6 +545,7 @@ class spheroidType : public ::xml_schema::type {
   ::xsd::cxx::tree::one<mass_type> mass_;
   ::xsd::cxx::tree::one<epsilon_type> epsilon_;
   ::xsd::cxx::tree::one<sigma_type> sigma_;
+  ::xsd::cxx::tree::one<twoD_type> twoD_;
 };
 
 class Dvec3Type : public ::xml_schema::type {
@@ -745,6 +760,22 @@ class simulation : public ::xml_schema::type {
 
 class metadata : public ::xml_schema::type {
  public:
+  // domain
+  //
+  typedef ::Ivec3Type domain_type;
+  typedef ::xsd::cxx::tree::optional<domain_type> domain_optional;
+  typedef ::xsd::cxx::tree::traits<domain_type, char> domain_traits;
+
+  const domain_optional& domain() const;
+
+  domain_optional& domain();
+
+  void domain(const domain_type& x);
+
+  void domain(const domain_optional& x);
+
+  void domain(::std::auto_ptr<domain_type> p);
+
   // FileName
   //
   typedef ::xml_schema::string FileName_type;
@@ -816,6 +847,7 @@ class metadata : public ::xml_schema::type {
   void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
 
  protected:
+  domain_optional domain_;
   FileName_optional FileName_;
   delta_t_optional delta_t_;
   t_end_optional t_end_;

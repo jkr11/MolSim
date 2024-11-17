@@ -11,8 +11,9 @@
 #include <string>
 
 using dvec3 = std::array<double, 3>;
+using ivec3 = std::array<int, 3>;
 
-class Particle {
+class Particle final {
  private:
   /**
    * Position of the particle
@@ -68,7 +69,7 @@ class Particle {
       const std::array<double, 3> &x_arg, const std::array<double, 3> &v_arg,
       double m_arg, double _epsilon, double _sigma, int type = 0);
 
-  virtual ~Particle();
+  ~Particle();
 
   [[nodiscard]] const std::array<double, 3> &getX() const;
 

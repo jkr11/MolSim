@@ -383,6 +383,30 @@ sigma (const sigma_type& x)
   this->sigma_.set (x);
 }
 
+const spheroidType::twoD_type& spheroidType::
+twoD () const
+{
+  return this->twoD_.get ();
+}
+
+spheroidType::twoD_type& spheroidType::
+twoD ()
+{
+  return this->twoD_.get ();
+}
+
+void spheroidType::
+twoD (const twoD_type& x)
+{
+  this->twoD_.set (x);
+}
+
+spheroidType::twoD_type spheroidType::
+twoD_default_value ()
+{
+  return twoD_type (true);
+}
+
 
 // Dvec3Type
 // 
@@ -596,6 +620,36 @@ spheroids (::std::auto_ptr< spheroids_type > x)
 
 // metadata
 // 
+
+const metadata::domain_optional& metadata::
+domain () const
+{
+  return this->domain_;
+}
+
+metadata::domain_optional& metadata::
+domain ()
+{
+  return this->domain_;
+}
+
+void metadata::
+domain (const domain_type& x)
+{
+  this->domain_.set (x);
+}
+
+void metadata::
+domain (const domain_optional& x)
+{
+  this->domain_ = x;
+}
+
+void metadata::
+domain (::std::auto_ptr< domain_type > x)
+{
+  this->domain_.set (x);
+}
 
 const metadata::FileName_optional& metadata::
 FileName () const
@@ -1038,7 +1092,8 @@ spheroidType (const velocity_type& velocity,
               const h_type& h,
               const mass_type& mass,
               const epsilon_type& epsilon,
-              const sigma_type& sigma)
+              const sigma_type& sigma,
+              const twoD_type& twoD)
 : ::xml_schema::type (),
   velocity_ (velocity, this),
   origin_ (origin, this),
@@ -1047,7 +1102,8 @@ spheroidType (const velocity_type& velocity,
   h_ (h, this),
   mass_ (mass, this),
   epsilon_ (epsilon, this),
-  sigma_ (sigma, this)
+  sigma_ (sigma, this),
+  twoD_ (twoD, this)
 {
 }
 
@@ -1059,7 +1115,8 @@ spheroidType (::std::auto_ptr< velocity_type > velocity,
               const h_type& h,
               const mass_type& mass,
               const epsilon_type& epsilon,
-              const sigma_type& sigma)
+              const sigma_type& sigma,
+              const twoD_type& twoD)
 : ::xml_schema::type (),
   velocity_ (velocity, this),
   origin_ (origin, this),
@@ -1068,7 +1125,8 @@ spheroidType (::std::auto_ptr< velocity_type > velocity,
   h_ (h, this),
   mass_ (mass, this),
   epsilon_ (epsilon, this),
-  sigma_ (sigma, this)
+  sigma_ (sigma, this),
+  twoD_ (twoD, this)
 {
 }
 
@@ -1084,7 +1142,8 @@ spheroidType (const spheroidType& x,
   h_ (x.h_, f, this),
   mass_ (x.mass_, f, this),
   epsilon_ (x.epsilon_, f, this),
-  sigma_ (x.sigma_, f, this)
+  sigma_ (x.sigma_, f, this),
+  twoD_ (x.twoD_, f, this)
 {
 }
 
@@ -1100,7 +1159,8 @@ spheroidType (const ::xercesc::DOMElement& e,
   h_ (this),
   mass_ (this),
   epsilon_ (this),
-  sigma_ (this)
+  sigma_ (this),
+  twoD_ (this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
   {
@@ -1213,6 +1273,17 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       }
     }
 
+    // twoD
+    //
+    if (n.name () == "twoD" && n.namespace_ ().empty ())
+    {
+      if (!twoD_.present ())
+      {
+        this->twoD_.set (twoD_traits::create (i, f, this));
+        continue;
+      }
+    }
+
     break;
   }
 
@@ -1271,6 +1342,13 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       "sigma",
       "");
   }
+
+  if (!twoD_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "twoD",
+      "");
+  }
 }
 
 spheroidType* spheroidType::
@@ -1294,6 +1372,7 @@ operator= (const spheroidType& x)
     this->mass_ = x.mass_;
     this->epsilon_ = x.epsilon_;
     this->sigma_ = x.sigma_;
+    this->twoD_ = x.twoD_;
   }
 
   return *this;
@@ -1701,6 +1780,7 @@ simulation::
 metadata::
 metadata ()
 : ::xml_schema::type (),
+  domain_ (this),
   FileName_ (this),
   delta_t_ (this),
   t_end_ (this)
@@ -1712,6 +1792,7 @@ metadata (const metadata& x,
           ::xml_schema::flags f,
           ::xml_schema::container* c)
 : ::xml_schema::type (x, f, c),
+  domain_ (x.domain_, f, this),
   FileName_ (x.FileName_, f, this),
   delta_t_ (x.delta_t_, f, this),
   t_end_ (x.t_end_, f, this)
@@ -1723,13 +1804,14 @@ metadata (const ::xercesc::DOMElement& e,
           ::xml_schema::flags f,
           ::xml_schema::container* c)
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  domain_ (this),
   FileName_ (this),
   delta_t_ (this),
   t_end_ (this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
   {
-    ::xsd::cxx::xml::dom::parser< char > p (e, false, false, true);
+    ::xsd::cxx::xml::dom::parser< char > p (e, true, false, true);
     this->parse (p, f);
   }
 }
@@ -1738,6 +1820,29 @@ void metadata::
 parse (::xsd::cxx::xml::dom::parser< char >& p,
        ::xml_schema::flags f)
 {
+  for (; p.more_content (); p.next_content (false))
+  {
+    const ::xercesc::DOMElement& i (p.cur_element ());
+    const ::xsd::cxx::xml::qualified_name< char > n (
+      ::xsd::cxx::xml::dom::name< char > (i));
+
+    // domain
+    //
+    if (n.name () == "domain" && n.namespace_ ().empty ())
+    {
+      ::std::auto_ptr< domain_type > r (
+        domain_traits::create (i, f, this));
+
+      if (!this->domain_)
+      {
+        this->domain_.set (r);
+        continue;
+      }
+    }
+
+    break;
+  }
+
   while (p.more_attributes ())
   {
     const ::xercesc::DOMAttr& i (p.next_attribute ());
@@ -1777,6 +1882,7 @@ operator= (const metadata& x)
   if (this != &x)
   {
     static_cast< ::xml_schema::type& > (*this) = x;
+    this->domain_ = x.domain_;
     this->FileName_ = x.FileName_;
     this->delta_t_ = x.delta_t_;
     this->t_end_ = x.t_end_;

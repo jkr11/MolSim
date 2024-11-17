@@ -5,13 +5,26 @@
 #ifndef SIMULATION_H
 #define SIMULATION_H
 #pragma once
-#include <array>
+#include <stdexcept>
+
+#include "defs/Particle.h"
+#include "utils/SpdWrapper.h"
 
 struct Simulation {
   double delta_t{};
   double t_end{};
   double cutoff_radius{};
-  std::array<int, 3> domain{};
+  ivec3 domain{};
 };
+
+template <typename SVec, typename TVec>
+TVec unwrapVec(const SVec& source, const std::string& paramName) {
+  try {
+    return TVec{source.x(), source.y(), source.z()};
+  } catch (const std::exception& e) {
+    throw std::runtime_error("Failed to unwrap vector " + paramName + ": " +
+                             e.what());
+  }
+}
 
 #endif  // SIMULATION_H

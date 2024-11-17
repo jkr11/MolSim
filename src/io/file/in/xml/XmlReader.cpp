@@ -6,7 +6,9 @@
 
 #include "defs/Generators/CuboidGenerator.h"
 #include "defs/Generators/SpheroidGenerator.h"
+#include "defs/Simulation.h"
 #include "input.hxx"
+#include "spdlog/fmt/bundled/args.h"
 #include "utils/SpdWrapper.h"
 
 void XmlReader::read(std::vector<Particle>& particles,
@@ -14,18 +16,30 @@ void XmlReader::read(std::vector<Particle>& particles,
   try {
     const std::unique_ptr<::simulation> config = simulation_(filepath);
     SpdWrapper::get()->info("Reading XML file {}", filepath);
-    simulation_parameters.delta_t = config->metadata()->delta_t().get();
-    simulation_parameters.t_end = config->metadata()->t_end().get();
+    if (config->metadata() != nullptr) {
+      auto& metadata = config->metadata();
+      if (metadata->delta_t() != nullptr) {
+        simulation_parameters.delta_t = metadata->delta_t().get();
+      }
+      if (metadata->t_end() != nullptr) {
+        simulation_parameters.t_end = metadata->t_end().get();
+      }
+      if (metadata->domain() != nullptr) {
+        simulation_parameters.domain =
+            unwrapVec<Ivec3Type&, ivec3>(metadata->domain().get(), "domain");
+      }
+    }
 
     if (config->cuboids() != nullptr) {
       for (const auto& cubes : config->cuboids()->cuboid()) {
         const auto& _corner = cubes.corner();
         const auto& _dimensions = cubes.dimensions();
         const auto& _velocity = cubes.velocity();
-        dvec3 corner = {_corner.x(), _corner.y(), _corner.z()};
-        std::array<int, 3> dimensions = {_dimensions.x(), _dimensions.y(),
-                                         _dimensions.z()};
-        dvec3 velocity = {_velocity.x(), _velocity.y(), _velocity.z()};
+        dvec3 corner = unwrapVec<const Dvec3Type&, dvec3>(_corner, "corner");
+        ivec3 dimensions =
+            unwrapVec<const Ivec3Type&, ivec3>(_dimensions, "dimensions");
+        dvec3 velocity =
+            unwrapVec<const Dvec3Type&, dvec3>(_velocity, "velocity");
 
         CuboidGenerator cg(corner, dimensions, cubes.h(), cubes.mass(),
                            velocity, cubes.mv(), cubes.epsilon(), cubes.sigma(),
@@ -56,7 +70,7 @@ void XmlReader::read(std::vector<Particle>& particles,
   }
 }
 
-std::tuple<double, double, double, std::array<int, 3>> XmlReader::pass() const {
+std::tuple<double, double, double, ivec3> XmlReader::pass() const {
   return {simulation_parameters.delta_t, simulation_parameters.t_end,
           simulation_parameters.cutoff_radius, simulation_parameters.domain};
 }

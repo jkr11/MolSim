@@ -7,6 +7,9 @@
                 <!-- metadata (optional) -->
                 <xs:element name="metadata" minOccurs="0">
                     <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="domain" type="Ivec3Type" minOccurs="0"/>
+                        </xs:sequence>
                         <xs:attribute name="FileName" type="xs:string"/>
                         <xs:attribute name="delta_t" type="xs:decimal"/>
                         <xs:attribute name="t_end" type="xs:double"/>
