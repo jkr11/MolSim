@@ -8,7 +8,7 @@
 #include <sstream>
 
 #include "debug/debug_print.h"
-#include "defs/CuboidGenerator.h"
+#include "defs/Generators/CuboidGenerator.h"
 #include "defs/Particle.h"
 #include "utils/SpdWrapper.h"
 

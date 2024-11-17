@@ -40,7 +40,8 @@ target_include_directories(MolSimLib PUBLIC
 )
 
 add_executable(MolSim MolSim.cpp
-        io/file/in/xml/input.cxx)
+        io/file/in/xml/input.cxx
+        defs/Generators/ParticleGenerator.h)
 target_link_libraries(MolSim PUBLIC MolSimLib)
 
 target_compile_options(MolSimLib

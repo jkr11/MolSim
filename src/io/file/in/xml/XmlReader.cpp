@@ -4,7 +4,7 @@
 
 #include "XmlReader.h"
 
-#include "defs/CuboidGenerator.h"
+#include "defs/Generators/CuboidGenerator.h"
 #include "utils/SpdWrapper.h"
 #include "input.hxx"
 
