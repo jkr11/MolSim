@@ -23,6 +23,10 @@ class XmlReader final : public FileReader {
   ivec3 domain{};
 
  public:
+  /**
+   * @brief instantiates XmlReader with the predefined parameters
+   * @param _simulation_parameters passed by MolSim.cpp
+   */
   explicit XmlReader(const Simulation &_simulation_parameters) {
     simulation_parameters = _simulation_parameters;
   };
