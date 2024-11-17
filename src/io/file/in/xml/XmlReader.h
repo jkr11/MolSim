@@ -33,6 +33,6 @@ class XmlReader final : public FileReader {
    * @brief passes the struct to other classes
    * @return struct with Simulation parameters
    */
-  [[nodiscard]] Simulation pass() const;
+  [[nodiscard]] std::tuple<double,double,double,std::array<int,3>> pass() const;
 };
 #endif  // XMLREADER_H

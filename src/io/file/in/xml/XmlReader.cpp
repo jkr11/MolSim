@@ -12,7 +12,7 @@
 void XmlReader::read(std::vector<Particle>& particles,
                      const std::string& filepath) {
   try {
-    const std::unique_ptr< ::simulation> config = simulation_(filepath);
+    const std::unique_ptr<::simulation> config = simulation_(filepath);
     SpdWrapper::get()->info("Reading XML file {}", filepath);
     simulation_parameters.delta_t = config->metadata()->delta_t().get();
     simulation_parameters.t_end = config->metadata()->t_end().get();
@@ -56,4 +56,7 @@ void XmlReader::read(std::vector<Particle>& particles,
   }
 }
 
-Simulation XmlReader::pass() const { return simulation_parameters; }
+std::tuple<double, double, double, std::array<int, 3>> XmlReader::pass() const {
+  return {simulation_parameters.delta_t, simulation_parameters.t_end,
+          simulation_parameters.cutoff_radius, simulation_parameters.domain};
+}

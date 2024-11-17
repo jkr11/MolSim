@@ -46,12 +46,14 @@ int main(int argc, char *argv[]) {
 
   std::vector<Particle> particles;
   arguments.reader->read(particles, arguments.inputFile);
-  simulation_params = dynamic_cast<XmlReader *>(arguments.reader.get())->pass();
-  SpdWrapper::get()->info("t_end after: {}", simulation_params.t_end);
+  auto [delta_t, t_end, cutoff_radius, domain] =
+      dynamic_cast<XmlReader *>(arguments.reader.get())->pass();
+  SpdWrapper::get()->info("t_end: {}, delta_t: {}, cutoff_radius: {}", t_end,
+                          delta_t, cutoff_radius);
+
   DirectSumContainer container(particles);
   SpdWrapper::get()->info("particles.size: {}", particles.size());
-  VerletIntegrator verlet_integrator(*arguments.force,
-                                     simulation_params.delta_t);
+  VerletIntegrator verlet_integrator(*arguments.force, delta_t);
   outputWriter::VTKWriter writer;
 
   const std::string outputDirectory =
@@ -64,7 +66,7 @@ int main(int argc, char *argv[]) {
   int percentage = 0;
   double next_output_time = 0;
 
-  while (current_time <= simulation_params.t_end) {
+  while (current_time <= t_end) {
     verlet_integrator.step(container);
 
     if (current_time >= next_output_time) {
@@ -73,17 +75,15 @@ int main(int argc, char *argv[]) {
       next_output_time = writes * arguments.output_time_step_size;
 
       // check if next percentage complete
-      if (const double t = 100 * current_time / arguments.t_end;
-          t >= percentage) {
+      if (const double t = 100 * current_time / t_end; t >= percentage) {
         percentage++;
         SpdWrapper::get()->info("[{:.0f} %]: Iteration {}",
-                                100 * current_time / arguments.t_end,
-                                iteration);
+                                100 * current_time / t_end, iteration);
       }
     }
 
     iteration++;
-    current_time = arguments.delta_t * iteration;  // + start_time
+    current_time = delta_t * iteration;  // + start_time
   }
   std::cout << std::endl;
   SpdWrapper::get()->info("Output written. Terminating...");
