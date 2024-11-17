@@ -6,6 +6,7 @@
 
 #include "utils/ArrayUtils.h"
 #include "utils/MaxwellBoltzmannDistribution.h"
+#include "utils/SpdWrapper.h"
 SpheroidGenerator::SpheroidGenerator(const dvec3& origin, const int radius,
                                      const double h, const double m,
                                      const dvec3& initialVelocity,
@@ -18,7 +19,20 @@ SpheroidGenerator::SpheroidGenerator(const dvec3& origin, const int radius,
       initialVelocity(initialVelocity),
       epsilon(epsilon),
       sigma(sigma),
-      type(type) {}
+      type(type) {
+  SpdWrapper::get()->info("CuboidGenerator created with parameters:");
+  SpdWrapper::get()->info("origin: ({}, {}, {})", origin[0], origin[1],
+                          origin[2]);
+  SpdWrapper::get()->info("radius: {}", radius);
+  SpdWrapper::get()->info("h: {}", h);
+  SpdWrapper::get()->info("m: {}", m);
+  SpdWrapper::get()->info("initialVelocity: ({}, {}, {})", initialVelocity[0],
+                          initialVelocity[1], initialVelocity[2]);
+  SpdWrapper::get()->info("mv: {}", mv);
+  SpdWrapper::get()->info("epsilon: {}", epsilon);
+  SpdWrapper::get()->info("sigma: {}", sigma);
+  SpdWrapper::get()->info("type: {}", type);
+}
 
 void SpheroidGenerator::generate(std::vector<Particle>& particles) {
   for (int i = -radius; i <= radius; i++) {

@@ -5,8 +5,9 @@
 #include "XmlReader.h"
 
 #include "defs/Generators/CuboidGenerator.h"
-#include "utils/SpdWrapper.h"
+#include "defs/Generators/SpheroidGenerator.h"
 #include "input.hxx"
+#include "utils/SpdWrapper.h"
 
 void XmlReader::read(std::vector<Particle>& particles,
                      const std::string& filepath) {
@@ -26,6 +27,20 @@ void XmlReader::read(std::vector<Particle>& particles,
                          cubes.type());
 
       cg.generate(particles);
+    }
+
+    for (const auto& spheres : config->spheroids()->spheroid()) {
+      const auto& _origin = spheres.origin();
+      const auto& _velocity = spheres.velocity();
+      dvec3 origin = {_origin.x(), _origin.y(), _origin.z()};
+      dvec3 velocity = {_velocity.x(), _velocity.y(), _velocity.z()};
+      int radius = spheres.radius();
+
+      SpheroidGenerator sg(origin, radius, spheres.h(), spheres.mass(),
+                           velocity, spheres.epsilon(), spheres.sigma(),
+                           spheres.type());
+
+      sg.generate(particles);
     }
   } catch (const std::exception& e) {
     SpdWrapper::get()->error("Error reading XML file: {}", e.what());

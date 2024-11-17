@@ -21,6 +21,14 @@
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
+                <!-- spheroids (n) -->
+                <xs:element name="spheroids" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="spheroid" type="spheroidType" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -36,6 +44,20 @@
             <xs:element name="epsilon" type="xs:decimal"/>
             <xs:element name="sigma" type="xs:decimal"/>
             <xs:element name="mv" type="xs:decimal"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Spheroid Type -->
+    <xs:complexType name="spheroidType">
+        <xs:sequence>
+            <xs:element name="velocity" type="Dvec3Type"/>
+            <xs:element name="origin" type="Dvec3Type"/>
+            <xs:element name="radius" type="xs:int"/>
+            <xs:element name="type" type="xs:int"/>
+            <xs:element name="h" type="xs:decimal"/>
+            <xs:element name="mass" type="xs:decimal"/>
+            <xs:element name="epsilon" type="xs:decimal"/>
+            <xs:element name="sigma" type="xs:decimal"/>
         </xs:sequence>
     </xs:complexType>
 
