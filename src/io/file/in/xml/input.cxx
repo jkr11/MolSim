@@ -533,22 +533,28 @@ metadata (::std::auto_ptr< metadata_type > x)
   this->metadata_.set (x);
 }
 
-const simulation::cuboids_type& simulation::
+const simulation::cuboids_optional& simulation::
 cuboids () const
 {
-  return this->cuboids_.get ();
+  return this->cuboids_;
 }
 
-simulation::cuboids_type& simulation::
+simulation::cuboids_optional& simulation::
 cuboids ()
 {
-  return this->cuboids_.get ();
+  return this->cuboids_;
 }
 
 void simulation::
 cuboids (const cuboids_type& x)
 {
   this->cuboids_.set (x);
+}
+
+void simulation::
+cuboids (const cuboids_optional& x)
+{
+  this->cuboids_ = x;
 }
 
 void simulation::
@@ -1572,19 +1578,10 @@ Ivec3Type::
 //
 
 simulation::
-simulation (const cuboids_type& cuboids)
+simulation ()
 : ::xml_schema::type (),
   metadata_ (this),
-  cuboids_ (cuboids, this),
-  spheroids_ (this)
-{
-}
-
-simulation::
-simulation (::std::auto_ptr< cuboids_type > cuboids)
-: ::xml_schema::type (),
-  metadata_ (this),
-  cuboids_ (cuboids, this),
+  cuboids_ (this),
   spheroids_ (this)
 {
 }
@@ -1647,7 +1644,7 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       ::std::auto_ptr< cuboids_type > r (
         cuboids_traits::create (i, f, this));
 
-      if (!cuboids_.present ())
+      if (!this->cuboids_)
       {
         this->cuboids_.set (r);
         continue;
@@ -1669,13 +1666,6 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     }
 
     break;
-  }
-
-  if (!cuboids_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "cuboids",
-      "");
   }
 }
 

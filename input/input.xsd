@@ -14,7 +14,7 @@
                 </xs:element>
 
                 <!-- cuboids (n) -->
-                <xs:element name="cuboids">
+                <xs:element name="cuboids" minOccurs="0">
                     <xs:complexType>
                         <xs:sequence>
                             <xs:element name="cuboid" type="cuboidType" maxOccurs="unbounded"/>

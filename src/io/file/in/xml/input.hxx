@@ -686,13 +686,16 @@ class simulation : public ::xml_schema::type {
   // cuboids
   //
   typedef ::cuboids cuboids_type;
+  typedef ::xsd::cxx::tree::optional<cuboids_type> cuboids_optional;
   typedef ::xsd::cxx::tree::traits<cuboids_type, char> cuboids_traits;
 
-  const cuboids_type& cuboids() const;
+  const cuboids_optional& cuboids() const;
 
-  cuboids_type& cuboids();
+  cuboids_optional& cuboids();
 
   void cuboids(const cuboids_type& x);
+
+  void cuboids(const cuboids_optional& x);
 
   void cuboids(::std::auto_ptr<cuboids_type> p);
 
@@ -714,9 +717,7 @@ class simulation : public ::xml_schema::type {
 
   // Constructors.
   //
-  simulation(const cuboids_type&);
-
-  simulation(::std::auto_ptr<cuboids_type>);
+  simulation();
 
   simulation(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
              ::xml_schema::container* c = 0);
@@ -738,7 +739,7 @@ class simulation : public ::xml_schema::type {
 
  protected:
   metadata_optional metadata_;
-  ::xsd::cxx::tree::one<cuboids_type> cuboids_;
+  cuboids_optional cuboids_;
   spheroids_optional spheroids_;
 };
 
