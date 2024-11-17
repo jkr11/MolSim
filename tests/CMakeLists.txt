@@ -3,6 +3,7 @@ cmake_policy(SET CMP0079 NEW)
 enable_testing()
 include_directories(
         ${PROJECT_SOURCE_DIR}/src
+        ${CMAKE_CURRENT_SOURCE_DIR}
 )
 file(GLOB_RECURSE MOLSIM_TEST
         "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
@@ -17,6 +18,7 @@ if (BUILD_TESTS)
             LennardJonesTest.cpp
             VerletIntegratorTest.cpp
             testUtil.h)
+
     target_link_libraries(MolSimTest MolSimLib GTest::gtest_main)
     include(GoogleTest)
     gtest_discover_tests(MolSimTest)
