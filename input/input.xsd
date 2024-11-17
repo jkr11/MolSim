@@ -58,6 +58,7 @@
             <xs:element name="mass" type="xs:decimal"/>
             <xs:element name="epsilon" type="xs:decimal"/>
             <xs:element name="sigma" type="xs:decimal"/>
+            <xs:element name="twoD" type="xs:boolean" default="true"/>
         </xs:sequence>
     </xs:complexType>
 
