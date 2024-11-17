@@ -33,7 +33,7 @@ TEST(DirectSumContainer, singleIterator) {
   container.addParticle(p2);
   container.addParticle(p3);
 
-  ASSERT_EQ(container.size(), 3) << "ParticleContainer particle count not "
+  ASSERT_EQ(container.size(), 3) << "container particle count not "
                                     "matching after adding 3 particles.";
 
   std::vector<Particle> vec = {};
