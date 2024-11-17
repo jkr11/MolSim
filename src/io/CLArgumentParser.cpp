@@ -11,7 +11,7 @@
 
 #include "file/in/CuboidReader.h"
 #include "file/in/DefaultReader.h"
-#include "file/in/XmlReader.h"
+#include "file/in/xml/XmlReader.h"
 #include "forces/Gravity.h"
 #include "forces/LennardJones.h"
 #include "spdlog/fmt/bundled/chrono.h"

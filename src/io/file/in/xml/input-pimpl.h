@@ -6,8 +6,8 @@
 #define INPUT_PIMPL_H
 #include <iostream>
 #include "input-pskel.hxx"
-
-class input_pimpl : public Simulation_pskel {
+// we can uuse this later on
+class input_pimpl final : public Simulation_pskel {
 public:
 };
 #endif //INPUT_PIMPL_H

@@ -40,10 +40,7 @@ target_include_directories(MolSimLib PUBLIC
 )
 
 add_executable(MolSim MolSim.cpp
-        defs/containers/DirectSumContainer.cpp
-        io/file/in/XmlReader.h
-        io/file/in/XmlReader.cpp
-        io/file/in/input.cxx)
+        io/file/in/xml/input.cxx)
 target_link_libraries(MolSim PUBLIC MolSimLib)
 
 target_compile_options(MolSimLib

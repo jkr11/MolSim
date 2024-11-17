@@ -4,22 +4,14 @@
 
 #include "XmlReader.h"
 
-#include <fstream>
-
 #include "defs/CuboidGenerator.h"
-#include "input.hxx"
 #include "utils/SpdWrapper.h"
+#include "input.hxx"
 
 void XmlReader::read(std::vector<Particle>& particles,
                      const std::string& filepath) {
   try {
-    SpdWrapper::get()->info("XMLREADER entered");
-    SpdWrapper::get()->info("XMLREADER opened");
-    //if (!xmlFile.is_open()) {
-    //  SpdWrapper::get()->error("Unable to open file {}", filepath);
-    //}
-
-    std::unique_ptr< ::simulation> config = simulation_(filepath);
+    const std::unique_ptr< ::simulation> config = simulation_(filepath);
     SpdWrapper::get()->info("Reading XML file {}", filepath);
     for (const auto& cubes : config->cuboids().cuboid()) {
       const auto& _corner = cubes.corner();
@@ -31,7 +23,7 @@ void XmlReader::read(std::vector<Particle>& particles,
       dvec3 velocity = {_velocity.x(), _velocity.y(), _velocity.z()};
       CuboidGenerator cg(corner, dimensions, cubes.h(), cubes.mass(), velocity,
                          cubes.mv(), cubes.epsilon(), cubes.sigma(),
-                         static_cast<int>(cubes.type()));
+                         cubes.type());
 
       cg.generate(particles);
     }
