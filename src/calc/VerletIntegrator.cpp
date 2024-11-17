@@ -15,8 +15,7 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
 
   // advance time, old F_{t] -> F_{t-1}, F_{t} = 0
   particle_container.singleIterator([](Particle& p) {
-    p.setOldF(p.getF());
-    p.setF({0, 0, 0});
+    p.updateForceInTime();
   });
 
   // update force

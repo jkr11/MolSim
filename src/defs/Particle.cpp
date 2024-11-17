@@ -75,6 +75,11 @@ void Particle::setEpsilon(const double &Epsilon) { epsilon = Epsilon; }
 
 void Particle::setSigma(const double &Sigma) { sigma = Sigma; }
 
+void Particle::updateForceInTime() {
+  old_f = f;
+  f = {0., 0., 0.};
+}
+
 std::string Particle::toString() const {
   std::stringstream stream;
   stream << "Particle: X:" << x << " v: " << v << " f: " << f
