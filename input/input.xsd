@@ -13,6 +13,7 @@
                         <xs:attribute name="FileName" type="xs:string"/>
                         <xs:attribute name="delta_t" type="xs:decimal"/>
                         <xs:attribute name="t_end" type="xs:double"/>
+                        <xs:attribute name="r_cutoff" type="xs:double"/>
                     </xs:complexType>
                 </xs:element>
 

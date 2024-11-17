@@ -1,7 +1,13 @@
 <?xml version="1.0"?>
 <simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:noNamespaceSchemaLocation="input.xsd">
-    <metadata delta_t="0.001" t_end="10" domain="10 10 10"/>
+    <metadata delta_t="0.001" t_end="10">
+        <domain>
+            <x>10</x>
+            <y>10</y>
+            <z>10</z>
+        </domain>
+    </metadata>
     <cuboids>
         <cuboid>
             <velocity>

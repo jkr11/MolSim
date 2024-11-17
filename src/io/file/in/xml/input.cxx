@@ -729,6 +729,30 @@ t_end (const t_end_optional& x)
   this->t_end_ = x;
 }
 
+const metadata::r_cutoff_optional& metadata::
+r_cutoff () const
+{
+  return this->r_cutoff_;
+}
+
+metadata::r_cutoff_optional& metadata::
+r_cutoff ()
+{
+  return this->r_cutoff_;
+}
+
+void metadata::
+r_cutoff (const r_cutoff_type& x)
+{
+  this->r_cutoff_.set (x);
+}
+
+void metadata::
+r_cutoff (const r_cutoff_optional& x)
+{
+  this->r_cutoff_ = x;
+}
+
 
 // cuboids
 // 
@@ -1783,7 +1807,8 @@ metadata ()
   domain_ (this),
   FileName_ (this),
   delta_t_ (this),
-  t_end_ (this)
+  t_end_ (this),
+  r_cutoff_ (this)
 {
 }
 
@@ -1795,7 +1820,8 @@ metadata (const metadata& x,
   domain_ (x.domain_, f, this),
   FileName_ (x.FileName_, f, this),
   delta_t_ (x.delta_t_, f, this),
-  t_end_ (x.t_end_, f, this)
+  t_end_ (x.t_end_, f, this),
+  r_cutoff_ (x.r_cutoff_, f, this)
 {
 }
 
@@ -1807,7 +1833,8 @@ metadata (const ::xercesc::DOMElement& e,
   domain_ (this),
   FileName_ (this),
   delta_t_ (this),
-  t_end_ (this)
+  t_end_ (this),
+  r_cutoff_ (this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
   {
@@ -1866,6 +1893,12 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       this->t_end_.set (t_end_traits::create (i, f, this));
       continue;
     }
+
+    if (n.name () == "r_cutoff" && n.namespace_ ().empty ())
+    {
+      this->r_cutoff_.set (r_cutoff_traits::create (i, f, this));
+      continue;
+    }
   }
 }
 
@@ -1886,6 +1919,7 @@ operator= (const metadata& x)
     this->FileName_ = x.FileName_;
     this->delta_t_ = x.delta_t_;
     this->t_end_ = x.t_end_;
+    this->r_cutoff_ = x.r_cutoff_;
   }
 
   return *this;

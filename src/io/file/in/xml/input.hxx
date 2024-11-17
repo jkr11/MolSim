@@ -824,6 +824,22 @@ class metadata : public ::xml_schema::type {
 
   void t_end(const t_end_optional& x);
 
+  // r_cutoff
+  //
+  typedef ::xml_schema::double_ r_cutoff_type;
+  typedef ::xsd::cxx::tree::optional<r_cutoff_type> r_cutoff_optional;
+  typedef ::xsd::cxx::tree::traits<r_cutoff_type, char,
+                                   ::xsd::cxx::tree::schema_type::double_>
+      r_cutoff_traits;
+
+  const r_cutoff_optional& r_cutoff() const;
+
+  r_cutoff_optional& r_cutoff();
+
+  void r_cutoff(const r_cutoff_type& x);
+
+  void r_cutoff(const r_cutoff_optional& x);
+
   // Constructors.
   //
   metadata();
@@ -851,6 +867,7 @@ class metadata : public ::xml_schema::type {
   FileName_optional FileName_;
   delta_t_optional delta_t_;
   t_end_optional t_end_;
+  r_cutoff_optional r_cutoff_;
 };
 
 class cuboids : public ::xml_schema::type {
