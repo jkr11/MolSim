@@ -35,13 +35,10 @@ int main(int argc, char *argv[]) {
                           arguments.t_end, arguments.delta_t,
                           arguments.output_time_step_size);
 
-  // setup Simulation
-  // FileReader::readFile(particles, input_file);
-  DirectSumContainer container;
   std::vector<Particle> particles;
-  TODO: arguments.reader->read(particles,
-                         arguments.inputFile);
-
+  arguments.reader->read(particles, arguments.inputFile);
+  DirectSumContainer container(particles);
+  SpdWrapper::get()->info("particles.size: {}", particles.size());
   VerletIntegrator verlet_integrator(*arguments.force, arguments.delta_t);
   outputWriter::VTKWriter writer;
 

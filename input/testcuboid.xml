@@ -1,12 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 <simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:noNamespaceSchemaLocation="../src/io/file/in/input.xsd">
-
-    <!-- Cuboids section with multiple cuboid entries -->
+            xsi:noNamespaceSchemaLocation="input.xsd">
+    <metadata delta_t="0.001" t_end="10"/>
     <cuboids>
         <cuboid>
             <velocity>
-                <x>1.0</x>
+                <x>0.0</x>
                 <y>0.0</y>
                 <z>0.0</z>
             </velocity>
@@ -21,37 +20,11 @@
                 <z>10</z>
             </dimensions>
             <type>1</type>
-            <h>0.5</h>
-            <mass>100.0</mass>
-            <epsilon>0.8</epsilon>
-            <sigma>0.5</sigma>
-            <mv>1.5</mv>
-        </cuboid>
-
-        <cuboid>
-            <velocity>
-                <x>0.0</x>
-                <y>1.0</y>
-                <z>0.0</z>
-            </velocity>
-            <corner>
-                <x>5.0</x>
-                <y>5.0</y>
-                <z>5.0</z>
-            </corner>
-            <dimensions>
-                <x>15</x>
-                <y>10</y>
-                <z>10</z>
-            </dimensions>
-            <type>2</type>
-            <h>0.6</h>
-            <mass>200.0</mass>
-            <epsilon>0.9</epsilon>
-            <sigma>0.7</sigma>
-            <mv>2.0</mv>
+            <h>0.1125</h>
+            <mass>5.0</mass>
+            <epsilon>0.1</epsilon>
+            <sigma>0.2</sigma>
+            <mv>0.3</mv>
         </cuboid>
     </cuboids>
-
 </simulation>
-

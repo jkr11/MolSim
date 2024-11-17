@@ -298,7 +298,7 @@ class cuboidType: public ::xml_schema::type
 
   // type
   //
-  typedef ::xml_schema::integer type_type;
+  typedef ::xml_schema::int_ type_type;
   typedef ::xsd::cxx::tree::traits< type_type, char > type_traits;
 
   const type_type&

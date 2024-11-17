@@ -14,13 +14,12 @@ void XmlReader::read(std::vector<Particle>& particles,
                      const std::string& filepath) {
   try {
     SpdWrapper::get()->info("XMLREADER entered");
-    std::ifstream xmlFile(filepath);
     SpdWrapper::get()->info("XMLREADER opened");
-    if (!xmlFile.is_open()) {
-      SpdWrapper::get()->error("Unable to open file {}", filepath);
-    }
+    //if (!xmlFile.is_open()) {
+    //  SpdWrapper::get()->error("Unable to open file {}", filepath);
+    //}
 
-    std::unique_ptr<::simulation> config = simulation_(xmlFile);
+    std::unique_ptr< ::simulation> config = simulation_(filepath);
     SpdWrapper::get()->info("Reading XML file {}", filepath);
     for (const auto& cubes : config->cuboids().cuboid()) {
       const auto& _corner = cubes.corner();
