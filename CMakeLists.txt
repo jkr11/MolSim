@@ -17,6 +17,14 @@ include(doxygen)
 include(spdlog)
 include(xsd)
 
+# removes annoying
+target_compile_options(spdlog
+        PRIVATE
+        $<$<CXX_COMPILER_ID:GNU>: -w>
+        $<$<CXX_COMPILER_ID:Clang>: -w>
+)
+
+
 # check for memory leaks with asan (run time) and clang-tidy (compile time)
 if (CMAKE_BUILD_TYPE STREQUAL "asan")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer -g")
