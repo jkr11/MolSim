@@ -10,7 +10,7 @@
  * @brief Integrator using the Verlet-integration method on a particle
  * container.
  */
-class VerletIntegrator : public Integrator {
+class VerletIntegrator final : public Integrator {
  public:
   /**
    * @brief Create VerletIntegrator object

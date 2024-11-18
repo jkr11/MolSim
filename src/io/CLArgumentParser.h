@@ -16,17 +16,18 @@
  * @brief struct to hold command line arguments
  */
 struct Arguments {
-  std::string inputFile;
+  std::string input_file;
   double t_end;
   double delta_t;
   double output_time_step_size;
-  std::string logLevel;
+  std::string log_level;
   std::shared_ptr<Force> force;  // TODO: I changed this from unique to shared
                                  // pointer because of copying in XMLReader, if
                                  // this is bad let me know
   ivec3 domain;
   double cutoff_radius;
-  std::shared_ptr<ParticleContainer> container;
+  enum { LinkedCells, DirectSum } container_type;
+  // std::shared_ptr<ParticleContainer> container;
 };
 
 /**

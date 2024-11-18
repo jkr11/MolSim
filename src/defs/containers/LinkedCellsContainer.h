@@ -6,8 +6,6 @@
 #include "defs/Particle.h"
 #include "defs/containers/ParticleContainer.h"
 
-typedef std::array<int, 3> ivec3;
-
 class LinkedCellsContainer final : public ParticleContainer {
  private:
   /**
@@ -48,6 +46,10 @@ class LinkedCellsContainer final : public ParticleContainer {
    */
   void addParticle(const Particle& p) override;
 
+  /**
+   * @brief adds an entire vector to the container.
+   * @param particles particles to be added
+   */
   void addParticles(const std::vector<Particle>& particles) override;
 
   /**

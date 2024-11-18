@@ -23,40 +23,41 @@ int main(int argc, char *argv[]) {
   // we dont need additional file readers anymore so we can just use XMLReader
 
   Arguments arguments = {
-      .inputFile = "",                            // file
+      .input_file = "",                           // file
       .t_end = 5,                                 // t_end
       .delta_t = 0.0002,                          // delta_t
       .output_time_step_size = 1,                 // output_time_step_size
-      .logLevel = "info",                         // logLevel
+      .log_level = "info",                        // logLevel
       .force = std::make_unique<LennardJones>(),  // force
       .cutoff_radius = 3.0,
       .domain = {100, 100, 100},
-      .container = nullptr,
+      .container_type = Arguments::LinkedCells,
   };  // TODO: figure out if the . assignement in structs is valid C++17
 
   if (CLArgumentParser::parse(argc, argv, arguments) != 0) {
     exit(EXIT_FAILURE);
   }
   const auto reader = std::make_unique<XmlReader>(arguments);
-  // SpdWrapper::get()->info("t_end: {}, delta_t: {}, output_time_step_size:
-  // {}",
-  //                         arguments.t_end, arguments.delta_t,
-  //                        arguments.output_time_step_size);
 
   std::vector<Particle> particles;
-  reader->read(particles, arguments.inputFile);
+  reader->read(particles, arguments.input_file);
   SpdWrapper::get()->info("Particles size {}", particles.size());
   auto [delta_t, t_end, cutoff_radius, domain] = reader.get()->pass();
 
   SpdWrapper::get()->info("t_end: {}, delta_t: {}, cutoff_radius: {}", t_end,
                           delta_t, cutoff_radius);
 
-  // arguments.container = std::make_unique<LinkedCellsContainer>(
-  //       arguments.domain, arguments.cutoff_radius);
-  const auto container =
-      std::make_unique<LinkedCellsContainer>(arguments.domain, cutoff_radius);
-  container->addParticles(particles);
-  container->imposeInvariant();
+  // maybe we can make this nicer, this is the best i can come up with right now
+  auto container{};
+  if (arguments.container_type == Arguments::LinkedCells) {
+    container =
+        std::make_unique<LinkedCellsContainer>(arguments.domain, cutoff_radius);
+    container->addParticles(particles);
+    container->imposeInvariant();
+  } else if (arguments.container_type == Arguments::DirectSum) {
+    container = std::make_unique<DirectSumContainer>();
+    container->addParticles(particles);
+  }
   SpdWrapper::get()->info("particles.size: {}", particles.size());
   VerletIntegrator verlet_integrator(*arguments.force, delta_t);
   outputWriter::VTKWriter writer;
@@ -64,8 +65,7 @@ int main(int argc, char *argv[]) {
   const std::string outputDirectory =
       createOutputDirectory("./output/", argc, argv);
 
-  const spdlog::stopwatch sw;
-  double current_time = 0;  // start time is always 0
+  double current_time = 0;
   int iteration = 0;
   int writes = 0;
   int percentage = 0;
