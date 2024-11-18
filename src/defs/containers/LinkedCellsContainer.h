@@ -20,11 +20,11 @@ class LinkedCellsContainer final : public ParticleContainer {
   std::vector<std::vector<Particle>> cells;
 
   // number of cells for domain + 2 (halo)
-  std::array<int, 3> cellCount;
+  std::array<int, 3> cellCount{};
   // cell dimensions
-  ivec3 cellDim;
+  ivec3 cellDim{};
   // cutoff distance
-  double cutoff;
+  double cutoff{};
 
  public:
   LinkedCellsContainer() = default;
@@ -95,14 +95,14 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @param f Function to be applied
    * @note Does not impose the invariant automatically!
    */
-  void boundaryIterator(std::function<void(Particle&)> f);
+  void boundaryIterator(const std::function<void(Particle&)>& f);
 
   /**
    * @brief Single iterator over all particles in the halo of the container
    * @param f Function to be applied
    * @note Does not impose the invariant automatically!
    */
-  void haloIterator(std::function<void(Particle&)> f);
+  void haloIterator(const std::function<void(Particle&)>& f);
 
   /**
    * @brief Get the amount of cells in each dimension
@@ -121,7 +121,8 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @param position Position in space
    * @return Associated cell index
    */
-  inline std::size_t dvec3ToCellIndex(const dvec3& position);
+  [[nodiscard]] inline std::size_t dvec3ToCellIndex(
+      const dvec3& position) const;
 
   /**
    * @brief Gets the cell index of the specified cell coordinate
@@ -151,28 +152,28 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @param cellCoord Cell coordinate to be checked
    * @return If cell is part of the halo
    */
-  [[nodiscard]] inline bool isHalo(const ivec3 cellCoord) const;
+  [[nodiscard]] inline bool isHaloVec(ivec3 cellCoord) const;
 
   /**
    * @brief Checks if a cell index is in the halo of the container
    * @param cellIndex cell index to be checked
    * @return If cell is part of the halo
    */
-  [[nodiscard]] inline bool isHalo(const std::size_t cellIndex) const;
+  [[nodiscard]] inline bool isHaloCell(std::size_t cellIndex) const;
 
   /**
    * @brief Checks if a cell coordinate is in the boundary of the container
    * @param cellCoord Cell coordinate to be checked
    * @return cell is part of the boundary
    */
-  [[nodiscard]] inline bool isBoundary(const ivec3 cellCoord) const;
+  [[nodiscard]] inline bool isBoundaryVec(ivec3 cellCoord) const;
 
   /**
    * @brief Checks if a cell index is in the boundary of the container
    * @param cellIndex cell index to be checked
    * @return If cell is part of the boundary
    */
-  [[nodiscard]] inline bool isBoundary(const std::size_t cellIndex) const;
+  [[nodiscard]] inline bool isBoundaryCell(std::size_t cellIndex) const;
 
   /**
    * @brief Debug method to get direct access to the cells vector
