@@ -60,6 +60,10 @@ std::vector<Particle> LinkedCellsContainer::getParticles() const {
   return count;
 }
 
+void LinkedCellsContainer::imposeInvariant() {
+  
+}
+
 void LinkedCellsContainer::singleIterator(
     const std::function<void(Particle &)> &f) {
   for (auto &c : cells) {
