@@ -4,6 +4,7 @@
 #pragma once
 #include "LinkedCellsContainer.h"
 
+#include <algorithm>
 #include <cmath>
 #include <cstddef>
 #include <functional>
@@ -12,8 +13,10 @@
 #include "../../utils/SpdWrapper.h"
 #include "../Particle.h"
 
-LinkedCellsContainer::LinkedCellsContainer(
-    const dvec3 &domain, const double cutoff /*boundary types*/) {
+LinkedCellsContainer::LinkedCellsContainer(const ivec3 &domain,
+                                           const double cutoff) {
+  SpdWrapper::get()->info("LinkedCellsContainer created with cutoff: {}",
+                          cutoff);
   cells = {};
   this->cutoff = cutoff;
 
@@ -23,25 +26,40 @@ LinkedCellsContainer::LinkedCellsContainer(
 
   cellDim = {domain[0] / cellCount[0], domain[1] / cellCount[1],
              domain[2] / cellCount[2]};
-
   // add 2 for halo
   cellCount = {cellCount[0] + 2, cellCount[1] + 2, cellCount[2] + 2};
 
+  SpdWrapper::get()->info("cellCount = ({}, {}, {})", cellCount[0],
+                          cellCount[1], cellCount[2]);
+  SpdWrapper::get()->info("total cells to allocate: {}",
+                          cellCount[0] * cellCount[1] * cellCount[2]);
   cells.resize(cellCount[0] * cellCount[1] * cellCount[2]);
+  SpdWrapper::get()->info("cells created");
 
   // TODO: pretty
   SpdWrapper::get()->info("cell dim: {}, {}, {}; cell count: {}, {}, {}",
                           cellDim[0], cellDim[1], cellDim[2], cellCount[0],
                           cellCount[1], cellCount[2]);
+  SpdWrapper::get()->info("Constructor left");
 }
 
 void LinkedCellsContainer::addParticle(const Particle &p) {
+  // SpdWrapper::get()->info("addParticle");
   std::size_t index = dvec3ToCellIndex(p.getX());
   cells[index].emplace_back(p);
 
   SpdWrapper::get()->debug(
       "Added particle with coords ({}, {}, {}) into cell index: {}",
       p.getX()[0], p.getX()[1], p.getX()[2], index);
+}
+
+void LinkedCellsContainer::addParticles(
+    const std::vector<Particle> &particles) {
+  SpdWrapper::get()->info("Adding particles");
+
+  for (const Particle &p : particles) {
+    addParticle(p);
+  }
 }
 
 void LinkedCellsContainer::removeParticle(const Particle &p) {
@@ -72,9 +90,9 @@ std::vector<Particle> LinkedCellsContainer::getParticles() const {
 void LinkedCellsContainer::imposeInvariant() {
   for (std::size_t index = 0; index < cells.size(); index++) {
     for (auto it = cells[index].begin(); it < cells[index].end();) {
-      std::size_t shouldBeIndex = dvec3ToCellIndex((*it).getX());
+      const std::size_t shouldBeIndex = dvec3ToCellIndex((*it).getX());
       if (shouldBeIndex == index) {
-        it++;
+        ++it;
         continue;
       }
 

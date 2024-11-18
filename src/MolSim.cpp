@@ -1,17 +1,18 @@
+#include <complex>
 #include <filesystem>
 #include <iostream>
 
 #include "calc/VerletIntegrator.h"
-
 #include "defs/Simulation.h"
-
 #include "defs/containers/DirectSumContainer.h"
+#include "defs/containers/LinkedCellsContainer.h"
 #include "forces/LennardJones.h"
 #include "io/CLArgumentParser.h"
 #include "io/file/in/CuboidReader.h"
 #include "io/file/in/xml/XmlReader.h"
 #include "io/file/out/OutputHelper.h"
 #include "io/file/out/VTKWriter.h"
+#include "spdlog/fmt/bundled/chrono.h"
 #include "spdlog/stopwatch.h"
 #include "utils/ArrayUtils.h"
 #include "utils/SpdWrapper.h"
@@ -23,13 +24,14 @@ int main(int argc, char *argv[]) {
 
   Arguments arguments = {
       .inputFile = "",                            // file
-      .t_end = 10,                                // t_end
-      .delta_t = 0.014,                           // delta_t
+      .t_end = 5,                                 // t_end
+      .delta_t = 0.0002,                          // delta_t
       .output_time_step_size = 1,                 // output_time_step_size
       .logLevel = "info",                         // logLevel
       .force = std::make_unique<LennardJones>(),  // force
-      .cutoff_radius = 0.05,
-      .domain = {10, 10, 10},
+      .cutoff_radius = 3.0,
+      .domain = {100, 100, 100},
+      .container = nullptr,
   };  // TODO: figure out if the . assignement in structs is valid C++17
 
   if (CLArgumentParser::parse(argc, argv, arguments) != 0) {
@@ -43,13 +45,18 @@ int main(int argc, char *argv[]) {
 
   std::vector<Particle> particles;
   reader->read(particles, arguments.inputFile);
-
+  SpdWrapper::get()->info("Particles size {}", particles.size());
   auto [delta_t, t_end, cutoff_radius, domain] = reader.get()->pass();
 
   SpdWrapper::get()->info("t_end: {}, delta_t: {}, cutoff_radius: {}", t_end,
                           delta_t, cutoff_radius);
 
-  DirectSumContainer container(particles);
+  // arguments.container = std::make_unique<LinkedCellsContainer>(
+  //       arguments.domain, arguments.cutoff_radius);
+  const auto container =
+      std::make_unique<LinkedCellsContainer>(arguments.domain, cutoff_radius);
+  container->addParticles(particles);
+  container->imposeInvariant();
   SpdWrapper::get()->info("particles.size: {}", particles.size());
   VerletIntegrator verlet_integrator(*arguments.force, delta_t);
   outputWriter::VTKWriter writer;
@@ -65,10 +72,10 @@ int main(int argc, char *argv[]) {
   double next_output_time = 0;
 
   while (current_time <= t_end) {
-    verlet_integrator.step(container);
+    verlet_integrator.step(*container);
 
     if (current_time >= next_output_time) {
-      plotParticles(outputDirectory, iteration, writer, container);
+      plotParticles(outputDirectory, iteration, writer, *container);
       writes++;
       next_output_time = writes * arguments.output_time_step_size;
 

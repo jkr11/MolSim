@@ -22,17 +22,20 @@ class LinkedCellsContainer final : public ParticleContainer {
   // number of cells for domain + 2 (halo)
   std::array<int, 3> cellCount;
   // cell dimensions
-  dvec3 cellDim;
-  //cutoff distance
+  ivec3 cellDim;
+  // cutoff distance
   double cutoff;
 
  public:
-  /** 
-   * @brief Constructs a ParticleContainer which is implemented using linkedCells
+  LinkedCellsContainer() = default;
+
+  /**
+   * @brief Constructs a ParticleContainer which is implemented using
+   * linkedCells
    * @param domain Domain of the container
    * @param cutoff maximum distance between valid particle pairs
    */
-  explicit LinkedCellsContainer(const dvec3& domain, double cutoff);
+  explicit LinkedCellsContainer(const ivec3& domain, double cutoff);
 
   /**
    * @brief Destructor
@@ -44,6 +47,8 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @param p Particle to be added
    */
   void addParticle(const Particle& p) override;
+
+  void addParticles(const std::vector<Particle>& particles) override;
 
   /**
    * @brief Remove a particle from the container
@@ -64,7 +69,8 @@ class LinkedCellsContainer final : public ParticleContainer {
   [[nodiscard]] std::size_t size() const override;
 
   /**
-   * @brief Impose the invarient, that the particles are spatially sorted into the correct vectors
+   * @brief Impose the invarient, that the particles are spatially sorted into
+   * the correct vectors
    */
   void imposeInvariant();
 
@@ -76,7 +82,8 @@ class LinkedCellsContainer final : public ParticleContainer {
   void singleIterator(const std::function<void(Particle&)>& f) override;
 
   /**
-   * @brief Pair iterator over all distinct particle pairs in the container with distance <= cutoff
+   * @brief Pair iterator over all distinct particle pairs in the container with
+   * distance <= cutoff
    * @param f Function to be applied
    * @note Does not impose the invariant automatically!
    */
@@ -107,7 +114,7 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @brief Get the dimensions of a all cells in the container
    * @return dvec3 of the dimensions of all cells
    */
-  [[nodiscard]] dvec3 getCellDim() const { return cellDim; }
+  [[nodiscard]] ivec3 getCellDim() const { return cellDim; }
 
   /**
    * @brief Gets the cell index of a position
@@ -172,5 +179,4 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @return Reference to the cell vector
    */
   std::vector<std::vector<Particle>>& getCells() { return cells; }
-
 };

@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <memory>
 
+#include "defs/containers/ParticleContainer.h"
 #include "forces/Force.h"
 #include "io/file/in/FileReader.h"
 
@@ -25,6 +26,7 @@ struct Arguments {
                                  // this is bad let me know
   ivec3 domain;
   double cutoff_radius;
+  std::shared_ptr<ParticleContainer> container;
 };
 
 /**

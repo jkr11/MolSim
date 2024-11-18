@@ -26,6 +26,7 @@ class ParticleContainer {
    */
   virtual void addParticle(const Particle& p) = 0;
 
+  virtual void addParticles(const std::vector<Particle>& particles) = 0;
   /**
    * @brief Remove a particle from the particle system.
    * @param p Particle to be removed.
