@@ -17,7 +17,8 @@ include(doxygen)
 include(spdlog)
 include(xsd)
 
-# removes annoying
+# removes annoying errors
+# doesnt work apparently someone find better solutions
 target_compile_options(spdlog
         PRIVATE
         $<$<CXX_COMPILER_ID:GNU>: -w>
