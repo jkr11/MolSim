@@ -25,6 +25,7 @@
             <epsilon>0.1</epsilon>
             <sigma>0.2</sigma>
             <mv>0.3</mv>
+            <twoD>false</twoD>
         </cuboid>
     </cuboids>
     <spheroids>
@@ -45,7 +46,7 @@
             <mass>3.0</mass>
             <epsilon>5</epsilon>
             <sigma>1</sigma>
-            <twoD>true</twoD>
+            <twoD>false</twoD>
         </spheroid>
     </spheroids>
 </simulation>

@@ -4,9 +4,11 @@
 
 #include "SpheroidGenerator.h"
 
+#include "debug/debug_print.h"
 #include "utils/ArrayUtils.h"
 #include "utils/MaxwellBoltzmannDistribution.h"
 #include "utils/SpdWrapper.h"
+
 SpheroidGenerator::SpheroidGenerator(const dvec3& origin, const int radius,
                                      const double h, const double m,
                                      const dvec3& initialVelocity,
@@ -21,7 +23,8 @@ SpheroidGenerator::SpheroidGenerator(const dvec3& origin, const int radius,
       sigma(sigma),
       type(type),
       twoD(twoD) {
-  SpdWrapper::get()->info("CuboidGenerator created with parameters:");
+  SpdWrapper::get()->info(
+      "SpheroidGenerator of dim {} created with parameters:", twoD ? 2 : 3);
   SpdWrapper::get()->info("origin: ({}, {}, {})", origin[0], origin[1],
                           origin[2]);
   SpdWrapper::get()->info("radius: {}", radius);
@@ -36,11 +39,14 @@ SpheroidGenerator::SpheroidGenerator(const dvec3& origin, const int radius,
 }
 
 void SpheroidGenerator::generate(std::vector<Particle>& particles) {
-  const int size = static_cast<int>(
-      0.75 * M_PI *
-      std::pow(radius, 3));  // 1 sphere is always contained in 2 sphere so this
-                             // should be fine actually
+  int size{};
+  if (twoD) {
+    size = static_cast<int>(M_PI * std::pow(radius, 2));
+  } else {
+    size = static_cast<int>(0.75 * M_PI * std::pow(radius, 3));
+  }
   particles.reserve(size);
+  DEBUG_PRINT("Reserved " + std::to_string(size));
   for (int i = -radius; i <= radius; i++) {
     for (int j = -radius; j <= radius; j++) {
       for (int k = -radius; k <= radius; k++) {
@@ -52,8 +58,8 @@ void SpheroidGenerator::generate(std::vector<Particle>& particles) {
         if (const double dist = ArrayUtils::L2Norm((1 / spaceRadius) * point);
             dist <= 1.0) {
           dvec3 position = origin + point;
-          dvec3 V =
-              initialVelocity + maxwellBoltzmannDistributedVelocity(mv, 3);
+          dvec3 V = initialVelocity +
+                    maxwellBoltzmannDistributedVelocity(mv, twoD ? 2 : 3);
           particles.emplace_back(position, V, m, epsilon, sigma, type);
         }
       }

@@ -13,7 +13,8 @@ CuboidGenerator::CuboidGenerator(const dvec3 &corner,
                                  const double h, const double m,
                                  const std::array<double, 3> &initialVelocity,
                                  const double mv, const double epsilon,
-                                 const double sigma, const int type)
+                                 const double sigma, const int type,
+                                 const bool twoD)
     : corner(corner),
       dimensions(dimensions),
       h(h),
@@ -22,8 +23,10 @@ CuboidGenerator::CuboidGenerator(const dvec3 &corner,
       mv(mv),
       epsilon(epsilon),
       sigma(sigma),
-      type(type) {
-  SpdWrapper::get()->info("CuboidGenerator created with parameters:");
+      type(type),
+      twoD(twoD) {
+  SpdWrapper::get()->info("CuboidGenerator of dim {} created with parameters:",
+                          twoD ? 2 : 3);
   SpdWrapper::get()->info("corner: ({}, {}, {})", corner[0], corner[1],
                           corner[2]);
   SpdWrapper::get()->info("dimensions: ({}, {}, {})", dimensions[0],
@@ -41,7 +44,7 @@ CuboidGenerator::CuboidGenerator(const dvec3 &corner,
 void CuboidGenerator::generate(std::vector<Particle> &particles) {
   const int size = (dimensions[0] * dimensions[1] * dimensions[2]);
   particles.reserve(size);
-  DEBUG_PRINT("reserved: " + size);
+  DEBUG_PRINT("reserved: " + std::to_string(size) + "particles");
 
   for (int i = 0; i < dimensions[0]; i++) {
     for (int j = 0; j < dimensions[1]; j++) {
@@ -50,7 +53,8 @@ void CuboidGenerator::generate(std::vector<Particle> &particles) {
                           corner[2] + k * h};
 
         std::array<double, 3> V =
-            initialVelocity + maxwellBoltzmannDistributedVelocity(mv, 3);
+            initialVelocity +
+            maxwellBoltzmannDistributedVelocity(mv, twoD ? 2 : 3);
         particles.emplace_back(position, V, m, epsilon, sigma, type);
       }
     }

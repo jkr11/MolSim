@@ -223,6 +223,30 @@ mv (const mv_type& x)
   this->mv_.set (x);
 }
 
+const cuboidType::twoD_type& cuboidType::
+twoD () const
+{
+  return this->twoD_.get ();
+}
+
+cuboidType::twoD_type& cuboidType::
+twoD ()
+{
+  return this->twoD_.get ();
+}
+
+void cuboidType::
+twoD (const twoD_type& x)
+{
+  this->twoD_.set (x);
+}
+
+cuboidType::twoD_type cuboidType::
+twoD_default_value ()
+{
+  return twoD_type (true);
+}
+
 
 // spheroidType
 // 
@@ -812,7 +836,8 @@ cuboidType (const velocity_type& velocity,
             const mass_type& mass,
             const epsilon_type& epsilon,
             const sigma_type& sigma,
-            const mv_type& mv)
+            const mv_type& mv,
+            const twoD_type& twoD)
 : ::xml_schema::type (),
   velocity_ (velocity, this),
   corner_ (corner, this),
@@ -822,7 +847,8 @@ cuboidType (const velocity_type& velocity,
   mass_ (mass, this),
   epsilon_ (epsilon, this),
   sigma_ (sigma, this),
-  mv_ (mv, this)
+  mv_ (mv, this),
+  twoD_ (twoD, this)
 {
 }
 
@@ -835,7 +861,8 @@ cuboidType (::std::auto_ptr< velocity_type > velocity,
             const mass_type& mass,
             const epsilon_type& epsilon,
             const sigma_type& sigma,
-            const mv_type& mv)
+            const mv_type& mv,
+            const twoD_type& twoD)
 : ::xml_schema::type (),
   velocity_ (velocity, this),
   corner_ (corner, this),
@@ -845,7 +872,8 @@ cuboidType (::std::auto_ptr< velocity_type > velocity,
   mass_ (mass, this),
   epsilon_ (epsilon, this),
   sigma_ (sigma, this),
-  mv_ (mv, this)
+  mv_ (mv, this),
+  twoD_ (twoD, this)
 {
 }
 
@@ -862,7 +890,8 @@ cuboidType (const cuboidType& x,
   mass_ (x.mass_, f, this),
   epsilon_ (x.epsilon_, f, this),
   sigma_ (x.sigma_, f, this),
-  mv_ (x.mv_, f, this)
+  mv_ (x.mv_, f, this),
+  twoD_ (x.twoD_, f, this)
 {
 }
 
@@ -879,7 +908,8 @@ cuboidType (const ::xercesc::DOMElement& e,
   mass_ (this),
   epsilon_ (this),
   sigma_ (this),
-  mv_ (this)
+  mv_ (this),
+  twoD_ (this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
   {
@@ -1006,6 +1036,17 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       }
     }
 
+    // twoD
+    //
+    if (n.name () == "twoD" && n.namespace_ ().empty ())
+    {
+      if (!twoD_.present ())
+      {
+        this->twoD_.set (twoD_traits::create (i, f, this));
+        continue;
+      }
+    }
+
     break;
   }
 
@@ -1071,6 +1112,13 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       "mv",
       "");
   }
+
+  if (!twoD_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "twoD",
+      "");
+  }
 }
 
 cuboidType* cuboidType::
@@ -1095,6 +1143,7 @@ operator= (const cuboidType& x)
     this->epsilon_ = x.epsilon_;
     this->sigma_ = x.sigma_;
     this->mv_ = x.mv_;
+    this->twoD_ = x.twoD_;
   }
 
   return *this;

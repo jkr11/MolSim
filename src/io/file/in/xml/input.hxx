@@ -351,16 +351,30 @@ class cuboidType : public ::xml_schema::type {
 
   void mv(const mv_type& x);
 
+  // twoD
+  //
+  typedef ::xml_schema::boolean twoD_type;
+  typedef ::xsd::cxx::tree::traits<twoD_type, char> twoD_traits;
+
+  const twoD_type& twoD() const;
+
+  twoD_type& twoD();
+
+  void twoD(const twoD_type& x);
+
+  static twoD_type twoD_default_value();
+
   // Constructors.
   //
   cuboidType(const velocity_type&, const corner_type&, const dimensions_type&,
              const type_type&, const h_type&, const mass_type&,
-             const epsilon_type&, const sigma_type&, const mv_type&);
+             const epsilon_type&, const sigma_type&, const mv_type&,
+             const twoD_type&);
 
   cuboidType(::std::auto_ptr<velocity_type>, ::std::auto_ptr<corner_type>,
              ::std::auto_ptr<dimensions_type>, const type_type&, const h_type&,
              const mass_type&, const epsilon_type&, const sigma_type&,
-             const mv_type&);
+             const mv_type&, const twoD_type&);
 
   cuboidType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
              ::xml_schema::container* c = 0);
@@ -390,6 +404,7 @@ class cuboidType : public ::xml_schema::type {
   ::xsd::cxx::tree::one<epsilon_type> epsilon_;
   ::xsd::cxx::tree::one<sigma_type> sigma_;
   ::xsd::cxx::tree::one<mv_type> mv_;
+  ::xsd::cxx::tree::one<twoD_type> twoD_;
 };
 
 class spheroidType : public ::xml_schema::type {

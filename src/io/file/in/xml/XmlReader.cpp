@@ -43,7 +43,7 @@ void XmlReader::read(std::vector<Particle>& particles,
 
         CuboidGenerator cg(corner, dimensions, cubes.h(), cubes.mass(),
                            velocity, cubes.mv(), cubes.epsilon(), cubes.sigma(),
-                           cubes.type());
+                           cubes.type(), cubes.twoD());
 
         cg.generate(particles);
       }
@@ -55,11 +55,10 @@ void XmlReader::read(std::vector<Particle>& particles,
         const auto& _velocity = spheres.velocity();
         dvec3 origin = {_origin.x(), _origin.y(), _origin.z()};
         dvec3 velocity = {_velocity.x(), _velocity.y(), _velocity.z()};
-        const int radius = spheres.radius();
 
-        SpheroidGenerator sg(origin, radius, spheres.h(), spheres.mass(),
-                             velocity, spheres.epsilon(), spheres.sigma(),
-                             spheres.type(), true);
+        SpheroidGenerator sg(origin, spheres.radius(), spheres.h(),
+                             spheres.mass(), velocity, spheres.epsilon(),
+                             spheres.sigma(), spheres.type(), spheres.twoD());
 
         sg.generate(particles);
       }

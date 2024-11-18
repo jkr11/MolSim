@@ -125,8 +125,9 @@ void CuboidReader::read(std::vector<Particle>& particles,
       DEBUG_PRINT("sigma: " + std::to_string(sigma) + " at line " +
                   std::to_string(lineNum));
 
+      // This always reads true, actual reader is XMLReader
       CuboidGenerator cg(corner, dimensions, h, mass, velocity, mv, epsilon,
-                         sigma, type);
+                         sigma, type, true);
 
       cg.generate(particles);
       DEBUG_PRINT("particle container size " + particles.size());
