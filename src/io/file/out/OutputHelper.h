@@ -34,7 +34,7 @@ inline void plotParticles(const std::string &outputDirectory,
 /**
  * @brief creates a timestamped directory in ./output/ containing the files at
  * the currents timestep and the specification used to attain the result.
- * @param outputDirectory the outpute directory named after the date
+ * @param outputDirectory the output directory named after the date
  * @param argc argc passed from main
  * @param argv argv passed from main
  * @return name of the output directory path

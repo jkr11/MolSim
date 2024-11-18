@@ -9,8 +9,7 @@
 #include <filesystem>
 #include <fstream>
 
-#include "file/in/CuboidReader.h"
-#include "file/in/DefaultReader.h"
+#include "defs/Simulation.h"
 #include "forces/Gravity.h"
 #include "forces/LennardJones.h"
 #include "spdlog/fmt/bundled/chrono.h"
@@ -69,15 +68,9 @@ int CLArgumentParser::parse(int argc, char *argv[], Arguments &arguments) {
           break;
         }
         case 'R': {
-          if (const std::string r = toLower(optarg); r == "cuboidreader") {
-            arguments.reader = std::make_unique<CuboidReader>();
-          } else if (r == "defaultreader") {
-            arguments.reader = std::make_unique<DefaultReader>();
-          } else {
-            SpdWrapper::get()->error("Unknown Reader Type: {}", r);
-            exit(EXIT_FAILURE);
-          }
-          break;
+          SpdWrapper::get()->info(
+              "This is deprecated as we only need XMLReader now, note that "
+              "only xml files are allowed.");
         }
         default:
           printUsage("unsupported flag '-" +

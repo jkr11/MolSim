@@ -21,6 +21,10 @@ class CuboidGenerator final : public ParticleGenerator {
   double epsilon;
   double sigma;
   const int type{};
+  /**
+   * here this just describes the behaviour of the brownian motion
+   */
+  const bool twoD{};
 
  public:
   /**
@@ -35,11 +39,12 @@ class CuboidGenerator final : public ParticleGenerator {
    * @param sigma lj - sigma
    * @param mv temperature of our system
    * @param type type of the particle in the system
+   * @param twoD dimension of velocity vector of brownian motion
    */
   CuboidGenerator(const dvec3 &corner, const std::array<int, 3> &dimensions,
-                  const double h, const double m,
-                  const std::array<double, 3> &initialVelocity, const double mv,
-                  const double epsilon, const double sigma, const int type);
+                  double h, double m,
+                  const std::array<double, 3> &initialVelocity, double mv,
+                  double epsilon, double sigma, int type, bool twoD);
 
   /**
    * @brief generates particles in the shape of a cuboid

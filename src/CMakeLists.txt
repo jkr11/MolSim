@@ -40,7 +40,11 @@ target_include_directories(MolSimLib PUBLIC
 )
 
 add_executable(MolSim MolSim.cpp
-        defs/containers/DirectSumContainer.cpp)
+        io/file/in/xml/input.cxx
+        defs/Generators/ParticleGenerator.h
+        defs/Generators/SpheroidGenerator.h
+        defs/Generators/SpheroidGenerator.cpp
+)
 target_link_libraries(MolSim PUBLIC MolSimLib)
 
 target_compile_options(MolSimLib
@@ -48,4 +52,17 @@ target_compile_options(MolSimLib
         $<$<CXX_COMPILER_ID:GNU>:-Wall>
         # disable some spam warnings for icpc...
         $<$<CXX_COMPILER_ID:Intel>:-w3 -wd383,981,1418,1572,2259>
+)
+
+set(FILES_TO_DISABLE_WARNINGS
+        io/file/in/xml/input-pimpl.h
+        io/file/in/xml/input.cxx
+        io/file/in/xml/input-pskel.cxx
+        io/file/in/xml/input.hxx
+        io/file/in/xml/input-pskel.hxx
+)
+
+set_source_files_properties(${FILES_TO_DISABLE_WARNINGS}
+        PROPERTIES
+        COMPILE_OPTIONS "-w"
 )
