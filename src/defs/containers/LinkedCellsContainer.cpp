@@ -45,7 +45,12 @@ void LinkedCellsContainer::addParticle(const Particle &p) {
 }
 
 void LinkedCellsContainer::removeParticle(const Particle &p) {
-  // TODO
+  std::size_t index = dvec3ToCellIndex(p.getX());
+  std::vector<Particle> &particles = cells[index];
+
+  particles.erase(std::remove_if(particles.begin(), particles.end(),
+                                 [&p](const Particle &q) { return &p == &q; }),
+                  particles.end());
 }
 
 std::vector<Particle> LinkedCellsContainer::getParticles() const {
@@ -61,7 +66,18 @@ std::vector<Particle> LinkedCellsContainer::getParticles() const {
 }
 
 void LinkedCellsContainer::imposeInvariant() {
-  
+  for (std::size_t index = 0; index < cells.size(); index++) {
+    for (auto it = cells[index].begin(); it < cells[index].end();) {
+      std::size_t shouldBeIndex = dvec3ToCellIndex((*it).getX());
+      if (shouldBeIndex == index) {
+        it++;
+        continue;
+      }
+
+      cells[shouldBeIndex].push_back(*it);
+      it = cells[index].erase(it);
+    }
+  }
 }
 
 void LinkedCellsContainer::singleIterator(
@@ -75,7 +91,6 @@ void LinkedCellsContainer::singleIterator(
 
 void LinkedCellsContainer::pairIterator(
     const std::function<void(Particle &, Particle &)> &f) {
-  // - extract offsets out of loop below (should be 13 neighbours in 3d)
   // - as x, y, z are all increasing offsets point to all neighbours in
   // positive directions
   // - for better cache usage (in flattened version) minimize max distance
@@ -100,12 +115,14 @@ void LinkedCellsContainer::pairIterator(
       {{0, 0, 1}},
   }};
 
+  // go over all cell indices
   for (std::size_t cellIndex = 0; cellIndex < cells.size(); cellIndex++) {
     std::vector<Particle> &cellParticles = cells[cellIndex];
 
-    ivec3 co = cellIndexToCoord(cellIndex);
+    ivec3 cellCoordinate = cellIndexToCoord(cellIndex);
     SpdWrapper::get()->debug("cell index: {}; coord = ({}, {}, {}); halo? = {}",
-                             cellIndex, co[0], co[1], co[2], isHalo(cellIndex));
+                             cellIndex, cellCoordinate[0], cellCoordinate[1],
+                             cellCoordinate[2], isHalo(cellIndex));
 
     if (cellParticles.empty()) continue;
 
@@ -122,10 +139,10 @@ void LinkedCellsContainer::pairIterator(
     // iterate over neighbouring particles
     for (auto &offset : offsets) {
       // compute neighbourIndex and check if it is valid
-      ivec3 neighbourCoord = {co[0] + offset[0], co[1] + offset[1],
-                              co[2] + offset[2]};
+      ivec3 neighbourCoord = {cellCoordinate[0] + offset[0],
+                              cellCoordinate[1] + offset[1],
+                              cellCoordinate[2] + offset[2]};
 
-      // only fires if halo has particle
       if (!isValidCellCoordinate(neighbourCoord)) {
         SpdWrapper::get()->info("Invalid coord: ({}, {}, {})",
                                 neighbourCoord[0], neighbourCoord[1],
@@ -219,7 +236,8 @@ inline bool LinkedCellsContainer::isValidCellCoordinate(
 
 inline bool LinkedCellsContainer::isHalo(const ivec3 cellCoord) const {
   return cellCoord[0] == -1 || cellCoord[1] == -1 || cellCoord[2] == -1 ||
-         cellCoord[0] == (cellCount[0] - 2) || cellCoord[1] == (cellCount[1] - 2) ||
+         cellCoord[0] == (cellCount[0] - 2) ||
+         cellCoord[1] == (cellCount[1] - 2) ||
          cellCoord[2] == (cellCount[2] - 2);
 }
 
@@ -230,12 +248,14 @@ inline bool LinkedCellsContainer::isHalo(const std::size_t cellIndex) const {
 
 inline bool LinkedCellsContainer::isBoundary(const ivec3 cellCoord) const {
   return (cellCoord[0] == 0 || cellCoord[1] == 0 || cellCoord[2] == 0 ||
-         cellCoord[0] == (cellCount[0] - 3) || 
-         cellCoord[1] == (cellCount[1] - 3) || 
-         cellCoord[2] == (cellCount[2] - 3)) && !isHalo(cellCoord);
+          cellCoord[0] == (cellCount[0] - 3) ||
+          cellCoord[1] == (cellCount[1] - 3) ||
+          cellCoord[2] == (cellCount[2] - 3)) &&
+         !isHalo(cellCoord);
 }
 
-inline bool LinkedCellsContainer::isBoundary(const std::size_t cellIndex) const {
+inline bool LinkedCellsContainer::isBoundary(
+    const std::size_t cellIndex) const {
   const ivec3 cellCoord = cellIndexToCoord(cellIndex);
   return isBoundary(cellCoord);
 }
