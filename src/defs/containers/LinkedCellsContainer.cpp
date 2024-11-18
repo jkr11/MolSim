@@ -225,10 +225,10 @@ inline bool LinkedCellsContainer::isHalo(const std::size_t cellIndex) const {
 }
 
 inline bool LinkedCellsContainer::isBoundary(const ivec3 cellCoord) const {
-  return cellCoord[0] == 0 || cellCoord[1] == 0 || cellCoord[2] == 0 ||
+  return (cellCoord[0] == 0 || cellCoord[1] == 0 || cellCoord[2] == 0 ||
          cellCoord[0] == (cellCount[0] - 3) || 
          cellCoord[1] == (cellCount[1] - 3) || 
-         cellCoord[2] == (cellCount[2] - 3);
+         cellCoord[2] == (cellCount[2] - 3)) && !isHalo(cellCoord);
 }
 
 inline bool LinkedCellsContainer::isBoundary(const std::size_t cellIndex) const {
