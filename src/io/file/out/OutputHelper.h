@@ -20,13 +20,13 @@
 inline void plotParticles(const std::string &outputDirectory,
                           const int iteration,
                           outputWriter::VTKWriter &vtkWriter,
-                          const ParticleContainer &particle_container) {
+                          ParticleContainer &particle_container) {
   vtkWriter.initializeOutput(static_cast<int>(particle_container.size()));
 
-  for (auto &p : particle_container.getParticles()) {
+  particle_container.singleIterator([&vtkWriter](Particle &p) {
     vtkWriter.plotParticle(p);
     // SpdWrapper::get()->info("Plotted");
-  }
+  });
 
   vtkWriter.writeFile(outputDirectory + "/MD_vtk", iteration);
 }

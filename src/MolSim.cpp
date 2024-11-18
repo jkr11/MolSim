@@ -2,7 +2,9 @@
 #include <iostream>
 
 #include "calc/VerletIntegrator.h"
+
 #include "defs/Simulation.h"
+
 #include "defs/containers/DirectSumContainer.h"
 #include "forces/LennardJones.h"
 #include "io/CLArgumentParser.h"
