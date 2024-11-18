@@ -5,7 +5,7 @@
 #ifndef XMLREADER_H
 #define XMLREADER_H
 #pragma once
-#include "defs/Simulation.h"
+#include "io/CLArgumentParser.h"
 #include "io/file/in/FileReader.h"
 
 /**
@@ -16,18 +16,18 @@
  */
 class XmlReader final : public FileReader {
  private:
-  Simulation simulation_parameters;
-  double delta_t{};
-  double t_end{};
-  double cutoff_radius{};
-  ivec3 domain{};
+  Arguments simulation_parameters;
+  // double delta_t{};
+  // double t_end{};
+  // double cutoff_radius{};
+  // ivec3 domain{};
 
  public:
   /**
    * @brief instantiates XmlReader with the predefined parameters
    * @param _simulation_parameters passed by MolSim.cpp
    */
-  explicit XmlReader(const Simulation &_simulation_parameters) {
+  explicit XmlReader(const Arguments &_simulation_parameters) {
     simulation_parameters = _simulation_parameters;
   };
 

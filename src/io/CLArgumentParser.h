@@ -20,7 +20,11 @@ struct Arguments {
   double delta_t;
   double output_time_step_size;
   std::string logLevel;
-  std::unique_ptr<Force> force;
+  std::shared_ptr<Force> force;  // TODO: I changed this from unique to shared
+                                 // pointer because of copying in XMLReader, if
+                                 // this is bad let me know
+  ivec3 domain;
+  double cutoff_radius;
 };
 
 /**

@@ -18,26 +18,22 @@ int main(int argc, char *argv[]) {
   SpdWrapper::get()->info("Application started");
   // ok so this is really ugly but i think we can merge both structs into one
   // we dont need additional file readers anymore so we can just use XMLReader
-  Simulation simulation_params = {
-      .delta_t = 0.014,
-      .t_end = 10,
+
+  Arguments arguments = {
+      .inputFile = "",                            // file
+      .t_end = 10,                                // t_end
+      .delta_t = 0.014,                           // delta_t
+      .output_time_step_size = 1,                 // output_time_step_size
+      .logLevel = "info",                         // logLevel
+      .force = std::make_unique<LennardJones>(),  // force
       .cutoff_radius = 0.05,
       .domain = {10, 10, 10},
-  };
-  // This is looking a lot better now, we can probably merge these now
-  Arguments arguments = {
-      "",                                // file
-      10,                                // t_end
-      0.014,                             // delta_t
-      1,                                 // output_time_step_size
-      "info",                            // logLevel
-      std::make_unique<LennardJones>(),  // force
-  };
+  };  // TODO: figure out if the . assignement in structs is valid C++17
 
   if (CLArgumentParser::parse(argc, argv, arguments) != 0) {
     exit(EXIT_FAILURE);
   }
-  const auto reader = std::make_unique<XmlReader>(simulation_params);
+  const auto reader = std::make_unique<XmlReader>(arguments);
   // SpdWrapper::get()->info("t_end: {}, delta_t: {}, output_time_step_size:
   // {}",
   //                         arguments.t_end, arguments.delta_t,
