@@ -94,9 +94,11 @@ TEST(LinkedCellsContainer, Size_addParticle_and_removeParticle) {
 
   //TODO: cell check
 
-  // remove particle is not coded yet
-  //container.removeParticle(p);
-  //EXPECT_EQ(container.size(), 0) << ".removeParticle() did not decrease .size() by 1.";
+  Particle pr;
+  container.singleIterator([&pr](Particle &q) {pr = q; });
+
+  container.removeParticle(pr);
+  EXPECT_EQ(container.size(), 0) << ".removeParticle() did not decrease .size() by 1.";
 
   //TODO: cell check
 }

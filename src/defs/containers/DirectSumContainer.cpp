@@ -30,7 +30,7 @@ void DirectSumContainer::addParticle(const Particle& p) {
 
 void DirectSumContainer::removeParticle(const Particle& p) {
   particles.erase(std::remove_if(particles.begin(), particles.end(),
-                                 [&p](const Particle& q) { return &p == &q; }),
+                                 [&p](const Particle& q) { return p == q; }),
                   particles.end());
 }
 

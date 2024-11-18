@@ -49,8 +49,12 @@ void LinkedCellsContainer::removeParticle(const Particle &p) {
   std::vector<Particle> &particles = cells[index];
 
   particles.erase(std::remove_if(particles.begin(), particles.end(),
-                                 [&p](const Particle &q) { return &p == &q; }),
+                                 [&p](const Particle &q) { return p == q; }),
                   particles.end());
+
+  SpdWrapper::get()->debug(
+      "Removed particle with coords ({}, {}, {}) from cell index: {}",
+      p.getX()[0], p.getX()[1], p.getX()[2], index);
 }
 
 std::vector<Particle> LinkedCellsContainer::getParticles() const {
