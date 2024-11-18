@@ -21,7 +21,6 @@ struct Arguments {
   double output_time_step_size;
   std::string logLevel;
   std::unique_ptr<Force> force;
-  std::unique_ptr<FileReader> reader;
 };
 
 /**

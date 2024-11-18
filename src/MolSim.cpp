@@ -24,30 +24,30 @@ int main(int argc, char *argv[]) {
       .cutoff_radius = 0.05,
       .domain = {10, 10, 10},
   };
-
+  // This is looking a lot better now, we can probably merge these now
   Arguments arguments = {
-      "",                                              // file
-      10,                                              // t_end
-      0.014,                                           // delta_t
-      1,                                               // output_time_step_size
-      "info",                                          // logLevel
-      std::make_unique<LennardJones>(),                // force
-      std::make_unique<XmlReader>(simulation_params),  // Reader
+      "",                                // file
+      10,                                // t_end
+      0.014,                             // delta_t
+      1,                                 // output_time_step_size
+      "info",                            // logLevel
+      std::make_unique<LennardJones>(),  // force
   };
 
   if (CLArgumentParser::parse(argc, argv, arguments) != 0) {
     exit(EXIT_FAILURE);
   }
-
+  const auto reader = std::make_unique<XmlReader>(simulation_params);
   // SpdWrapper::get()->info("t_end: {}, delta_t: {}, output_time_step_size:
   // {}",
   //                         arguments.t_end, arguments.delta_t,
   //                        arguments.output_time_step_size);
 
   std::vector<Particle> particles;
-  arguments.reader->read(particles, arguments.inputFile);
-  auto [delta_t, t_end, cutoff_radius, domain] =
-      dynamic_cast<XmlReader *>(arguments.reader.get())->pass();
+  reader->read(particles, arguments.inputFile);
+
+  auto [delta_t, t_end, cutoff_radius, domain] = reader.get()->pass();
+
   SpdWrapper::get()->info("t_end: {}, delta_t: {}, cutoff_radius: {}", t_end,
                           delta_t, cutoff_radius);
 
