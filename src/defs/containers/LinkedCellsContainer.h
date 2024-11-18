@@ -25,6 +25,9 @@ class LinkedCellsContainer final : public ParticleContainer {
   double cutoff;
 
  public:
+  /* 
+   * @brief 
+   */
   explicit LinkedCellsContainer(const dvec3& domain, double cutoff);
 
   ~LinkedCellsContainer() override = default;
@@ -46,19 +49,22 @@ class LinkedCellsContainer final : public ParticleContainer {
 
   void haloIterator(std::function<void(Particle&)> f);
 
-  // debug methods
-  std::vector<std::vector<Particle>>& getCells() { return cells; }
-
   [[nodiscard]] std::array<int, 3> getCellCount() const { return cellCount; }
 
   [[nodiscard]] dvec3 getCellDim() const { return cellDim; }
 
- private:
   inline std::size_t dvec3ToCellIndex(const dvec3& position);
   [[nodiscard]] inline std::size_t cellCoordToIndex(
       std::array<int, 3> position) const;
   [[nodiscard]] inline std::array<int, 3> cellIndexToCoord(
       std::size_t cellIndex) const;
   [[nodiscard]] inline bool isValidCellCoordinate(ivec3 coordinate) const;
-  [[nodiscard]] inline bool isHalo(std::size_t cellIndex) const;
+  [[nodiscard]] inline bool isHalo(const ivec3 cellCoord) const;
+  [[nodiscard]] inline bool isHalo(const std::size_t cellIndex) const;
+  [[nodiscard]] inline bool isBoundary(const ivec3 cellCoord) const;
+  [[nodiscard]] inline bool isBoundary(const std::size_t cellIndex) const;
+
+  // debug methods
+  std::vector<std::vector<Particle>>& getCells() { return cells; }
+
 };

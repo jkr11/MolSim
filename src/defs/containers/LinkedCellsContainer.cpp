@@ -160,11 +160,23 @@ void LinkedCellsContainer::pairIterator(
 }
 
 void LinkedCellsContainer::boundaryIterator(std::function<void(Particle &)> f) {
-  // TODO
+  for (std::size_t index = 0; index < cells.size(); index++) {
+    if (!isBoundary(index)) continue;
+
+    for (auto &p : cells[index]) {
+      f(p);
+    }
+  }
 }
 
 void LinkedCellsContainer::haloIterator(std::function<void(Particle &)> f) {
-  // TODO
+  for (std::size_t index = 0; index < cells.size(); index++) {
+    if (!isHalo(index)) continue;
+
+    for (auto &p : cells[index]) {
+      f(p);
+    }
+  }
 }
 
 inline std::size_t LinkedCellsContainer::dvec3ToCellIndex(
@@ -201,9 +213,25 @@ inline bool LinkedCellsContainer::isValidCellCoordinate(
          (-1 <= coordinate[2] && coordinate[2] <= (cellCount[2] - 2));
 }
 
+inline bool LinkedCellsContainer::isHalo(const ivec3 cellCoord) const {
+  return cellCoord[0] == -1 || cellCoord[1] == -1 || cellCoord[2] == -1 ||
+         cellCoord[0] == (cellCount[0] - 2) || cellCoord[1] == (cellCount[1] - 2) ||
+         cellCoord[2] == (cellCount[2] - 2);
+}
+
 inline bool LinkedCellsContainer::isHalo(const std::size_t cellIndex) const {
-  const ivec3 cc = cellIndexToCoord(cellIndex);
-  return cc[0] == -1 || cc[1] == -1 || cc[2] == -1 ||
-         cc[0] == (cellCount[0] - 2) || cc[1] == (cellCount[1] - 2) ||
-         cc[2] == (cellCount[2] - 2);
+  const ivec3 cellCoord = cellIndexToCoord(cellIndex);
+  return isHalo(cellCoord);
+}
+
+inline bool LinkedCellsContainer::isBoundary(const ivec3 cellCoord) const {
+  return cellCoord[0] == 0 || cellCoord[1] == 0 || cellCoord[2] == 0 ||
+         cellCoord[0] == (cellCount[0] - 3) || 
+         cellCoord[1] == (cellCount[1] - 3) || 
+         cellCoord[2] == (cellCount[2] - 3);
+}
+
+inline bool LinkedCellsContainer::isBoundary(const std::size_t cellIndex) const {
+  const ivec3 cellCoord = cellIndexToCoord(cellIndex);
+  return isBoundary(cellCoord);
 }

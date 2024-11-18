@@ -6,14 +6,19 @@
 #include "testUtil.h"
 
 /*
- * dummy test 
+ * @brief small helper function to create particles
+ * @param x x coordinate of particle
+ * @param y y coordinate of particle
+ * @param z z coordinate of particle
+ * @return Particle
  */
-TEST(LinkedCellsContainer, dummy) {
-    LinkedCellsContainer container({10, 10, 10}, 3);
-
-    //EXPECT_EQ(1, 0);
+Particle createParticle(double x, double y, double z) {
+    return Particle({x, y, z}, {0, 0, 0}, 1, 1, 1);
 }
 
+/*
+ * Container creates the right amount of cells and correct cell dimensions
+ */
 TEST(LinkedCellsContainer, constructor) {
     LinkedCellsContainer container({10, 20, 30}, 3);
 
@@ -26,21 +31,85 @@ TEST(LinkedCellsContainer, constructor) {
     EXPECT_NEAR(container.getCellDim()[2], 3, 1e-5) << "Z dim wrong.";
 }
 
-TEST(LinkedCellsContainer, addParticleAndSize) {
-    LinkedCellsContainer container({10, 10, 10}, 5);
-    EXPECT_EQ(container.size(), 0) << "Freshly instantiated LinkedCellsContainer is not empty.";
 
-    Particle p({1, 1, 1}, {0, 0, 0}, 1, 1, 1);
-    container.addParticle(p);
-    EXPECT_EQ(container.size(), 1) << ".addParticle() did not increase .size() by 1.";
+/*
+ * .isBoundaryIndex(...) is correct for some example indices
+ * .isBoundaryVec3(...) is correct for some example indices
+ */
+TEST(LinkedCellsContainer, isBoudaryIndex_and_isBoudaryVec3) {
+  LinkedCellsContainer container({10, 20, 30}, 10); //1x2x3 => [-1, 1] x [-1, 2] x [-1, 3]
+
+  /*EXPECT_TRUE(container.isBoundary());
+  EXPECT_TRUE(container.isBoundary());
+  EXPECT_TRUE(container.isBoundary());
+  EXPECT_FALSE(container.isBoundary());
+  EXPECT_FALSE(container.isBoundary());
+  EXPECT_FALSE(container.isBoundary());
+
+  EXPECT_TRUE(container.isBoundary());
+  EXPECT_TRUE(container.isBoundary());
+  EXPECT_TRUE(container.isBoundary());
+  EXPECT_FALSE(container.isBoundary());
+  EXPECT_FALSE(container.isBoundary());
+  EXPECT_FALSE(container.isBoundary());*/
 }
 
+/*
+ * .isHaloIndex(...) is correct for some example indices
+ * .isHaloVec3(...) is correct for some example indices
+ */
+TEST(LinkedCellsContainer, isHaloIndex_and_isHaloVec3) {
+  LinkedCellsContainer container({10, 20, 30}, 10);
+
+  /*EXPECT_TRUE(container.isHalo());
+  EXPECT_TRUE(container.isHalo());
+  EXPECT_TRUE(container.isHalo());
+  EXPECT_FALSE(container.isHalo());
+  EXPECT_FALSE(container.isHalo());
+  EXPECT_FALSE(container.isHalo());
+
+  EXPECT_TRUE(container.isHalo());
+  EXPECT_TRUE(container.isHalo());
+  EXPECT_TRUE(container.isHalo());
+  EXPECT_FALSE(container.isHalo());
+  EXPECT_FALSE(container.isHalo());
+  EXPECT_FALSE(container.isHalo());*/
+}
+
+
+/*
+ * if new container, then container.size() == 0
+ * .addParticle(...) increments .size()
+ * .addParticle(...) inserts into the right cell
+ * .removeParticle(...) decrements .size()
+ * .removeParticle(...) removes from the right cell
+ */
+TEST(LinkedCellsContainer, Size_addParticle_and_removeParticle) {
+  LinkedCellsContainer container({10, 10, 10}, 5);
+  EXPECT_EQ(container.size(), 0) << "Freshly instantiated LinkedCellsContainer is not empty.";
+
+  Particle p = createParticle(1, 1, 1);
+  container.addParticle(p);
+  EXPECT_EQ(container.size(), 1) << ".addParticle() did not increase .size() by 1.";
+
+  //TODO: cell check
+
+  // remove particle is not coded yet
+  //container.removeParticle(p);
+  //EXPECT_EQ(container.size(), 0) << ".removeParticle() did not decrease .size() by 1.";
+
+  //TODO: cell check
+}
+
+/*
+ * .singleIterator() iterates over all particles
+ */
 TEST(LinkedCellsContainer, singleIterator) {
   LinkedCellsContainer container({10, 10, 10}, 2);
 
-  Particle p1({1, 1, 1}, {0, 0, 0}, 1, 1, 1);
-  Particle p2({5, 1, 6}, {0, 0, 0}, 1, 1, 1);
-  Particle p3({7, 7, 8}, {0, 0, 0}, 1, 1, 1);
+  Particle p1 = createParticle(1, 1, 1);
+  Particle p2 = createParticle(5, 1, 6);
+  Particle p3 = createParticle(7, 7, 8);
 
   container.addParticle(p1);
   container.addParticle(p2);
@@ -60,10 +129,6 @@ TEST(LinkedCellsContainer, singleIterator) {
   EXPECT_TRUE(vec[0] == p3 || vec[1] == p3 || vec[2] == p3) << "Particle was not iterated over.";
 }
 
-Particle create_particle(double x, double y, double z) {
-    return Particle({x, y, z}, {0, 0, 0}, 1, 1, 1);
-}
-
 /*
   Test pairIterator by running the O(n^2) algorithm and checking if 
   the count of pairs and the pairs themselves match
@@ -75,16 +140,16 @@ TEST(LinkedCellsContainer, pairIterator) {
   LinkedCellsContainer container({10, 10, 10}, cutoff);
 
   std::array<Particle, 10> particles = {
-    create_particle(1, 1, 1),
-    create_particle(5, 1, 6),
-    create_particle(7, 7, 8),
-    create_particle(4, 3, 0),
-    create_particle(5, 0, 5),
-    create_particle(1, 5, 2),
-    create_particle(9, 6, 4),
-    create_particle(2, 1, 1),
-    create_particle(3, 0, 0),
-    create_particle(0, 6, 1)
+    createParticle(1, 1, 1),
+    createParticle(5, 1, 6),
+    createParticle(7, 7, 8),
+    createParticle(4, 3, 0),
+    createParticle(5, 0, 5),
+    createParticle(1, 5, 2),
+    createParticle(9, 6, 4),
+    createParticle(2, 1, 1),
+    createParticle(3, 0, 0),
+    createParticle(0, 6, 1)
   };
 
   for (int i = 0; i < particles.size(); i++) {
@@ -121,4 +186,18 @@ TEST(LinkedCellsContainer, pairIterator) {
   });
 
   EXPECT_EQ(count, pairs.size()) << "Pair count does not match reference implementation";
+}
+
+/*
+ * 
+ */
+TEST(LinkedCellsContainer, boundaryIterator) {
+  //TODO
+}
+
+/*
+ *
+ */
+TEST(LinkedCellsContainer, haloIterator) {
+  //TODO
 }
