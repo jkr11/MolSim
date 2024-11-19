@@ -55,11 +55,8 @@ target_compile_options(MolSimLib
 )
 
 set(FILES_TO_DISABLE_WARNINGS
-        io/file/in/xml/input-pimpl.h
         io/file/in/xml/input.cxx
-        io/file/in/xml/input-pskel.cxx
         io/file/in/xml/input.hxx
-        io/file/in/xml/input-pskel.hxx
 )
 
 set_source_files_properties(${FILES_TO_DISABLE_WARNINGS}
