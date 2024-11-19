@@ -1,19 +1,23 @@
 //
 // created by mcarn on 11/15/24
 //
-#pragma once
 #include "LinkedCellsContainer.h"
 
+#include <algorithm>
 #include <cmath>
 #include <cstddef>
 #include <functional>
 #include <vector>
 
-#include "../../utils/SpdWrapper.h"
-#include "../Particle.h"
+#include "debug/debug_print.h"
+#include "defs/Particle.h"
+#include "utils/SpdWrapper.h"
 
-LinkedCellsContainer::LinkedCellsContainer(
-    const dvec3 &domain, const double cutoff /*boundary types*/) {
+LinkedCellsContainer::LinkedCellsContainer(const ivec3 &domain,
+                                           const double cutoff) {
+
+  SpdWrapper::get()->info("domain size: ({}, {}, {})", domain[0], domain[1], domain[2]);
+
   cells = {};
   this->cutoff = cutoff;
 
@@ -23,8 +27,8 @@ LinkedCellsContainer::LinkedCellsContainer(
 
   cellDim = {domain[0] / cellCount[0], domain[1] / cellCount[1],
              domain[2] / cellCount[2]};
-
   // add 2 for halo
+
   cellCount = {cellCount[0] + 2, cellCount[1] + 2, cellCount[2] + 2};
 
   cells.resize(cellCount[0] * cellCount[1] * cellCount[2]);
@@ -36,28 +40,35 @@ LinkedCellsContainer::LinkedCellsContainer(
 }
 
 void LinkedCellsContainer::addParticle(const Particle &p) {
-  std::size_t index = dvec3ToCellIndex(p.getX());
+  // SpdWrapper::get()->info("addParticle");
+  const std::size_t index = dvec3ToCellIndex(p.getX());
   cells[index].emplace_back(p);
 
-  SpdWrapper::get()->debug(
-      "Added particle with coords ({}, {}, {}) into cell index: {}",
-      p.getX()[0], p.getX()[1], p.getX()[2], index);
+  DEBUG_PRINT_FMT("Added particle with coords ({}, {}, {}) into cell index: {}",
+                  p.getX()[0], p.getX()[1], p.getX()[2], index)
+}
+
+void LinkedCellsContainer::addParticles(
+    const std::vector<Particle> &particles) {
+  for (const Particle &p : particles) {
+    addParticle(p);
+  }
 }
 
 void LinkedCellsContainer::removeParticle(const Particle &p) {
-  std::size_t index = dvec3ToCellIndex(p.getX());
+  const std::size_t index = dvec3ToCellIndex(p.getX());
   std::vector<Particle> &particles = cells[index];
 
   particles.erase(std::remove_if(particles.begin(), particles.end(),
                                  [&p](const Particle &q) { return p == q; }),
                   particles.end());
 
-  SpdWrapper::get()->debug(
+  DEBUG_PRINT_FMT(
       "Removed particle with coords ({}, {}, {}) from cell index: {}",
-      p.getX()[0], p.getX()[1], p.getX()[2], index);
+      p.getX()[0], p.getX()[1], p.getX()[2], index)
 }
 
-std::vector<Particle> LinkedCellsContainer::getParticles() const {
+std::vector<Particle*> LinkedCellsContainer::getParticles() {
   // TODO
 }
 
@@ -72,9 +83,9 @@ std::vector<Particle> LinkedCellsContainer::getParticles() const {
 void LinkedCellsContainer::imposeInvariant() {
   for (std::size_t index = 0; index < cells.size(); index++) {
     for (auto it = cells[index].begin(); it < cells[index].end();) {
-      std::size_t shouldBeIndex = dvec3ToCellIndex((*it).getX());
+      const std::size_t shouldBeIndex = dvec3ToCellIndex(it->getX());
       if (shouldBeIndex == index) {
-        it++;
+        ++it;
         continue;
       }
 
@@ -100,7 +111,7 @@ void LinkedCellsContainer::pairIterator(
   // - for better cache usage (in flattened version) minimize max distance
   //   between values
   // - direction of traversal: z, y, x
-  std::array<ivec3, 13> offsets = {{
+  const std::array<ivec3, 13> offsets = {{
       // 9 x facing
       {{1, -1, -1}},
       {{1, -1, 0}},
@@ -124,9 +135,9 @@ void LinkedCellsContainer::pairIterator(
     std::vector<Particle> &cellParticles = cells[cellIndex];
 
     ivec3 cellCoordinate = cellIndexToCoord(cellIndex);
-    SpdWrapper::get()->debug("cell index: {}; coord = ({}, {}, {}); halo? = {}",
-                             cellIndex, cellCoordinate[0], cellCoordinate[1],
-                             cellCoordinate[2], isHalo(cellIndex));
+    DEBUG_PRINT_FMT("cell index: {}; coord = ({}, {}, {}); halo? = {}",
+                    cellIndex, cellCoordinate[0], cellCoordinate[1],
+                    cellCoordinate[2], isHalo(cellIndex));
 
     if (cellParticles.empty()) continue;
 
@@ -134,28 +145,26 @@ void LinkedCellsContainer::pairIterator(
     for (std::size_t i = 0; i < cellParticles.size(); ++i) {
       for (std::size_t j = i + 1; j < cellParticles.size(); ++j) {
         f(cellParticles[i], cellParticles[j]);
-        SpdWrapper::get()->debug("Intra cell pair: ({}, {})",
-                                 cellParticles[i].getType(),
-                                 cellParticles[j].getType());
+        DEBUG_PRINT_FMT("Intra cell pair: ({}, {})", cellParticles[i].getType(),
+                        cellParticles[j].getType());
       }
     }
 
     // iterate over neighbouring particles
     for (auto &offset : offsets) {
       // compute neighbourIndex and check if it is valid
-      ivec3 neighbourCoord = {cellCoordinate[0] + offset[0],
-                              cellCoordinate[1] + offset[1],
-                              cellCoordinate[2] + offset[2]};
+      const ivec3 neighbourCoord = {cellCoordinate[0] + offset[0],
+                                    cellCoordinate[1] + offset[1],
+                                    cellCoordinate[2] + offset[2]};
 
       if (!isValidCellCoordinate(neighbourCoord)) {
-        SpdWrapper::get()->info("Invalid coord: ({}, {}, {})",
-                                neighbourCoord[0], neighbourCoord[1],
-                                neighbourCoord[2]);
+        DEBUG_PRINT_FMT("Invalid coord: ({}, {}, {})", neighbourCoord[0],
+                        neighbourCoord[1], neighbourCoord[2])
         continue;
       }
 
-      size_t neighbourIndex = cellCoordToIndex(neighbourCoord);
-      SpdWrapper::get()->debug(
+      const size_t neighbourIndex = cellCoordToIndex(neighbourCoord);
+      DEBUG_PRINT_FMT(
           "Checking cell i={}; c=({}, {}, {}) for pairs (offset = ({}, {}, "
           "{}))",
           neighbourIndex, neighbourCoord[0], neighbourCoord[1],
@@ -175,16 +184,16 @@ void LinkedCellsContainer::pairIterator(
             continue;
 
           f(cellParticle, neighbourParticle);
-          SpdWrapper::get()->debug("Cross cell pair: ({}, {})",
-                                   cellParticle.getType(),
-                                   neighbourParticle.getType());
+          DEBUG_PRINT_FMT("Cross cell pair: ({}, {})", cellParticle.getType(),
+                          neighbourParticle.getType())
         }
       }
     }
   }
 }
 
-void LinkedCellsContainer::boundaryIterator(std::function<void(Particle &)> f) {
+void LinkedCellsContainer::boundaryIterator(
+    const std::function<void(Particle &)> &f) {
   for (std::size_t index = 0; index < cells.size(); index++) {
     if (!isBoundary(index)) continue;
 
@@ -194,7 +203,8 @@ void LinkedCellsContainer::boundaryIterator(std::function<void(Particle &)> f) {
   }
 }
 
-void LinkedCellsContainer::haloIterator(std::function<void(Particle &)> f) {
+void LinkedCellsContainer::haloIterator(
+    const std::function<void(Particle &)> &f) {
   for (std::size_t index = 0; index < cells.size(); index++) {
     if (!isHalo(index)) continue;
 
@@ -205,7 +215,7 @@ void LinkedCellsContainer::haloIterator(std::function<void(Particle &)> f) {
 }
 
 inline std::size_t LinkedCellsContainer::dvec3ToCellIndex(
-    const dvec3 &position) {
+    const dvec3 &position) const {
   const std::array<int, 3> cellCoords = {
       static_cast<int>(std::floor(position[0] / cellDim[0])),
       static_cast<int>(std::floor(position[1] / cellDim[1])),
@@ -245,7 +255,8 @@ inline bool LinkedCellsContainer::isHalo(const ivec3 cellCoord) const {
          cellCoord[2] == (cellCount[2] - 2);
 }
 
-inline bool LinkedCellsContainer::isHalo(const std::size_t cellIndex) const {
+inline bool LinkedCellsContainer::isHalo(
+    const std::size_t cellIndex) const {
   const ivec3 cellCoord = cellIndexToCoord(cellIndex);
   return isHalo(cellCoord);
 }

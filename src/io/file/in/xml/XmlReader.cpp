@@ -24,6 +24,9 @@ void XmlReader::read(std::vector<Particle>& particles,
       if (metadata->t_end() != nullptr) {
         simulation_parameters.t_end = metadata->t_end().get();
       }
+      if (metadata->r_cutoff() != nullptr) {
+        simulation_parameters.cutoff_radius = metadata->r_cutoff().get();
+      }
       if (metadata->domain() != nullptr) {
         simulation_parameters.domain =
             unwrapVec<Ivec3Type&, ivec3>(metadata->domain().get(), "domain");

@@ -26,6 +26,7 @@ class ParticleContainer {
    */
   virtual void addParticle(const Particle& p) = 0;
 
+  virtual void addParticles(const std::vector<Particle>& particles) = 0;
   /**
    * @brief Remove a particle from the particle system.
    * @param p Particle to be removed.
@@ -37,7 +38,7 @@ class ParticleContainer {
    * container.
    * @return Vector of all particles.
    */
-  [[nodiscard]] virtual std::vector<Particle> getParticles() const = 0;
+  [[nodiscard]] virtual std::vector<Particle*> getParticles() = 0;
 
   /**
    * @brief Get the number of particles in the container.
@@ -58,4 +59,6 @@ class ParticleContainer {
    */
   virtual void pairIterator(
       const std::function<void(Particle&, Particle&)>& f) = 0;
+
+  virtual void imposeInvariant() = 0;
 };

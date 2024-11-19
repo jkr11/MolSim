@@ -28,14 +28,26 @@ void DirectSumContainer::addParticle(const Particle& p) {
   particles.push_back(p);
 }
 
+void DirectSumContainer::addParticles(const std::vector<Particle>& particles) {
+  for (const auto& p : particles) {
+    addParticle(p);
+  }
+}
+
 void DirectSumContainer::removeParticle(const Particle& p) {
   particles.erase(std::remove_if(particles.begin(), particles.end(),
                                  [&p](const Particle& q) { return p == q; }),
                   particles.end());
 }
 
-std::vector<Particle> DirectSumContainer::getParticles() const {
-  return particles;  // TODO: is this a copy because it should be
+std::vector<Particle*> DirectSumContainer::getParticles() {
+  std::vector<Particle*> refs;
+  refs.reserve(particles.size());
+  for (auto &p : particles) {
+    refs.push_back(&p);
+  }
+
+  return refs;
 }
 
 [[nodiscard]] std::size_t DirectSumContainer::size() const {
@@ -58,3 +70,5 @@ void DirectSumContainer::pairIterator(
     }
   }
 }
+
+void DirectSumContainer::imposeInvariant(){};
