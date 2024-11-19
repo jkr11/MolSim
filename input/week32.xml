@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:noNamespaceSchemaLocation="input.xsd">
-    <metadata delta_t="0.0002" t_end="5" r_cutoff="3.0">
+    <metadata delta_t="0.0005" t_end="20" r_cutoff="3.0">
         <domain>
-            <x>100</x>
-            <y>100</y>
-            <z>100</z>
+            <x>180</x>
+            <y>90</y>
+            <z>10</z>
         </domain>
     </metadata>
     <cuboids>
@@ -16,13 +16,13 @@
                 <z>0.0</z>
             </velocity>
             <corner>
-                <x>0.0</x>
-                <y>0.0</y>
-                <z>0.0</z>
+                <x>20</x>
+                <y>20</y>
+                <z>0</z>
             </corner>
             <dimensions>
-                <x>40</x>
-                <y>8</y>
+                <x>100</x>
+                <y>20</y>
                 <z>1</z>
             </dimensions>
             <type>1</type>
@@ -35,25 +35,25 @@
         </cuboid>
         <cuboid>
             <velocity>
-                <x>0.0</x>
-                <y>-10.0</y>
-                <z>0.0</z>
+                <x>0</x>
+                <y>-10</y>
+                <z>0</z>
             </velocity>
             <corner>
-                <x>15</x>
-                <y>15</y>
-                <z>0.0</z>
+                <x>70</x>
+                <y>60</y>
+                <z>0</z>
             </corner>
             <dimensions>
-                <x>8</x>
-                <y>8</y>
+                <x>20</x>
+                <y>20</y>
                 <z>1</z>
             </dimensions>
             <type>2</type>
             <h>1.1225</h>
             <mass>1.0</mass>
-            <epsilon>3.3</epsilon>
-            <sigma>0.88</sigma>
+            <epsilon>5.0</epsilon>
+            <sigma>1.0</sigma>
             <mv>0.1</mv>
             <twoD>true</twoD>
         </cuboid>
