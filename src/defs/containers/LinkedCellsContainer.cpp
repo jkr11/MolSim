@@ -68,7 +68,7 @@ void LinkedCellsContainer::removeParticle(const Particle &p) {
       p.getX()[0], p.getX()[1], p.getX()[2], index)
 }
 
-std::vector<Particle> LinkedCellsContainer::getParticles() const {
+std::vector<Particle*> LinkedCellsContainer::getParticles() {
   // TODO
 }
 
@@ -137,7 +137,7 @@ void LinkedCellsContainer::pairIterator(
     ivec3 cellCoordinate = cellIndexToCoord(cellIndex);
     DEBUG_PRINT_FMT("cell index: {}; coord = ({}, {}, {}); halo? = {}",
                     cellIndex, cellCoordinate[0], cellCoordinate[1],
-                    cellCoordinate[2], isHaloCell(cellIndex));
+                    cellCoordinate[2], isHalo(cellIndex));
 
     if (cellParticles.empty()) continue;
 

@@ -38,7 +38,7 @@ class ParticleContainer {
    * container.
    * @return Vector of all particles.
    */
-  [[nodiscard]] virtual std::vector<Particle&> getParticles() const = 0;
+  [[nodiscard]] virtual std::vector<Particle*> getParticles() = 0;
 
   /**
    * @brief Get the number of particles in the container.

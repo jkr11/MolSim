@@ -57,7 +57,7 @@ class FlattenedLinkedCellsContainer final : public ParticleContainer {
    * @brief Get a vector of all references to particles in the container
    * @return Vector of references to particles in the container
    */
-  [[nodiscard]] std::vector<Particle> getParticles() const override;
+  [[nodiscard]] std::vector<Particle*> getParticles() override;
 
   /**
    * @brief Get the count of particles in the container

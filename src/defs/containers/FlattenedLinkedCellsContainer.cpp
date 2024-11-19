@@ -42,7 +42,7 @@ void FlattenedLinkedCellsContainer::removeParticle(const Particle &p) {
   //TODO:
 }
 
-std::vector<Particle> FlattenedLinkedCellsContainer::getParticles() const {
+std::vector<Particle*> FlattenedLinkedCellsContainer::getParticles() {
   // TODO
 }
 

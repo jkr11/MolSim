@@ -40,8 +40,14 @@ void DirectSumContainer::removeParticle(const Particle& p) {
                   particles.end());
 }
 
-std::vector<Particle> DirectSumContainer::getParticles() const {
-  return particles;  // TODO: is this a copy because it should be
+std::vector<Particle*> DirectSumContainer::getParticles() {
+  std::vector<Particle*> refs;
+  refs.reserve(particles.size());
+  for (auto &p : particles) {
+    refs.push_back(&p);
+  }
+
+  return refs;
 }
 
 [[nodiscard]] std::size_t DirectSumContainer::size() const {
