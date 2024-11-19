@@ -1,35 +1,26 @@
+//
+// Created by mcarn on 11/19/24.
+//
+
 #pragma once
-#include <cstddef>
-#include <functional>
-#include <vector>
 
-#include "defs/Particle.h"
-#include "defs/containers/ParticleContainer.h"
+#include "ParticleContainer.h"
 
-class LinkedCellsContainer final : public ParticleContainer {
- private:
+class FlattenedLinkedCellsContainer final : public ParticleContainer {
+  private:
+   std::vector<Particle> particles;  //probably need a second one which is swapped each time
+   std::vector<int> partitioning;
+
+   std::array<int, 3> cellCount{};
+   ivec3 cellDim{};
+   double cutoff{};
+
+  public:
   /**
-   * x is left - right
-   * y is up - down
-   * z is back - front
-   *
-   * position = x * (cellsY * cellsZ) + y * (cellsZ) + z
-   */
-  std::vector<std::vector<Particle>> cells;
-
-  // number of cells for domain + 2 (halo)
-  std::array<int, 3> cellCount{};
-  // cell dimensions
-  ivec3 cellDim{};
-  // cutoff distance
-  double cutoff{};
-
- public:
-  /**
-   * Empty constructor
-   * TODO: why does this even exist?
-   */
-  LinkedCellsContainer() = default;
+  * Empty constructor
+  * TODO: why does this even exist?
+  */
+  FlattenedLinkedCellsContainer() = default;
 
   /**
    * @brief Constructs a ParticleContainer which is implemented using
@@ -37,12 +28,12 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @param domain Domain of the container
    * @param cutoff maximum distance between valid particle pairs
    */
-  explicit LinkedCellsContainer(const ivec3& domain, double cutoff);
+   explicit FlattenedLinkedCellsContainer(const ivec3& domain, double cutoff);
 
   /**
    * @brief Destructor
    */
-  ~LinkedCellsContainer() override = default;
+   ~FlattenedLinkedCellsContainer() override = default;
 
   /**
    * @brief Add a particle to the container
@@ -51,8 +42,8 @@ class LinkedCellsContainer final : public ParticleContainer {
   void addParticle(const Particle& p) override;
 
   /**
-   * @brief Add a vector of particles to the container
-   * @param particles Particles to be added
+   * @brief adds an entire vector to the container.
+   * @param particles particles to be added
    */
   void addParticles(const std::vector<Particle>& particles) override;
 
@@ -66,7 +57,7 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @brief Get a vector of all references to particles in the container
    * @return Vector of references to particles in the container
    */
-  [[nodiscard]] std::vector<Particle&> getParticles() const override;
+  [[nodiscard]] std::vector<Particle> getParticles() const override;
 
   /**
    * @brief Get the count of particles in the container
@@ -181,9 +172,5 @@ class LinkedCellsContainer final : public ParticleContainer {
    */
   [[nodiscard]] inline bool isBoundary(std::size_t cellIndex) const;
 
-  /**
-   * @brief Debug method to get direct access to the cells vector
-   * @return Reference to the cell vector
-   */
-  std::vector<std::vector<Particle>>& getCells() { return cells; }
+
 };
