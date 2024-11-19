@@ -6,9 +6,10 @@
 #include "defs/Particle.h"
 #include "utils/SpdWrapper.h"
 
-FlattenedLinkedCellsContainer::FlattenedLinkedCellsContainer(const ivec3& domain, const double cutoff) {
-
-  SpdWrapper::get()->info("domain size: ({}, {}, {})", domain[0], domain[1], domain[2]);
+FlattenedLinkedCellsContainer::FlattenedLinkedCellsContainer(
+    const ivec3 &domain, const double cutoff) {
+  SpdWrapper::get()->info("domain size: ({}, {}, {})", domain[0], domain[1],
+                          domain[2]);
 
   particles = {};
   this->cutoff = cutoff;
@@ -32,29 +33,28 @@ FlattenedLinkedCellsContainer::FlattenedLinkedCellsContainer(const ivec3& domain
 void FlattenedLinkedCellsContainer::addParticle(const Particle &p) {
   const std::size_t index = dvec3ToCellIndex(p.getX());
 
-  //TODO: needs to resize etc, maybe make a addlist that after imposeInvariant adds all automatically
-
-
-
+  // TODO: needs to resize etc, maybe make a addlist that after imposeInvariant
+  // adds all automatically
 }
 
 void FlattenedLinkedCellsContainer::removeParticle(const Particle &p) {
-  //TODO:
+  // TODO:
 }
 
-std::vector<Particle*> FlattenedLinkedCellsContainer::getParticles() {
+std::vector<Particle *> FlattenedLinkedCellsContainer::getParticles() {
   // TODO
 }
 
 [[nodiscard]] std::size_t FlattenedLinkedCellsContainer::size() const {
-  return particles.size(); //TODO: will change if 2 vectors are used to swap
+  return particles.size();  // TODO: will change if 2 vectors are used to swap
 }
 
 void FlattenedLinkedCellsContainer::imposeInvariant() {
-   //TODO
+  // TODO
 }
 
-void FlattenedLinkedCellsContainer::singleIterator(const std::function<void(Particle &)> &f) {
+void FlattenedLinkedCellsContainer::singleIterator(
+    const std::function<void(Particle &)> &f) {
   for (auto &p : particles) {
     f(p);
   }
@@ -62,15 +62,17 @@ void FlattenedLinkedCellsContainer::singleIterator(const std::function<void(Part
 
 void FlattenedLinkedCellsContainer::pairIterator(
     const std::function<void(Particle &, Particle &)> &f) {
-  //TODO
+  // TODO
 }
 
-void FlattenedLinkedCellsContainer::boundaryIterator(const std::function<void(Particle &)>& f) {
-  //TODO
+void FlattenedLinkedCellsContainer::boundaryIterator(
+    const std::function<void(Particle &)> &f) {
+  // TODO
 }
 
-void FlattenedLinkedCellsContainer::haloIterator(const std::function<void(Particle &)>& f) {
-  //TODO
+void FlattenedLinkedCellsContainer::haloIterator(
+    const std::function<void(Particle &)> &f) {
+  // TODO
 }
 
 inline std::size_t FlattenedLinkedCellsContainer::dvec3ToCellIndex(
@@ -85,12 +87,12 @@ inline std::size_t FlattenedLinkedCellsContainer::dvec3ToCellIndex(
 
 inline std::size_t FlattenedLinkedCellsContainer::cellCoordToIndex(
     const std::array<int, 3> position) const {
-  //TODO
+  // TODO
 }
 
 inline std::array<int, 3> FlattenedLinkedCellsContainer::cellIndexToCoord(
     std::size_t cellIndex) const {
-  //TODO
+  // TODO
 }
 
 inline bool FlattenedLinkedCellsContainer::isValidCellCoordinate(
@@ -113,7 +115,8 @@ inline bool FlattenedLinkedCellsContainer::isHalo(
   return isHalo(cellCoord);
 }
 
-inline bool FlattenedLinkedCellsContainer::isBoundary(const ivec3 cellCoord) const {
+inline bool FlattenedLinkedCellsContainer::isBoundary(
+    const ivec3 cellCoord) const {
   return (cellCoord[0] == 0 || cellCoord[1] == 0 || cellCoord[2] == 0 ||
           cellCoord[0] == (cellCount[0] - 3) ||
           cellCoord[1] == (cellCount[1] - 3) ||

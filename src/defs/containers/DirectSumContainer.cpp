@@ -43,7 +43,7 @@ void DirectSumContainer::removeParticle(const Particle& p) {
 std::vector<Particle*> DirectSumContainer::getParticles() {
   std::vector<Particle*> refs;
   refs.reserve(particles.size());
-  for (auto &p : particles) {
+  for (auto& p : particles) {
     refs.push_back(&p);
   }
 

@@ -7,19 +7,20 @@
 #include "ParticleContainer.h"
 
 class FlattenedLinkedCellsContainer final : public ParticleContainer {
-  private:
-   std::vector<Particle> particles;  //probably need a second one which is swapped each time
-   std::vector<int> partitioning;
+ private:
+  std::vector<Particle> particles;  // probably need a second one which is
+                                    // swapped each time
+  std::vector<int> partitioning;
 
-   std::array<int, 3> cellCount{};
-   ivec3 cellDim{};
-   double cutoff{};
+  std::array<int, 3> cellCount{};
+  ivec3 cellDim{};
+  double cutoff{};
 
-  public:
+ public:
   /**
-  * Empty constructor
-  * TODO: why does this even exist?
-  */
+   * Empty constructor
+   * TODO: why does this even exist?
+   */
   FlattenedLinkedCellsContainer() = default;
 
   /**
@@ -28,12 +29,12 @@ class FlattenedLinkedCellsContainer final : public ParticleContainer {
    * @param domain Domain of the container
    * @param cutoff maximum distance between valid particle pairs
    */
-   explicit FlattenedLinkedCellsContainer(const ivec3& domain, double cutoff);
+  explicit FlattenedLinkedCellsContainer(const ivec3& domain, double cutoff);
 
   /**
    * @brief Destructor
    */
-   ~FlattenedLinkedCellsContainer() override = default;
+  ~FlattenedLinkedCellsContainer() override = default;
 
   /**
    * @brief Add a particle to the container
@@ -171,6 +172,4 @@ class FlattenedLinkedCellsContainer final : public ParticleContainer {
    * @return If cell is part of the boundary
    */
   [[nodiscard]] inline bool isBoundary(std::size_t cellIndex) const;
-
-
 };

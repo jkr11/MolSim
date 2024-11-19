@@ -15,8 +15,8 @@
 
 LinkedCellsContainer::LinkedCellsContainer(const ivec3 &domain,
                                            const double cutoff) {
-
-  SpdWrapper::get()->info("domain size: ({}, {}, {})", domain[0], domain[1], domain[2]);
+  SpdWrapper::get()->info("domain size: ({}, {}, {})", domain[0], domain[1],
+                          domain[2]);
 
   cells = {};
   this->cutoff = cutoff;
@@ -68,7 +68,7 @@ void LinkedCellsContainer::removeParticle(const Particle &p) {
       p.getX()[0], p.getX()[1], p.getX()[2], index)
 }
 
-std::vector<Particle*> LinkedCellsContainer::getParticles() {
+std::vector<Particle *> LinkedCellsContainer::getParticles() {
   // TODO
 }
 
@@ -255,8 +255,7 @@ inline bool LinkedCellsContainer::isHalo(const ivec3 cellCoord) const {
          cellCoord[2] == (cellCount[2] - 2);
 }
 
-inline bool LinkedCellsContainer::isHalo(
-    const std::size_t cellIndex) const {
+inline bool LinkedCellsContainer::isHalo(const std::size_t cellIndex) const {
   const ivec3 cellCoord = cellIndexToCoord(cellIndex);
   return isHalo(cellCoord);
 }

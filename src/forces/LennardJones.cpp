@@ -14,6 +14,7 @@ dvec3 LennardJones::directionalForce(Particle& p1, Particle& p2) const {
   const double sr = sigma / r;
   const double sr6 = std::pow(sr, 6);
   const double sr12 = std::pow(sr6, 2);
-  const double force_magnitude = 24 * epsilon * (sr6 - 2 * sr12) / (std::pow(r,2));
+  const double force_magnitude =
+      24 * epsilon * (sr6 - 2 * sr12) / (std::pow(r, 2));
   return force_magnitude * rv;
 }
