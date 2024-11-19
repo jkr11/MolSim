@@ -52,7 +52,7 @@ class Particle {
   double epsilon{};
 
   /**
-   * distance at which the particle to particle potential energy is zero \n
+   * distance from the particle at which the potential is zero \n
    * used in the calculation of lennard-jones force
    */
   double sigma{};
