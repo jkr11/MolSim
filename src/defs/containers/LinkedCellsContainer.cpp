@@ -15,6 +15,9 @@
 
 LinkedCellsContainer::LinkedCellsContainer(const ivec3 &domain,
                                            const double cutoff) {
+
+  SpdWrapper::get()->info("domain size: ({}, {}, {})", domain[0], domain[1], domain[2]);
+
   cells = {};
   this->cutoff = cutoff;
 
@@ -25,6 +28,7 @@ LinkedCellsContainer::LinkedCellsContainer(const ivec3 &domain,
   cellDim = {domain[0] / cellCount[0], domain[1] / cellCount[1],
              domain[2] / cellCount[2]};
   // add 2 for halo
+
   cellCount = {cellCount[0] + 2, cellCount[1] + 2, cellCount[2] + 2};
 
   cells.resize(cellCount[0] * cellCount[1] * cellCount[2]);

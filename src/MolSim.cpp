@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
   std::unique_ptr<ParticleContainer> container;
   if (arguments.container_type == Arguments::LinkedCells) {
     container =
-        std::make_unique<LinkedCellsContainer>(arguments.domain, cutoff_radius);
+        std::make_unique<LinkedCellsContainer>(domain, cutoff_radius);
     container->addParticles(particles);
     container->imposeInvariant();
   } else if (arguments.container_type == Arguments::DirectSum) {
