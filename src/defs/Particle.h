@@ -46,7 +46,7 @@ class Particle {
   int type{};
 
   /**
-   * depth at which the potential well \n
+   * depth of the potential well
    * used in the caluclation of lennard-jones force
    */
   double epsilon{};
