@@ -29,8 +29,8 @@ int main(int argc, char *argv[]) {
       .output_time_step_size = 1,                 // output_time_step_size
       .log_level = "info",                        // logLevel
       .force = std::make_unique<LennardJones>(),  // force
-      .cutoff_radius = 3.0,
       .domain = {100, 100, 100},
+      .cutoff_radius = 3.0,
       .container_type = Arguments::LinkedCells,
   };  // TODO: figure out if the . assignement in structs is valid C++17
 
@@ -48,7 +48,7 @@ int main(int argc, char *argv[]) {
                           delta_t, cutoff_radius);
 
   // maybe we can make this nicer, this is the best i can come up with right now
-  auto container{};
+  std::unique_ptr<ParticleContainer> container;
   if (arguments.container_type == Arguments::LinkedCells) {
     container =
         std::make_unique<LinkedCellsContainer>(arguments.domain, cutoff_radius);

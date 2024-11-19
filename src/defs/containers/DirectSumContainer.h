@@ -19,6 +19,8 @@ class DirectSumContainer : public ParticleContainer {
 
   void addParticle(const Particle& p) override;
 
+  void addParticles(const std::vector<Particle>& particles) override;
+
   void removeParticle(const Particle& p) override;
 
   [[nodiscard]] std::vector<Particle> getParticles() const override;
@@ -29,4 +31,6 @@ class DirectSumContainer : public ParticleContainer {
 
   void pairIterator(
       const std::function<void(Particle&, Particle&)>& f) override;
+
+  void imposeInvariant() override;
 };

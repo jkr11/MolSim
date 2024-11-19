@@ -28,6 +28,12 @@ void DirectSumContainer::addParticle(const Particle& p) {
   particles.push_back(p);
 }
 
+void DirectSumContainer::addParticles(const std::vector<Particle>& particles) {
+  for (const auto& p : particles) {
+    addParticle(p);
+  }
+}
+
 void DirectSumContainer::removeParticle(const Particle& p) {
   particles.erase(std::remove_if(particles.begin(), particles.end(),
                                  [&p](const Particle& q) { return p == q; }),
@@ -58,3 +64,5 @@ void DirectSumContainer::pairIterator(
     }
   }
 }
+
+void DirectSumContainer::imposeInvariant(){};
