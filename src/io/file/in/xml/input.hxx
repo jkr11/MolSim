@@ -31,8 +31,8 @@
 // in the accompanying FLOSSE file.
 //
 
-#ifndef INPUT_HXX
-#define INPUT_HXX
+#ifndef CXX___SRC_IO_FILE_IN_XML_INPUT_HXX
+#define CXX___SRC_IO_FILE_IN_XML_INPUT_HXX
 
 #ifndef XSD_USE_CHAR
 #define XSD_USE_CHAR
@@ -49,9 +49,9 @@
 
 #include <xsd/cxx/config.hxx>
 
-//#if (XSD_INT_VERSION != 4000000L)
-//#error XSD runtime version mismatch
-//#endif
+#if (XSD_INT_VERSION != 4000000L)
+#error XSD runtime version mismatch
+#endif
 
 #include <xsd/cxx/pre.hxx>
 #include <xsd/cxx/tree/elements.hxx>
@@ -1058,4 +1058,4 @@ class spheroids : public ::xml_schema::type {
 //
 // End epilogue.
 
-#endif  // INPUT_HXX
+#endif  // CXX___SRC_IO_FILE_IN_XML_INPUT_HXX
