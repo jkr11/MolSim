@@ -52,8 +52,8 @@
             <type>2</type>
             <h>1.1225</h>
             <mass>1.0</mass>
-            <epsilon>3.3</epsilon>
-            <sigma>0.88</sigma>
+            <epsilon>5.0</epsilon>
+            <sigma>1.0</sigma>
             <mv>0.1</mv>
             <twoD>true</twoD>
         </cuboid>

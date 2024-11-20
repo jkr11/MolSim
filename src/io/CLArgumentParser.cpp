@@ -72,6 +72,7 @@ int CLArgumentParser::parse(int argc, char *argv[], Arguments &arguments) {
           SpdWrapper::get()->info(
               "This is deprecated as we only need XMLReader now, note that "
               "only xml files are allowed.");
+          break;
         }
         case 'C': {
           if (const std::string c = toLower(optarg); c == "linkedcells") {
@@ -79,6 +80,7 @@ int CLArgumentParser::parse(int argc, char *argv[], Arguments &arguments) {
           } else if (c == "directsum") {
             arguments.container_type = Arguments::DirectSum;
           }
+          break;
         }
         default:
           printUsage("unsupported flag '-" +
