@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
       .domain = {100, 100, 100},
       .cutoff_radius = 3.0,
       .container_type = Arguments::LinkedCells,
-  };  // TODO: figure out if the . assignement in structs is valid C++17
+  };  // TODO: figure out if the . assignment in structs is valid C++17
 
   if (CLArgumentParser::parse(argc, argv, arguments) != 0) {
     exit(EXIT_FAILURE);
@@ -69,6 +69,7 @@ int main(int argc, char *argv[]) {
   int writes = 0;
   int percentage = 0;
   double next_output_time = 0;
+  spdlog::stopwatch stopwatch;
 
   while (current_time <= t_end) {
     verlet_integrator.step(*container);
@@ -81,13 +82,20 @@ int main(int argc, char *argv[]) {
       // check if next percentage complete
       if (const double t = 100 * current_time / t_end; t >= percentage) {
         percentage++;
-        SpdWrapper::get()->info("[{:.0f} %]: Iteration {}",
-                                100 * current_time / t_end, iteration);
+        auto eta = (stopwatch.elapsed() / percentage) * 100 - stopwatch.elapsed();
+        auto h = std::chrono::duration_cast<std::chrono::hours>(eta).count();
+        eta -= std::chrono::hours(h);
+        auto m = std::chrono::duration_cast<std::chrono::minutes>(eta).count();
+        eta -= std::chrono::minutes(m);
+        auto s = std::chrono::duration_cast<std::chrono::seconds>(eta).count();
+
+        SpdWrapper::get()->info("[{:.0f} %]: Iteration {:<12} | [ETA: {}:{:02}:{:02}]",
+                                100 * current_time / t_end, iteration, h, m , s);
       }
     }
 
     iteration++;
-    current_time = delta_t * iteration;  // + start_time
+    current_time = delta_t * iteration;
   }
   std::cout << std::endl;
   SpdWrapper::get()->info("Output written. Terminating...");
