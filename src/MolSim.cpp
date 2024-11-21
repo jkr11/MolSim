@@ -71,7 +71,7 @@ int main(int argc, char *argv[]) {
     }
 
     iteration++;
-    current_time = arguments.delta_t * iteration;  // + start_time
+    current_time = arguments.delta_t * iteration;
   }
   std::cout << std::endl;
   SpdWrapper::get()->info("Output written. Terminating...");
