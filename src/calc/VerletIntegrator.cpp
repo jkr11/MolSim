@@ -5,11 +5,6 @@
 
 #include "../utils/ArrayUtils.h"
 
-/**
- * @brief does one step in time using the Verlet integration method on the
- * particle_container, updating X -> F -> V
- * @param particle_container Reference to the current particle-system
- */
 void VerletIntegrator::step(ParticleContainer& particle_container) {
   // update positions
   particle_container.single_iterator([this](Particle& p) {
@@ -25,11 +20,13 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
   });
 
   // update force
+
   particle_container.pairIterator([this](Particle& p1, Particle& p2) {
     const dvec3 g12 = force.directionalForce(p1, p2);
     p1.setF(p1.getF() + g12);  // F_i = \sum_j F_ij
     p2.setF(p2.getF() - g12);  // g12 = -g21
   });
+
   // Now we use F_t and F_{t-1} to calculate the current velocity
   particle_container.single_iterator([this](Particle& p) {
     const dvec3 new_v =

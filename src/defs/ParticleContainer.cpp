@@ -3,22 +3,23 @@
 //
 #include "ParticleContainer.h"
 
-ParticleContainer::ParticleContainer() = default;
+ParticleContainer::ParticleContainer() { this->particles = {}; };
+
 ParticleContainer::~ParticleContainer() = default;
 
-ParticleContainer::ParticleContainer(const std::list<Particle>& particles) {
-  for (const auto& particle : particles) {
+ParticleContainer::ParticleContainer(const std::list<Particle> &particles) {
+  for (const auto &particle : particles) {
     this->particles.push_back(particle);
   }
 }
 
-ParticleContainer::ParticleContainer(const std::vector<Particle>& particles) {
-  for (const auto& particle : particles) {
+ParticleContainer::ParticleContainer(const std::vector<Particle> &particles) {
+  for (const auto &particle : particles) {
     this->particles.push_back(particle);
   }
 }
 
-void ParticleContainer::addParticle(const Particle& p) {
+void ParticleContainer::addParticle(const Particle &p) {
   particles.push_back(p);
 }
 
@@ -30,4 +31,12 @@ Particle ParticleContainer::operator[](const int n) { return particles[n]; }
 
 std::vector<Particle> ParticleContainer::getParticles() { return particles; }
 
+std::vector<Particle> &ParticleContainer::getParticlesReference() {
+  return particles;
+}
+
 std::size_t ParticleContainer::size() const { return particles.size(); }
+
+void ParticleContainer::resize(const std::size_t size) {
+  particles.resize(size);
+}

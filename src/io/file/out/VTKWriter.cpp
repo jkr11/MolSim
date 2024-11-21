@@ -7,13 +7,13 @@
 
 #include "VTKWriter.h"
 
-#include <debug/debug_print.h>
-
 #include <cstdlib>
 #include <fstream>
 #include <iomanip>
-#include <iostream>
 #include <string>
+
+#include "debug/debug_print.h"
+#include "utils/SpdWrapper.h"
 
 namespace outputWriter {
 
@@ -53,7 +53,7 @@ void VTKWriter::initializeOutput(int numParticles) {
   vtkFile->UnstructuredGrid(unstructuredGrid);
 }
 
-void VTKWriter::writeFile(const std::string &filename, int iteration) {
+void VTKWriter::writeFile(const std::string &filename, int iteration) const {
   std::stringstream strstr;
   strstr << filename << "_" << std::setfill('0') << std::setw(4) << iteration
          << ".vtu";
@@ -63,12 +63,14 @@ void VTKWriter::writeFile(const std::string &filename, int iteration) {
   delete vtkFile;
 }
 
-void VTKWriter::plotParticle(Particle &p) {
+void VTKWriter::plotParticle(const Particle &p) const {
+#ifdef DEBUG
   if (vtkFile->UnstructuredGrid().present()) {
     DEBUG_PRINT("UnstructuredGrid is present");
   } else {
-    DEBUG_PRINT("ERROR: No UnstructuredGrid present");
+    DEBUG_PRINT("No UnstructuredGrid present");
   }
+#endif
 
   PointData::DataArray_sequence &pointDataSequence =
       vtkFile->UnstructuredGrid()->Piece().PointData().DataArray();
@@ -77,24 +79,24 @@ void VTKWriter::plotParticle(Particle &p) {
   dataIterator->push_back(p.getM());
   // cout << "Appended mass data in: " << dataIterator->Name();
 
-  dataIterator++;
+  ++dataIterator;
   dataIterator->push_back(p.getV()[0]);
   dataIterator->push_back(p.getV()[1]);
   dataIterator->push_back(p.getV()[2]);
   // cout << "Appended velocity data in: " << dataIterator->Name();
 
-  dataIterator++;
+  ++dataIterator;
   dataIterator->push_back(p.getOldF()[0]);
   dataIterator->push_back(p.getOldF()[1]);
   dataIterator->push_back(p.getOldF()[2]);
   // cout << "Appended force data in: " << dataIterator->Name();
 
-  dataIterator++;
+  ++dataIterator;
   dataIterator->push_back(p.getType());
 
   Points::DataArray_sequence &pointsSequence =
       vtkFile->UnstructuredGrid()->Piece().Points().DataArray();
-  Points::DataArray_iterator pointsIterator = pointsSequence.begin();
+  const Points::DataArray_iterator pointsIterator = pointsSequence.begin();
   pointsIterator->push_back(p.getX()[0]);
   pointsIterator->push_back(p.getX()[1]);
   pointsIterator->push_back(p.getX()[2]);

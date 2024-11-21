@@ -25,7 +25,7 @@ copyright : not copyrighted - public domain
 
   <xsd:complexType name="DataArray_t">
     <xsd:simpleContent>
-      <xsd:extension base="DataArrayList_t"> <!-- hier typ der daten in liste  --> 
+      <xsd:extension base="DataArrayList_t"> <!-- hier typ der daten in liste  -->
         <xsd:attribute name="type" use="required">
           <xsd:simpleType>
             <xsd:restriction base="xsd:string">
@@ -84,7 +84,7 @@ copyright : not copyrighted - public domain
   	</xsd:sequence>
   	<xsd:attribute name="NumberOfPoints" type="xsd:integer" use="required"/>
   	<xsd:attribute name="NumberOfCells" type="xsd:integer" use="required"/>
-  </xsd:complexType>	
+  </xsd:complexType>
 
   <xsd:complexType name="UnstructuredGrid_t">
     <xsd:all>
@@ -105,12 +105,12 @@ copyright : not copyrighted - public domain
         collection of names to which this greeting applies.
       </xsd:documentation>
     </xsd:annotation>
-	
+
     <xsd:choice>
       <xsd:element name="UnstructuredGrid" type="UnstructuredGrid_t"/>
       <xsd:element name="PolyData" type="PolyData_t"/>
     </xsd:choice>
-    
+
     <xsd:attribute name="type" type="xsd:string" use="required"/>
     <xsd:attribute name="version" type="xsd:string" fixed="0.1" use="required"/>
     <xsd:attribute name="byte_order" type="xsd:string" fixed="LittleEndian" use="required"/>

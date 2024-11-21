@@ -45,42 +45,62 @@ class Particle {
    */
   int type{};
 
+  /**
+   * depth of the potential well
+   * used in the caluclation of lennard-jones force
+   */
+  double epsilon{};
+
+  /**
+   * distance from the particle at which the potential is zero \n
+   * used in the calculation of lennard-jones force
+   */
+  double sigma{};
+
  public:
   explicit Particle(int type = 0);
 
-  Particle(const Particle& other);
+  Particle(const Particle &other);
 
   Particle(
       // for visualization, we need always 3 coordinates
       // -> in case of 2d, we use only the first and the second
-      const std::array<double, 3>& x_arg, const std::array<double, 3>& v_arg,
-      double m_arg, int type = 0);
+      const std::array<double, 3> &x_arg, const std::array<double, 3> &v_arg,
+      double m_arg, const double _epsilon, const double _sigma, int type = 0);
 
   virtual ~Particle();
 
-  [[nodiscard]] const std::array<double, 3>& getX() const;
+  [[nodiscard]] const std::array<double, 3> &getX() const;
 
-  [[nodiscard]] const std::array<double, 3>& getV() const;
+  [[nodiscard]] const std::array<double, 3> &getV() const;
 
-  [[nodiscard]] const std::array<double, 3>& getF() const;
+  [[nodiscard]] const std::array<double, 3> &getF() const;
 
-  [[nodiscard]] const std::array<double, 3>& getOldF() const;
+  [[nodiscard]] const std::array<double, 3> &getOldF() const;
 
   [[nodiscard]] double getM() const;
 
   [[nodiscard]] int getType() const;
 
-  void setF(const std::array<double, 3>& F);
+  [[nodiscard]] double getEpsilon() const;
 
-  void setX(const std::array<double, 3>& X);
+  [[nodiscard]] double getSigma() const;
 
-  void setV(const std::array<double, 3>& V);
+  void setF(const std::array<double, 3> &F);
 
-  void setOldF(const dvec3& oF);
+  void setX(const std::array<double, 3> &X);
 
-  bool operator==(const Particle& other) const;
+  void setV(const std::array<double, 3> &V);
+
+  void setOldF(const dvec3 &oF);
+
+  void setEpsilon(const double &epsilon);
+
+  void setSigma(const double &sigma);
+
+  bool operator==(const Particle &other) const;
 
   [[nodiscard]] std::string toString() const;
 };
 
-std::ostream& operator<<(std::ostream& stream, Particle& p);
+std::ostream &operator<<(std::ostream &stream, const Particle &p);
