@@ -9,7 +9,7 @@
             <Gravity/>
         </force>
         <delta_t>0.014</delta_t>
-        <t_end>10</t_end>
+        <t_end>1000</t_end>
         <twoD>true</twoD>
     </metadata>
     <cuboids>

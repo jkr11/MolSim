@@ -20,6 +20,7 @@ void XmlReader::read(std::vector<Particle>& particles,
     if (auto& container = metadata.container();
         container.directSum().present()) {
       simulation_parameters.container_type = Arguments::DirectSum;
+      SpdWrapper::get()->info("Using directSumContainer");
     } else if (container.linkedCells().present()) {
       simulation_parameters.container_type = Arguments::LinkedCells;
       const auto& domain = container.linkedCells().get().domain();
@@ -27,6 +28,7 @@ void XmlReader::read(std::vector<Particle>& particles,
           unwrapVec<const Ivec3Type&, ivec3>(domain, "domain");
       simulation_parameters.cutoff_radius =
           container.linkedCells().get().r_cutoff();
+      SpdWrapper::get()->info("Using LinkedCellsContainer");
     } else {
       SpdWrapper::get()->info(
           "No container provided, using default LinkedCells");
@@ -56,7 +58,7 @@ void XmlReader::read(std::vector<Particle>& particles,
 
         CuboidGenerator cg(corner, dimensions, cubes.h(), cubes.mass(),
                            velocity, cubes.mv(), cubes.epsilon(), cubes.sigma(),
-                           cubes.type(), twoD());
+                           cubes.type(), twoD);
 
         cg.generate(particles);
       }
@@ -71,7 +73,7 @@ void XmlReader::read(std::vector<Particle>& particles,
 
         SpheroidGenerator sg(origin, spheres.radius(), spheres.h(),
                              spheres.mass(), velocity, spheres.epsilon(),
-                             spheres.sigma(), spheres.type(), twoD());
+                             spheres.sigma(), spheres.type(), twoD);
 
         sg.generate(particles);
       }
@@ -82,7 +84,13 @@ void XmlReader::read(std::vector<Particle>& particles,
   }
 }
 
-std::tuple<double, double, double, ivec3> XmlReader::pass() const {
-  return {simulation_parameters.delta_t, simulation_parameters.t_end,
-          simulation_parameters.cutoff_radius, simulation_parameters.domain};
+std::tuple<double, double, double, ivec3, Arguments::ForceType,
+           Arguments::ContainerType>
+XmlReader::pass() const {
+  return {simulation_parameters.delta_t,
+          simulation_parameters.t_end,
+          simulation_parameters.cutoff_radius,
+          simulation_parameters.domain,
+          simulation_parameters.force_type,
+          simulation_parameters.container_type};
 }

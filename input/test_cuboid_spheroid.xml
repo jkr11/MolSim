@@ -1,7 +1,17 @@
 <?xml version="1.0"?>
 <simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:noNamespaceSchemaLocation="input.xsd">
-    <metadata delta_t="0.015" t_end="15"/>
+    <metadata>
+        <container>
+            <directSum/>
+        </container>
+        <force>
+            <LennardJones/>
+        </force>
+        <delta_t>0.015</delta_t>
+        <t_end>15</t_end>
+        <twoD>false</twoD>
+    </metadata>
     <cuboids>
         <cuboid>
             <velocity>
@@ -25,7 +35,6 @@
             <epsilon>0.1</epsilon>
             <sigma>0.2</sigma>
             <mv>0.3</mv>
-            <twoD>false</twoD>
         </cuboid>
     </cuboids>
     <spheroids>
@@ -46,7 +55,6 @@
             <mass>3.0</mass>
             <epsilon>5</epsilon>
             <sigma>1</sigma>
-            <twoD>false</twoD>
         </spheroid>
     </spheroids>
 </simulation>

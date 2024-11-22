@@ -24,15 +24,15 @@ int main(int argc, char *argv[]) {
   // we dont need additional file readers anymore so we can just use XMLReader
 
   Arguments arguments = {
-      .input_file = "",                       // file
-      .t_end = 5,                             // t_end
-      .delta_t = 0.0002,                      // delta_t
-      .output_time_step_size = 1,             // output_time_step_size
-      .log_level = "info",                    // logLevel
-      .force_type = Arguments::LennardJones,  // force
+      .input_file = "",                  // file
+      .t_end = 5,                        // t_end
+      .delta_t = 0.0002,                 // delta_t
+      .output_time_step_size = 1,        // output_time_step_size
+      .log_level = "info",               // logLevel
+      .force_type = Arguments::Gravity,  // force
       .domain = {100, 100, 100},
       .cutoff_radius = 3.0,
-      .container_type = Arguments::LinkedCells,
+      .container_type = Arguments::DirectSum,
   };  // TODO: figure out if the . assignement in structs is valid C++17
 
   if (CLArgumentParser::parse(argc, argv, arguments) != 0) {
@@ -43,27 +43,32 @@ int main(int argc, char *argv[]) {
   std::vector<Particle> particles;
   reader->read(particles, arguments.input_file);
   SpdWrapper::get()->info("Particles size {}", particles.size());
-  auto [delta_t, t_end, cutoff_radius, domain] = reader.get()->pass();
+  auto [delta_t, t_end, cutoff_radius, domain, force_type, container_type] =
+      reader.get()->pass();
 
   SpdWrapper::get()->info("t_end: {}, delta_t: {}, cutoff_radius: {}", t_end,
                           delta_t, cutoff_radius);
 
   // maybe we can make this nicer, this is the best i can come up with right now
   std::unique_ptr<ParticleContainer> container;
-  if (arguments.container_type == Arguments::LinkedCells) {
+  if (container_type == Arguments::LinkedCells) {
+    SpdWrapper::get()->info("Creating LinkedCells container");
     container = std::make_unique<LinkedCellsContainer>(domain, cutoff_radius);
     container->addParticles(particles);
     container->imposeInvariant();
-  } else if (arguments.container_type == Arguments::DirectSum) {
+  } else if (container_type == Arguments::DirectSum) {
+    SpdWrapper::get()->info("Running DirectSum");
     container = std::make_unique<DirectSumContainer>();
     container->addParticles(particles);
   }
 
   // set force type
   std::unique_ptr<Force> force;
-  if (arguments.force_type == Arguments::Gravity) {
+  if (force_type == Arguments::Gravity) {
+    SpdWrapper::get()->info("using Gravity");
     force = std::make_unique<Gravity>();
-  } else if (arguments.force_type == Arguments::LennardJones) {
+  } else if (force_type == Arguments::LennardJones) {
+    SpdWrapper::get()->info("using LennardJones");
     force = std::make_unique<LennardJones>();
   }
   SpdWrapper::get()->info("particles.size: {}", particles.size());

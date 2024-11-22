@@ -1,12 +1,26 @@
 <?xml version="1.0"?>
 <simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:noNamespaceSchemaLocation="input.xsd">
-    <metadata delta_t="0.0005" t_end="20" r_cutoff="3.0">
-        <domain>
-            <x>100</x>
-            <y>100</y>
-            <z>10</z>
-        </domain>
+    <metadata>
+        <container>
+            <linkedCells>
+                <domain>
+                    <x>100</x>
+                    <y>100</y>
+                    <z>100</z>
+                </domain>
+                <r_cutoff>3.0</r_cutoff>
+                <boundary>
+                    <Boundary/>
+                </boundary>
+            </linkedCells>
+        </container>
+        <force>
+            <LennardJones/>
+        </force>
+        <delta_t>0.00005</delta_t>
+        <t_end>20</t_end>
+        <twoD>false</twoD>
     </metadata>
     <cuboids>
         <cuboid>
@@ -31,7 +45,6 @@
             <epsilon>5.0</epsilon>
             <sigma>1.0</sigma>
             <mv>0.1</mv>
-            <twoD>true</twoD>
         </cuboid>
     </cuboids>
 </simulation>

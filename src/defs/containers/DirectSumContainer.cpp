@@ -9,14 +9,20 @@
 #include <functional>
 #include <vector>
 
+#include "debug/debug_print.h"
 #include "defs/Particle.h"
 
 DirectSumContainer::DirectSumContainer() : ParticleContainer() {
+  DEBUG_PRINT("DirectSumContainer::DirectSumContainer()");
+  SpdWrapper::get()->info("DirectSumContainer::DirectSumContainer()");
+
   this->particles = {};
 }
 
 DirectSumContainer::DirectSumContainer(const std::vector<Particle>& particles)
     : ParticleContainer() {
+  DEBUG_PRINT("explicit DirectSumContainer::DirectSumContainer()");
+  SpdWrapper::get()->info("DirectSumContainer::DirectSumContainer()");
   for (const auto& particle : particles) {
     this->particles.push_back(particle);
   }
@@ -25,6 +31,7 @@ DirectSumContainer::DirectSumContainer(const std::vector<Particle>& particles)
 // DirectSumContainer::~DirectSumContainer();
 
 void DirectSumContainer::addParticle(const Particle& p) {
+  SpdWrapper::get()->info("DirectSumContainer::addParticle()");
   particles.push_back(p);
 }
 
@@ -71,4 +78,4 @@ void DirectSumContainer::pairIterator(
   }
 }
 
-void DirectSumContainer::imposeInvariant(){};
+void DirectSumContainer::imposeInvariant() {};

@@ -43,6 +43,8 @@ class XmlReader final : public FileReader {
    * @brief passes the struct to other classes
    * @return struct with Simulation parameters
    */
-  [[nodiscard]] std::tuple<double, double, double, ivec3> pass() const;
+  [[nodiscard]] std::tuple<double, double, double, ivec3, Arguments::ForceType,
+                           Arguments::ContainerType>
+  pass() const;
 };
 #endif  // XMLREADER_H
