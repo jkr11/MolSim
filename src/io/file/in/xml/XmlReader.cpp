@@ -16,22 +16,21 @@ void XmlReader::read(std::vector<Particle>& particles,
   try {
     const std::unique_ptr<::simulation> config = simulation_(filepath);
     SpdWrapper::get()->info("Reading XML file {}", filepath);
-    if (config->metadata() != nullptr) {
-      auto& metadata = config->metadata();
-      if (metadata->delta_t() != nullptr) {
-        simulation_parameters.delta_t = metadata->delta_t().get();
-      }
-      if (metadata->t_end() != nullptr) {
-        simulation_parameters.t_end = metadata->t_end().get();
-      }
-      if (metadata->r_cutoff() != nullptr) {
-        simulation_parameters.cutoff_radius = metadata->r_cutoff().get();
-      }
-      if (metadata->domain() != nullptr) {
-        simulation_parameters.domain =
-            unwrapVec<Ivec3Type&, ivec3>(metadata->domain().get(), "domain");
-      }
+    auto& metadata = config->metadata();
+    if (auto& container = metadata.container();
+        container.directSum().present()) {
+      simulation_parameters.container_type = Arguments::DirectSum;
+    } else if (container.linkedCells().present()) {
+      simulation_parameters.container_type = Arguments::LinkedCells;
+      const auto& domain = container.linkedCells().get().domain();
+      simulation_parameters.domain = unwrapVec<const Ivec3Type&, ivec3>(domain, "domain");
+      simulation_parameters.cutoff_radius = container.linkedCells().get().r_cutoff();
+    } else {
+      SpdWrapper::get()->info(
+          "No container provided, using default LinkedCells");
     }
+    simulation_parameters.delta_t = metadata.delta_t();
+    simulation_parameters.t_end = metadata.t_end();
 
     if (config->cuboids() != nullptr) {
       for (const auto& cubes : config->cuboids()->cuboid()) {
