@@ -2,7 +2,7 @@
 // Created by jkr on 10/18/24.
 //
 #pragma once
-#include "../defs/Particle.h"
+#include "defs/Particle.h"
 
 /**
  * @brief Interface for different types of forces

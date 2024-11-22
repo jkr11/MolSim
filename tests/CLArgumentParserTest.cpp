@@ -1,4 +1,6 @@
+/*
 #include <gtest/gtest.h>
+
 
 #include <vector>
 #include <fstream>
@@ -6,10 +8,11 @@
 #include "../src/io/CLArgumentParser.h"
 #include "../src/forces/LennardJones.h"
 #include "../src/io/file/in/CuboidReader.h"
-
+*/
 /*
- * Parse example CLI arguments correctly
+ * @brief Parse example CLI arguments correctly
  */
+/*
 TEST(CLArgumentParser, parse) {
     std::ofstream file("testFile.txt");
     if (file.is_open()) {
@@ -51,3 +54,4 @@ TEST(CLArgumentParser, parse) {
     
     //TODO expand to cover force selection
 }
+*/

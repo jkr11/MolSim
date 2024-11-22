@@ -9,8 +9,7 @@
 #include <filesystem>
 #include <fstream>
 
-#include "file/in/CuboidReader.h"
-#include "file/in/DefaultReader.h"
+#include "defs/Simulation.h"
 #include "forces/Gravity.h"
 #include "forces/LennardJones.h"
 #include "spdlog/fmt/bundled/chrono.h"
@@ -25,6 +24,7 @@ int CLArgumentParser::parse(int argc, char *argv[], Arguments &arguments) {
                                  {"loglevel", required_argument, nullptr, 'l'},
                                  {"force", required_argument, nullptr, 'F'},
                                  {"reader", required_argument, nullptr, 'R'},
+                                 {"container", required_argument, nullptr, 'C'},
                                  {nullptr, 0, nullptr, 0}};
 
   int opt;
@@ -43,7 +43,7 @@ int CLArgumentParser::parse(int argc, char *argv[], Arguments &arguments) {
           printUsage("Display Help page, no execution", argv[0]);
           return -1;
         case 'f':
-          arguments.inputFile = optarg;
+          arguments.input_file = optarg;
           break;
         case 't':
           arguments.t_end = std::stod(optarg);
@@ -55,7 +55,7 @@ int CLArgumentParser::parse(int argc, char *argv[], Arguments &arguments) {
           arguments.output_time_step_size = std::stod(optarg);
           break;
         case 'l':
-          arguments.logLevel = optarg;
+          arguments.log_level = optarg;
           break;
         case 'F': {
           if (const std::string f = toLower(optarg); f == "lennardjones") {
@@ -69,13 +69,16 @@ int CLArgumentParser::parse(int argc, char *argv[], Arguments &arguments) {
           break;
         }
         case 'R': {
-          if (const std::string r = toLower(optarg); r == "cuboidreader") {
-            arguments.reader = std::make_unique<CuboidReader>();
-          } else if (r == "defaultreader") {
-            arguments.reader = std::make_unique<DefaultReader>();
-          } else {
-            SpdWrapper::get()->error("Unknown Reader Type: {}", r);
-            exit(EXIT_FAILURE);
+          SpdWrapper::get()->info(
+              "This is deprecated as we only need XMLReader now, note that "
+              "only xml files are allowed.");
+          break;
+        }
+        case 'C': {
+          if (const std::string c = toLower(optarg); c == "linkedcells") {
+            arguments.container_type = Arguments::LinkedCells;
+          } else if (c == "directsum") {
+            arguments.container_type = Arguments::DirectSum;
           }
           break;
         }
@@ -105,21 +108,21 @@ int CLArgumentParser::parse(int argc, char *argv[], Arguments &arguments) {
   }
 
   // validate input file
-  if (!std::filesystem::exists(arguments.inputFile) ||
-      std::filesystem::is_directory(arguments.inputFile)) {
-    printUsage("Input File '" + arguments.inputFile + "' does not exist",
+  if (!std::filesystem::exists(arguments.input_file) ||
+      std::filesystem::is_directory(arguments.input_file)) {
+    printUsage("Input File '" + arguments.input_file + "' does not exist",
                argv[0]);
     return -1;
   }
 
-  if (auto iss = std::ifstream(arguments.inputFile);
+  if (auto iss = std::ifstream(arguments.input_file);
       iss.peek() == std::ifstream::traits_type::eof()) {
-    printUsage("input file " + arguments.inputFile + " is empty!", argv[0]);
+    printUsage("input file " + arguments.input_file + " is empty!", argv[0]);
     return -1;
   }
 
   // change loglevel
-  if (SpdWrapper::setLogLevel(arguments.logLevel) != 0) {
+  if (SpdWrapper::setLogLevel(arguments.log_level) != 0) {
     printUsage("Log level invalid.", argv[0]);
     return -1;
   }

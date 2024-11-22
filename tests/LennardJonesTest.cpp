@@ -2,12 +2,12 @@
 
 #include <vector>
 
-#include "../src/defs/ParticleContainer.h"
+#include "../src/defs/containers/ParticleContainer.h"
 #include "../src/forces/LennardJones.h"
 #include "testUtil.h"
 
 /*
- * LennardJones directional force, arbitrary example 2
+ * LennardJones directional force, arbitrary example 1
  */
 TEST(LennardJones, directionalForce1) {
   Particle p({1, 0, 0}, {0, 0, 0}, 1, 1, 1);

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="simulation">
+        <xs:complexType>
+            <xs:sequence>
+                <!-- metadata (optional) -->
+                <xs:element name="metadata" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="domain" type="Ivec3Type" minOccurs="0"/>
+                        </xs:sequence>
+                        <xs:attribute name="FileName" type="xs:string"/>
+                        <xs:attribute name="delta_t" type="xs:decimal"/>
+                        <xs:attribute name="t_end" type="xs:double"/>
+                        <xs:attribute name="r_cutoff" type="xs:double"/>
+                    </xs:complexType>
+                </xs:element>
+
+                <!-- cuboids (n) -->
+                <xs:element name="cuboids" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="cuboid" type="cuboidType" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <!-- spheroids (n) -->
+                <xs:element name="spheroids" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="spheroid" type="spheroidType" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="cuboidType">
+        <xs:sequence>
+            <xs:element name="velocity" type="Dvec3Type"/>
+            <xs:element name="corner" type="Dvec3Type"/>
+            <xs:element name="dimensions" type="Ivec3Type"/>
+            <xs:element name="type" type="xs:int"/>
+            <xs:element name="h" type="xs:decimal"/>
+            <xs:element name="mass" type="xs:decimal"/>
+            <xs:element name="epsilon" type="xs:decimal"/>
+            <xs:element name="sigma" type="xs:decimal"/>
+            <xs:element name="mv" type="xs:decimal"/>
+            <xs:element name="twoD" type="xs:boolean" default="true"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Spheroid Type -->
+    <xs:complexType name="spheroidType">
+        <xs:sequence>
+            <xs:element name="velocity" type="Dvec3Type"/>
+            <xs:element name="origin" type="Dvec3Type"/>
+            <xs:element name="radius" type="xs:int"/>
+            <xs:element name="type" type="xs:int"/>
+            <xs:element name="h" type="xs:decimal"/>
+            <xs:element name="mass" type="xs:decimal"/>
+            <xs:element name="epsilon" type="xs:decimal"/>
+            <xs:element name="sigma" type="xs:decimal"/>
+            <xs:element name="twoD" type="xs:boolean" default="true"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- VectorType for dvec3-->
+    <xs:complexType name="Dvec3Type">
+        <xs:sequence>
+            <xs:element name="x" type="xs:decimal"/>
+            <xs:element name="y" type="xs:decimal"/>
+            <xs:element name="z" type="xs:decimal"/>
+        </xs:sequence>
+    </xs:complexType>
+    <!-- VectorType for dimension, std::array<int,3> -->
+    <xs:complexType name="Ivec3Type">
+        <xs:sequence>
+            <xs:element name="x" type="xs:int"/>
+            <xs:element name="y" type="xs:int"/>
+            <xs:element name="z" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

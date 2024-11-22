@@ -9,20 +9,34 @@
 #include "VTKWriter.h"
 #include "utils/SpdWrapper.h"
 
+/**
+ * @brief prints the current state of the system to viewable files
+ * @param outputDirectory specifies the base for the output folders, on which
+ * other folders named after date are saved
+ * @param iteration the current iteration from the main simulation loop
+ * @param vtkWriter writes a .vtu a file
+ * @param particle_container contains the entirety of the current particles
+ */
 inline void plotParticles(const std::string &outputDirectory,
                           const int iteration,
                           outputWriter::VTKWriter &vtkWriter,
                           ParticleContainer &particle_container) {
   vtkWriter.initializeOutput(static_cast<int>(particle_container.size()));
 
-  for (auto &p : particle_container.getParticles()) {
-    vtkWriter.plotParticle(p);
-    // SpdWrapper::get()->info("Plotted");
-  }
+  particle_container.singleIterator(
+      [&vtkWriter](const Particle &p) { vtkWriter.plotParticle(p); });
 
   vtkWriter.writeFile(outputDirectory + "/MD_vtk", iteration);
 }
 
+/**
+ * @brief creates a timestamped directory in ./output/ containing the files at
+ * the currents timestep and the specification used to attain the result.
+ * @param outputDirectory the output directory named after the date
+ * @param argc argc passed from main
+ * @param argv argv passed from main
+ * @return name of the output directory path
+ */
 inline std::string createOutputDirectory(const std::string &outputDirectory,
                                          int argc, char *argv[]) {
   // source for getting time:
