@@ -32,6 +32,7 @@
             <xs:element name="force" type="ForceType"/>
             <xs:element name="delta_t" type="xs:decimal"/>
             <xs:element name="t_end" type="xs:double"/>
+            <xs:element name="twoD" type="xs:boolean"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -46,7 +47,7 @@
             <xs:element name="epsilon" type="xs:decimal"/>
             <xs:element name="sigma" type="xs:decimal"/>
             <xs:element name="mv" type="xs:decimal"/>
-            <xs:element name="twoD" type="xs:boolean" default="true"/>
+            <!--<xs:element name="twoD" type="xs:boolean" default="true"/>-->
         </xs:sequence>
     </xs:complexType>
 
@@ -61,7 +62,7 @@
             <xs:element name="mass" type="xs:decimal"/>
             <xs:element name="epsilon" type="xs:decimal"/>
             <xs:element name="sigma" type="xs:decimal"/>
-            <xs:element name="twoD" type="xs:boolean" default="true"/>
+            <!--<xs:element name="twoD" type="xs:boolean" default="true"/>-->
         </xs:sequence>
     </xs:complexType>
 

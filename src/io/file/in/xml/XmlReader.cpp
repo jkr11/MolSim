@@ -23,8 +23,10 @@ void XmlReader::read(std::vector<Particle>& particles,
     } else if (container.linkedCells().present()) {
       simulation_parameters.container_type = Arguments::LinkedCells;
       const auto& domain = container.linkedCells().get().domain();
-      simulation_parameters.domain = unwrapVec<const Ivec3Type&, ivec3>(domain, "domain");
-      simulation_parameters.cutoff_radius = container.linkedCells().get().r_cutoff();
+      simulation_parameters.domain =
+          unwrapVec<const Ivec3Type&, ivec3>(domain, "domain");
+      simulation_parameters.cutoff_radius =
+          container.linkedCells().get().r_cutoff();
     } else {
       SpdWrapper::get()->info(
           "No container provided, using default LinkedCells");
@@ -36,6 +38,10 @@ void XmlReader::read(std::vector<Particle>& particles,
     }
     simulation_parameters.delta_t = metadata.delta_t();
     simulation_parameters.t_end = metadata.t_end();
+    // it's enough for twoD to be a global parameter
+    // I didn't really see any need for a single simulation to support both twoD
+    // and threeD interactions
+    const auto& twoD = metadata.twoD();
 
     if (config->cuboids() != nullptr) {
       for (const auto& cubes : config->cuboids()->cuboid()) {
@@ -50,7 +56,7 @@ void XmlReader::read(std::vector<Particle>& particles,
 
         CuboidGenerator cg(corner, dimensions, cubes.h(), cubes.mass(),
                            velocity, cubes.mv(), cubes.epsilon(), cubes.sigma(),
-                           cubes.type(), cubes.twoD());
+                           cubes.type(), twoD());
 
         cg.generate(particles);
       }
@@ -65,7 +71,7 @@ void XmlReader::read(std::vector<Particle>& particles,
 
         SpheroidGenerator sg(origin, spheres.radius(), spheres.h(),
                              spheres.mass(), velocity, spheres.epsilon(),
-                             spheres.sigma(), spheres.type(), spheres.twoD());
+                             spheres.sigma(), spheres.type(), twoD());
 
         sg.generate(particles);
       }

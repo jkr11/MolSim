@@ -87,6 +87,14 @@ MetadataType::t_end_type& MetadataType::t_end() { return this->t_end_.get(); }
 
 void MetadataType::t_end(const t_end_type& x) { this->t_end_.set(x); }
 
+const MetadataType::twoD_type& MetadataType::twoD() const {
+  return this->twoD_.get();
+}
+
+MetadataType::twoD_type& MetadataType::twoD() { return this->twoD_.get(); }
+
+void MetadataType::twoD(const twoD_type& x) { this->twoD_.set(x); }
+
 // cuboidType
 //
 
@@ -176,18 +184,6 @@ cuboidType::mv_type& cuboidType::mv() { return this->mv_.get(); }
 
 void cuboidType::mv(const mv_type& x) { this->mv_.set(x); }
 
-const cuboidType::twoD_type& cuboidType::twoD() const {
-  return this->twoD_.get();
-}
-
-cuboidType::twoD_type& cuboidType::twoD() { return this->twoD_.get(); }
-
-void cuboidType::twoD(const twoD_type& x) { this->twoD_.set(x); }
-
-cuboidType::twoD_type cuboidType::twoD_default_value() {
-  return twoD_type(true);
-}
-
 // spheroidType
 //
 
@@ -268,18 +264,6 @@ const spheroidType::sigma_type& spheroidType::sigma() const {
 spheroidType::sigma_type& spheroidType::sigma() { return this->sigma_.get(); }
 
 void spheroidType::sigma(const sigma_type& x) { this->sigma_.set(x); }
-
-const spheroidType::twoD_type& spheroidType::twoD() const {
-  return this->twoD_.get();
-}
-
-spheroidType::twoD_type& spheroidType::twoD() { return this->twoD_.get(); }
-
-void spheroidType::twoD(const twoD_type& x) { this->twoD_.set(x); }
-
-spheroidType::twoD_type spheroidType::twoD_default_value() {
-  return twoD_type(true);
-}
 
 // Dvec3Type
 //
@@ -564,21 +548,24 @@ void spheroids::spheroid(const spheroid_sequence& s) { this->spheroid_ = s; }
 
 MetadataType::MetadataType(const container_type& container,
                            const force_type& force, const delta_t_type& delta_t,
-                           const t_end_type& t_end)
+                           const t_end_type& t_end, const twoD_type& twoD)
     : ::xml_schema::type(),
       container_(container, this),
       force_(force, this),
       delta_t_(delta_t, this),
-      t_end_(t_end, this) {}
+      t_end_(t_end, this),
+      twoD_(twoD, this) {}
 
 MetadataType::MetadataType(::std::auto_ptr<container_type> container,
                            ::std::auto_ptr<force_type> force,
-                           const delta_t_type& delta_t, const t_end_type& t_end)
+                           const delta_t_type& delta_t, const t_end_type& t_end,
+                           const twoD_type& twoD)
     : ::xml_schema::type(),
       container_(container, this),
       force_(force, this),
       delta_t_(delta_t, this),
-      t_end_(t_end, this) {}
+      t_end_(t_end, this),
+      twoD_(twoD, this) {}
 
 MetadataType::MetadataType(const MetadataType& x, ::xml_schema::flags f,
                            ::xml_schema::container* c)
@@ -586,7 +573,8 @@ MetadataType::MetadataType(const MetadataType& x, ::xml_schema::flags f,
       container_(x.container_, f, this),
       force_(x.force_, f, this),
       delta_t_(x.delta_t_, f, this),
-      t_end_(x.t_end_, f, this) {}
+      t_end_(x.t_end_, f, this),
+      twoD_(x.twoD_, f, this) {}
 
 MetadataType::MetadataType(const ::xercesc::DOMElement& e,
                            ::xml_schema::flags f, ::xml_schema::container* c)
@@ -594,7 +582,8 @@ MetadataType::MetadataType(const ::xercesc::DOMElement& e,
       container_(this),
       force_(this),
       delta_t_(this),
-      t_end_(this) {
+      t_end_(this),
+      twoD_(this) {
   if ((f & ::xml_schema::flags::base) == 0) {
     ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
     this->parse(p, f);
@@ -648,6 +637,15 @@ void MetadataType::parse(::xsd::cxx::xml::dom::parser<char>& p,
       }
     }
 
+    // twoD
+    //
+    if (n.name() == "twoD" && n.namespace_().empty()) {
+      if (!twoD_.present()) {
+        this->twoD_.set(twoD_traits::create(i, f, this));
+        continue;
+      }
+    }
+
     break;
   }
 
@@ -666,6 +664,10 @@ void MetadataType::parse(::xsd::cxx::xml::dom::parser<char>& p,
   if (!t_end_.present()) {
     throw ::xsd::cxx::tree::expected_element<char>("t_end", "");
   }
+
+  if (!twoD_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("twoD", "");
+  }
 }
 
 MetadataType* MetadataType::_clone(::xml_schema::flags f,
@@ -680,6 +682,7 @@ MetadataType& MetadataType::operator=(const MetadataType& x) {
     this->force_ = x.force_;
     this->delta_t_ = x.delta_t_;
     this->t_end_ = x.t_end_;
+    this->twoD_ = x.twoD_;
   }
 
   return *this;
@@ -694,7 +697,7 @@ cuboidType::cuboidType(const velocity_type& velocity, const corner_type& corner,
                        const dimensions_type& dimensions, const type_type& type,
                        const h_type& h, const mass_type& mass,
                        const epsilon_type& epsilon, const sigma_type& sigma,
-                       const mv_type& mv, const twoD_type& twoD)
+                       const mv_type& mv)
     : ::xml_schema::type(),
       velocity_(velocity, this),
       corner_(corner, this),
@@ -704,16 +707,14 @@ cuboidType::cuboidType(const velocity_type& velocity, const corner_type& corner,
       mass_(mass, this),
       epsilon_(epsilon, this),
       sigma_(sigma, this),
-      mv_(mv, this),
-      twoD_(twoD, this) {}
+      mv_(mv, this) {}
 
 cuboidType::cuboidType(::std::auto_ptr<velocity_type> velocity,
                        ::std::auto_ptr<corner_type> corner,
                        ::std::auto_ptr<dimensions_type> dimensions,
                        const type_type& type, const h_type& h,
                        const mass_type& mass, const epsilon_type& epsilon,
-                       const sigma_type& sigma, const mv_type& mv,
-                       const twoD_type& twoD)
+                       const sigma_type& sigma, const mv_type& mv)
     : ::xml_schema::type(),
       velocity_(velocity, this),
       corner_(corner, this),
@@ -723,8 +724,7 @@ cuboidType::cuboidType(::std::auto_ptr<velocity_type> velocity,
       mass_(mass, this),
       epsilon_(epsilon, this),
       sigma_(sigma, this),
-      mv_(mv, this),
-      twoD_(twoD, this) {}
+      mv_(mv, this) {}
 
 cuboidType::cuboidType(const cuboidType& x, ::xml_schema::flags f,
                        ::xml_schema::container* c)
@@ -737,8 +737,7 @@ cuboidType::cuboidType(const cuboidType& x, ::xml_schema::flags f,
       mass_(x.mass_, f, this),
       epsilon_(x.epsilon_, f, this),
       sigma_(x.sigma_, f, this),
-      mv_(x.mv_, f, this),
-      twoD_(x.twoD_, f, this) {}
+      mv_(x.mv_, f, this) {}
 
 cuboidType::cuboidType(const ::xercesc::DOMElement& e, ::xml_schema::flags f,
                        ::xml_schema::container* c)
@@ -751,8 +750,7 @@ cuboidType::cuboidType(const ::xercesc::DOMElement& e, ::xml_schema::flags f,
       mass_(this),
       epsilon_(this),
       sigma_(this),
-      mv_(this),
-      twoD_(this) {
+      mv_(this) {
   if ((f & ::xml_schema::flags::base) == 0) {
     ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
     this->parse(p, f);
@@ -853,15 +851,6 @@ void cuboidType::parse(::xsd::cxx::xml::dom::parser<char>& p,
       }
     }
 
-    // twoD
-    //
-    if (n.name() == "twoD" && n.namespace_().empty()) {
-      if (!twoD_.present()) {
-        this->twoD_.set(twoD_traits::create(i, f, this));
-        continue;
-      }
-    }
-
     break;
   }
 
@@ -900,10 +889,6 @@ void cuboidType::parse(::xsd::cxx::xml::dom::parser<char>& p,
   if (!mv_.present()) {
     throw ::xsd::cxx::tree::expected_element<char>("mv", "");
   }
-
-  if (!twoD_.present()) {
-    throw ::xsd::cxx::tree::expected_element<char>("twoD", "");
-  }
 }
 
 cuboidType* cuboidType::_clone(::xml_schema::flags f,
@@ -923,7 +908,6 @@ cuboidType& cuboidType::operator=(const cuboidType& x) {
     this->epsilon_ = x.epsilon_;
     this->sigma_ = x.sigma_;
     this->mv_ = x.mv_;
-    this->twoD_ = x.twoD_;
   }
 
   return *this;
@@ -938,7 +922,7 @@ spheroidType::spheroidType(const velocity_type& velocity,
                            const origin_type& origin, const radius_type& radius,
                            const type_type& type, const h_type& h,
                            const mass_type& mass, const epsilon_type& epsilon,
-                           const sigma_type& sigma, const twoD_type& twoD)
+                           const sigma_type& sigma)
     : ::xml_schema::type(),
       velocity_(velocity, this),
       origin_(origin, this),
@@ -947,15 +931,13 @@ spheroidType::spheroidType(const velocity_type& velocity,
       h_(h, this),
       mass_(mass, this),
       epsilon_(epsilon, this),
-      sigma_(sigma, this),
-      twoD_(twoD, this) {}
+      sigma_(sigma, this) {}
 
 spheroidType::spheroidType(::std::auto_ptr<velocity_type> velocity,
                            ::std::auto_ptr<origin_type> origin,
                            const radius_type& radius, const type_type& type,
                            const h_type& h, const mass_type& mass,
-                           const epsilon_type& epsilon, const sigma_type& sigma,
-                           const twoD_type& twoD)
+                           const epsilon_type& epsilon, const sigma_type& sigma)
     : ::xml_schema::type(),
       velocity_(velocity, this),
       origin_(origin, this),
@@ -964,8 +946,7 @@ spheroidType::spheroidType(::std::auto_ptr<velocity_type> velocity,
       h_(h, this),
       mass_(mass, this),
       epsilon_(epsilon, this),
-      sigma_(sigma, this),
-      twoD_(twoD, this) {}
+      sigma_(sigma, this) {}
 
 spheroidType::spheroidType(const spheroidType& x, ::xml_schema::flags f,
                            ::xml_schema::container* c)
@@ -977,8 +958,7 @@ spheroidType::spheroidType(const spheroidType& x, ::xml_schema::flags f,
       h_(x.h_, f, this),
       mass_(x.mass_, f, this),
       epsilon_(x.epsilon_, f, this),
-      sigma_(x.sigma_, f, this),
-      twoD_(x.twoD_, f, this) {}
+      sigma_(x.sigma_, f, this) {}
 
 spheroidType::spheroidType(const ::xercesc::DOMElement& e,
                            ::xml_schema::flags f, ::xml_schema::container* c)
@@ -990,8 +970,7 @@ spheroidType::spheroidType(const ::xercesc::DOMElement& e,
       h_(this),
       mass_(this),
       epsilon_(this),
-      sigma_(this),
-      twoD_(this) {
+      sigma_(this) {
   if ((f & ::xml_schema::flags::base) == 0) {
     ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
     this->parse(p, f);
@@ -1081,15 +1060,6 @@ void spheroidType::parse(::xsd::cxx::xml::dom::parser<char>& p,
       }
     }
 
-    // twoD
-    //
-    if (n.name() == "twoD" && n.namespace_().empty()) {
-      if (!twoD_.present()) {
-        this->twoD_.set(twoD_traits::create(i, f, this));
-        continue;
-      }
-    }
-
     break;
   }
 
@@ -1124,10 +1094,6 @@ void spheroidType::parse(::xsd::cxx::xml::dom::parser<char>& p,
   if (!sigma_.present()) {
     throw ::xsd::cxx::tree::expected_element<char>("sigma", "");
   }
-
-  if (!twoD_.present()) {
-    throw ::xsd::cxx::tree::expected_element<char>("twoD", "");
-  }
 }
 
 spheroidType* spheroidType::_clone(::xml_schema::flags f,
@@ -1146,7 +1112,6 @@ spheroidType& spheroidType::operator=(const spheroidType& x) {
     this->mass_ = x.mass_;
     this->epsilon_ = x.epsilon_;
     this->sigma_ = x.sigma_;
-    this->twoD_ = x.twoD_;
   }
 
   return *this;
