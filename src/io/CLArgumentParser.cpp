@@ -59,9 +59,9 @@ int CLArgumentParser::parse(int argc, char *argv[], Arguments &arguments) {
           break;
         case 'F': {
           if (const std::string f = toLower(optarg); f == "lennardjones") {
-            arguments.force = std::make_unique<LennardJones>();
+            arguments.force_type = Arguments::LennardJones;
           } else if (f == "gravity") {
-            arguments.force = std::make_unique<Gravity>();
+            arguments.force_type = Arguments::Gravity;
           } else {
             SpdWrapper::get()->error("Unknown Force Type: {}", f);
             exit(EXIT_FAILURE);

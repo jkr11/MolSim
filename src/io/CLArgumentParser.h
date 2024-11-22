@@ -21,9 +21,10 @@ struct Arguments {
   double delta_t;
   double output_time_step_size;
   std::string log_level;
-  std::shared_ptr<Force> force;  // TODO: I changed this from unique to shared
+  //std::shared_ptr<Force> force;  // TODO: I changed this from unique to shared
                                  // pointer because of copying in XMLReader, if
                                  // this is bad let me know
+  enum { LennardJones, Gravity } force_type;
   ivec3 domain;
   double cutoff_radius;
   enum { LinkedCells, DirectSum } container_type;

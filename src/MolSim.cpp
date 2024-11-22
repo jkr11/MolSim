@@ -6,6 +6,7 @@
 #include "defs/Simulation.h"
 #include "defs/containers/DirectSumContainer.h"
 #include "defs/containers/LinkedCellsContainer.h"
+#include "forces/Gravity.h"
 #include "forces/LennardJones.h"
 #include "io/CLArgumentParser.h"
 #include "io/file/in/CuboidReader.h"
@@ -23,12 +24,12 @@ int main(int argc, char *argv[]) {
   // we dont need additional file readers anymore so we can just use XMLReader
 
   Arguments arguments = {
-      .input_file = "",                           // file
-      .t_end = 5,                                 // t_end
-      .delta_t = 0.0002,                          // delta_t
-      .output_time_step_size = 1,                 // output_time_step_size
-      .log_level = "info",                        // logLevel
-      .force = std::make_unique<LennardJones>(),  // force
+      .input_file = "",                       // file
+      .t_end = 5,                             // t_end
+      .delta_t = 0.0002,                      // delta_t
+      .output_time_step_size = 1,             // output_time_step_size
+      .log_level = "info",                    // logLevel
+      .force_type = Arguments::LennardJones,  // force
       .domain = {100, 100, 100},
       .cutoff_radius = 3.0,
       .container_type = Arguments::LinkedCells,
@@ -57,8 +58,16 @@ int main(int argc, char *argv[]) {
     container = std::make_unique<DirectSumContainer>();
     container->addParticles(particles);
   }
+
+  // set force type
+  std::unique_ptr<Force> force;
+  if (arguments.force_type == Arguments::Gravity) {
+    force = std::make_unique<Gravity>();
+  } else if (arguments.force_type == Arguments::LennardJones) {
+    force = std::make_unique<LennardJones>();
+  }
   SpdWrapper::get()->info("particles.size: {}", particles.size());
-  VerletIntegrator verlet_integrator(*arguments.force, delta_t);
+  VerletIntegrator verlet_integrator(*force, delta_t);
   outputWriter::VTKWriter writer;
 
   const std::string outputDirectory =
