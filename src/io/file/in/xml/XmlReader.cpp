@@ -29,6 +29,11 @@ void XmlReader::read(std::vector<Particle>& particles,
       SpdWrapper::get()->info(
           "No container provided, using default LinkedCells");
     }
+    if (auto& force = metadata.force(); force.LennardJones().present()) {
+      simulation_parameters.force_type = Arguments::LennardJones;
+    } else if (force.Gravity().present()) {
+      simulation_parameters.force_type = Arguments::Gravity;
+    }
     simulation_parameters.delta_t = metadata.delta_t();
     simulation_parameters.t_end = metadata.t_end();
 
