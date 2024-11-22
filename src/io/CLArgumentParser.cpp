@@ -9,7 +9,7 @@
 #include <filesystem>
 #include <fstream>
 
-#include "defs/Simulation.h"
+#include "defs/types.h"
 #include "forces/Gravity.h"
 #include "forces/LennardJones.h"
 #include "spdlog/fmt/bundled/chrono.h"

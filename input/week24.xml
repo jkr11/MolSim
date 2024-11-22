@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:noNamespaceSchemaLocation="input.xsd">
-    <metadata delta_t="0.0002" t_end="5" r_cutoff="3.0">
+    <metadata delta_t="0.0002" t_end="5" r_cutoff="30.0">
         <domain>
             <x>100</x>
             <y>100</y>

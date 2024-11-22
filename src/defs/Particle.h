@@ -9,9 +9,8 @@
 
 #include <array>
 #include <string>
+#include "defs/types.h"
 
-using dvec3 = std::array<double, 3>;
-using ivec3 = std::array<int, 3>;
 
 class Particle final {
  private:

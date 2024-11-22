@@ -7,18 +7,10 @@
 #pragma once
 #include <stdexcept>
 
-#include "defs/Particle.h"
 #include "utils/SpdWrapper.h"
 
-/**
- * @brief holds the necessary parameters for our simulation read from xml files.
- */
-struct Simulation {
-  double delta_t{};
-  double t_end{};
-  double cutoff_radius{};
-  ivec3 domain{};
-};
+using dvec3 = std::array<double, 3>;
+using ivec3 = std::array<int, 3>;
 
 /**
  * @brief translates a vector from the xml parser to a valid "standard" c++ type
