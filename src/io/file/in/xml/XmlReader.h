@@ -41,7 +41,9 @@ class XmlReader final : public FileReader {
 
   /**
    * @brief passes the struct to other classes
-   * @return struct with Simulation parameters
+   * @return the contents of the struct modified in this class alone, i decided
+   * to do this because the Arguments Struct depends on the filename that is
+   * read later.
    */
   [[nodiscard]] std::tuple<double, double, double, ivec3, Arguments::ForceType,
                            Arguments::ContainerType>

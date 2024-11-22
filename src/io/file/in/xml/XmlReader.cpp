@@ -4,6 +4,8 @@
 
 #include "XmlReader.h"
 
+#include <filesystem>
+
 #include "defs/Generators/CuboidGenerator.h"
 #include "defs/Generators/SpheroidGenerator.h"
 #include "defs/Simulation.h"
@@ -13,6 +15,14 @@
 
 void XmlReader::read(std::vector<Particle>& particles,
                      const std::string& filepath) {
+  const std::filesystem::path path(filepath);
+  if (!exists(path)) {
+    throw std::runtime_error("File not found: " + path.string());
+  }
+  if (path.extension() != ".xml") {
+    throw std::invalid_argument("File extension is not supported: " +
+                                path.string());
+  }
   try {
     const std::unique_ptr<::simulation> config = simulation_(filepath);
     SpdWrapper::get()->info("Reading XML file {}", filepath);

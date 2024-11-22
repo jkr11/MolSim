@@ -56,6 +56,21 @@ class CLArgumentParser {
    */
   static void printUsage(const std::string &additionalNote,
                          const std::string &programName);
+
+  /**
+   * @brief parses an input to a double with inbuilt error handling
+   * @throws invalid_argument
+   * @param arg input from cli
+   * @param option_name name of the option that is being parsed
+   * @return the parsed double if successfull
+   */
+  static double parseDouble(const char *arg, const std::string &option_name);
+
+  static Arguments::ForceType parseForceType(const std::string &arg);
+
+  static Arguments::ContainerType parseContainerType(const std::string &arg);
+
+  static void validateInputFile(const std::string &file_path);
 };
 
 /**
