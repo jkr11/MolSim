@@ -52,12 +52,10 @@ int main(int argc, char *argv[]) {
   // maybe we can make this nicer, this is the best i can come up with right now
   std::unique_ptr<ParticleContainer> container;
   if (container_type == Arguments::LinkedCells) {
-    SpdWrapper::get()->info("Creating LinkedCells container");
     container = std::make_unique<LinkedCellsContainer>(domain, cutoff_radius);
     container->addParticles(particles);
     container->imposeInvariant();
   } else if (container_type == Arguments::DirectSum) {
-    SpdWrapper::get()->info("Running DirectSum");
     container = std::make_unique<DirectSumContainer>();
     container->addParticles(particles);
   }
@@ -65,10 +63,8 @@ int main(int argc, char *argv[]) {
   // set force type
   std::unique_ptr<Force> force;
   if (force_type == Arguments::Gravity) {
-    SpdWrapper::get()->info("using Gravity");
     force = std::make_unique<Gravity>();
   } else if (force_type == Arguments::LennardJones) {
-    SpdWrapper::get()->info("using LennardJones");
     force = std::make_unique<LennardJones>();
   }
   SpdWrapper::get()->info("particles.size: {}", particles.size());
