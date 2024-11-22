@@ -66,10 +66,30 @@ class CLArgumentParser {
    */
   static double parseDouble(const char *arg, const std::string &option_name);
 
+  /**
+   * @brief Parses a string argument to determine the force type.
+   * @param arg The string representing the force type from CLI
+   * @return the parsed `Arguments::ForceType` value corresponding to the input
+   * @throws std::invalid_arguments if the input doesnt match
+   */
   static Arguments::ForceType parseForceType(const std::string &arg);
 
+  /**
+   * @brief Parses a string argument to determine the container type.
+   *
+   * @param arg The string representing the container type from CLI
+   * @return The parsed `Arguments::ContainerType` value corresponding to the
+   * input
+   * @throws std::invalid_argument if the input doesn't match
+   */
   static Arguments::ContainerType parseContainerType(const std::string &arg);
 
+  /**
+   * @brief Validates the existence and validity of an input file.
+   * @param file_path The path to the input file to be validated.
+   * @throws std::invalid_argument if the file does not exist, is a directory,
+   * or is empty.
+   */
   static void validateInputFile(const std::string &file_path);
 };
 
