@@ -12,7 +12,7 @@ class FlattenedLinkedCellsContainer final : public ParticleContainer {
                                     // swapped each time
   std::vector<int> partitioning;
 
-  std::array<int, 3> cellCount{};
+  ivec3 cellCount{};
   ivec3 cellDim{};
   double cutoff{};
 
@@ -106,7 +106,7 @@ class FlattenedLinkedCellsContainer final : public ParticleContainer {
    * @brief Get the amount of cells in each dimension
    * @return ivec3 of cells in each dimension
    */
-  [[nodiscard]] std::array<int, 3> getCellCount() const { return cellCount; }
+  [[nodiscard]] ivec3 getCellCount() const { return cellCount; }
 
   /**
    * @brief Get the dimensions of a all cells in the container
@@ -128,14 +128,14 @@ class FlattenedLinkedCellsContainer final : public ParticleContainer {
    * @return Associated cell index
    */
   [[nodiscard]] inline std::size_t cellCoordToIndex(
-      std::array<int, 3> position) const;
+      ivec3 position) const;
 
   /**
    * @brief Gets the cell coordinate from the cell index
    * @param cellIndex Index of the cell
    * @return Cell coodinate in 3 dimensions
    */
-  [[nodiscard]] inline std::array<int, 3> cellIndexToCoord(
+  [[nodiscard]] inline ivec3 cellIndexToCoord(
       std::size_t cellIndex) const;
 
   /**
