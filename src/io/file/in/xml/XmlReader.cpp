@@ -9,7 +9,7 @@
 #include "debug/debug_print.h"
 #include "defs/Generators/CuboidGenerator.h"
 #include "defs/Generators/SpheroidGenerator.h"
-#include "defs/Simulation.h"
+#include "defs/types.h"
 #include "input.hxx"
 #include "spdlog/fmt/bundled/args.h"
 #include "utils/SpdWrapper.h"

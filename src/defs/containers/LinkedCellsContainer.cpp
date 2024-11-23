@@ -226,12 +226,12 @@ inline std::size_t LinkedCellsContainer::dvec3ToCellIndex(
 }
 
 inline std::size_t LinkedCellsContainer::cellCoordToIndex(
-    const std::array<int, 3> position) const {
+    const ivec3 position) const {
   return (position[0] + 1) * (cellCount[1] * cellCount[2]) +
          (position[1] + 1) * (cellCount[2]) + (position[2] + 1);
 }
 
-inline std::array<int, 3> LinkedCellsContainer::cellIndexToCoord(
+inline ivec3 LinkedCellsContainer::cellIndexToCoord(
     std::size_t cellIndex) const {
   const int x = static_cast<int>(cellIndex / (cellCount[1] * cellCount[2]));
   cellIndex = cellIndex - (x * cellCount[1] * cellCount[2]);

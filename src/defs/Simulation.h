@@ -7,8 +7,10 @@
 #pragma once
 #include <stdexcept>
 
-#include "defs/Particle.h"
 #include "utils/SpdWrapper.h"
+
+using dvec3 = std::array<double, 3>;
+using ivec3 = std::array<int, 3>;
 
 /**
  * @brief struct to hold command line arguments

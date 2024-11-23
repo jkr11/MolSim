@@ -13,7 +13,7 @@
 class CuboidGenerator final : public ParticleGenerator {
  private:
   dvec3 corner;
-  std::array<int, 3> dimensions;
+  ivec3 dimensions;
   double h;
   double m;
   const dvec3 initialVelocity;
