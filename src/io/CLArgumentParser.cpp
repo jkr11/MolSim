@@ -12,7 +12,7 @@
 #include "defs/Simulation.h"
 #include "spdlog/fmt/bundled/chrono.h"
 #include "utils/SpdWrapper.h"
-// This basically only needs to read filename and set the loglevel (for now)
+
 std::tuple<std::filesystem::path, double> CLArgumentParser::parse(
     int argc, char *argv[]) {
   const option long_options[] = {{"help", no_argument, nullptr, 'h'},
