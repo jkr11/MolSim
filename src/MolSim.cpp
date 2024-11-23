@@ -22,12 +22,12 @@ int main(int argc, char* argv[]) {
   SpdWrapper::get()->info("Application started");
 
   Arguments arguments = {
-      //.input_file = "",                  // file
-      .t_end = 5,         // t_end
-      .delta_t = 0.0002,  // delta_t
-      //.output_time_step_size = 1,        // output_time_step_size
-      .log_level = "info",                    // logLevel
-      .force_type = Arguments::LennardJones,  // force
+      //.input_file = "",
+      .t_end = 5,
+      .delta_t = 0.0002,
+      //.output_time_step_size = 1,
+      .log_level = "info",
+      .force_type = Arguments::LennardJones,
       .domain = {100, 100, 100},
       .cutoff_radius = 3.0,
       .container_type = Arguments::LinkedCells,
@@ -42,7 +42,6 @@ int main(int argc, char* argv[]) {
 
   arguments.printConfiguration();
 
-  // maybe we can make this nicer, this is the best i can come up with right now
   std::unique_ptr<ParticleContainer> container;
   if (arguments.container_type == Arguments::LinkedCells) {
     container = std::make_unique<LinkedCellsContainer>(arguments.domain,
@@ -54,7 +53,6 @@ int main(int argc, char* argv[]) {
     container->addParticles(particles);
   }
 
-  // set force type
   std::unique_ptr<Force> force;
   if (arguments.force_type == Arguments::Gravity) {
     force = std::make_unique<Gravity>();
