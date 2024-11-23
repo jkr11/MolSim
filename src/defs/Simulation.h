@@ -5,18 +5,14 @@
 #ifndef SIMULATION_H
 #define SIMULATION_H
 #pragma once
-#include <stdexcept>
 
+#include "defs/types.h"
 #include "utils/SpdWrapper.h"
-
-using dvec3 = std::array<double, 3>;
-using ivec3 = std::array<int, 3>;
 
 /**
  * @brief struct to hold command line arguments
  */
 struct Arguments {
-  // std::string input_file;
   double t_end;
   double delta_t;
   // double output_time_step_size; // TODO: this is still needed, this is
@@ -40,8 +36,9 @@ struct Arguments {
     logger->info("Force Type: {}",
                  (force_type == LennardJones ? "Lennard-Jones" : "Gravity"));
 
-    logger->info("Container Type: {}",
-                 (container_type == LinkedCells ? "Linked Cells" : "Direct Sum"));
+    logger->info(
+        "Container Type: {}",
+        (container_type == LinkedCells ? "Linked Cells" : "Direct Sum"));
 
     if (container_type == LinkedCells) {
       logger->info("-- Domain: ({}, {}, {})", domain[0], domain[1], domain[2]);
@@ -51,8 +48,5 @@ struct Arguments {
     logger->info("============================");
   }
 };
-
-// TODO: find a nice place for this
-
 
 #endif  // SIMULATION_H

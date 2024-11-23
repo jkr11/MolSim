@@ -9,8 +9,8 @@
 
 #include <array>
 #include <string>
-#include "defs/types.h"
 
+#include "defs/types.h"
 
 class Particle final {
  private:
