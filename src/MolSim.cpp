@@ -36,21 +36,16 @@ int main(int argc, char* argv[]) {
   };  // TODO: figure out if the . assignement in structs is valid C++17
 
   auto [input_file, step_size] = CLArgumentParser::parse(argc, argv);
-  // const auto reader = std::make_unique<XmlReader>();
+
   //  TODO: Should we change this so it doesnt get read here but the reader
   //  instantiates the container and then writes the shapes to the container?
   std::vector<Particle> particles;
-  // reader->read(particles, input_file);
-  XmlReader::read(particles, input_file, arguments);
-  SpdWrapper::get()->info("Particles size {}", particles.size());
-  /*
-  auto [delta_t, t_end, cutoff_radius, domain, force_type, container_type] =
-      reader.get()->pass();
-      */
 
-  SpdWrapper::get()->info("t_end: {}, delta_t: {}, cutoff_radius: {}",
-                          arguments.t_end, arguments.delta_t,
-                          arguments.cutoff_radius);
+  XmlReader::read(particles, input_file, arguments);
+
+  SpdWrapper::get()->info("Particles size {}", particles.size());
+
+  arguments.printConfiguration();
 
   // maybe we can make this nicer, this is the best i can come up with right now
   std::unique_ptr<ParticleContainer> container;
@@ -71,7 +66,7 @@ int main(int argc, char* argv[]) {
   } else if (arguments.force_type == Arguments::LennardJones) {
     force = std::make_unique<LennardJones>();
   }
-  SpdWrapper::get()->info("particles.size: {}", particles.size());
+
   VerletIntegrator verlet_integrator(*force, arguments.delta_t);
   outputWriter::VTKWriter writer;
 

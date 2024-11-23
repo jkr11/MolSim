@@ -26,7 +26,37 @@ struct Arguments {
   enum ContainerType { LinkedCells, DirectSum } container_type;
   // TODO: make this into an std::variant<LinkedCellsStruct,DirectSumStruct> as
   // we add more information that directsum doesnt need to know about.
+  void printConfiguration() const {
+    const auto logger = SpdWrapper::get();
+
+    logger->info("Simulation Configuration:");
+    logger->info("--------------------------");
+    logger->info("Time End: {}", t_end);
+    logger->info("Time Step: {}", delta_t);
+    logger->info("Log Level: {}", log_level);
+
+    logger->info("Force Type: {}",
+                 (force_type == LennardJones ? "Lennard-Jones" : "Gravity"));
+
+    logger->info("Container Type: {}",
+                 (container_type == LinkedCells ? "Linked Cells" : "Direct Sum"));
+
+    if (container_type == LinkedCells) {
+      logger->info("Domain: ({}, {}, {})", domain[0], domain[1], domain[2]);
+      logger->info("Cutoff Radius: {}", cutoff_radius);
+    }
+
+    logger->info("--------------------------");
+  }
 };
+
+class Simulation {
+public:
+
+  void printConfiguration(Arguments& arguments);
+};
+
+
 
 // TODO: find a nice place for this
 /**
