@@ -28,6 +28,11 @@ target_link_libraries(MolSimLib
 target_compile_features(MolSimLib
         PUBLIC cxx_std_17
 )
+#target_compile_options(MolSimLib
+#        PRIVATE
+#        $<$<CXX_COMPILER_ID:GNU>: -w>
+#        $<$<CXX_COMPILER_ID:Clang>: -w>
+#)
 
 target_include_directories(MolSimLib PUBLIC
         ${libxsd_SOURCE_DIR}

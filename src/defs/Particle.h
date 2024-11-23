@@ -46,13 +46,13 @@ class Particle final {
   int type{};
 
   /**
-   * depth at which the potential well \n
+   * depth of the potential well
    * used in the caluclation of lennard-jones force
    */
   double epsilon{};
 
   /**
-   * distance at which the particle to particle potential energy is zero \n
+   * distance from the particle at which the potential is zero \n
    * used in the calculation of lennard-jones force
    */
   double sigma{};

@@ -15,6 +15,7 @@
 
 LinkedCellsContainer::LinkedCellsContainer(const ivec3 &domain,
                                            const double cutoff) {
+  DEBUG_PRINT("LinkedCellsContainer instantiated");
   SpdWrapper::get()->info("domain size: ({}, {}, {})", domain[0], domain[1],
                           domain[2]);
 

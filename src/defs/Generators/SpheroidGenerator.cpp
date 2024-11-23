@@ -23,19 +23,18 @@ SpheroidGenerator::SpheroidGenerator(const dvec3& origin, const int radius,
       sigma(sigma),
       type(type),
       twoD(twoD) {
-  SpdWrapper::get()->info(
-      "SpheroidGenerator of dim {} created with parameters:", twoD ? 2 : 3);
-  SpdWrapper::get()->info("origin: ({}, {}, {})", origin[0], origin[1],
-                          origin[2]);
-  SpdWrapper::get()->info("radius: {}", radius);
-  SpdWrapper::get()->info("h: {}", h);
-  SpdWrapper::get()->info("m: {}", m);
-  SpdWrapper::get()->info("initialVelocity: ({}, {}, {})", initialVelocity[0],
-                          initialVelocity[1], initialVelocity[2]);
-  SpdWrapper::get()->info("mv: {}", mv);
-  SpdWrapper::get()->info("epsilon: {}", epsilon);
-  SpdWrapper::get()->info("sigma: {}", sigma);
-  SpdWrapper::get()->info("type: {}", type);
+  DEBUG_PRINT_FMT("SpheroidGenerator of dim {} created with parameters:",
+                  twoD ? 2 : 3);
+  DEBUG_PRINT_FMT("origin: ({}, {}, {})", origin[0], origin[1], origin[2]);
+  DEBUG_PRINT_FMT("radius: {}", radius);
+  DEBUG_PRINT_FMT("h: {}", h);
+  DEBUG_PRINT_FMT("m: {}", m);
+  DEBUG_PRINT_FMT("initialVelocity: ({}, {}, {})", initialVelocity[0],
+                  initialVelocity[1], initialVelocity[2]);
+  DEBUG_PRINT_FMT("mv: {}", mv);
+  DEBUG_PRINT_FMT("epsilon: {}", epsilon);
+  DEBUG_PRINT_FMT("sigma: {}", sigma);
+  DEBUG_PRINT_FMT("type: {}", type);
 }
 
 void SpheroidGenerator::generate(std::vector<Particle>& particles) {

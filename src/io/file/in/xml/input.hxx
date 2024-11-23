@@ -49,9 +49,9 @@
 
 #include <xsd/cxx/config.hxx>
 
-// #if (XSD_INT_VERSION != 4000000L)
-// #error XSD runtime version mismatch
-// #endif
+//#if (XSD_INT_VERSION != 4000000L)
+//#error XSD runtime version mismatch
+//#endif
 
 #include <xsd/cxx/pre.hxx>
 #include <xsd/cxx/tree/elements.hxx>
@@ -215,12 +215,17 @@ const XMLCh* const tree_node_key = ::xsd::cxx::tree::user_data_keys::node;
 
 // Forward declarations.
 //
+class MetadataType;
 class cuboidType;
 class spheroidType;
 class Dvec3Type;
 class Ivec3Type;
+class ContainerType;
+class LinkedCellsType;
+class DirectSumType;
+class BoundaryType;
+class ForceType;
 class simulation;
-class metadata;
 class cuboids;
 class spheroids;
 
@@ -233,6 +238,105 @@ class spheroids;
 #include <xsd/cxx/tree/list.hxx>
 #include <xsd/cxx/xml/char-utf8.hxx>
 #include <xsd/cxx/xml/dom/parsing-header.hxx>
+
+class MetadataType : public ::xml_schema::type {
+ public:
+  // container
+  //
+  typedef ::ContainerType container_type;
+  typedef ::xsd::cxx::tree::traits<container_type, char> container_traits;
+
+  const container_type& container() const;
+
+  container_type& container();
+
+  void container(const container_type& x);
+
+  void container(::std::auto_ptr<container_type> p);
+
+  // force
+  //
+  typedef ::ForceType force_type;
+  typedef ::xsd::cxx::tree::traits<force_type, char> force_traits;
+
+  const force_type& force() const;
+
+  force_type& force();
+
+  void force(const force_type& x);
+
+  void force(::std::auto_ptr<force_type> p);
+
+  // delta_t
+  //
+  typedef ::xml_schema::decimal delta_t_type;
+  typedef ::xsd::cxx::tree::traits<delta_t_type, char,
+                                   ::xsd::cxx::tree::schema_type::decimal>
+      delta_t_traits;
+
+  const delta_t_type& delta_t() const;
+
+  delta_t_type& delta_t();
+
+  void delta_t(const delta_t_type& x);
+
+  // t_end
+  //
+  typedef ::xml_schema::double_ t_end_type;
+  typedef ::xsd::cxx::tree::traits<t_end_type, char,
+                                   ::xsd::cxx::tree::schema_type::double_>
+      t_end_traits;
+
+  const t_end_type& t_end() const;
+
+  t_end_type& t_end();
+
+  void t_end(const t_end_type& x);
+
+  // twoD
+  //
+  typedef ::xml_schema::boolean twoD_type;
+  typedef ::xsd::cxx::tree::traits<twoD_type, char> twoD_traits;
+
+  const twoD_type& twoD() const;
+
+  twoD_type& twoD();
+
+  void twoD(const twoD_type& x);
+
+  // Constructors.
+  //
+  MetadataType(const container_type&, const force_type&, const delta_t_type&,
+               const t_end_type&, const twoD_type&);
+
+  MetadataType(::std::auto_ptr<container_type>, ::std::auto_ptr<force_type>,
+               const delta_t_type&, const t_end_type&, const twoD_type&);
+
+  MetadataType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
+               ::xml_schema::container* c = 0);
+
+  MetadataType(const MetadataType& x, ::xml_schema::flags f = 0,
+               ::xml_schema::container* c = 0);
+
+  virtual MetadataType* _clone(::xml_schema::flags f = 0,
+                               ::xml_schema::container* c = 0) const;
+
+  MetadataType& operator=(const MetadataType& x);
+
+  virtual ~MetadataType();
+
+  // Implementation.
+  //
+ protected:
+  void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
+
+ protected:
+  ::xsd::cxx::tree::one<container_type> container_;
+  ::xsd::cxx::tree::one<force_type> force_;
+  ::xsd::cxx::tree::one<delta_t_type> delta_t_;
+  ::xsd::cxx::tree::one<t_end_type> t_end_;
+  ::xsd::cxx::tree::one<twoD_type> twoD_;
+};
 
 class cuboidType : public ::xml_schema::type {
  public:
@@ -351,30 +455,16 @@ class cuboidType : public ::xml_schema::type {
 
   void mv(const mv_type& x);
 
-  // twoD
-  //
-  typedef ::xml_schema::boolean twoD_type;
-  typedef ::xsd::cxx::tree::traits<twoD_type, char> twoD_traits;
-
-  const twoD_type& twoD() const;
-
-  twoD_type& twoD();
-
-  void twoD(const twoD_type& x);
-
-  static twoD_type twoD_default_value();
-
   // Constructors.
   //
   cuboidType(const velocity_type&, const corner_type&, const dimensions_type&,
              const type_type&, const h_type&, const mass_type&,
-             const epsilon_type&, const sigma_type&, const mv_type&,
-             const twoD_type&);
+             const epsilon_type&, const sigma_type&, const mv_type&);
 
   cuboidType(::std::auto_ptr<velocity_type>, ::std::auto_ptr<corner_type>,
              ::std::auto_ptr<dimensions_type>, const type_type&, const h_type&,
              const mass_type&, const epsilon_type&, const sigma_type&,
-             const mv_type&, const twoD_type&);
+             const mv_type&);
 
   cuboidType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
              ::xml_schema::container* c = 0);
@@ -404,7 +494,6 @@ class cuboidType : public ::xml_schema::type {
   ::xsd::cxx::tree::one<epsilon_type> epsilon_;
   ::xsd::cxx::tree::one<sigma_type> sigma_;
   ::xsd::cxx::tree::one<mv_type> mv_;
-  ::xsd::cxx::tree::one<twoD_type> twoD_;
 };
 
 class spheroidType : public ::xml_schema::type {
@@ -509,29 +598,15 @@ class spheroidType : public ::xml_schema::type {
 
   void sigma(const sigma_type& x);
 
-  // twoD
-  //
-  typedef ::xml_schema::boolean twoD_type;
-  typedef ::xsd::cxx::tree::traits<twoD_type, char> twoD_traits;
-
-  const twoD_type& twoD() const;
-
-  twoD_type& twoD();
-
-  void twoD(const twoD_type& x);
-
-  static twoD_type twoD_default_value();
-
   // Constructors.
   //
   spheroidType(const velocity_type&, const origin_type&, const radius_type&,
                const type_type&, const h_type&, const mass_type&,
-               const epsilon_type&, const sigma_type&, const twoD_type&);
+               const epsilon_type&, const sigma_type&);
 
   spheroidType(::std::auto_ptr<velocity_type>, ::std::auto_ptr<origin_type>,
                const radius_type&, const type_type&, const h_type&,
-               const mass_type&, const epsilon_type&, const sigma_type&,
-               const twoD_type&);
+               const mass_type&, const epsilon_type&, const sigma_type&);
 
   spheroidType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
                ::xml_schema::container* c = 0);
@@ -560,7 +635,6 @@ class spheroidType : public ::xml_schema::type {
   ::xsd::cxx::tree::one<mass_type> mass_;
   ::xsd::cxx::tree::one<epsilon_type> epsilon_;
   ::xsd::cxx::tree::one<sigma_type> sigma_;
-  ::xsd::cxx::tree::one<twoD_type> twoD_;
 };
 
 class Dvec3Type : public ::xml_schema::type {
@@ -695,21 +769,298 @@ class Ivec3Type : public ::xml_schema::type {
   ::xsd::cxx::tree::one<z_type> z_;
 };
 
+class ContainerType : public ::xml_schema::type {
+ public:
+  // directSum
+  //
+  typedef ::DirectSumType directSum_type;
+  typedef ::xsd::cxx::tree::optional<directSum_type> directSum_optional;
+  typedef ::xsd::cxx::tree::traits<directSum_type, char> directSum_traits;
+
+  const directSum_optional& directSum() const;
+
+  directSum_optional& directSum();
+
+  void directSum(const directSum_type& x);
+
+  void directSum(const directSum_optional& x);
+
+  void directSum(::std::auto_ptr<directSum_type> p);
+
+  // linkedCells
+  //
+  typedef ::LinkedCellsType linkedCells_type;
+  typedef ::xsd::cxx::tree::optional<linkedCells_type> linkedCells_optional;
+  typedef ::xsd::cxx::tree::traits<linkedCells_type, char> linkedCells_traits;
+
+  const linkedCells_optional& linkedCells() const;
+
+  linkedCells_optional& linkedCells();
+
+  void linkedCells(const linkedCells_type& x);
+
+  void linkedCells(const linkedCells_optional& x);
+
+  void linkedCells(::std::auto_ptr<linkedCells_type> p);
+
+  // Constructors.
+  //
+  ContainerType();
+
+  ContainerType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
+                ::xml_schema::container* c = 0);
+
+  ContainerType(const ContainerType& x, ::xml_schema::flags f = 0,
+                ::xml_schema::container* c = 0);
+
+  virtual ContainerType* _clone(::xml_schema::flags f = 0,
+                                ::xml_schema::container* c = 0) const;
+
+  ContainerType& operator=(const ContainerType& x);
+
+  virtual ~ContainerType();
+
+  // Implementation.
+  //
+ protected:
+  void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
+
+ protected:
+  directSum_optional directSum_;
+  linkedCells_optional linkedCells_;
+};
+
+class LinkedCellsType : public ::xml_schema::type {
+ public:
+  // domain
+  //
+  typedef ::Ivec3Type domain_type;
+  typedef ::xsd::cxx::tree::traits<domain_type, char> domain_traits;
+
+  const domain_type& domain() const;
+
+  domain_type& domain();
+
+  void domain(const domain_type& x);
+
+  void domain(::std::auto_ptr<domain_type> p);
+
+  // r_cutoff
+  //
+  typedef ::xml_schema::decimal r_cutoff_type;
+  typedef ::xsd::cxx::tree::traits<r_cutoff_type, char,
+                                   ::xsd::cxx::tree::schema_type::decimal>
+      r_cutoff_traits;
+
+  const r_cutoff_type& r_cutoff() const;
+
+  r_cutoff_type& r_cutoff();
+
+  void r_cutoff(const r_cutoff_type& x);
+
+  // boundary
+  //
+  typedef ::BoundaryType boundary_type;
+  typedef ::xsd::cxx::tree::traits<boundary_type, char> boundary_traits;
+
+  const boundary_type& boundary() const;
+
+  boundary_type& boundary();
+
+  void boundary(const boundary_type& x);
+
+  void boundary(::std::auto_ptr<boundary_type> p);
+
+  // Constructors.
+  //
+  LinkedCellsType(const domain_type&, const r_cutoff_type&,
+                  const boundary_type&);
+
+  LinkedCellsType(::std::auto_ptr<domain_type>, const r_cutoff_type&,
+                  ::std::auto_ptr<boundary_type>);
+
+  LinkedCellsType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
+                  ::xml_schema::container* c = 0);
+
+  LinkedCellsType(const LinkedCellsType& x, ::xml_schema::flags f = 0,
+                  ::xml_schema::container* c = 0);
+
+  virtual LinkedCellsType* _clone(::xml_schema::flags f = 0,
+                                  ::xml_schema::container* c = 0) const;
+
+  LinkedCellsType& operator=(const LinkedCellsType& x);
+
+  virtual ~LinkedCellsType();
+
+  // Implementation.
+  //
+ protected:
+  void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
+
+ protected:
+  ::xsd::cxx::tree::one<domain_type> domain_;
+  ::xsd::cxx::tree::one<r_cutoff_type> r_cutoff_;
+  ::xsd::cxx::tree::one<boundary_type> boundary_;
+};
+
+class DirectSumType : public ::xml_schema::type {
+ public:
+  // Constructors.
+  //
+  DirectSumType();
+
+  DirectSumType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
+                ::xml_schema::container* c = 0);
+
+  DirectSumType(const ::xercesc::DOMAttr& a, ::xml_schema::flags f = 0,
+                ::xml_schema::container* c = 0);
+
+  DirectSumType(const ::std::string& s, const ::xercesc::DOMElement* e,
+                ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+  DirectSumType(const DirectSumType& x, ::xml_schema::flags f = 0,
+                ::xml_schema::container* c = 0);
+
+  virtual DirectSumType* _clone(::xml_schema::flags f = 0,
+                                ::xml_schema::container* c = 0) const;
+
+  virtual ~DirectSumType();
+};
+
+class BoundaryType : public ::xml_schema::type {
+ public:
+  // Outflow
+  //
+  typedef ::xml_schema::type Outflow_type;
+  typedef ::xsd::cxx::tree::optional<Outflow_type> Outflow_optional;
+  typedef ::xsd::cxx::tree::traits<Outflow_type, char> Outflow_traits;
+
+  const Outflow_optional& Outflow() const;
+
+  Outflow_optional& Outflow();
+
+  void Outflow(const Outflow_type& x);
+
+  void Outflow(const Outflow_optional& x);
+
+  void Outflow(::std::auto_ptr<Outflow_type> p);
+
+  // Boundary
+  //
+  typedef ::xml_schema::type Boundary_type;
+  typedef ::xsd::cxx::tree::optional<Boundary_type> Boundary_optional;
+  typedef ::xsd::cxx::tree::traits<Boundary_type, char> Boundary_traits;
+
+  const Boundary_optional& Boundary() const;
+
+  Boundary_optional& Boundary();
+
+  void Boundary(const Boundary_type& x);
+
+  void Boundary(const Boundary_optional& x);
+
+  void Boundary(::std::auto_ptr<Boundary_type> p);
+
+  // Constructors.
+  //
+  BoundaryType();
+
+  BoundaryType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
+               ::xml_schema::container* c = 0);
+
+  BoundaryType(const BoundaryType& x, ::xml_schema::flags f = 0,
+               ::xml_schema::container* c = 0);
+
+  virtual BoundaryType* _clone(::xml_schema::flags f = 0,
+                               ::xml_schema::container* c = 0) const;
+
+  BoundaryType& operator=(const BoundaryType& x);
+
+  virtual ~BoundaryType();
+
+  // Implementation.
+  //
+ protected:
+  void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
+
+ protected:
+  Outflow_optional Outflow_;
+  Boundary_optional Boundary_;
+};
+
+class ForceType : public ::xml_schema::type {
+ public:
+  // Gravity
+  //
+  typedef ::xml_schema::type Gravity_type;
+  typedef ::xsd::cxx::tree::optional<Gravity_type> Gravity_optional;
+  typedef ::xsd::cxx::tree::traits<Gravity_type, char> Gravity_traits;
+
+  const Gravity_optional& Gravity() const;
+
+  Gravity_optional& Gravity();
+
+  void Gravity(const Gravity_type& x);
+
+  void Gravity(const Gravity_optional& x);
+
+  void Gravity(::std::auto_ptr<Gravity_type> p);
+
+  // LennardJones
+  //
+  typedef ::xml_schema::type LennardJones_type;
+  typedef ::xsd::cxx::tree::optional<LennardJones_type> LennardJones_optional;
+  typedef ::xsd::cxx::tree::traits<LennardJones_type, char> LennardJones_traits;
+
+  const LennardJones_optional& LennardJones() const;
+
+  LennardJones_optional& LennardJones();
+
+  void LennardJones(const LennardJones_type& x);
+
+  void LennardJones(const LennardJones_optional& x);
+
+  void LennardJones(::std::auto_ptr<LennardJones_type> p);
+
+  // Constructors.
+  //
+  ForceType();
+
+  ForceType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
+            ::xml_schema::container* c = 0);
+
+  ForceType(const ForceType& x, ::xml_schema::flags f = 0,
+            ::xml_schema::container* c = 0);
+
+  virtual ForceType* _clone(::xml_schema::flags f = 0,
+                            ::xml_schema::container* c = 0) const;
+
+  ForceType& operator=(const ForceType& x);
+
+  virtual ~ForceType();
+
+  // Implementation.
+  //
+ protected:
+  void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
+
+ protected:
+  Gravity_optional Gravity_;
+  LennardJones_optional LennardJones_;
+};
+
 class simulation : public ::xml_schema::type {
  public:
   // metadata
   //
-  typedef ::metadata metadata_type;
-  typedef ::xsd::cxx::tree::optional<metadata_type> metadata_optional;
+  typedef ::MetadataType metadata_type;
   typedef ::xsd::cxx::tree::traits<metadata_type, char> metadata_traits;
 
-  const metadata_optional& metadata() const;
+  const metadata_type& metadata() const;
 
-  metadata_optional& metadata();
+  metadata_type& metadata();
 
   void metadata(const metadata_type& x);
-
-  void metadata(const metadata_optional& x);
 
   void metadata(::std::auto_ptr<metadata_type> p);
 
@@ -747,7 +1098,9 @@ class simulation : public ::xml_schema::type {
 
   // Constructors.
   //
-  simulation();
+  simulation(const metadata_type&);
+
+  simulation(::std::auto_ptr<metadata_type>);
 
   simulation(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
              ::xml_schema::container* c = 0);
@@ -768,121 +1121,9 @@ class simulation : public ::xml_schema::type {
   void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
 
  protected:
-  metadata_optional metadata_;
+  ::xsd::cxx::tree::one<metadata_type> metadata_;
   cuboids_optional cuboids_;
   spheroids_optional spheroids_;
-};
-
-class metadata : public ::xml_schema::type {
- public:
-  // domain
-  //
-  typedef ::Ivec3Type domain_type;
-  typedef ::xsd::cxx::tree::optional<domain_type> domain_optional;
-  typedef ::xsd::cxx::tree::traits<domain_type, char> domain_traits;
-
-  const domain_optional& domain() const;
-
-  domain_optional& domain();
-
-  void domain(const domain_type& x);
-
-  void domain(const domain_optional& x);
-
-  void domain(::std::auto_ptr<domain_type> p);
-
-  // FileName
-  //
-  typedef ::xml_schema::string FileName_type;
-  typedef ::xsd::cxx::tree::optional<FileName_type> FileName_optional;
-  typedef ::xsd::cxx::tree::traits<FileName_type, char> FileName_traits;
-
-  const FileName_optional& FileName() const;
-
-  FileName_optional& FileName();
-
-  void FileName(const FileName_type& x);
-
-  void FileName(const FileName_optional& x);
-
-  void FileName(::std::auto_ptr<FileName_type> p);
-
-  // delta_t
-  //
-  typedef ::xml_schema::decimal delta_t_type;
-  typedef ::xsd::cxx::tree::optional<delta_t_type> delta_t_optional;
-  typedef ::xsd::cxx::tree::traits<delta_t_type, char,
-                                   ::xsd::cxx::tree::schema_type::decimal>
-      delta_t_traits;
-
-  const delta_t_optional& delta_t() const;
-
-  delta_t_optional& delta_t();
-
-  void delta_t(const delta_t_type& x);
-
-  void delta_t(const delta_t_optional& x);
-
-  // t_end
-  //
-  typedef ::xml_schema::double_ t_end_type;
-  typedef ::xsd::cxx::tree::optional<t_end_type> t_end_optional;
-  typedef ::xsd::cxx::tree::traits<t_end_type, char,
-                                   ::xsd::cxx::tree::schema_type::double_>
-      t_end_traits;
-
-  const t_end_optional& t_end() const;
-
-  t_end_optional& t_end();
-
-  void t_end(const t_end_type& x);
-
-  void t_end(const t_end_optional& x);
-
-  // r_cutoff
-  //
-  typedef ::xml_schema::double_ r_cutoff_type;
-  typedef ::xsd::cxx::tree::optional<r_cutoff_type> r_cutoff_optional;
-  typedef ::xsd::cxx::tree::traits<r_cutoff_type, char,
-                                   ::xsd::cxx::tree::schema_type::double_>
-      r_cutoff_traits;
-
-  const r_cutoff_optional& r_cutoff() const;
-
-  r_cutoff_optional& r_cutoff();
-
-  void r_cutoff(const r_cutoff_type& x);
-
-  void r_cutoff(const r_cutoff_optional& x);
-
-  // Constructors.
-  //
-  metadata();
-
-  metadata(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
-           ::xml_schema::container* c = 0);
-
-  metadata(const metadata& x, ::xml_schema::flags f = 0,
-           ::xml_schema::container* c = 0);
-
-  virtual metadata* _clone(::xml_schema::flags f = 0,
-                           ::xml_schema::container* c = 0) const;
-
-  metadata& operator=(const metadata& x);
-
-  virtual ~metadata();
-
-  // Implementation.
-  //
- protected:
-  void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
-
- protected:
-  domain_optional domain_;
-  FileName_optional FileName_;
-  delta_t_optional delta_t_;
-  t_end_optional t_end_;
-  r_cutoff_optional r_cutoff_;
 };
 
 class cuboids : public ::xml_schema::type {

@@ -40,6 +40,61 @@
 
 #include <xsd/cxx/pre.hxx>
 
+// MetadataType
+//
+
+const MetadataType::container_type& MetadataType::container() const {
+  return this->container_.get();
+}
+
+MetadataType::container_type& MetadataType::container() {
+  return this->container_.get();
+}
+
+void MetadataType::container(const container_type& x) {
+  this->container_.set(x);
+}
+
+void MetadataType::container(::std::auto_ptr<container_type> x) {
+  this->container_.set(x);
+}
+
+const MetadataType::force_type& MetadataType::force() const {
+  return this->force_.get();
+}
+
+MetadataType::force_type& MetadataType::force() { return this->force_.get(); }
+
+void MetadataType::force(const force_type& x) { this->force_.set(x); }
+
+void MetadataType::force(::std::auto_ptr<force_type> x) { this->force_.set(x); }
+
+const MetadataType::delta_t_type& MetadataType::delta_t() const {
+  return this->delta_t_.get();
+}
+
+MetadataType::delta_t_type& MetadataType::delta_t() {
+  return this->delta_t_.get();
+}
+
+void MetadataType::delta_t(const delta_t_type& x) { this->delta_t_.set(x); }
+
+const MetadataType::t_end_type& MetadataType::t_end() const {
+  return this->t_end_.get();
+}
+
+MetadataType::t_end_type& MetadataType::t_end() { return this->t_end_.get(); }
+
+void MetadataType::t_end(const t_end_type& x) { this->t_end_.set(x); }
+
+const MetadataType::twoD_type& MetadataType::twoD() const {
+  return this->twoD_.get();
+}
+
+MetadataType::twoD_type& MetadataType::twoD() { return this->twoD_.get(); }
+
+void MetadataType::twoD(const twoD_type& x) { this->twoD_.set(x); }
+
 // cuboidType
 //
 
@@ -129,18 +184,6 @@ cuboidType::mv_type& cuboidType::mv() { return this->mv_.get(); }
 
 void cuboidType::mv(const mv_type& x) { this->mv_.set(x); }
 
-const cuboidType::twoD_type& cuboidType::twoD() const {
-  return this->twoD_.get();
-}
-
-cuboidType::twoD_type& cuboidType::twoD() { return this->twoD_.get(); }
-
-void cuboidType::twoD(const twoD_type& x) { this->twoD_.set(x); }
-
-cuboidType::twoD_type cuboidType::twoD_default_value() {
-  return twoD_type(true);
-}
-
 // spheroidType
 //
 
@@ -222,18 +265,6 @@ spheroidType::sigma_type& spheroidType::sigma() { return this->sigma_.get(); }
 
 void spheroidType::sigma(const sigma_type& x) { this->sigma_.set(x); }
 
-const spheroidType::twoD_type& spheroidType::twoD() const {
-  return this->twoD_.get();
-}
-
-spheroidType::twoD_type& spheroidType::twoD() { return this->twoD_.get(); }
-
-void spheroidType::twoD(const twoD_type& x) { this->twoD_.set(x); }
-
-spheroidType::twoD_type spheroidType::twoD_default_value() {
-  return twoD_type(true);
-}
-
 // Dvec3Type
 //
 
@@ -276,20 +307,181 @@ Ivec3Type::z_type& Ivec3Type::z() { return this->z_.get(); }
 
 void Ivec3Type::z(const z_type& x) { this->z_.set(x); }
 
+// ContainerType
+//
+
+const ContainerType::directSum_optional& ContainerType::directSum() const {
+  return this->directSum_;
+}
+
+ContainerType::directSum_optional& ContainerType::directSum() {
+  return this->directSum_;
+}
+
+void ContainerType::directSum(const directSum_type& x) {
+  this->directSum_.set(x);
+}
+
+void ContainerType::directSum(const directSum_optional& x) {
+  this->directSum_ = x;
+}
+
+void ContainerType::directSum(::std::auto_ptr<directSum_type> x) {
+  this->directSum_.set(x);
+}
+
+const ContainerType::linkedCells_optional& ContainerType::linkedCells() const {
+  return this->linkedCells_;
+}
+
+ContainerType::linkedCells_optional& ContainerType::linkedCells() {
+  return this->linkedCells_;
+}
+
+void ContainerType::linkedCells(const linkedCells_type& x) {
+  this->linkedCells_.set(x);
+}
+
+void ContainerType::linkedCells(const linkedCells_optional& x) {
+  this->linkedCells_ = x;
+}
+
+void ContainerType::linkedCells(::std::auto_ptr<linkedCells_type> x) {
+  this->linkedCells_.set(x);
+}
+
+// LinkedCellsType
+//
+
+const LinkedCellsType::domain_type& LinkedCellsType::domain() const {
+  return this->domain_.get();
+}
+
+LinkedCellsType::domain_type& LinkedCellsType::domain() {
+  return this->domain_.get();
+}
+
+void LinkedCellsType::domain(const domain_type& x) { this->domain_.set(x); }
+
+void LinkedCellsType::domain(::std::auto_ptr<domain_type> x) {
+  this->domain_.set(x);
+}
+
+const LinkedCellsType::r_cutoff_type& LinkedCellsType::r_cutoff() const {
+  return this->r_cutoff_.get();
+}
+
+LinkedCellsType::r_cutoff_type& LinkedCellsType::r_cutoff() {
+  return this->r_cutoff_.get();
+}
+
+void LinkedCellsType::r_cutoff(const r_cutoff_type& x) {
+  this->r_cutoff_.set(x);
+}
+
+const LinkedCellsType::boundary_type& LinkedCellsType::boundary() const {
+  return this->boundary_.get();
+}
+
+LinkedCellsType::boundary_type& LinkedCellsType::boundary() {
+  return this->boundary_.get();
+}
+
+void LinkedCellsType::boundary(const boundary_type& x) {
+  this->boundary_.set(x);
+}
+
+void LinkedCellsType::boundary(::std::auto_ptr<boundary_type> x) {
+  this->boundary_.set(x);
+}
+
+// DirectSumType
+//
+
+// BoundaryType
+//
+
+const BoundaryType::Outflow_optional& BoundaryType::Outflow() const {
+  return this->Outflow_;
+}
+
+BoundaryType::Outflow_optional& BoundaryType::Outflow() {
+  return this->Outflow_;
+}
+
+void BoundaryType::Outflow(const Outflow_type& x) { this->Outflow_.set(x); }
+
+void BoundaryType::Outflow(const Outflow_optional& x) { this->Outflow_ = x; }
+
+void BoundaryType::Outflow(::std::auto_ptr<Outflow_type> x) {
+  this->Outflow_.set(x);
+}
+
+const BoundaryType::Boundary_optional& BoundaryType::Boundary() const {
+  return this->Boundary_;
+}
+
+BoundaryType::Boundary_optional& BoundaryType::Boundary() {
+  return this->Boundary_;
+}
+
+void BoundaryType::Boundary(const Boundary_type& x) { this->Boundary_.set(x); }
+
+void BoundaryType::Boundary(const Boundary_optional& x) { this->Boundary_ = x; }
+
+void BoundaryType::Boundary(::std::auto_ptr<Boundary_type> x) {
+  this->Boundary_.set(x);
+}
+
+// ForceType
+//
+
+const ForceType::Gravity_optional& ForceType::Gravity() const {
+  return this->Gravity_;
+}
+
+ForceType::Gravity_optional& ForceType::Gravity() { return this->Gravity_; }
+
+void ForceType::Gravity(const Gravity_type& x) { this->Gravity_.set(x); }
+
+void ForceType::Gravity(const Gravity_optional& x) { this->Gravity_ = x; }
+
+void ForceType::Gravity(::std::auto_ptr<Gravity_type> x) {
+  this->Gravity_.set(x);
+}
+
+const ForceType::LennardJones_optional& ForceType::LennardJones() const {
+  return this->LennardJones_;
+}
+
+ForceType::LennardJones_optional& ForceType::LennardJones() {
+  return this->LennardJones_;
+}
+
+void ForceType::LennardJones(const LennardJones_type& x) {
+  this->LennardJones_.set(x);
+}
+
+void ForceType::LennardJones(const LennardJones_optional& x) {
+  this->LennardJones_ = x;
+}
+
+void ForceType::LennardJones(::std::auto_ptr<LennardJones_type> x) {
+  this->LennardJones_.set(x);
+}
+
 // simulation
 //
 
-const simulation::metadata_optional& simulation::metadata() const {
-  return this->metadata_;
+const simulation::metadata_type& simulation::metadata() const {
+  return this->metadata_.get();
 }
 
-simulation::metadata_optional& simulation::metadata() {
-  return this->metadata_;
+simulation::metadata_type& simulation::metadata() {
+  return this->metadata_.get();
 }
 
 void simulation::metadata(const metadata_type& x) { this->metadata_.set(x); }
-
-void simulation::metadata(const metadata_optional& x) { this->metadata_ = x; }
 
 void simulation::metadata(::std::auto_ptr<metadata_type> x) {
   this->metadata_.set(x);
@@ -327,63 +519,6 @@ void simulation::spheroids(::std::auto_ptr<spheroids_type> x) {
   this->spheroids_.set(x);
 }
 
-// metadata
-//
-
-const metadata::domain_optional& metadata::domain() const {
-  return this->domain_;
-}
-
-metadata::domain_optional& metadata::domain() { return this->domain_; }
-
-void metadata::domain(const domain_type& x) { this->domain_.set(x); }
-
-void metadata::domain(const domain_optional& x) { this->domain_ = x; }
-
-void metadata::domain(::std::auto_ptr<domain_type> x) { this->domain_.set(x); }
-
-const metadata::FileName_optional& metadata::FileName() const {
-  return this->FileName_;
-}
-
-metadata::FileName_optional& metadata::FileName() { return this->FileName_; }
-
-void metadata::FileName(const FileName_type& x) { this->FileName_.set(x); }
-
-void metadata::FileName(const FileName_optional& x) { this->FileName_ = x; }
-
-void metadata::FileName(::std::auto_ptr<FileName_type> x) {
-  this->FileName_.set(x);
-}
-
-const metadata::delta_t_optional& metadata::delta_t() const {
-  return this->delta_t_;
-}
-
-metadata::delta_t_optional& metadata::delta_t() { return this->delta_t_; }
-
-void metadata::delta_t(const delta_t_type& x) { this->delta_t_.set(x); }
-
-void metadata::delta_t(const delta_t_optional& x) { this->delta_t_ = x; }
-
-const metadata::t_end_optional& metadata::t_end() const { return this->t_end_; }
-
-metadata::t_end_optional& metadata::t_end() { return this->t_end_; }
-
-void metadata::t_end(const t_end_type& x) { this->t_end_.set(x); }
-
-void metadata::t_end(const t_end_optional& x) { this->t_end_ = x; }
-
-const metadata::r_cutoff_optional& metadata::r_cutoff() const {
-  return this->r_cutoff_;
-}
-
-metadata::r_cutoff_optional& metadata::r_cutoff() { return this->r_cutoff_; }
-
-void metadata::r_cutoff(const r_cutoff_type& x) { this->r_cutoff_.set(x); }
-
-void metadata::r_cutoff(const r_cutoff_optional& x) { this->r_cutoff_ = x; }
-
 // cuboids
 //
 
@@ -408,6 +543,153 @@ void spheroids::spheroid(const spheroid_sequence& s) { this->spheroid_ = s; }
 
 #include <xsd/cxx/xml/dom/parsing-source.hxx>
 
+// MetadataType
+//
+
+MetadataType::MetadataType(const container_type& container,
+                           const force_type& force, const delta_t_type& delta_t,
+                           const t_end_type& t_end, const twoD_type& twoD)
+    : ::xml_schema::type(),
+      container_(container, this),
+      force_(force, this),
+      delta_t_(delta_t, this),
+      t_end_(t_end, this),
+      twoD_(twoD, this) {}
+
+MetadataType::MetadataType(::std::auto_ptr<container_type> container,
+                           ::std::auto_ptr<force_type> force,
+                           const delta_t_type& delta_t, const t_end_type& t_end,
+                           const twoD_type& twoD)
+    : ::xml_schema::type(),
+      container_(container, this),
+      force_(force, this),
+      delta_t_(delta_t, this),
+      t_end_(t_end, this),
+      twoD_(twoD, this) {}
+
+MetadataType::MetadataType(const MetadataType& x, ::xml_schema::flags f,
+                           ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c),
+      container_(x.container_, f, this),
+      force_(x.force_, f, this),
+      delta_t_(x.delta_t_, f, this),
+      t_end_(x.t_end_, f, this),
+      twoD_(x.twoD_, f, this) {}
+
+MetadataType::MetadataType(const ::xercesc::DOMElement& e,
+                           ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c),
+      container_(this),
+      force_(this),
+      delta_t_(this),
+      t_end_(this),
+      twoD_(this) {
+  if ((f & ::xml_schema::flags::base) == 0) {
+    ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
+    this->parse(p, f);
+  }
+}
+
+void MetadataType::parse(::xsd::cxx::xml::dom::parser<char>& p,
+                         ::xml_schema::flags f) {
+  for (; p.more_content(); p.next_content(false)) {
+    const ::xercesc::DOMElement& i(p.cur_element());
+    const ::xsd::cxx::xml::qualified_name<char> n(
+        ::xsd::cxx::xml::dom::name<char>(i));
+
+    // container
+    //
+    if (n.name() == "container" && n.namespace_().empty()) {
+      ::std::auto_ptr<container_type> r(container_traits::create(i, f, this));
+
+      if (!container_.present()) {
+        this->container_.set(r);
+        continue;
+      }
+    }
+
+    // force
+    //
+    if (n.name() == "force" && n.namespace_().empty()) {
+      ::std::auto_ptr<force_type> r(force_traits::create(i, f, this));
+
+      if (!force_.present()) {
+        this->force_.set(r);
+        continue;
+      }
+    }
+
+    // delta_t
+    //
+    if (n.name() == "delta_t" && n.namespace_().empty()) {
+      if (!delta_t_.present()) {
+        this->delta_t_.set(delta_t_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    // t_end
+    //
+    if (n.name() == "t_end" && n.namespace_().empty()) {
+      if (!t_end_.present()) {
+        this->t_end_.set(t_end_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    // twoD
+    //
+    if (n.name() == "twoD" && n.namespace_().empty()) {
+      if (!twoD_.present()) {
+        this->twoD_.set(twoD_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    break;
+  }
+
+  if (!container_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("container", "");
+  }
+
+  if (!force_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("force", "");
+  }
+
+  if (!delta_t_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("delta_t", "");
+  }
+
+  if (!t_end_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("t_end", "");
+  }
+
+  if (!twoD_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("twoD", "");
+  }
+}
+
+MetadataType* MetadataType::_clone(::xml_schema::flags f,
+                                   ::xml_schema::container* c) const {
+  return new class MetadataType(*this, f, c);
+}
+
+MetadataType& MetadataType::operator=(const MetadataType& x) {
+  if (this != &x) {
+    static_cast< ::xml_schema::type&>(*this) = x;
+    this->container_ = x.container_;
+    this->force_ = x.force_;
+    this->delta_t_ = x.delta_t_;
+    this->t_end_ = x.t_end_;
+    this->twoD_ = x.twoD_;
+  }
+
+  return *this;
+}
+
+MetadataType::~MetadataType() {}
+
 // cuboidType
 //
 
@@ -415,7 +697,7 @@ cuboidType::cuboidType(const velocity_type& velocity, const corner_type& corner,
                        const dimensions_type& dimensions, const type_type& type,
                        const h_type& h, const mass_type& mass,
                        const epsilon_type& epsilon, const sigma_type& sigma,
-                       const mv_type& mv, const twoD_type& twoD)
+                       const mv_type& mv)
     : ::xml_schema::type(),
       velocity_(velocity, this),
       corner_(corner, this),
@@ -425,16 +707,14 @@ cuboidType::cuboidType(const velocity_type& velocity, const corner_type& corner,
       mass_(mass, this),
       epsilon_(epsilon, this),
       sigma_(sigma, this),
-      mv_(mv, this),
-      twoD_(twoD, this) {}
+      mv_(mv, this) {}
 
 cuboidType::cuboidType(::std::auto_ptr<velocity_type> velocity,
                        ::std::auto_ptr<corner_type> corner,
                        ::std::auto_ptr<dimensions_type> dimensions,
                        const type_type& type, const h_type& h,
                        const mass_type& mass, const epsilon_type& epsilon,
-                       const sigma_type& sigma, const mv_type& mv,
-                       const twoD_type& twoD)
+                       const sigma_type& sigma, const mv_type& mv)
     : ::xml_schema::type(),
       velocity_(velocity, this),
       corner_(corner, this),
@@ -444,8 +724,7 @@ cuboidType::cuboidType(::std::auto_ptr<velocity_type> velocity,
       mass_(mass, this),
       epsilon_(epsilon, this),
       sigma_(sigma, this),
-      mv_(mv, this),
-      twoD_(twoD, this) {}
+      mv_(mv, this) {}
 
 cuboidType::cuboidType(const cuboidType& x, ::xml_schema::flags f,
                        ::xml_schema::container* c)
@@ -458,8 +737,7 @@ cuboidType::cuboidType(const cuboidType& x, ::xml_schema::flags f,
       mass_(x.mass_, f, this),
       epsilon_(x.epsilon_, f, this),
       sigma_(x.sigma_, f, this),
-      mv_(x.mv_, f, this),
-      twoD_(x.twoD_, f, this) {}
+      mv_(x.mv_, f, this) {}
 
 cuboidType::cuboidType(const ::xercesc::DOMElement& e, ::xml_schema::flags f,
                        ::xml_schema::container* c)
@@ -472,8 +750,7 @@ cuboidType::cuboidType(const ::xercesc::DOMElement& e, ::xml_schema::flags f,
       mass_(this),
       epsilon_(this),
       sigma_(this),
-      mv_(this),
-      twoD_(this) {
+      mv_(this) {
   if ((f & ::xml_schema::flags::base) == 0) {
     ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
     this->parse(p, f);
@@ -574,15 +851,6 @@ void cuboidType::parse(::xsd::cxx::xml::dom::parser<char>& p,
       }
     }
 
-    // twoD
-    //
-    if (n.name() == "twoD" && n.namespace_().empty()) {
-      if (!twoD_.present()) {
-        this->twoD_.set(twoD_traits::create(i, f, this));
-        continue;
-      }
-    }
-
     break;
   }
 
@@ -621,10 +889,6 @@ void cuboidType::parse(::xsd::cxx::xml::dom::parser<char>& p,
   if (!mv_.present()) {
     throw ::xsd::cxx::tree::expected_element<char>("mv", "");
   }
-
-  if (!twoD_.present()) {
-    throw ::xsd::cxx::tree::expected_element<char>("twoD", "");
-  }
 }
 
 cuboidType* cuboidType::_clone(::xml_schema::flags f,
@@ -644,7 +908,6 @@ cuboidType& cuboidType::operator=(const cuboidType& x) {
     this->epsilon_ = x.epsilon_;
     this->sigma_ = x.sigma_;
     this->mv_ = x.mv_;
-    this->twoD_ = x.twoD_;
   }
 
   return *this;
@@ -659,7 +922,7 @@ spheroidType::spheroidType(const velocity_type& velocity,
                            const origin_type& origin, const radius_type& radius,
                            const type_type& type, const h_type& h,
                            const mass_type& mass, const epsilon_type& epsilon,
-                           const sigma_type& sigma, const twoD_type& twoD)
+                           const sigma_type& sigma)
     : ::xml_schema::type(),
       velocity_(velocity, this),
       origin_(origin, this),
@@ -668,15 +931,13 @@ spheroidType::spheroidType(const velocity_type& velocity,
       h_(h, this),
       mass_(mass, this),
       epsilon_(epsilon, this),
-      sigma_(sigma, this),
-      twoD_(twoD, this) {}
+      sigma_(sigma, this) {}
 
 spheroidType::spheroidType(::std::auto_ptr<velocity_type> velocity,
                            ::std::auto_ptr<origin_type> origin,
                            const radius_type& radius, const type_type& type,
                            const h_type& h, const mass_type& mass,
-                           const epsilon_type& epsilon, const sigma_type& sigma,
-                           const twoD_type& twoD)
+                           const epsilon_type& epsilon, const sigma_type& sigma)
     : ::xml_schema::type(),
       velocity_(velocity, this),
       origin_(origin, this),
@@ -685,8 +946,7 @@ spheroidType::spheroidType(::std::auto_ptr<velocity_type> velocity,
       h_(h, this),
       mass_(mass, this),
       epsilon_(epsilon, this),
-      sigma_(sigma, this),
-      twoD_(twoD, this) {}
+      sigma_(sigma, this) {}
 
 spheroidType::spheroidType(const spheroidType& x, ::xml_schema::flags f,
                            ::xml_schema::container* c)
@@ -698,8 +958,7 @@ spheroidType::spheroidType(const spheroidType& x, ::xml_schema::flags f,
       h_(x.h_, f, this),
       mass_(x.mass_, f, this),
       epsilon_(x.epsilon_, f, this),
-      sigma_(x.sigma_, f, this),
-      twoD_(x.twoD_, f, this) {}
+      sigma_(x.sigma_, f, this) {}
 
 spheroidType::spheroidType(const ::xercesc::DOMElement& e,
                            ::xml_schema::flags f, ::xml_schema::container* c)
@@ -711,8 +970,7 @@ spheroidType::spheroidType(const ::xercesc::DOMElement& e,
       h_(this),
       mass_(this),
       epsilon_(this),
-      sigma_(this),
-      twoD_(this) {
+      sigma_(this) {
   if ((f & ::xml_schema::flags::base) == 0) {
     ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
     this->parse(p, f);
@@ -802,15 +1060,6 @@ void spheroidType::parse(::xsd::cxx::xml::dom::parser<char>& p,
       }
     }
 
-    // twoD
-    //
-    if (n.name() == "twoD" && n.namespace_().empty()) {
-      if (!twoD_.present()) {
-        this->twoD_.set(twoD_traits::create(i, f, this));
-        continue;
-      }
-    }
-
     break;
   }
 
@@ -845,10 +1094,6 @@ void spheroidType::parse(::xsd::cxx::xml::dom::parser<char>& p,
   if (!sigma_.present()) {
     throw ::xsd::cxx::tree::expected_element<char>("sigma", "");
   }
-
-  if (!twoD_.present()) {
-    throw ::xsd::cxx::tree::expected_element<char>("twoD", "");
-  }
 }
 
 spheroidType* spheroidType::_clone(::xml_schema::flags f,
@@ -867,7 +1112,6 @@ spheroidType& spheroidType::operator=(const spheroidType& x) {
     this->mass_ = x.mass_;
     this->epsilon_ = x.epsilon_;
     this->sigma_ = x.sigma_;
-    this->twoD_ = x.twoD_;
   }
 
   return *this;
@@ -1061,11 +1305,382 @@ Ivec3Type& Ivec3Type::operator=(const Ivec3Type& x) {
 
 Ivec3Type::~Ivec3Type() {}
 
+// ContainerType
+//
+
+ContainerType::ContainerType()
+    : ::xml_schema::type(), directSum_(this), linkedCells_(this) {}
+
+ContainerType::ContainerType(const ContainerType& x, ::xml_schema::flags f,
+                             ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c),
+      directSum_(x.directSum_, f, this),
+      linkedCells_(x.linkedCells_, f, this) {}
+
+ContainerType::ContainerType(const ::xercesc::DOMElement& e,
+                             ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c),
+      directSum_(this),
+      linkedCells_(this) {
+  if ((f & ::xml_schema::flags::base) == 0) {
+    ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
+    this->parse(p, f);
+  }
+}
+
+void ContainerType::parse(::xsd::cxx::xml::dom::parser<char>& p,
+                          ::xml_schema::flags f) {
+  for (; p.more_content(); p.next_content(false)) {
+    const ::xercesc::DOMElement& i(p.cur_element());
+    const ::xsd::cxx::xml::qualified_name<char> n(
+        ::xsd::cxx::xml::dom::name<char>(i));
+
+    // directSum
+    //
+    if (n.name() == "directSum" && n.namespace_().empty()) {
+      ::std::auto_ptr<directSum_type> r(directSum_traits::create(i, f, this));
+
+      if (!this->directSum_) {
+        this->directSum_.set(r);
+        continue;
+      }
+    }
+
+    // linkedCells
+    //
+    if (n.name() == "linkedCells" && n.namespace_().empty()) {
+      ::std::auto_ptr<linkedCells_type> r(
+          linkedCells_traits::create(i, f, this));
+
+      if (!this->linkedCells_) {
+        this->linkedCells_.set(r);
+        continue;
+      }
+    }
+
+    break;
+  }
+}
+
+ContainerType* ContainerType::_clone(::xml_schema::flags f,
+                                     ::xml_schema::container* c) const {
+  return new class ContainerType(*this, f, c);
+}
+
+ContainerType& ContainerType::operator=(const ContainerType& x) {
+  if (this != &x) {
+    static_cast< ::xml_schema::type&>(*this) = x;
+    this->directSum_ = x.directSum_;
+    this->linkedCells_ = x.linkedCells_;
+  }
+
+  return *this;
+}
+
+ContainerType::~ContainerType() {}
+
+// LinkedCellsType
+//
+
+LinkedCellsType::LinkedCellsType(const domain_type& domain,
+                                 const r_cutoff_type& r_cutoff,
+                                 const boundary_type& boundary)
+    : ::xml_schema::type(),
+      domain_(domain, this),
+      r_cutoff_(r_cutoff, this),
+      boundary_(boundary, this) {}
+
+LinkedCellsType::LinkedCellsType(::std::auto_ptr<domain_type> domain,
+                                 const r_cutoff_type& r_cutoff,
+                                 ::std::auto_ptr<boundary_type> boundary)
+    : ::xml_schema::type(),
+      domain_(domain, this),
+      r_cutoff_(r_cutoff, this),
+      boundary_(boundary, this) {}
+
+LinkedCellsType::LinkedCellsType(const LinkedCellsType& x,
+                                 ::xml_schema::flags f,
+                                 ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c),
+      domain_(x.domain_, f, this),
+      r_cutoff_(x.r_cutoff_, f, this),
+      boundary_(x.boundary_, f, this) {}
+
+LinkedCellsType::LinkedCellsType(const ::xercesc::DOMElement& e,
+                                 ::xml_schema::flags f,
+                                 ::xml_schema::container* c)
+    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c),
+      domain_(this),
+      r_cutoff_(this),
+      boundary_(this) {
+  if ((f & ::xml_schema::flags::base) == 0) {
+    ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
+    this->parse(p, f);
+  }
+}
+
+void LinkedCellsType::parse(::xsd::cxx::xml::dom::parser<char>& p,
+                            ::xml_schema::flags f) {
+  for (; p.more_content(); p.next_content(false)) {
+    const ::xercesc::DOMElement& i(p.cur_element());
+    const ::xsd::cxx::xml::qualified_name<char> n(
+        ::xsd::cxx::xml::dom::name<char>(i));
+
+    // domain
+    //
+    if (n.name() == "domain" && n.namespace_().empty()) {
+      ::std::auto_ptr<domain_type> r(domain_traits::create(i, f, this));
+
+      if (!domain_.present()) {
+        this->domain_.set(r);
+        continue;
+      }
+    }
+
+    // r_cutoff
+    //
+    if (n.name() == "r_cutoff" && n.namespace_().empty()) {
+      if (!r_cutoff_.present()) {
+        this->r_cutoff_.set(r_cutoff_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    // boundary
+    //
+    if (n.name() == "boundary" && n.namespace_().empty()) {
+      ::std::auto_ptr<boundary_type> r(boundary_traits::create(i, f, this));
+
+      if (!boundary_.present()) {
+        this->boundary_.set(r);
+        continue;
+      }
+    }
+
+    break;
+  }
+
+  if (!domain_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("domain", "");
+  }
+
+  if (!r_cutoff_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("r_cutoff", "");
+  }
+
+  if (!boundary_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("boundary", "");
+  }
+}
+
+LinkedCellsType* LinkedCellsType::_clone(::xml_schema::flags f,
+                                         ::xml_schema::container* c) const {
+  return new class LinkedCellsType(*this, f, c);
+}
+
+LinkedCellsType& LinkedCellsType::operator=(const LinkedCellsType& x) {
+  if (this != &x) {
+    static_cast< ::xml_schema::type&>(*this) = x;
+    this->domain_ = x.domain_;
+    this->r_cutoff_ = x.r_cutoff_;
+    this->boundary_ = x.boundary_;
+  }
+
+  return *this;
+}
+
+LinkedCellsType::~LinkedCellsType() {}
+
+// DirectSumType
+//
+
+DirectSumType::DirectSumType() : ::xml_schema::type() {}
+
+DirectSumType::DirectSumType(const DirectSumType& x, ::xml_schema::flags f,
+                             ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c) {}
+
+DirectSumType::DirectSumType(const ::xercesc::DOMElement& e,
+                             ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::type(e, f, c) {}
+
+DirectSumType::DirectSumType(const ::xercesc::DOMAttr& a, ::xml_schema::flags f,
+                             ::xml_schema::container* c)
+    : ::xml_schema::type(a, f, c) {}
+
+DirectSumType::DirectSumType(const ::std::string& s,
+                             const ::xercesc::DOMElement* e,
+                             ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::type(s, e, f, c) {}
+
+DirectSumType* DirectSumType::_clone(::xml_schema::flags f,
+                                     ::xml_schema::container* c) const {
+  return new class DirectSumType(*this, f, c);
+}
+
+DirectSumType::~DirectSumType() {}
+
+// BoundaryType
+//
+
+BoundaryType::BoundaryType()
+    : ::xml_schema::type(), Outflow_(this), Boundary_(this) {}
+
+BoundaryType::BoundaryType(const BoundaryType& x, ::xml_schema::flags f,
+                           ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c),
+      Outflow_(x.Outflow_, f, this),
+      Boundary_(x.Boundary_, f, this) {}
+
+BoundaryType::BoundaryType(const ::xercesc::DOMElement& e,
+                           ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c),
+      Outflow_(this),
+      Boundary_(this) {
+  if ((f & ::xml_schema::flags::base) == 0) {
+    ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
+    this->parse(p, f);
+  }
+}
+
+void BoundaryType::parse(::xsd::cxx::xml::dom::parser<char>& p,
+                         ::xml_schema::flags f) {
+  for (; p.more_content(); p.next_content(false)) {
+    const ::xercesc::DOMElement& i(p.cur_element());
+    const ::xsd::cxx::xml::qualified_name<char> n(
+        ::xsd::cxx::xml::dom::name<char>(i));
+
+    // Outflow
+    //
+    if (n.name() == "Outflow" && n.namespace_().empty()) {
+      ::std::auto_ptr<Outflow_type> r(Outflow_traits::create(i, f, this));
+
+      if (!this->Outflow_) {
+        this->Outflow_.set(r);
+        continue;
+      }
+    }
+
+    // Boundary
+    //
+    if (n.name() == "Boundary" && n.namespace_().empty()) {
+      ::std::auto_ptr<Boundary_type> r(Boundary_traits::create(i, f, this));
+
+      if (!this->Boundary_) {
+        this->Boundary_.set(r);
+        continue;
+      }
+    }
+
+    break;
+  }
+}
+
+BoundaryType* BoundaryType::_clone(::xml_schema::flags f,
+                                   ::xml_schema::container* c) const {
+  return new class BoundaryType(*this, f, c);
+}
+
+BoundaryType& BoundaryType::operator=(const BoundaryType& x) {
+  if (this != &x) {
+    static_cast< ::xml_schema::type&>(*this) = x;
+    this->Outflow_ = x.Outflow_;
+    this->Boundary_ = x.Boundary_;
+  }
+
+  return *this;
+}
+
+BoundaryType::~BoundaryType() {}
+
+// ForceType
+//
+
+ForceType::ForceType()
+    : ::xml_schema::type(), Gravity_(this), LennardJones_(this) {}
+
+ForceType::ForceType(const ForceType& x, ::xml_schema::flags f,
+                     ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c),
+      Gravity_(x.Gravity_, f, this),
+      LennardJones_(x.LennardJones_, f, this) {}
+
+ForceType::ForceType(const ::xercesc::DOMElement& e, ::xml_schema::flags f,
+                     ::xml_schema::container* c)
+    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c),
+      Gravity_(this),
+      LennardJones_(this) {
+  if ((f & ::xml_schema::flags::base) == 0) {
+    ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
+    this->parse(p, f);
+  }
+}
+
+void ForceType::parse(::xsd::cxx::xml::dom::parser<char>& p,
+                      ::xml_schema::flags f) {
+  for (; p.more_content(); p.next_content(false)) {
+    const ::xercesc::DOMElement& i(p.cur_element());
+    const ::xsd::cxx::xml::qualified_name<char> n(
+        ::xsd::cxx::xml::dom::name<char>(i));
+
+    // Gravity
+    //
+    if (n.name() == "Gravity" && n.namespace_().empty()) {
+      ::std::auto_ptr<Gravity_type> r(Gravity_traits::create(i, f, this));
+
+      if (!this->Gravity_) {
+        this->Gravity_.set(r);
+        continue;
+      }
+    }
+
+    // LennardJones
+    //
+    if (n.name() == "LennardJones" && n.namespace_().empty()) {
+      ::std::auto_ptr<LennardJones_type> r(
+          LennardJones_traits::create(i, f, this));
+
+      if (!this->LennardJones_) {
+        this->LennardJones_.set(r);
+        continue;
+      }
+    }
+
+    break;
+  }
+}
+
+ForceType* ForceType::_clone(::xml_schema::flags f,
+                             ::xml_schema::container* c) const {
+  return new class ForceType(*this, f, c);
+}
+
+ForceType& ForceType::operator=(const ForceType& x) {
+  if (this != &x) {
+    static_cast< ::xml_schema::type&>(*this) = x;
+    this->Gravity_ = x.Gravity_;
+    this->LennardJones_ = x.LennardJones_;
+  }
+
+  return *this;
+}
+
+ForceType::~ForceType() {}
+
 // simulation
 //
 
-simulation::simulation()
-    : ::xml_schema::type(), metadata_(this), cuboids_(this), spheroids_(this) {}
+simulation::simulation(const metadata_type& metadata)
+    : ::xml_schema::type(),
+      metadata_(metadata, this),
+      cuboids_(this),
+      spheroids_(this) {}
+
+simulation::simulation(::std::auto_ptr<metadata_type> metadata)
+    : ::xml_schema::type(),
+      metadata_(metadata, this),
+      cuboids_(this),
+      spheroids_(this) {}
 
 simulation::simulation(const simulation& x, ::xml_schema::flags f,
                        ::xml_schema::container* c)
@@ -1098,7 +1713,7 @@ void simulation::parse(::xsd::cxx::xml::dom::parser<char>& p,
     if (n.name() == "metadata" && n.namespace_().empty()) {
       ::std::auto_ptr<metadata_type> r(metadata_traits::create(i, f, this));
 
-      if (!this->metadata_) {
+      if (!metadata_.present()) {
         this->metadata_.set(r);
         continue;
       }
@@ -1128,6 +1743,10 @@ void simulation::parse(::xsd::cxx::xml::dom::parser<char>& p,
 
     break;
   }
+
+  if (!metadata_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("metadata", "");
+  }
 }
 
 simulation* simulation::_clone(::xml_schema::flags f,
@@ -1147,108 +1766,6 @@ simulation& simulation::operator=(const simulation& x) {
 }
 
 simulation::~simulation() {}
-
-// metadata
-//
-
-metadata::metadata()
-    : ::xml_schema::type(),
-      domain_(this),
-      FileName_(this),
-      delta_t_(this),
-      t_end_(this),
-      r_cutoff_(this) {}
-
-metadata::metadata(const metadata& x, ::xml_schema::flags f,
-                   ::xml_schema::container* c)
-    : ::xml_schema::type(x, f, c),
-      domain_(x.domain_, f, this),
-      FileName_(x.FileName_, f, this),
-      delta_t_(x.delta_t_, f, this),
-      t_end_(x.t_end_, f, this),
-      r_cutoff_(x.r_cutoff_, f, this) {}
-
-metadata::metadata(const ::xercesc::DOMElement& e, ::xml_schema::flags f,
-                   ::xml_schema::container* c)
-    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c),
-      domain_(this),
-      FileName_(this),
-      delta_t_(this),
-      t_end_(this),
-      r_cutoff_(this) {
-  if ((f & ::xml_schema::flags::base) == 0) {
-    ::xsd::cxx::xml::dom::parser<char> p(e, true, false, true);
-    this->parse(p, f);
-  }
-}
-
-void metadata::parse(::xsd::cxx::xml::dom::parser<char>& p,
-                     ::xml_schema::flags f) {
-  for (; p.more_content(); p.next_content(false)) {
-    const ::xercesc::DOMElement& i(p.cur_element());
-    const ::xsd::cxx::xml::qualified_name<char> n(
-        ::xsd::cxx::xml::dom::name<char>(i));
-
-    // domain
-    //
-    if (n.name() == "domain" && n.namespace_().empty()) {
-      ::std::auto_ptr<domain_type> r(domain_traits::create(i, f, this));
-
-      if (!this->domain_) {
-        this->domain_.set(r);
-        continue;
-      }
-    }
-
-    break;
-  }
-
-  while (p.more_attributes()) {
-    const ::xercesc::DOMAttr& i(p.next_attribute());
-    const ::xsd::cxx::xml::qualified_name<char> n(
-        ::xsd::cxx::xml::dom::name<char>(i));
-
-    if (n.name() == "FileName" && n.namespace_().empty()) {
-      this->FileName_.set(FileName_traits::create(i, f, this));
-      continue;
-    }
-
-    if (n.name() == "delta_t" && n.namespace_().empty()) {
-      this->delta_t_.set(delta_t_traits::create(i, f, this));
-      continue;
-    }
-
-    if (n.name() == "t_end" && n.namespace_().empty()) {
-      this->t_end_.set(t_end_traits::create(i, f, this));
-      continue;
-    }
-
-    if (n.name() == "r_cutoff" && n.namespace_().empty()) {
-      this->r_cutoff_.set(r_cutoff_traits::create(i, f, this));
-      continue;
-    }
-  }
-}
-
-metadata* metadata::_clone(::xml_schema::flags f,
-                           ::xml_schema::container* c) const {
-  return new class metadata(*this, f, c);
-}
-
-metadata& metadata::operator=(const metadata& x) {
-  if (this != &x) {
-    static_cast< ::xml_schema::type&>(*this) = x;
-    this->domain_ = x.domain_;
-    this->FileName_ = x.FileName_;
-    this->delta_t_ = x.delta_t_;
-    this->t_end_ = x.t_end_;
-    this->r_cutoff_ = x.r_cutoff_;
-  }
-
-  return *this;
-}
-
-metadata::~metadata() {}
 
 // cuboids
 //

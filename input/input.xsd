@@ -5,18 +5,7 @@
         <xs:complexType>
             <xs:sequence>
                 <!-- metadata (optional) -->
-                <xs:element name="metadata" minOccurs="0">
-                    <xs:complexType>
-                        <xs:sequence>
-                            <xs:element name="domain" type="Ivec3Type" minOccurs="0"/>
-                        </xs:sequence>
-                        <xs:attribute name="FileName" type="xs:string"/>
-                        <xs:attribute name="delta_t" type="xs:decimal"/>
-                        <xs:attribute name="t_end" type="xs:double"/>
-                        <xs:attribute name="r_cutoff" type="xs:double"/>
-                    </xs:complexType>
-                </xs:element>
-
+                <xs:element name="metadata" type="MetadataType"/>
                 <!-- cuboids (n) -->
                 <xs:element name="cuboids" minOccurs="0">
                     <xs:complexType>
@@ -37,6 +26,16 @@
         </xs:complexType>
     </xs:element>
 
+    <xs:complexType name="MetadataType">
+        <xs:sequence>
+            <xs:element name="container" type="ContainerType"/>
+            <xs:element name="force" type="ForceType"/>
+            <xs:element name="delta_t" type="xs:decimal"/>
+            <xs:element name="t_end" type="xs:double"/>
+            <xs:element name="twoD" type="xs:boolean"/>
+        </xs:sequence>
+    </xs:complexType>
+
     <xs:complexType name="cuboidType">
         <xs:sequence>
             <xs:element name="velocity" type="Dvec3Type"/>
@@ -48,7 +47,7 @@
             <xs:element name="epsilon" type="xs:decimal"/>
             <xs:element name="sigma" type="xs:decimal"/>
             <xs:element name="mv" type="xs:decimal"/>
-            <xs:element name="twoD" type="xs:boolean" default="true"/>
+            <!--<xs:element name="twoD" type="xs:boolean" default="true"/>-->
         </xs:sequence>
     </xs:complexType>
 
@@ -63,7 +62,7 @@
             <xs:element name="mass" type="xs:decimal"/>
             <xs:element name="epsilon" type="xs:decimal"/>
             <xs:element name="sigma" type="xs:decimal"/>
-            <xs:element name="twoD" type="xs:boolean" default="true"/>
+            <!--<xs:element name="twoD" type="xs:boolean" default="true"/>-->
         </xs:sequence>
     </xs:complexType>
 
@@ -82,5 +81,37 @@
             <xs:element name="y" type="xs:int"/>
             <xs:element name="z" type="xs:int"/>
         </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ContainerType">
+        <xs:choice>
+            <xs:element name="directSum" type="DirectSumType"/>
+            <xs:element name="linkedCells" type="LinkedCellsType"/>
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="LinkedCellsType">
+        <xs:sequence>
+            <xs:element name="domain" type="Ivec3Type"/>
+            <xs:element name="r_cutoff" type="xs:decimal"/>
+            <xs:element name="boundary" type="BoundaryType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="DirectSumType">
+    </xs:complexType>
+
+    <xs:complexType name="BoundaryType">
+        <xs:choice>
+            <xs:element name="Outflow"/>
+            <xs:element name="Boundary"/>
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="ForceType">
+        <xs:choice>
+            <xs:element name="Gravity"/>
+            <xs:element name="LennardJones"/>
+        </xs:choice>
     </xs:complexType>
 </xs:schema>
