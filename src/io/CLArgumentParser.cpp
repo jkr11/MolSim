@@ -26,7 +26,7 @@ std::tuple<std::filesystem::path, double> CLArgumentParser::parse(
   int option_index = 0;
 
   std::filesystem::path input_file{};
-  double step_size = 100;
+  double step_size = 0.5;
 
   while ((opt = getopt_long(argc, argv, "hf:s:l:R:", long_options,
                             &option_index)) != -1) {

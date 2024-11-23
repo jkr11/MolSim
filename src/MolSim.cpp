@@ -1,4 +1,3 @@
-#include <complex>
 #include <filesystem>
 #include <iostream>
 
@@ -14,7 +13,6 @@
 #include "io/file/out/OutputHelper.h"
 #include "io/file/out/VTKWriter.h"
 #include "spdlog/fmt/bundled/chrono.h"
-#include "spdlog/stopwatch.h"
 #include "utils/ArrayUtils.h"
 #include "utils/SpdWrapper.h"
 
@@ -33,7 +31,7 @@ int main(int argc, char* argv[]) {
       .container_type = Arguments::LinkedCells,
   };
   auto [input_file, step_size] = CLArgumentParser::parse(argc, argv);
-
+  SpdWrapper::get()->info("Step size: {}", step_size);
   //  TODO: Should we change this so it doesnt get read here but the reader
   //  instantiates the container and then writes the shapes to the container?
   std::vector<Particle> particles;
@@ -79,7 +77,6 @@ int main(int argc, char* argv[]) {
       plotParticles(outputDirectory, iteration, writer, *container);
       writes++;
       next_output_time = writes * step_size;
-
       // check if next percentage complete
       if (const double t = 100 * current_time / arguments.t_end;
           t >= percentage) {
