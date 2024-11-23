@@ -6,19 +6,15 @@
 #include "../utils/ArrayUtils.h"
 
 void VerletIntegrator::step(ParticleContainer& particle_container) {
-  // update positions
   particle_container.singleIterator([this](Particle& p) {
     const dvec3 new_x = p.getX() + delta_t * p.getV() +
                         (delta_t * delta_t / (2 * p.getM())) * (p.getF());
     p.setX(new_x);
   });
 
-  // advance time, old F_{t] -> F_{t-1}, F_{t} = 0
-  particle_container.singleIterator([](Particle& p) {
-    p.updateForceInTime();
-  });
+  particle_container.singleIterator([](Particle& p) { p.updateForceInTime(); });
 
-  // update force
+  particle_container.imposeInvariant();
 
   particle_container.pairIterator([this](Particle& p1, Particle& p2) {
     const dvec3 g12 = force.directionalForce(p1, p2);
@@ -26,7 +22,6 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
     p2.setF(p2.getF() - g12);  // g12 = -g21
   });
 
-  // Now we use F_t and F_{t-1} to calculate the current velocity
   particle_container.singleIterator([this](Particle& p) {
     const dvec3 new_v =
         p.getV() + (delta_t / (2 * p.getM()) * (p.getOldF() + p.getF()));

@@ -135,12 +135,12 @@ void LinkedCellsContainer::pairIterator(
   for (std::size_t cellIndex = 0; cellIndex < cells.size(); cellIndex++) {
     std::vector<Particle> &cellParticles = cells[cellIndex];
 
+    if (cellParticles.empty()) continue;
+
     ivec3 cellCoordinate = cellIndexToCoord(cellIndex);
     DEBUG_PRINT_FMT("cell index: {}; coord = ({}, {}, {}); halo? = {}",
                     cellIndex, cellCoordinate[0], cellCoordinate[1],
                     cellCoordinate[2], isHalo(cellIndex));
-
-    if (cellParticles.empty()) continue;
 
     // iterate over particles inside cell
     for (std::size_t i = 0; i < cellParticles.size(); ++i) {
