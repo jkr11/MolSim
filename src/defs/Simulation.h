@@ -11,15 +11,24 @@
 #include "utils/SpdWrapper.h"
 
 /**
- * @brief holds the necessary parameters for our simulation read from xml files.
+ * @brief struct to hold command line arguments
  */
-struct Simulation {
-  double delta_t{};
-  double t_end{};
-  double cutoff_radius{};
-  ivec3 domain{};
+struct Arguments {
+  // std::string input_file;
+  double t_end;
+  double delta_t;
+  // double output_time_step_size; // TODO: this is still needed, this is
+  // supposed to be fps later on
+  std::string log_level;
+  enum ForceType { LennardJones, Gravity } force_type;
+  ivec3 domain;
+  double cutoff_radius;
+  enum ContainerType { LinkedCells, DirectSum } container_type;
+  // TODO: make this into an std::variant<LinkedCellsStruct,DirectSumStruct> as
+  // we add more information that directsum doesnt need to know about.
 };
 
+// TODO: find a nice place for this
 /**
  * @brief translates a vector from the xml parser to a valid "standard" c++ type
  * @tparam SVec source vector as one of the xsd types, e.g. IVec3Type

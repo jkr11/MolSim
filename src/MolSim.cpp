@@ -18,57 +18,61 @@
 #include "utils/ArrayUtils.h"
 #include "utils/SpdWrapper.h"
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
   SpdWrapper::get()->info("Application started");
   // ok so this is really ugly but i think we can merge both structs into one
   // we dont need additional file readers anymore so we can just use XMLReader
 
   Arguments arguments = {
-      .input_file = "",                  // file
-      .t_end = 5,                        // t_end
-      .delta_t = 0.0002,                 // delta_t
-      .output_time_step_size = 1,        // output_time_step_size
-      .log_level = "info",               // logLevel
-      .force_type = Arguments::Gravity,  // force
+      //.input_file = "",                  // file
+      .t_end = 5,         // t_end
+      .delta_t = 0.0002,  // delta_t
+      //.output_time_step_size = 1,        // output_time_step_size
+      .log_level = "info",                    // logLevel
+      .force_type = Arguments::LennardJones,  // force
       .domain = {100, 100, 100},
       .cutoff_radius = 3.0,
-      .container_type = Arguments::DirectSum,
+      .container_type = Arguments::LinkedCells,
   };  // TODO: figure out if the . assignement in structs is valid C++17
 
-  if (CLArgumentParser::parse(argc, argv, arguments) != 0) {
-    exit(EXIT_FAILURE);
-  }
-  const auto reader = std::make_unique<XmlReader>(arguments);
-
+  auto [input_file, step_size] = CLArgumentParser::parse(argc, argv);
+  // const auto reader = std::make_unique<XmlReader>();
+  //  TODO: Should we change this so it doesnt get read here but the reader
+  //  instantiates the container and then writes the shapes to the container?
   std::vector<Particle> particles;
-  reader->read(particles, arguments.input_file);
+  // reader->read(particles, input_file);
+  XmlReader::read(particles, input_file, arguments);
   SpdWrapper::get()->info("Particles size {}", particles.size());
+  /*
   auto [delta_t, t_end, cutoff_radius, domain, force_type, container_type] =
       reader.get()->pass();
+      */
 
-  SpdWrapper::get()->info("t_end: {}, delta_t: {}, cutoff_radius: {}", t_end,
-                          delta_t, cutoff_radius);
+  SpdWrapper::get()->info("t_end: {}, delta_t: {}, cutoff_radius: {}",
+                          arguments.t_end, arguments.delta_t,
+                          arguments.cutoff_radius);
 
   // maybe we can make this nicer, this is the best i can come up with right now
   std::unique_ptr<ParticleContainer> container;
-  if (container_type == Arguments::LinkedCells) {
-    container = std::make_unique<LinkedCellsContainer>(domain, cutoff_radius);
+  if (arguments.container_type == Arguments::LinkedCells) {
+    container = std::make_unique<LinkedCellsContainer>(arguments.domain,
+                                                       arguments.cutoff_radius);
     container->addParticles(particles);
     container->imposeInvariant();
-  } else if (container_type == Arguments::DirectSum) {
+  } else if (arguments.container_type == Arguments::DirectSum) {
     container = std::make_unique<DirectSumContainer>();
     container->addParticles(particles);
   }
 
   // set force type
   std::unique_ptr<Force> force;
-  if (force_type == Arguments::Gravity) {
+  if (arguments.force_type == Arguments::Gravity) {
     force = std::make_unique<Gravity>();
-  } else if (force_type == Arguments::LennardJones) {
+  } else if (arguments.force_type == Arguments::LennardJones) {
     force = std::make_unique<LennardJones>();
   }
   SpdWrapper::get()->info("particles.size: {}", particles.size());
-  VerletIntegrator verlet_integrator(*force, delta_t);
+  VerletIntegrator verlet_integrator(*force, arguments.delta_t);
   outputWriter::VTKWriter writer;
 
   const std::string outputDirectory =
@@ -80,24 +84,26 @@ int main(int argc, char *argv[]) {
   int percentage = 0;
   double next_output_time = 0;
 
-  while (current_time <= t_end) {
+  while (current_time <= arguments.t_end) {
     verlet_integrator.step(*container);
 
     if (current_time >= next_output_time) {
       plotParticles(outputDirectory, iteration, writer, *container);
       writes++;
-      next_output_time = writes * arguments.output_time_step_size;
+      next_output_time = writes * step_size;
 
       // check if next percentage complete
-      if (const double t = 100 * current_time / t_end; t >= percentage) {
+      if (const double t = 100 * current_time / arguments.t_end;
+          t >= percentage) {
         percentage++;
         SpdWrapper::get()->info("[{:.0f} %]: Iteration {}",
-                                100 * current_time / t_end, iteration);
+                                100 * current_time / arguments.t_end,
+                                iteration);
       }
     }
 
     iteration++;
-    current_time = delta_t * iteration;  // + start_time
+    current_time = arguments.delta_t * iteration;  // + start_time
   }
   std::cout << std::endl;
   SpdWrapper::get()->info("Output written. Terminating...");

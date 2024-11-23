@@ -5,7 +5,7 @@
         <container>
             <linkedCells>
                 <domain>
-                    <x>90</x>
+                    <x>180</x>
                     <y>90</y>
                     <z>1</z>
                 </domain>
@@ -16,7 +16,7 @@
             </linkedCells>
         </container>
         <force>
-            <Gravity/>
+            <LennardJones/>
         </force>
         <delta_t>0.00005</delta_t>
         <t_end>20</t_end>

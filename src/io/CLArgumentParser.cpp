@@ -10,29 +10,28 @@
 #include <fstream>
 
 #include "defs/Simulation.h"
-#include "forces/Gravity.h"
-#include "forces/LennardJones.h"
 #include "spdlog/fmt/bundled/chrono.h"
 #include "utils/SpdWrapper.h"
-
-int CLArgumentParser::parse(int argc, char *argv[], Arguments &arguments) {
+// This basically only needs to read filename and set the loglevel (for now)
+std::tuple<std::filesystem::path, double> CLArgumentParser::parse(
+    int argc, char *argv[]) {
   const option long_options[] = {{"help", no_argument, nullptr, 'h'},
                                  {"file", required_argument, nullptr, 'f'},
-                                 {"t_end", required_argument, nullptr, 't'},
-                                 {"delta_t", required_argument, nullptr, 'd'},
                                  {"step_size", required_argument, nullptr, 's'},
                                  {"loglevel", required_argument, nullptr, 'l'},
-                                 {"force", required_argument, nullptr, 'F'},
                                  {"reader", required_argument, nullptr, 'R'},
-                                 {"container", required_argument, nullptr, 'C'},
                                  {nullptr, 0, nullptr, 0}};
 
   int opt;
   int option_index = 0;
 
-  while ((opt = getopt_long(argc, argv, "hf:t:d:s:l:F:R:", long_options,
+  std::filesystem::path input_file{};
+  double step_size{};
+
+  while ((opt = getopt_long(argc, argv, "hf:s:l:R:", long_options,
                             &option_index)) != -1) {
     try {
+      // TODO: is this even necessary?
       if ((opt == 'f' || opt == 't' || opt == 'd' || opt == 's') &&
           optarg == nullptr) {
         throw std::invalid_argument("invalid argument for option -" +
@@ -42,36 +41,23 @@ int CLArgumentParser::parse(int argc, char *argv[], Arguments &arguments) {
       switch (opt) {
         case 'h':
           printUsage("Display Help page, no execution", argv[0]);
-          return -1;
+          exit(EXIT_FAILURE);
         case 'f':
-          arguments.input_file = optarg;
-          break;
-        case 't':
-          arguments.t_end = parseDouble(optarg, "t_end");
-          break;
-        case 'd':
-          arguments.delta_t = parseDouble(optarg, "delta_t");
+          input_file = optarg;
           break;
         case 's':
-          arguments.output_time_step_size = parseDouble(optarg, "step_size");
+          step_size = parseDouble(optarg, "step_size");
           break;
         case 'l':
           if (SpdWrapper::setLogLevel(optarg) != 0) {
             throw std::invalid_argument(
                 "invalid argument for option --loglevel" + std::string(optarg));
           }
-          arguments.log_level = optarg;
-          break;
-        case 'F':
-          arguments.force_type = parseForceType(optarg);
           break;
         case 'R':
           SpdWrapper::get()->info(
               "This is deprecated and ignored as we only need XMLReader now, "
               "note that only xml files are allowed.");
-          break;
-        case 'C':
-          arguments.container_type = parseContainerType(optarg);
           break;
         default:
           throw std::invalid_argument("Unsupported option: -" +
@@ -79,18 +65,17 @@ int CLArgumentParser::parse(int argc, char *argv[], Arguments &arguments) {
       }
     } catch (const std::exception &e) {
       printUsage(e.what(), argv[0]);
-      return -1;
+      exit(EXIT_FAILURE);
     }
   }
 
   try {
-    validateInputFile(arguments.input_file);
+    validateInputFile(input_file);
   } catch (const std::exception &e) {
     printUsage(e.what(), argv[0]);
-    return -1;
+    exit(EXIT_FAILURE);
   }
-
-  return 0;
+  return {input_file, step_size};
 }
 
 double CLArgumentParser::parseDouble(const char *arg,
@@ -102,7 +87,7 @@ double CLArgumentParser::parseDouble(const char *arg,
                                 option_name + "': " + std::string(arg));
   }
 }
-
+// TODO: delete
 Arguments::ForceType CLArgumentParser::parseForceType(const std::string &arg) {
   if (const std::string f = toLower(arg); f == "lennardjones") {
     return Arguments::LennardJones;
@@ -113,7 +98,7 @@ Arguments::ForceType CLArgumentParser::parseForceType(const std::string &arg) {
     throw std::invalid_argument("Unknown Force Type: '" + arg);
   }
 }
-
+// TODO: delete
 Arguments::ContainerType CLArgumentParser::parseContainerType(
     const std::string &arg) {
   if (const std::string c = toLower(arg); c == "linkedcells") {
@@ -126,20 +111,23 @@ Arguments::ContainerType CLArgumentParser::parseContainerType(
   }
 }
 
-void CLArgumentParser::validateInputFile(const std::string &file_path) {
+void CLArgumentParser::validateInputFile(
+    const std::filesystem::path &file_path) {
   if (!std::filesystem::exists(file_path) ||
       std::filesystem::is_directory(file_path)) {
     printUsage("File does not exist", file_path);
-    throw std::invalid_argument("Input file '" + file_path +
+    throw std::invalid_argument("Input file '" + std::string(file_path) +
                                 "' does not exist or is a directory");
   }
 
   if (std::ifstream iss(file_path);
       iss.peek() == std::ifstream::traits_type::eof()) {
-    throw std::invalid_argument("Input file '" + file_path + "' is empty!");
+    throw std::invalid_argument("Input file '" + std::string(file_path) +
+                                "' is empty!");
   }
 }
 
+// TODO: adjust this
 void CLArgumentParser::printUsage(const std::string &additionalNote,
                                   const std::string &programName) {
   // std::cerr << red << "[Error:] " << additionalNote << reset << "\n";

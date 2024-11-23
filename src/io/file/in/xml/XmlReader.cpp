@@ -14,7 +14,8 @@
 #include "utils/SpdWrapper.h"
 
 void XmlReader::read(std::vector<Particle>& particles,
-                     const std::string& filepath) {
+                     const std::string& filepath,
+                     Arguments& simulation_parameters) {
   const std::filesystem::path path(filepath);
   if (!exists(path)) {
     throw std::runtime_error("File not found: " + path.string());
@@ -45,14 +46,15 @@ void XmlReader::read(std::vector<Particle>& particles,
     }
     if (auto& force = metadata.force(); force.LennardJones().present()) {
       simulation_parameters.force_type = Arguments::LennardJones;
+      SpdWrapper::get()->info("Using LennardJones");
     } else if (force.Gravity().present()) {
       simulation_parameters.force_type = Arguments::Gravity;
+      SpdWrapper::get()->info("Using Gravity");
+    } else {
+      SpdWrapper::get()->info("No force provided, using default LennardJones");
     }
     simulation_parameters.delta_t = metadata.delta_t();
     simulation_parameters.t_end = metadata.t_end();
-    // it's enough for twoD to be a global parameter
-    // I didn't really see any need for a single simulation to support both twoD
-    // and threeD interactions
     const auto& twoD = metadata.twoD();
 
     if (config->cuboids() != nullptr) {
@@ -88,11 +90,12 @@ void XmlReader::read(std::vector<Particle>& particles,
         sg.generate(particles);
       }
     }
-
   } catch (const std::exception& e) {
     SpdWrapper::get()->error("Error reading XML file: {}", e.what());
   }
 }
+
+/*
 
 std::tuple<double, double, double, ivec3, Arguments::ForceType,
            Arguments::ContainerType>
@@ -104,3 +107,4 @@ XmlReader::pass() const {
           simulation_parameters.force_type,
           simulation_parameters.container_type};
 }
+*/
