@@ -26,7 +26,7 @@ std::tuple<std::filesystem::path, double> CLArgumentParser::parse(
   int option_index = 0;
 
   std::filesystem::path input_file{};
-  double step_size{};
+  double step_size = 100;
 
   while ((opt = getopt_long(argc, argv, "hf:s:l:R:", long_options,
                             &option_index)) != -1) {
@@ -85,29 +85,6 @@ double CLArgumentParser::parseDouble(const char *arg,
   } catch (const std::exception &e) {
     throw std::invalid_argument("Invalid numeric value for option '" +
                                 option_name + "': " + std::string(arg));
-  }
-}
-// TODO: delete
-Arguments::ForceType CLArgumentParser::parseForceType(const std::string &arg) {
-  if (const std::string f = toLower(arg); f == "lennardjones") {
-    return Arguments::LennardJones;
-  } else {
-    if (f == "gravity") {
-      return Arguments::Gravity;
-    }
-    throw std::invalid_argument("Unknown Force Type: '" + arg);
-  }
-}
-// TODO: delete
-Arguments::ContainerType CLArgumentParser::parseContainerType(
-    const std::string &arg) {
-  if (const std::string c = toLower(arg); c == "linkedcells") {
-    return Arguments::LinkedCells;
-  } else {
-    if (c == "directsum") {
-      return Arguments::DirectSum;
-    }
-    throw std::invalid_argument("Unknown container type: " + arg);
   }
 }
 

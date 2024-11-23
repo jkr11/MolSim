@@ -20,8 +20,6 @@
 
 int main(int argc, char* argv[]) {
   SpdWrapper::get()->info("Application started");
-  // ok so this is really ugly but i think we can merge both structs into one
-  // we dont need additional file readers anymore so we can just use XMLReader
 
   Arguments arguments = {
       //.input_file = "",                  // file
@@ -33,8 +31,7 @@ int main(int argc, char* argv[]) {
       .domain = {100, 100, 100},
       .cutoff_radius = 3.0,
       .container_type = Arguments::LinkedCells,
-  };  // TODO: figure out if the . assignement in structs is valid C++17
-
+  };
   auto [input_file, step_size] = CLArgumentParser::parse(argc, argv);
 
   //  TODO: Should we change this so it doesnt get read here but the reader
@@ -42,8 +39,6 @@ int main(int argc, char* argv[]) {
   std::vector<Particle> particles;
 
   XmlReader::read(particles, input_file, arguments);
-
-  SpdWrapper::get()->info("Particles size {}", particles.size());
 
   arguments.printConfiguration();
 

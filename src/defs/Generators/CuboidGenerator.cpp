@@ -25,20 +25,19 @@ CuboidGenerator::CuboidGenerator(const dvec3 &corner,
       sigma(sigma),
       type(type),
       twoD(twoD) {
-  SpdWrapper::get()->info("CuboidGenerator of dim {} created with parameters:",
-                          twoD ? 2 : 3);
-  SpdWrapper::get()->info("corner: ({}, {}, {})", corner[0], corner[1],
-                          corner[2]);
-  SpdWrapper::get()->info("dimensions: ({}, {}, {})", dimensions[0],
-                          dimensions[1], dimensions[2]);
-  SpdWrapper::get()->info("h: {}", h);
-  SpdWrapper::get()->info("m: {}", m);
-  SpdWrapper::get()->info("initialVelocity: ({}, {}, {})", initialVelocity[0],
-                          initialVelocity[1], initialVelocity[2]);
-  SpdWrapper::get()->info("mv: {}", mv);
-  SpdWrapper::get()->info("epsilon: {}", epsilon);
-  SpdWrapper::get()->info("sigma: {}", sigma);
-  SpdWrapper::get()->info("type: {}", type);
+  DEBUG_PRINT_FMT("CuboidGenerator of dim {} created with parameters:",
+                  twoD ? 2 : 3);
+  DEBUG_PRINT_FMT("corner: ({}, {}, {})", corner[0], corner[1], corner[2]);
+  DEBUG_PRINT_FMT("dimensions: ({}, {}, {})", dimensions[0], dimensions[1],
+                  dimensions[2]);
+  DEBUG_PRINT_FMT("h: {}", h);
+  DEBUG_PRINT_FMT("m: {}", m);
+  DEBUG_PRINT_FMT("initialVelocity: ({}, {}, {})", initialVelocity[0],
+                  initialVelocity[1], initialVelocity[2]);
+  DEBUG_PRINT_FMT("mv: {}", mv);
+  DEBUG_PRINT_FMT("epsilon: {}", epsilon);
+  DEBUG_PRINT_FMT("sigma: {}", sigma);
+  DEBUG_PRINT_FMT("type: {}", type);
 }
 
 void CuboidGenerator::generate(std::vector<Particle> &particles) {

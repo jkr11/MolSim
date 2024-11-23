@@ -6,6 +6,7 @@
 
 #include <filesystem>
 
+#include "debug/debug_print.h"
 #include "defs/Generators/CuboidGenerator.h"
 #include "defs/Generators/SpheroidGenerator.h"
 #include "defs/Simulation.h"
@@ -31,7 +32,7 @@ void XmlReader::read(std::vector<Particle>& particles,
     if (auto& container = metadata.container();
         container.directSum().present()) {
       simulation_parameters.container_type = Arguments::DirectSum;
-      SpdWrapper::get()->info("Using directSumContainer");
+      DEBUG_PRINT("Using DirectSum container")
     } else if (container.linkedCells().present()) {
       simulation_parameters.container_type = Arguments::LinkedCells;
       const auto& domain = container.linkedCells().get().domain();
@@ -39,19 +40,19 @@ void XmlReader::read(std::vector<Particle>& particles,
           unwrapVec<const Ivec3Type&, ivec3>(domain, "domain");
       simulation_parameters.cutoff_radius =
           container.linkedCells().get().r_cutoff();
-      SpdWrapper::get()->info("Using LinkedCellsContainer");
+      DEBUG_PRINT("Using LinkedCells container");
     } else {
-      SpdWrapper::get()->info(
+      SpdWrapper::get()->warn(
           "No container provided, using default LinkedCells");
     }
     if (auto& force = metadata.force(); force.LennardJones().present()) {
       simulation_parameters.force_type = Arguments::LennardJones;
-      SpdWrapper::get()->info("Using LennardJones");
+      DEBUG_PRINT("Using LennardJones");
     } else if (force.Gravity().present()) {
       simulation_parameters.force_type = Arguments::Gravity;
-      SpdWrapper::get()->info("Using Gravity");
+      DEBUG_PRINT("Using Gravity");
     } else {
-      SpdWrapper::get()->info("No force provided, using default LennardJones");
+      SpdWrapper::get()->warn("No force provided, using default LennardJones");
     }
     simulation_parameters.delta_t = metadata.delta_t();
     simulation_parameters.t_end = metadata.t_end();
@@ -92,9 +93,11 @@ void XmlReader::read(std::vector<Particle>& particles,
     }
   } catch (const std::exception& e) {
     SpdWrapper::get()->error("Error reading XML file: {}", e.what());
+    exit(EXIT_FAILURE);
   }
 }
 
+// TODO: dead code, discuss
 /*
 
 std::tuple<double, double, double, ivec3, Arguments::ForceType,
