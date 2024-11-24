@@ -1,0 +1,113 @@
+#!/bin/bash
+
+help() {
+  echo "builds the project in /buildDir/<CMAKE_BUILD_TYPE> and exports the path to the executable in \$BUILD"
+  printf "predefined <CMAKE_BUILD_TYPE>s are:\t Release    (default)\n"
+  printf "\t\t\t\t\t Debug\n"
+  printf "\t\t\t\t\t asan\n"
+  printf "\t\t\t\t\t asan-quiet\n"
+  echo "use -t or --test to also test"
+  echo "Usage: source build.sh <CMAKE_BUILD_TYPE> [-t|--test]"
+  return
+}
+
+RELEASE_TYPE="Release"
+RUN_TESTS="OFF"
+
+# parse args
+for arg in "$@"; do
+  if [[ $arg == "--help" ]]
+  then
+    help
+    return
+  elif [[ $arg == "-t" || $arg == "--test" ]]
+  then
+    RUN_TESTS="ON"
+    echo "enabled testing"
+  else
+    RELEASE_TYPE="$arg"
+    printf "changed Release Type to %s\n" "$RELEASE_TYPE"
+  fi
+done
+
+printf "\033[32mbuilding '%s'\033[0m\n" "$RELEASE_TYPE"
+
+# create buildDir if needed
+if [ -d "../buildDir/$RELEASE_TYPE" ]
+then
+  printf "\033[32mdetected existing 'buildDir/%s'\033[0m\n" "$RELEASE_TYPE"
+else
+  mkdir -p ../buildDir/"$RELEASE_TYPE"
+  echo "created 'buildDir/$RELEASE_TYPE'"
+fi
+
+echo ""
+printf "\033[32m--- CMAKE: ---\033[0m\n"
+echo ""
+
+# setup cmake
+start_time=$(date +%s%N)
+cd ../buildDir/"$RELEASE_TYPE" || exit 1
+cmake ../../CMakeLists.txt
+cmake -DCMAKE_BUILD_TYPE="$RELEASE_TYPE" -DBUILD_TESTS="$RUN_TESTS" .
+
+echo ""
+printf "\033[32m--- BUILDING: ---\033[0m\n"
+echo ""
+
+# build with cmake and all cores
+if ! cmake --build . -- -"j$(nproc)"; then
+  printf "\033[31mbuild failed!\033[0m\n"
+  cd ../../scripts || return 127 # navigate back
+  return 127
+fi
+
+
+
+# test
+if [[ $RUN_TESTS == "On" ]]
+then
+  echo ""
+  printf "\033[32m--- TESTING: ---\033[0m\n"
+  echo ""
+  if ! ctest; then
+    printf "\033[31mtests failed!\033[0m\n"
+    cd ../../scripts || return 127 # navigate back
+    return 127
+  fi
+else
+  echo ""
+  echo "--- SKIPPED TESTING: ---"
+fi
+
+echo ""
+printf "\033[32m--- NOTE: ---\033[0m\n"
+echo ""
+
+# timing
+end_time=$(date +%s%N)
+elapsed_ns=$((end_time - start_time))
+elapsed_sec=$((elapsed_ns / 1000000000))
+elapsed_ms=$(((elapsed_ns % 1000000000) / 1000000))
+
+echo "Time to build & test:"
+echo "[${elapsed_sec}s ${elapsed_ms}ms]"
+
+(return 0 2>/dev/null) && sourced=1 || sourced=0
+
+if [ "$sourced" -eq 0 ]
+then
+  echo "no \$BUILD variable created since script was not sourced!"
+  return
+fi
+
+BUILD_FILE=$(dirname "$(realpath "$0")")"/MolSim"
+export BUILD="$BUILD_FILE"
+
+# navigate back since this is should have been executed with the same shell
+cd ../../scripts || return 127
+
+echo ""
+printf "\033[32mpath to executable is stored in \$BUILD:\033[0m\n"
+echo "$BUILD"
+echo ""
