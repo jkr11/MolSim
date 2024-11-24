@@ -575,6 +575,45 @@ void ForceType::LennardJones(::std::auto_ptr<LennardJones_type> x) {
   this->LennardJones_.set(x);
 }
 
+const ForceType::SingularGravity_optional& ForceType::SingularGravity() const {
+  return this->SingularGravity_;
+}
+
+ForceType::SingularGravity_optional& ForceType::SingularGravity() {
+  return this->SingularGravity_;
+}
+
+void ForceType::SingularGravity(const SingularGravity_type& x) {
+  this->SingularGravity_.set(x);
+}
+
+void ForceType::SingularGravity(const SingularGravity_optional& x) {
+  this->SingularGravity_ = x;
+}
+
+void ForceType::SingularGravity(::std::auto_ptr<SingularGravity_type> x) {
+  this->SingularGravity_.set(x);
+}
+
+// GravityType
+//
+
+// LennardJonesForce
+//
+
+// SingularGravityType
+//
+
+const SingularGravityType::g_optional& SingularGravityType::g() const {
+  return this->g_;
+}
+
+SingularGravityType::g_optional& SingularGravityType::g() { return this->g_; }
+
+void SingularGravityType::g(const g_type& x) { this->g_.set(x); }
+
+void SingularGravityType::g(const g_optional& x) { this->g_ = x; }
+
 // simulation
 //
 
@@ -1898,19 +1937,24 @@ BoundaryConfigType::~BoundaryConfigType() {}
 //
 
 ForceType::ForceType()
-    : ::xml_schema::type(), Gravity_(this), LennardJones_(this) {}
+    : ::xml_schema::type(),
+      Gravity_(this),
+      LennardJones_(this),
+      SingularGravity_(this) {}
 
 ForceType::ForceType(const ForceType& x, ::xml_schema::flags f,
                      ::xml_schema::container* c)
     : ::xml_schema::type(x, f, c),
       Gravity_(x.Gravity_, f, this),
-      LennardJones_(x.LennardJones_, f, this) {}
+      LennardJones_(x.LennardJones_, f, this),
+      SingularGravity_(x.SingularGravity_, f, this) {}
 
 ForceType::ForceType(const ::xercesc::DOMElement& e, ::xml_schema::flags f,
                      ::xml_schema::container* c)
     : ::xml_schema::type(e, f | ::xml_schema::flags::base, c),
       Gravity_(this),
-      LennardJones_(this) {
+      LennardJones_(this),
+      SingularGravity_(this) {
   if ((f & ::xml_schema::flags::base) == 0) {
     ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
     this->parse(p, f);
@@ -1947,6 +1991,18 @@ void ForceType::parse(::xsd::cxx::xml::dom::parser<char>& p,
       }
     }
 
+    // SingularGravity
+    //
+    if (n.name() == "SingularGravity" && n.namespace_().empty()) {
+      ::std::auto_ptr<SingularGravity_type> r(
+          SingularGravity_traits::create(i, f, this));
+
+      if (!this->SingularGravity_) {
+        this->SingularGravity_.set(r);
+        continue;
+      }
+    }
+
     break;
   }
 }
@@ -1961,12 +2017,125 @@ ForceType& ForceType::operator=(const ForceType& x) {
     static_cast< ::xml_schema::type&>(*this) = x;
     this->Gravity_ = x.Gravity_;
     this->LennardJones_ = x.LennardJones_;
+    this->SingularGravity_ = x.SingularGravity_;
   }
 
   return *this;
 }
 
 ForceType::~ForceType() {}
+
+// GravityType
+//
+
+GravityType::GravityType() : ::xml_schema::type() {}
+
+GravityType::GravityType(const GravityType& x, ::xml_schema::flags f,
+                         ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c) {}
+
+GravityType::GravityType(const ::xercesc::DOMElement& e, ::xml_schema::flags f,
+                         ::xml_schema::container* c)
+    : ::xml_schema::type(e, f, c) {}
+
+GravityType::GravityType(const ::xercesc::DOMAttr& a, ::xml_schema::flags f,
+                         ::xml_schema::container* c)
+    : ::xml_schema::type(a, f, c) {}
+
+GravityType::GravityType(const ::std::string& s, const ::xercesc::DOMElement* e,
+                         ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::type(s, e, f, c) {}
+
+GravityType* GravityType::_clone(::xml_schema::flags f,
+                                 ::xml_schema::container* c) const {
+  return new class GravityType(*this, f, c);
+}
+
+GravityType::~GravityType() {}
+
+// LennardJonesForce
+//
+
+LennardJonesForce::LennardJonesForce() : ::xml_schema::type() {}
+
+LennardJonesForce::LennardJonesForce(const LennardJonesForce& x,
+                                     ::xml_schema::flags f,
+                                     ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c) {}
+
+LennardJonesForce::LennardJonesForce(const ::xercesc::DOMElement& e,
+                                     ::xml_schema::flags f,
+                                     ::xml_schema::container* c)
+    : ::xml_schema::type(e, f, c) {}
+
+LennardJonesForce::LennardJonesForce(const ::xercesc::DOMAttr& a,
+                                     ::xml_schema::flags f,
+                                     ::xml_schema::container* c)
+    : ::xml_schema::type(a, f, c) {}
+
+LennardJonesForce::LennardJonesForce(const ::std::string& s,
+                                     const ::xercesc::DOMElement* e,
+                                     ::xml_schema::flags f,
+                                     ::xml_schema::container* c)
+    : ::xml_schema::type(s, e, f, c) {}
+
+LennardJonesForce* LennardJonesForce::_clone(::xml_schema::flags f,
+                                             ::xml_schema::container* c) const {
+  return new class LennardJonesForce(*this, f, c);
+}
+
+LennardJonesForce::~LennardJonesForce() {}
+
+// SingularGravityType
+//
+
+SingularGravityType::SingularGravityType() : ::xml_schema::type(), g_(this) {}
+
+SingularGravityType::SingularGravityType(const SingularGravityType& x,
+                                         ::xml_schema::flags f,
+                                         ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c), g_(x.g_, f, this) {}
+
+SingularGravityType::SingularGravityType(const ::xercesc::DOMElement& e,
+                                         ::xml_schema::flags f,
+                                         ::xml_schema::container* c)
+    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c), g_(this) {
+  if ((f & ::xml_schema::flags::base) == 0) {
+    ::xsd::cxx::xml::dom::parser<char> p(e, false, false, true);
+    this->parse(p, f);
+  }
+}
+
+void SingularGravityType::parse(::xsd::cxx::xml::dom::parser<char>& p,
+                                ::xml_schema::flags f) {
+  while (p.more_attributes()) {
+    const ::xercesc::DOMAttr& i(p.next_attribute());
+    const ::xsd::cxx::xml::qualified_name<char> n(
+        ::xsd::cxx::xml::dom::name<char>(i));
+
+    if (n.name() == "g" && n.namespace_().empty()) {
+      this->g_.set(g_traits::create(i, f, this));
+      continue;
+    }
+  }
+}
+
+SingularGravityType* SingularGravityType::_clone(
+    ::xml_schema::flags f, ::xml_schema::container* c) const {
+  return new class SingularGravityType(*this, f, c);
+}
+
+SingularGravityType& SingularGravityType::operator=(
+    const SingularGravityType& x) {
+  if (this != &x) {
+    static_cast< ::xml_schema::type&>(*this) = x;
+    this->g_ = x.g_;
+  }
+
+  return *this;
+}
+
+SingularGravityType::~SingularGravityType() {}
 
 // simulation
 //

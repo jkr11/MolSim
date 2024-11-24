@@ -2,14 +2,14 @@
 // Created by jkr on 10/18/24.
 //
 #pragma once
-#include "Force.h"
+#include "BidirectionalForce.h"
 #include "defs/Particle.h"
 #include "utils/ArrayUtils.h"
 
 /**
  * @brief Gravitational force F_{1,2}
  */
-class Gravity final : public Force {
+class Gravity final : public BidirectionalForce {
  public:
   /**
    *

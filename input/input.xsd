@@ -121,9 +121,20 @@
     </xs:complexType>
 
     <xs:complexType name="ForceType">
-        <xs:choice>
-            <xs:element name="Gravity"/>
-            <xs:element name="LennardJones"/>
-        </xs:choice>
+        <xs:sequence>
+            <xs:element name="Gravity" type="GravityType" minOccurs="0"/>
+            <xs:element name="LennardJones" type="LennardJonesForce" minOccurs="0"/>
+            <xs:element name="SingularGravity" type="SingularGravityType" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="GravityType">
+    </xs:complexType>
+
+    <xs:complexType name="LennardJonesForce">
+    </xs:complexType>
+
+    <xs:complexType name="SingularGravityType">
+        <xs:attribute name="g" type="xs:decimal"/>
     </xs:complexType>
 </xs:schema>

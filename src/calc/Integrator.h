@@ -1,13 +1,13 @@
 #pragma once
 #include "../defs/containers/ParticleContainer.h"
-#include "../forces/Force.h"
+#include "../forces/BidirectionalForce.h"
 
 /**
  * @brief Interface for different types of integrators
  */
 class Integrator {
  protected:
-  Force &force;
+  BidirectionalForce &force;
   double delta_t;
 
  public:
@@ -17,7 +17,7 @@ class Integrator {
    * @param delta_t Delta time
    * @note Since this is an interface, it's invalid
    */
-  Integrator(Force &force, const double delta_t)
+  Integrator(BidirectionalForce &force, const double delta_t)
       : force(force), delta_t(delta_t) {};
 
   /**

@@ -72,7 +72,7 @@ int main(int argc, char* argv[]) {
     throw std::runtime_error("Unrecognized container type");
   }
 
-  std::unique_ptr<Force> force;
+  std::unique_ptr<BidirectionalForce> force;
   if (arguments.force_type == Arguments::Gravity) {
     force = std::make_unique<Gravity>();
   } else if (arguments.force_type == Arguments::LennardJones) {

@@ -49,9 +49,9 @@
 
 #include <xsd/cxx/config.hxx>
 
-// #if (XSD_INT_VERSION != 4000000L)
-// #error XSD runtime version mismatch
-// #endif
+#if (XSD_INT_VERSION != 4000000L)
+#error XSD runtime version mismatch
+#endif
 
 #include <xsd/cxx/pre.hxx>
 #include <xsd/cxx/tree/elements.hxx>
@@ -226,6 +226,9 @@ class DirectSumType;
 class BoundaryType;
 class BoundaryConfigType;
 class ForceType;
+class GravityType;
+class LennardJonesForce;
+class SingularGravityType;
 class simulation;
 class cuboids;
 class spheroids;
@@ -1126,7 +1129,7 @@ class ForceType : public ::xml_schema::type {
  public:
   // Gravity
   //
-  typedef ::xml_schema::type Gravity_type;
+  typedef ::GravityType Gravity_type;
   typedef ::xsd::cxx::tree::optional<Gravity_type> Gravity_optional;
   typedef ::xsd::cxx::tree::traits<Gravity_type, char> Gravity_traits;
 
@@ -1142,7 +1145,7 @@ class ForceType : public ::xml_schema::type {
 
   // LennardJones
   //
-  typedef ::xml_schema::type LennardJones_type;
+  typedef ::LennardJonesForce LennardJones_type;
   typedef ::xsd::cxx::tree::optional<LennardJones_type> LennardJones_optional;
   typedef ::xsd::cxx::tree::traits<LennardJones_type, char> LennardJones_traits;
 
@@ -1155,6 +1158,24 @@ class ForceType : public ::xml_schema::type {
   void LennardJones(const LennardJones_optional& x);
 
   void LennardJones(::std::auto_ptr<LennardJones_type> p);
+
+  // SingularGravity
+  //
+  typedef ::SingularGravityType SingularGravity_type;
+  typedef ::xsd::cxx::tree::optional<SingularGravity_type>
+      SingularGravity_optional;
+  typedef ::xsd::cxx::tree::traits<SingularGravity_type, char>
+      SingularGravity_traits;
+
+  const SingularGravity_optional& SingularGravity() const;
+
+  SingularGravity_optional& SingularGravity();
+
+  void SingularGravity(const SingularGravity_type& x);
+
+  void SingularGravity(const SingularGravity_optional& x);
+
+  void SingularGravity(::std::auto_ptr<SingularGravity_type> p);
 
   // Constructors.
   //
@@ -1181,6 +1202,99 @@ class ForceType : public ::xml_schema::type {
  protected:
   Gravity_optional Gravity_;
   LennardJones_optional LennardJones_;
+  SingularGravity_optional SingularGravity_;
+};
+
+class GravityType : public ::xml_schema::type {
+ public:
+  // Constructors.
+  //
+  GravityType();
+
+  GravityType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
+              ::xml_schema::container* c = 0);
+
+  GravityType(const ::xercesc::DOMAttr& a, ::xml_schema::flags f = 0,
+              ::xml_schema::container* c = 0);
+
+  GravityType(const ::std::string& s, const ::xercesc::DOMElement* e,
+              ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+  GravityType(const GravityType& x, ::xml_schema::flags f = 0,
+              ::xml_schema::container* c = 0);
+
+  virtual GravityType* _clone(::xml_schema::flags f = 0,
+                              ::xml_schema::container* c = 0) const;
+
+  virtual ~GravityType();
+};
+
+class LennardJonesForce : public ::xml_schema::type {
+ public:
+  // Constructors.
+  //
+  LennardJonesForce();
+
+  LennardJonesForce(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
+                    ::xml_schema::container* c = 0);
+
+  LennardJonesForce(const ::xercesc::DOMAttr& a, ::xml_schema::flags f = 0,
+                    ::xml_schema::container* c = 0);
+
+  LennardJonesForce(const ::std::string& s, const ::xercesc::DOMElement* e,
+                    ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+  LennardJonesForce(const LennardJonesForce& x, ::xml_schema::flags f = 0,
+                    ::xml_schema::container* c = 0);
+
+  virtual LennardJonesForce* _clone(::xml_schema::flags f = 0,
+                                    ::xml_schema::container* c = 0) const;
+
+  virtual ~LennardJonesForce();
+};
+
+class SingularGravityType : public ::xml_schema::type {
+ public:
+  // g
+  //
+  typedef ::xml_schema::decimal g_type;
+  typedef ::xsd::cxx::tree::optional<g_type> g_optional;
+  typedef ::xsd::cxx::tree::traits<g_type, char,
+                                   ::xsd::cxx::tree::schema_type::decimal>
+      g_traits;
+
+  const g_optional& g() const;
+
+  g_optional& g();
+
+  void g(const g_type& x);
+
+  void g(const g_optional& x);
+
+  // Constructors.
+  //
+  SingularGravityType();
+
+  SingularGravityType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
+                      ::xml_schema::container* c = 0);
+
+  SingularGravityType(const SingularGravityType& x, ::xml_schema::flags f = 0,
+                      ::xml_schema::container* c = 0);
+
+  virtual SingularGravityType* _clone(::xml_schema::flags f = 0,
+                                      ::xml_schema::container* c = 0) const;
+
+  SingularGravityType& operator=(const SingularGravityType& x);
+
+  virtual ~SingularGravityType();
+
+  // Implementation.
+  //
+ protected:
+  void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
+
+ protected:
+  g_optional g_;
 };
 
 class simulation : public ::xml_schema::type {

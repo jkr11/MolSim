@@ -10,18 +10,18 @@
  *       (Lennard-Jones) coming up. Maybe also include self potentials, so split
  * in (p,q) interactions and self interactions
  */
-class Force {
+class BidirectionalForce {
  public:
   /**
    * @brief Create Force object
    * @note Since this is an interface, it's invalid
    */
-  Force() = default;
+  BidirectionalForce() = default;
 
   /**
    * @brief Virtual destructor for all Force inheritors
    */
-  virtual ~Force() = default;
+  virtual ~BidirectionalForce() = default;
 
   /**
    * @brief Function to calculate the directional force between two particles

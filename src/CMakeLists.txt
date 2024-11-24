@@ -49,6 +49,7 @@ add_executable(MolSim MolSim.cpp
         defs/Generators/ParticleGenerator.h
         defs/Generators/SpheroidGenerator.h
         defs/Generators/SpheroidGenerator.cpp
+        forces/SingularGravity.h
 )
 
 set(FILES_TO_DISABLE_WARNINGS
