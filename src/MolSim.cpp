@@ -6,6 +6,7 @@
 #include "defs/containers/LinkedCellsContainer.h"
 #include "forces/Gravity.h"
 #include "forces/LennardJones.h"
+#include "forces/SingularGravity.h"
 #include "io/CLArgumentParser.h"
 #include "io/file/in/CuboidReader.h"
 #include "io/file/in/xml/XmlReader.h"
@@ -25,7 +26,9 @@ int main(int argc, char* argv[]) {
       //.output_time_step_size = 1,
       .log_level = "info",
       .force_type = Arguments::LennardJones,
+      .singular_force_type = Arguments::SingularGravity,
       .container_type = Arguments::LinkedCells,
+      .singular_force_data = SingularGravityConfig{.g = 11.4},
       .container_data =
           LinkedCellsConfig{.domain = {100, 100, 100},
                             .cutoff_radius = 3.0,
@@ -79,7 +82,18 @@ int main(int argc, char* argv[]) {
     force = std::make_unique<LennardJones>();
   }
 
-  VerletIntegrator verlet_integrator(*force, arguments.delta_t);
+  std::unique_ptr<SingularForce> singular_force;
+  if (std::holds_alternative<SingularGravityConfig>(
+          arguments.singular_force_data)) {
+    const auto& [g] =
+        std::get<SingularGravityConfig>(arguments.singular_force_data);
+    singular_force = std::make_unique<SingularGravity>(g);
+  } else {
+    SpdWrapper::get()->error("Unrecognized singular force");
+  }
+
+  VerletIntegrator verlet_integrator(*force, *singular_force,
+                                     arguments.delta_t);
   outputWriter::VTKWriter writer;
 
   const std::string outputDirectory =

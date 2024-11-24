@@ -11,7 +11,7 @@ class SingularGravity final : public SingularForce {
   double g{};
 
  public:
-  explicit SingularGravity(const double g) {};
+  explicit SingularGravity(double g);
 
   // TODO: do we need to do this modular over the axis? or is it only in y
   // direction?

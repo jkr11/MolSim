@@ -17,8 +17,8 @@ class VerletIntegrator final : public Integrator {
    * @param force Reference to the type of force applied each iteration
    * @param delta_t Delta time
    */
-  VerletIntegrator(BidirectionalForce& force, const double delta_t)
-      : Integrator(force, delta_t) {}
+  VerletIntegrator(BidirectionalForce& bidirectional_force, SingularForce& singular_force, const double delta_t)
+      : Integrator(bidirectional_force, singular_force, delta_t) {}
 
   /**
    * @brief Destructor

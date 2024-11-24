@@ -34,6 +34,10 @@ struct LinkedCellsConfig {
 struct DirectSumConfig {
   // this doesnt need any other info.
 };
+
+struct SingularGravityConfig {
+  double g{};
+};
 // TODO: apparently we cant nest these for access in XMLReader
 /**
  * @brief struct to hold command line arguments
@@ -45,9 +49,10 @@ struct Arguments {
   // TODO: i think log level can be removed too
   std::string log_level;
   enum ForceType { LennardJones, Gravity } force_type;
+  enum SingularForceType { SingularGravity } singular_force_type;
   // TODO: remove this vvvvv
   enum ContainerType { LinkedCells, DirectSum } container_type;
-
+  std::variant<SingularGravityConfig> singular_force_data;
   std::variant<LinkedCellsConfig, DirectSumConfig> container_data;
   void printConfiguration() const {
     const auto logger = SpdWrapper::get();
