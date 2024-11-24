@@ -40,6 +40,16 @@ void XmlReader::read(std::vector<Particle>& particles,
           unwrapVec<const Ivec3Type&, ivec3>(domain, "domain");
       simulation_parameters.cutoff_radius =
           container.linkedCells().get().r_cutoff();
+      const auto& boundaries = container.linkedCells().get().boundary();
+      const Arguments::BoundaryConfig boundary_config = {
+          .north = toBoundaryType(boundaries.north()),
+          .south = toBoundaryType(boundaries.south()),
+          .east = toBoundaryType(boundaries.east()),
+          .west = toBoundaryType(boundaries.west()),
+          .up = toBoundaryType(boundaries.up()),
+          .down = toBoundaryType(boundaries.down()),
+      };
+      simulation_parameters.boundary_config = boundary_config;
       DEBUG_PRINT("Using LinkedCells container");
     } else {
       SpdWrapper::get()->warn(
@@ -94,6 +104,22 @@ void XmlReader::read(std::vector<Particle>& particles,
   } catch (const std::exception& e) {
     SpdWrapper::get()->error("Error reading XML file: {}", e.what());
     exit(EXIT_FAILURE);
+  }
+}
+
+template <typename BT>
+Arguments::BoundaryType toBoundaryType(const BT& boundary_type) {
+  if (boundary_type.Outflow().present()) {
+    return Arguments::Outflow;
+  }
+  if (boundary_type.Periodic().present()) {
+    return Arguments::Periodic;
+  }
+  if (boundary_type.Reflective().present()) {
+    return Arguments::Reflective;
+  }
+  {
+    throw std::runtime_error("Unknown boundary type");
   }
 }
 

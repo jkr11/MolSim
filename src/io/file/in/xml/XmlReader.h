@@ -47,7 +47,17 @@ class XmlReader : public FileReader {
                            Arguments::ContainerType>
   pass() const;
   */
+  // TODO: move this to a helper class
 };
+
+/**
+ * @brief converst the xsd type
+ * @param boundary_type is the choice type passed from the xsd schema
+ * specification
+ * @return the enum type for arguments
+ */
+template <typename BT>
+Arguments::BoundaryType toBoundaryType(const BT& boundary_type);
 
 /**
  * @brief translates a vector from the xml parser to a valid "standard" c++ type
