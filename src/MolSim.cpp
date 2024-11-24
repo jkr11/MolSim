@@ -54,7 +54,7 @@ int main(int argc, char* argv[]) {
   // this is also much safer I guess
   // TODO: i really hope lrz is c++ 17 and not 14 else we can revert all of this
   // yikes
-  if (std ::holds_alternative<LinkedCellsConfig>(arguments.container_data)) {
+  if (std::holds_alternative<LinkedCellsConfig>(arguments.container_data)) {
     const auto& linked_cells_data =
         std::get<LinkedCellsConfig>(arguments.container_data);
     // TODO: make it possible to just pass the entire struct into this or

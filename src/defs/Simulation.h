@@ -12,7 +12,7 @@
 #include "utils/SpdWrapper.h"
 
 /**
- * @brief struct to hold command line arguments
+ * @brief holds the specification for the LinkedCellsContainer
  */
 struct LinkedCellsConfig {
   ivec3 domain;
@@ -28,20 +28,24 @@ struct LinkedCellsConfig {
   } boundary_config;
 };
 
+/**
+ * @brief holds the specification for the DirectSumContainer
+ */
 struct DirectSumConfig {
   // this doesnt need any other info.
 };
 // TODO: apparently we cant nest these for access in XMLReader
+/**
+ * @brief struct to hold command line arguments
+ */
 struct Arguments {
   double t_end;
   double delta_t;
-  // double output_time_step_size; // TODO: this is still needed, this is
-  // supposed to be fps later on
+  // double output_time_step_size; // TODO: should this go in files?
+  // TODO: i think log level can be removed too
   std::string log_level;
   enum ForceType { LennardJones, Gravity } force_type;
-  // ivec3 domain;
-  // double cutoff_radius;
-
+  // TODO: remove this vvvvv
   enum ContainerType { LinkedCells, DirectSum } container_type;
 
   std::variant<LinkedCellsConfig, DirectSumConfig> container_data;
