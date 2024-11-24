@@ -49,9 +49,9 @@
 
 #include <xsd/cxx/config.hxx>
 
-//#if (XSD_INT_VERSION != 4000000L)
-//#error XSD runtime version mismatch
-//#endif
+#if (XSD_INT_VERSION != 4000000L)
+#error XSD runtime version mismatch
+#endif
 
 #include <xsd/cxx/pre.hxx>
 #include <xsd/cxx/tree/elements.hxx>
@@ -224,6 +224,7 @@ class ContainerType;
 class LinkedCellsType;
 class DirectSumType;
 class BoundaryType;
+class BoundaryConfigType;
 class ForceType;
 class simulation;
 class cuboids;
@@ -860,7 +861,7 @@ class LinkedCellsType : public ::xml_schema::type {
 
   // boundary
   //
-  typedef ::BoundaryType boundary_type;
+  typedef ::BoundaryConfigType boundary_type;
   typedef ::xsd::cxx::tree::traits<boundary_type, char> boundary_traits;
 
   const boundary_type& boundary() const;
@@ -945,21 +946,37 @@ class BoundaryType : public ::xml_schema::type {
 
   void Outflow(::std::auto_ptr<Outflow_type> p);
 
-  // Boundary
+  // Reflective
   //
-  typedef ::xml_schema::type Boundary_type;
-  typedef ::xsd::cxx::tree::optional<Boundary_type> Boundary_optional;
-  typedef ::xsd::cxx::tree::traits<Boundary_type, char> Boundary_traits;
+  typedef ::xml_schema::type Reflective_type;
+  typedef ::xsd::cxx::tree::optional<Reflective_type> Reflective_optional;
+  typedef ::xsd::cxx::tree::traits<Reflective_type, char> Reflective_traits;
 
-  const Boundary_optional& Boundary() const;
+  const Reflective_optional& Reflective() const;
 
-  Boundary_optional& Boundary();
+  Reflective_optional& Reflective();
 
-  void Boundary(const Boundary_type& x);
+  void Reflective(const Reflective_type& x);
 
-  void Boundary(const Boundary_optional& x);
+  void Reflective(const Reflective_optional& x);
 
-  void Boundary(::std::auto_ptr<Boundary_type> p);
+  void Reflective(::std::auto_ptr<Reflective_type> p);
+
+  // Periodic
+  //
+  typedef ::xml_schema::type Periodic_type;
+  typedef ::xsd::cxx::tree::optional<Periodic_type> Periodic_optional;
+  typedef ::xsd::cxx::tree::traits<Periodic_type, char> Periodic_traits;
+
+  const Periodic_optional& Periodic() const;
+
+  Periodic_optional& Periodic();
+
+  void Periodic(const Periodic_type& x);
+
+  void Periodic(const Periodic_optional& x);
+
+  void Periodic(::std::auto_ptr<Periodic_type> p);
 
   // Constructors.
   //
@@ -985,7 +1002,124 @@ class BoundaryType : public ::xml_schema::type {
 
  protected:
   Outflow_optional Outflow_;
-  Boundary_optional Boundary_;
+  Reflective_optional Reflective_;
+  Periodic_optional Periodic_;
+};
+
+class BoundaryConfigType : public ::xml_schema::type {
+ public:
+  // north
+  //
+  typedef ::BoundaryType north_type;
+  typedef ::xsd::cxx::tree::traits<north_type, char> north_traits;
+
+  const north_type& north() const;
+
+  north_type& north();
+
+  void north(const north_type& x);
+
+  void north(::std::auto_ptr<north_type> p);
+
+  // south
+  //
+  typedef ::BoundaryType south_type;
+  typedef ::xsd::cxx::tree::traits<south_type, char> south_traits;
+
+  const south_type& south() const;
+
+  south_type& south();
+
+  void south(const south_type& x);
+
+  void south(::std::auto_ptr<south_type> p);
+
+  // east
+  //
+  typedef ::BoundaryType east_type;
+  typedef ::xsd::cxx::tree::traits<east_type, char> east_traits;
+
+  const east_type& east() const;
+
+  east_type& east();
+
+  void east(const east_type& x);
+
+  void east(::std::auto_ptr<east_type> p);
+
+  // west
+  //
+  typedef ::BoundaryType west_type;
+  typedef ::xsd::cxx::tree::traits<west_type, char> west_traits;
+
+  const west_type& west() const;
+
+  west_type& west();
+
+  void west(const west_type& x);
+
+  void west(::std::auto_ptr<west_type> p);
+
+  // up
+  //
+  typedef ::BoundaryType up_type;
+  typedef ::xsd::cxx::tree::traits<up_type, char> up_traits;
+
+  const up_type& up() const;
+
+  up_type& up();
+
+  void up(const up_type& x);
+
+  void up(::std::auto_ptr<up_type> p);
+
+  // down
+  //
+  typedef ::BoundaryType down_type;
+  typedef ::xsd::cxx::tree::traits<down_type, char> down_traits;
+
+  const down_type& down() const;
+
+  down_type& down();
+
+  void down(const down_type& x);
+
+  void down(::std::auto_ptr<down_type> p);
+
+  // Constructors.
+  //
+  BoundaryConfigType(const north_type&, const south_type&, const east_type&,
+                     const west_type&, const up_type&, const down_type&);
+
+  BoundaryConfigType(::std::auto_ptr<north_type>, ::std::auto_ptr<south_type>,
+                     ::std::auto_ptr<east_type>, ::std::auto_ptr<west_type>,
+                     ::std::auto_ptr<up_type>, ::std::auto_ptr<down_type>);
+
+  BoundaryConfigType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
+                     ::xml_schema::container* c = 0);
+
+  BoundaryConfigType(const BoundaryConfigType& x, ::xml_schema::flags f = 0,
+                     ::xml_schema::container* c = 0);
+
+  virtual BoundaryConfigType* _clone(::xml_schema::flags f = 0,
+                                     ::xml_schema::container* c = 0) const;
+
+  BoundaryConfigType& operator=(const BoundaryConfigType& x);
+
+  virtual ~BoundaryConfigType();
+
+  // Implementation.
+  //
+ protected:
+  void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
+
+ protected:
+  ::xsd::cxx::tree::one<north_type> north_;
+  ::xsd::cxx::tree::one<south_type> south_;
+  ::xsd::cxx::tree::one<east_type> east_;
+  ::xsd::cxx::tree::one<west_type> west_;
+  ::xsd::cxx::tree::one<up_type> up_;
+  ::xsd::cxx::tree::one<down_type> down_;
 };
 
 class ForceType : public ::xml_schema::type {

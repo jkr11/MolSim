@@ -417,20 +417,125 @@ void BoundaryType::Outflow(::std::auto_ptr<Outflow_type> x) {
   this->Outflow_.set(x);
 }
 
-const BoundaryType::Boundary_optional& BoundaryType::Boundary() const {
-  return this->Boundary_;
+const BoundaryType::Reflective_optional& BoundaryType::Reflective() const {
+  return this->Reflective_;
 }
 
-BoundaryType::Boundary_optional& BoundaryType::Boundary() {
-  return this->Boundary_;
+BoundaryType::Reflective_optional& BoundaryType::Reflective() {
+  return this->Reflective_;
 }
 
-void BoundaryType::Boundary(const Boundary_type& x) { this->Boundary_.set(x); }
+void BoundaryType::Reflective(const Reflective_type& x) {
+  this->Reflective_.set(x);
+}
 
-void BoundaryType::Boundary(const Boundary_optional& x) { this->Boundary_ = x; }
+void BoundaryType::Reflective(const Reflective_optional& x) {
+  this->Reflective_ = x;
+}
 
-void BoundaryType::Boundary(::std::auto_ptr<Boundary_type> x) {
-  this->Boundary_.set(x);
+void BoundaryType::Reflective(::std::auto_ptr<Reflective_type> x) {
+  this->Reflective_.set(x);
+}
+
+const BoundaryType::Periodic_optional& BoundaryType::Periodic() const {
+  return this->Periodic_;
+}
+
+BoundaryType::Periodic_optional& BoundaryType::Periodic() {
+  return this->Periodic_;
+}
+
+void BoundaryType::Periodic(const Periodic_type& x) { this->Periodic_.set(x); }
+
+void BoundaryType::Periodic(const Periodic_optional& x) { this->Periodic_ = x; }
+
+void BoundaryType::Periodic(::std::auto_ptr<Periodic_type> x) {
+  this->Periodic_.set(x);
+}
+
+// BoundaryConfigType
+//
+
+const BoundaryConfigType::north_type& BoundaryConfigType::north() const {
+  return this->north_.get();
+}
+
+BoundaryConfigType::north_type& BoundaryConfigType::north() {
+  return this->north_.get();
+}
+
+void BoundaryConfigType::north(const north_type& x) { this->north_.set(x); }
+
+void BoundaryConfigType::north(::std::auto_ptr<north_type> x) {
+  this->north_.set(x);
+}
+
+const BoundaryConfigType::south_type& BoundaryConfigType::south() const {
+  return this->south_.get();
+}
+
+BoundaryConfigType::south_type& BoundaryConfigType::south() {
+  return this->south_.get();
+}
+
+void BoundaryConfigType::south(const south_type& x) { this->south_.set(x); }
+
+void BoundaryConfigType::south(::std::auto_ptr<south_type> x) {
+  this->south_.set(x);
+}
+
+const BoundaryConfigType::east_type& BoundaryConfigType::east() const {
+  return this->east_.get();
+}
+
+BoundaryConfigType::east_type& BoundaryConfigType::east() {
+  return this->east_.get();
+}
+
+void BoundaryConfigType::east(const east_type& x) { this->east_.set(x); }
+
+void BoundaryConfigType::east(::std::auto_ptr<east_type> x) {
+  this->east_.set(x);
+}
+
+const BoundaryConfigType::west_type& BoundaryConfigType::west() const {
+  return this->west_.get();
+}
+
+BoundaryConfigType::west_type& BoundaryConfigType::west() {
+  return this->west_.get();
+}
+
+void BoundaryConfigType::west(const west_type& x) { this->west_.set(x); }
+
+void BoundaryConfigType::west(::std::auto_ptr<west_type> x) {
+  this->west_.set(x);
+}
+
+const BoundaryConfigType::up_type& BoundaryConfigType::up() const {
+  return this->up_.get();
+}
+
+BoundaryConfigType::up_type& BoundaryConfigType::up() {
+  return this->up_.get();
+}
+
+void BoundaryConfigType::up(const up_type& x) { this->up_.set(x); }
+
+void BoundaryConfigType::up(::std::auto_ptr<up_type> x) { this->up_.set(x); }
+
+const BoundaryConfigType::down_type& BoundaryConfigType::down() const {
+  return this->down_.get();
+}
+
+BoundaryConfigType::down_type& BoundaryConfigType::down() {
+  return this->down_.get();
+}
+
+void BoundaryConfigType::down(const down_type& x) { this->down_.set(x); }
+
+void BoundaryConfigType::down(::std::auto_ptr<down_type> x) {
+  this->down_.set(x);
 }
 
 // ForceType
@@ -1524,19 +1629,24 @@ DirectSumType::~DirectSumType() {}
 //
 
 BoundaryType::BoundaryType()
-    : ::xml_schema::type(), Outflow_(this), Boundary_(this) {}
+    : ::xml_schema::type(),
+      Outflow_(this),
+      Reflective_(this),
+      Periodic_(this) {}
 
 BoundaryType::BoundaryType(const BoundaryType& x, ::xml_schema::flags f,
                            ::xml_schema::container* c)
     : ::xml_schema::type(x, f, c),
       Outflow_(x.Outflow_, f, this),
-      Boundary_(x.Boundary_, f, this) {}
+      Reflective_(x.Reflective_, f, this),
+      Periodic_(x.Periodic_, f, this) {}
 
 BoundaryType::BoundaryType(const ::xercesc::DOMElement& e,
                            ::xml_schema::flags f, ::xml_schema::container* c)
     : ::xml_schema::type(e, f | ::xml_schema::flags::base, c),
       Outflow_(this),
-      Boundary_(this) {
+      Reflective_(this),
+      Periodic_(this) {
   if ((f & ::xml_schema::flags::base) == 0) {
     ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
     this->parse(p, f);
@@ -1561,13 +1671,24 @@ void BoundaryType::parse(::xsd::cxx::xml::dom::parser<char>& p,
       }
     }
 
-    // Boundary
+    // Reflective
     //
-    if (n.name() == "Boundary" && n.namespace_().empty()) {
-      ::std::auto_ptr<Boundary_type> r(Boundary_traits::create(i, f, this));
+    if (n.name() == "Reflective" && n.namespace_().empty()) {
+      ::std::auto_ptr<Reflective_type> r(Reflective_traits::create(i, f, this));
 
-      if (!this->Boundary_) {
-        this->Boundary_.set(r);
+      if (!this->Reflective_) {
+        this->Reflective_.set(r);
+        continue;
+      }
+    }
+
+    // Periodic
+    //
+    if (n.name() == "Periodic" && n.namespace_().empty()) {
+      ::std::auto_ptr<Periodic_type> r(Periodic_traits::create(i, f, this));
+
+      if (!this->Periodic_) {
+        this->Periodic_.set(r);
         continue;
       }
     }
@@ -1585,13 +1706,193 @@ BoundaryType& BoundaryType::operator=(const BoundaryType& x) {
   if (this != &x) {
     static_cast< ::xml_schema::type&>(*this) = x;
     this->Outflow_ = x.Outflow_;
-    this->Boundary_ = x.Boundary_;
+    this->Reflective_ = x.Reflective_;
+    this->Periodic_ = x.Periodic_;
   }
 
   return *this;
 }
 
 BoundaryType::~BoundaryType() {}
+
+// BoundaryConfigType
+//
+
+BoundaryConfigType::BoundaryConfigType(const north_type& north,
+                                       const south_type& south,
+                                       const east_type& east,
+                                       const west_type& west, const up_type& up,
+                                       const down_type& down)
+    : ::xml_schema::type(),
+      north_(north, this),
+      south_(south, this),
+      east_(east, this),
+      west_(west, this),
+      up_(up, this),
+      down_(down, this) {}
+
+BoundaryConfigType::BoundaryConfigType(::std::auto_ptr<north_type> north,
+                                       ::std::auto_ptr<south_type> south,
+                                       ::std::auto_ptr<east_type> east,
+                                       ::std::auto_ptr<west_type> west,
+                                       ::std::auto_ptr<up_type> up,
+                                       ::std::auto_ptr<down_type> down)
+    : ::xml_schema::type(),
+      north_(north, this),
+      south_(south, this),
+      east_(east, this),
+      west_(west, this),
+      up_(up, this),
+      down_(down, this) {}
+
+BoundaryConfigType::BoundaryConfigType(const BoundaryConfigType& x,
+                                       ::xml_schema::flags f,
+                                       ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c),
+      north_(x.north_, f, this),
+      south_(x.south_, f, this),
+      east_(x.east_, f, this),
+      west_(x.west_, f, this),
+      up_(x.up_, f, this),
+      down_(x.down_, f, this) {}
+
+BoundaryConfigType::BoundaryConfigType(const ::xercesc::DOMElement& e,
+                                       ::xml_schema::flags f,
+                                       ::xml_schema::container* c)
+    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c),
+      north_(this),
+      south_(this),
+      east_(this),
+      west_(this),
+      up_(this),
+      down_(this) {
+  if ((f & ::xml_schema::flags::base) == 0) {
+    ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
+    this->parse(p, f);
+  }
+}
+
+void BoundaryConfigType::parse(::xsd::cxx::xml::dom::parser<char>& p,
+                               ::xml_schema::flags f) {
+  for (; p.more_content(); p.next_content(false)) {
+    const ::xercesc::DOMElement& i(p.cur_element());
+    const ::xsd::cxx::xml::qualified_name<char> n(
+        ::xsd::cxx::xml::dom::name<char>(i));
+
+    // north
+    //
+    if (n.name() == "north" && n.namespace_().empty()) {
+      ::std::auto_ptr<north_type> r(north_traits::create(i, f, this));
+
+      if (!north_.present()) {
+        this->north_.set(r);
+        continue;
+      }
+    }
+
+    // south
+    //
+    if (n.name() == "south" && n.namespace_().empty()) {
+      ::std::auto_ptr<south_type> r(south_traits::create(i, f, this));
+
+      if (!south_.present()) {
+        this->south_.set(r);
+        continue;
+      }
+    }
+
+    // east
+    //
+    if (n.name() == "east" && n.namespace_().empty()) {
+      ::std::auto_ptr<east_type> r(east_traits::create(i, f, this));
+
+      if (!east_.present()) {
+        this->east_.set(r);
+        continue;
+      }
+    }
+
+    // west
+    //
+    if (n.name() == "west" && n.namespace_().empty()) {
+      ::std::auto_ptr<west_type> r(west_traits::create(i, f, this));
+
+      if (!west_.present()) {
+        this->west_.set(r);
+        continue;
+      }
+    }
+
+    // up
+    //
+    if (n.name() == "up" && n.namespace_().empty()) {
+      ::std::auto_ptr<up_type> r(up_traits::create(i, f, this));
+
+      if (!up_.present()) {
+        this->up_.set(r);
+        continue;
+      }
+    }
+
+    // down
+    //
+    if (n.name() == "down" && n.namespace_().empty()) {
+      ::std::auto_ptr<down_type> r(down_traits::create(i, f, this));
+
+      if (!down_.present()) {
+        this->down_.set(r);
+        continue;
+      }
+    }
+
+    break;
+  }
+
+  if (!north_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("north", "");
+  }
+
+  if (!south_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("south", "");
+  }
+
+  if (!east_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("east", "");
+  }
+
+  if (!west_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("west", "");
+  }
+
+  if (!up_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("up", "");
+  }
+
+  if (!down_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("down", "");
+  }
+}
+
+BoundaryConfigType* BoundaryConfigType::_clone(
+    ::xml_schema::flags f, ::xml_schema::container* c) const {
+  return new class BoundaryConfigType(*this, f, c);
+}
+
+BoundaryConfigType& BoundaryConfigType::operator=(const BoundaryConfigType& x) {
+  if (this != &x) {
+    static_cast< ::xml_schema::type&>(*this) = x;
+    this->north_ = x.north_;
+    this->south_ = x.south_;
+    this->east_ = x.east_;
+    this->west_ = x.west_;
+    this->up_ = x.up_;
+    this->down_ = x.down_;
+  }
+
+  return *this;
+}
+
+BoundaryConfigType::~BoundaryConfigType() {}
 
 // ForceType
 //

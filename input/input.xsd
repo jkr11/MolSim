@@ -94,7 +94,7 @@
         <xs:sequence>
             <xs:element name="domain" type="Ivec3Type"/>
             <xs:element name="r_cutoff" type="xs:decimal"/>
-            <xs:element name="boundary" type="BoundaryType"/>
+            <xs:element name="boundary" type="BoundaryConfigType"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -104,8 +104,20 @@
     <xs:complexType name="BoundaryType">
         <xs:choice>
             <xs:element name="Outflow"/>
-            <xs:element name="Boundary"/>
+            <xs:element name="Reflective"/>
+            <xs:element name="Periodic"/>
         </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="BoundaryConfigType">
+        <xs:sequence>
+            <xs:element name="north" type="BoundaryType"/>
+            <xs:element name="south" type="BoundaryType"/>
+            <xs:element name="east" type="BoundaryType"/>
+            <xs:element name="west" type="BoundaryType"/>
+            <xs:element name="up" type="BoundaryType"/>
+            <xs:element name="down" type="BoundaryType"/>
+        </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="ForceType">
