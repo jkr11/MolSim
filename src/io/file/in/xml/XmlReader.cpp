@@ -70,6 +70,7 @@ void XmlReader::read(std::vector<Particle>& particles,
     } else {
       SpdWrapper::get()->warn("No force provided, using default LennardJones");
     }
+    // TODO: singular forces here , but its a good start 
     simulation_parameters.delta_t = metadata.delta_t();
     simulation_parameters.t_end = metadata.t_end();
     const auto& twoD = metadata.twoD();
