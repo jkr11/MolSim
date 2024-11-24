@@ -101,7 +101,7 @@ then
   return
 fi
 
-BUILD_FILE=$(dirname "$(realpath "$0")")"/MolSim"
+BUILD_FILE=$(dirname "$(realpath "$0")")"/src/MolSim"
 export BUILD="$BUILD_FILE"
 
 # navigate back since this is should have been executed with the same shell
