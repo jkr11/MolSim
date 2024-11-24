@@ -50,18 +50,26 @@ int main(int argc, char* argv[]) {
   arguments.printConfiguration();
 
   std::unique_ptr<ParticleContainer> container;
-  if (arguments.container_type == Arguments::LinkedCells) {
+  // So this exists pretty cool we can save another field in the struct
+  // this is also much safer I guess
+  // TODO: i really hope lrz is c++ 17 and not 14 else we can revert all of this
+  // yikes
+  if (std ::holds_alternative<LinkedCellsConfig>(arguments.container_data)) {
     const auto& linked_cells_data =
         std::get<LinkedCellsConfig>(arguments.container_data);
-    // TODO: make it possible to just pass the entire struct into this or write
-    // a translation unit
+    // TODO: make it possible to just pass the entire struct into this or
+    // write a translation unit
     container = std::make_unique<LinkedCellsContainer>(
         linked_cells_data.domain, linked_cells_data.cutoff_radius);
     container->addParticles(particles);
     container->imposeInvariant();
-  } else if (arguments.container_type == Arguments::DirectSum) {
+  } else if (std::holds_alternative<DirectSumContainer>(
+                 arguments.container_data)) {
     container = std::make_unique<DirectSumContainer>();
     container->addParticles(particles);
+  } else {
+    SpdWrapper::get()->error("Unrecognized container type");
+    throw std::runtime_error("Unrecognized container type");
   }
 
   std::unique_ptr<Force> force;
