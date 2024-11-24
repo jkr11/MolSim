@@ -18,7 +18,7 @@ class LinkedCellsContainer final : public ParticleContainer {
   std::vector<std::vector<Particle>> cells;
 
   // number of cells for domain + 2 (halo)
-  std::array<int, 3> cellCount{};
+  ivec3 cellCount{};
   // cell dimensions
   ivec3 cellDim{};
   // cutoff distance
@@ -143,7 +143,7 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @param cellIndex Index of the cell
    * @return Cell coodinate in 3 dimensions
    */
-  [[nodiscard]] inline std::array<int, 3> cellIndexToCoord(
+  [[nodiscard]] inline ivec3 cellIndexToCoord(
       std::size_t cellIndex) const;
 
   /**

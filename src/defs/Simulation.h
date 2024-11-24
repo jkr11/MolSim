@@ -5,38 +5,123 @@
 #ifndef SIMULATION_H
 #define SIMULATION_H
 #pragma once
-#include <stdexcept>
 
-#include "defs/Particle.h"
+#include <variant>
+
+#include "defs/types.h"
 #include "utils/SpdWrapper.h"
 
 /**
- * @brief holds the necessary parameters for our simulation read from xml files.
+ * @brief holds the specification for the LinkedCellsContainer
  */
-struct Simulation {
-  double delta_t{};
-  double t_end{};
-  double cutoff_radius{};
-  ivec3 domain{};
+struct LinkedCellsConfig {
+  ivec3 domain;
+  double cutoff_radius;
+  enum BoundaryType { Outflow, Reflective, Periodic } boundary_type;
+  struct BoundaryConfig {
+    BoundaryType north;
+    BoundaryType south;
+    BoundaryType east;
+    BoundaryType west;
+    BoundaryType up;
+    BoundaryType down;
+  } boundary_config;
 };
 
 /**
- * @brief translates a vector from the xml parser to a valid "standard" c++ type
- * @tparam SVec source vector as one of the xsd types, e.g. IVec3Type
- * @tparam TVec target in c++-space, e.g ivec3 (:= std::array<int,3>)
- * @param source the vector passed form the xml parser
- * @param paramName the name of the parameter we are dealing with for throwing
- * an error
- * @return the vector in c++-space types.
+ * @brief holds the specification for the DirectSumContainer
  */
-template <typename SVec, typename TVec>
-TVec unwrapVec(const SVec& source, const std::string& paramName) {
-  try {
-    return TVec{source.x(), source.y(), source.z()};
-  } catch (const std::exception& e) {
-    throw std::runtime_error("Failed to unwrap vector " + paramName + ": " +
-                             e.what());
+struct DirectSumConfig {
+  // this doesnt need any other info.
+};
+// TODO: apparently we cant nest these for access in XMLReader
+/**
+ * @brief struct to hold command line arguments
+ */
+struct Arguments {
+  double t_end;
+  double delta_t;
+  // double output_time_step_size; // TODO: should this go in files?
+  // TODO: i think log level can be removed too
+  std::string log_level;
+  enum ForceType { LennardJones, Gravity } force_type;
+  // TODO: remove this vvvvv
+  enum ContainerType { LinkedCells, DirectSum } container_type;
+
+  std::variant<LinkedCellsConfig, DirectSumConfig> container_data;
+  void printConfiguration() const {
+    const auto logger = SpdWrapper::get();
+
+    logger->info("Simulation Configuration:");
+    logger->info("============================");
+    logger->info("t_end: {}", t_end);
+    logger->info("delta_t: {}", delta_t);
+    logger->info("Log Level: {}", log_level);
+
+    logger->info("Force Type: {}",
+                 (force_type == LennardJones ? "Lennard-Jones" : "Gravity"));
+
+    if (container_type == LinkedCells) {
+      using BoundaryType = LinkedCellsConfig::BoundaryType;
+      logger->info("Container Type: Linked Cells");
+
+      const auto& linked_cells_data =
+          std::get<LinkedCellsConfig>(container_data);
+      logger->info("-- Domain: ({}, {}, {})", linked_cells_data.domain[0],
+                   linked_cells_data.domain[1], linked_cells_data.domain[2]);
+      logger->info("-- Cutoff Radius: {}", linked_cells_data.cutoff_radius);
+
+      logger->info("Boundary Configuration:");
+      logger->info("------------------------");
+      logger->info(
+          "North Boundary: {}",
+          (linked_cells_data.boundary_config.north == LinkedCellsConfig::Outflow
+               ? "Outflow"
+           : linked_cells_data.boundary_config.north == BoundaryType::Reflective
+               ? "Reflective"
+               : "Periodic"));
+      logger->info(
+          "South Boundary: {}",
+          (linked_cells_data.boundary_config.south == BoundaryType::Outflow
+               ? "Outflow"
+           : linked_cells_data.boundary_config.south == BoundaryType::Reflective
+               ? "Reflective"
+               : "Periodic"));
+      logger->info(
+          "East Boundary: {}",
+          (linked_cells_data.boundary_config.east == BoundaryType::Outflow
+               ? "Outflow"
+           : linked_cells_data.boundary_config.east == BoundaryType::Reflective
+               ? "Reflective"
+               : "Periodic"));
+      logger->info(
+          "West Boundary: {}",
+          (linked_cells_data.boundary_config.west == BoundaryType::Outflow
+               ? "Outflow"
+           : linked_cells_data.boundary_config.west == BoundaryType::Reflective
+               ? "Reflective"
+               : "Periodic"));
+      logger->info(
+          "Up Boundary: {}",
+          (linked_cells_data.boundary_config.up == BoundaryType::Outflow
+               ? "Outflow"
+           : linked_cells_data.boundary_config.up == BoundaryType::Reflective
+               ? "Reflective"
+               : "Periodic"));
+      logger->info(
+          "Down Boundary: {}",
+          (linked_cells_data.boundary_config.down == BoundaryType::Outflow
+               ? "Outflow"
+           : linked_cells_data.boundary_config.down == BoundaryType::Reflective
+               ? "Reflective"
+               : "Periodic"));
+
+    } else {
+      logger->info("Container Type: Direct Sum");
+    }
+
+    logger->info("============================");
   }
-}
+};
 
 #endif  // SIMULATION_H

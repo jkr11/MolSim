@@ -1,11 +1,10 @@
-#include <complex>
 #include <filesystem>
 #include <iostream>
 
 #include "calc/VerletIntegrator.h"
-#include "defs/Simulation.h"
 #include "defs/containers/DirectSumContainer.h"
 #include "defs/containers/LinkedCellsContainer.h"
+#include "forces/Gravity.h"
 #include "forces/LennardJones.h"
 #include "io/CLArgumentParser.h"
 #include "io/file/in/CuboidReader.h"
@@ -13,52 +12,74 @@
 #include "io/file/out/OutputHelper.h"
 #include "io/file/out/VTKWriter.h"
 #include "spdlog/fmt/bundled/chrono.h"
-#include "spdlog/stopwatch.h"
 #include "utils/ArrayUtils.h"
 #include "utils/SpdWrapper.h"
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
   SpdWrapper::get()->info("Application started");
-  // ok so this is really ugly but i think we can merge both structs into one
-  // we dont need additional file readers anymore so we can just use XMLReader
 
   Arguments arguments = {
-      .input_file = "",                           // file
-      .t_end = 5,                                 // t_end
-      .delta_t = 0.0002,                          // delta_t
-      .output_time_step_size = 1,                 // output_time_step_size
-      .log_level = "info",                        // logLevel
-      .force = std::make_unique<LennardJones>(),  // force
-      .domain = {100, 100, 100},
-      .cutoff_radius = 3.0,
+      //.input_file = "",
+      .t_end = 5,
+      .delta_t = 0.0002,
+      //.output_time_step_size = 1,
+      .log_level = "info",
+      .force_type = Arguments::LennardJones,
       .container_type = Arguments::LinkedCells,
-  };  // TODO: figure out if the . assignement in structs is valid C++17
-
-  if (CLArgumentParser::parse(argc, argv, arguments) != 0) {
-    exit(EXIT_FAILURE);
-  }
-  const auto reader = std::make_unique<XmlReader>(arguments);
-
+      .container_data =
+          LinkedCellsConfig{.domain = {100, 100, 100},
+                            .cutoff_radius = 3.0,
+                            .boundary_config =
+                                {
+                                    .north = LinkedCellsConfig::Outflow,
+                                    .south = LinkedCellsConfig::Outflow,
+                                    .east = LinkedCellsConfig::Outflow,
+                                    .west = LinkedCellsConfig::Outflow,
+                                    .up = LinkedCellsConfig::Outflow,
+                                    .down = LinkedCellsConfig::Outflow,
+                                }},
+  };
+  auto [input_file, step_size] = CLArgumentParser::parse(argc, argv);
+  SpdWrapper::get()->info("Step size: {}", step_size);
+  //  TODO: Should we change this so it doesnt get read here but the reader
+  //  instantiates the container and then writes the shapes to the container?
   std::vector<Particle> particles;
-  reader->read(particles, arguments.input_file);
-  SpdWrapper::get()->info("Particles size {}", particles.size());
-  auto [delta_t, t_end, cutoff_radius, domain] = reader.get()->pass();
 
-  SpdWrapper::get()->info("t_end: {}, delta_t: {}, cutoff_radius: {}", t_end,
-                          delta_t, cutoff_radius);
+  XmlReader::read(particles, input_file, arguments);
 
-  // maybe we can make this nicer, this is the best i can come up with right now
+  arguments.printConfiguration();
+
   std::unique_ptr<ParticleContainer> container;
-  if (arguments.container_type == Arguments::LinkedCells) {
-    container = std::make_unique<LinkedCellsContainer>(domain, cutoff_radius);
+  // So this exists pretty cool we can save another field in the struct
+  // this is also much safer I guess
+  // TODO: i really hope lrz is c++ 17 and not 14 else we can revert all of this
+  // yikes
+  if (std::holds_alternative<LinkedCellsConfig>(arguments.container_data)) {
+    const auto& linked_cells_data =
+        std::get<LinkedCellsConfig>(arguments.container_data);
+    // TODO: make it possible to just pass the entire struct into this or
+    // write a translation unit
+    container = std::make_unique<LinkedCellsContainer>(
+        linked_cells_data.domain, linked_cells_data.cutoff_radius);
     container->addParticles(particles);
     container->imposeInvariant();
-  } else if (arguments.container_type == Arguments::DirectSum) {
+  } else if (std::holds_alternative<DirectSumConfig>(
+                 arguments.container_data)) {
     container = std::make_unique<DirectSumContainer>();
     container->addParticles(particles);
+  } else {
+    SpdWrapper::get()->error("Unrecognized container type");
+    throw std::runtime_error("Unrecognized container type");
   }
-  SpdWrapper::get()->info("particles.size: {}", particles.size());
-  VerletIntegrator verlet_integrator(*arguments.force, delta_t);
+
+  std::unique_ptr<Force> force;
+  if (arguments.force_type == Arguments::Gravity) {
+    force = std::make_unique<Gravity>();
+  } else if (arguments.force_type == Arguments::LennardJones) {
+    force = std::make_unique<LennardJones>();
+  }
+
+  VerletIntegrator verlet_integrator(*force, arguments.delta_t);
   outputWriter::VTKWriter writer;
 
   const std::string outputDirectory =
@@ -70,24 +91,25 @@ int main(int argc, char *argv[]) {
   int percentage = 0;
   double next_output_time = 0;
 
-  while (current_time <= t_end) {
+  while (current_time <= arguments.t_end) {
     verlet_integrator.step(*container);
 
     if (current_time >= next_output_time) {
       plotParticles(outputDirectory, iteration, writer, *container);
       writes++;
-      next_output_time = writes * arguments.output_time_step_size;
-
+      next_output_time = writes * step_size;
       // check if next percentage complete
-      if (const double t = 100 * current_time / t_end; t >= percentage) {
+      if (const double t = 100 * current_time / arguments.t_end;
+          t >= percentage) {
         percentage++;
         SpdWrapper::get()->info("[{:.0f} %]: Iteration {}",
-                                100 * current_time / t_end, iteration);
+                                100 * current_time / arguments.t_end,
+                                iteration);
       }
     }
 
     iteration++;
-    current_time = delta_t * iteration;  // + start_time
+    current_time = arguments.delta_t * iteration;  // + start_time
   }
   std::cout << std::endl;
   SpdWrapper::get()->info("Output written. Terminating...");
