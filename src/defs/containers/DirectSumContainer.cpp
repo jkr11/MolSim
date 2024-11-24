@@ -75,4 +75,6 @@ void DirectSumContainer::pairIterator(
   }
 }
 
-void DirectSumContainer::imposeInvariant() {};
+void DirectSumContainer::imposeInvariant() {
+
+};

@@ -127,9 +127,7 @@ LBoundaryType toBoundaryType(const BT& boundary_type) {
   if (boundary_type.Reflective().present()) {
     return LBoundaryType::Reflective;
   }
-  {
-    throw std::runtime_error("Unknown boundary type");
-  }
+  throw std::runtime_error("Unknown boundary type");
 }
 
 // TODO: dead code, discuss
