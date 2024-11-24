@@ -25,9 +25,19 @@ int main(int argc, char* argv[]) {
       //.output_time_step_size = 1,
       .log_level = "info",
       .force_type = Arguments::LennardJones,
-      .domain = {100, 100, 100},
-      .cutoff_radius = 3.0,
       .container_type = Arguments::LinkedCells,
+      .container_data =
+          LinkedCellsConfig{.domain = {100, 100, 100},
+                            .cutoff_radius = 3.0,
+                            .boundary_config =
+                                {
+                                    .north = LinkedCellsConfig::Outflow,
+                                    .south = LinkedCellsConfig::Outflow,
+                                    .east = LinkedCellsConfig::Outflow,
+                                    .west = LinkedCellsConfig::Outflow,
+                                    .up = LinkedCellsConfig::Outflow,
+                                    .down = LinkedCellsConfig::Outflow,
+                                }},
   };
   auto [input_file, step_size] = CLArgumentParser::parse(argc, argv);
   SpdWrapper::get()->info("Step size: {}", step_size);
@@ -41,8 +51,12 @@ int main(int argc, char* argv[]) {
 
   std::unique_ptr<ParticleContainer> container;
   if (arguments.container_type == Arguments::LinkedCells) {
-    container = std::make_unique<LinkedCellsContainer>(arguments.domain,
-                                                       arguments.cutoff_radius);
+    const auto& linked_cells_data =
+        std::get<LinkedCellsConfig>(arguments.container_data);
+    // TODO: make it possible to just pass the entire struct into this or write
+    // a translation unit
+    container = std::make_unique<LinkedCellsContainer>(
+        linked_cells_data.domain, linked_cells_data.cutoff_radius);
     container->addParticles(particles);
     container->imposeInvariant();
   } else if (arguments.container_type == Arguments::DirectSum) {

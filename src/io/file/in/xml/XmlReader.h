@@ -57,7 +57,7 @@ class XmlReader : public FileReader {
  * @return the enum type for arguments
  */
 template <typename BT>
-Arguments::BoundaryType toBoundaryType(const BT& boundary_type);
+LinkedCellsConfig::BoundaryType toBoundaryType(const BT& boundary_type);
 
 /**
  * @brief translates a vector from the xml parser to a valid "standard" c++ type

@@ -32,16 +32,20 @@ void XmlReader::read(std::vector<Particle>& particles,
     if (auto& container = metadata.container();
         container.directSum().present()) {
       simulation_parameters.container_type = Arguments::DirectSum;
+      DirectSumConfig direct_sum_config;
+      // This is always an empty struct
+      simulation_parameters.container_data = direct_sum_config;
       DEBUG_PRINT("Using DirectSum container")
     } else if (container.linkedCells().present()) {
       simulation_parameters.container_type = Arguments::LinkedCells;
+      LinkedCellsConfig linked_cells_config{};
       const auto& domain = container.linkedCells().get().domain();
-      simulation_parameters.domain =
+      linked_cells_config.domain =
           unwrapVec<const Ivec3Type&, ivec3>(domain, "domain");
-      simulation_parameters.cutoff_radius =
+      linked_cells_config.cutoff_radius =
           container.linkedCells().get().r_cutoff();
       const auto& boundaries = container.linkedCells().get().boundary();
-      const Arguments::BoundaryConfig boundary_config = {
+      const LinkedCellsConfig::BoundaryConfig boundary_config = {
           .north = toBoundaryType(boundaries.north()),
           .south = toBoundaryType(boundaries.south()),
           .east = toBoundaryType(boundaries.east()),
@@ -49,7 +53,9 @@ void XmlReader::read(std::vector<Particle>& particles,
           .up = toBoundaryType(boundaries.up()),
           .down = toBoundaryType(boundaries.down()),
       };
-      simulation_parameters.boundary_config = boundary_config;
+      linked_cells_config.boundary_config = boundary_config;
+      simulation_parameters.container_data = linked_cells_config;
+      // TODO: not initialized is concerning
       DEBUG_PRINT("Using LinkedCells container");
     } else {
       SpdWrapper::get()->warn(
@@ -107,16 +113,19 @@ void XmlReader::read(std::vector<Particle>& particles,
   }
 }
 
+using LBoundaryType =
+    LinkedCellsConfig::BoundaryType;  // BoundaryType is double used by the xsd
+                                      // config files
 template <typename BT>
-Arguments::BoundaryType toBoundaryType(const BT& boundary_type) {
+LBoundaryType toBoundaryType(const BT& boundary_type) {
   if (boundary_type.Outflow().present()) {
-    return Arguments::Outflow;
+    return LBoundaryType::Outflow;
   }
   if (boundary_type.Periodic().present()) {
-    return Arguments::Periodic;
+    return LBoundaryType::Periodic;
   }
   if (boundary_type.Reflective().present()) {
-    return Arguments::Reflective;
+    return LBoundaryType::Reflective;
   }
   {
     throw std::runtime_error("Unknown boundary type");

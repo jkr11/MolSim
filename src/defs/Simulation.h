@@ -6,19 +6,15 @@
 #define SIMULATION_H
 #pragma once
 
+#include <variant>
+
 #include "defs/types.h"
 #include "utils/SpdWrapper.h"
 
 /**
  * @brief struct to hold command line arguments
  */
-struct Arguments {
-  double t_end;
-  double delta_t;
-  // double output_time_step_size; // TODO: this is still needed, this is
-  // supposed to be fps later on
-  std::string log_level;
-  enum ForceType { LennardJones, Gravity } force_type;
+struct LinkedCellsConfig {
   ivec3 domain;
   double cutoff_radius;
   enum BoundaryType { Outflow, Reflective, Periodic } boundary_type;
@@ -30,9 +26,25 @@ struct Arguments {
     BoundaryType up;
     BoundaryType down;
   } boundary_config;
+};
+
+struct DirectSumConfig {
+  // this doesnt need any other info.
+};
+// TODO: apparently we cant nest these for access in XMLReader
+struct Arguments {
+  double t_end;
+  double delta_t;
+  // double output_time_step_size; // TODO: this is still needed, this is
+  // supposed to be fps later on
+  std::string log_level;
+  enum ForceType { LennardJones, Gravity } force_type;
+  // ivec3 domain;
+  // double cutoff_radius;
+
   enum ContainerType { LinkedCells, DirectSum } container_type;
-  // TODO: make this into an std::variant<LinkedCellsStruct,DirectSumStruct> as
-  // we add more information that directsum doesnt need to know about.
+
+  std::variant<LinkedCellsConfig, DirectSumConfig> container_data;
   void printConfiguration() const {
     const auto logger = SpdWrapper::get();
 
@@ -45,32 +57,63 @@ struct Arguments {
     logger->info("Force Type: {}",
                  (force_type == LennardJones ? "Lennard-Jones" : "Gravity"));
 
-    logger->info(
-        "Container Type: {}",
-        (container_type == LinkedCells ? "Linked Cells" : "Direct Sum"));
-
     if (container_type == LinkedCells) {
-      logger->info("-- Domain: ({}, {}, {})", domain[0], domain[1], domain[2]);
-      logger->info("-- Cutoff Radius: {}", cutoff_radius);
-      logger->info("-- Boundary Configuration:");
-      logger->info("---- North Boundary: {}",
-                   (boundary_config.north == Outflow ? "Outflow" :
-                    boundary_config.north == Reflective ? "Reflective" : "Periodic"));
-      logger->info("---- South Boundary: {}",
-                   (boundary_config.south == Outflow ? "Outflow" :
-                    boundary_config.south == Reflective ? "Reflective" : "Periodic"));
-      logger->info("---- East Boundary: {}",
-                   (boundary_config.east == Outflow ? "Outflow" :
-                    boundary_config.east == Reflective ? "Reflective" : "Periodic"));
-      logger->info("---- West Boundary: {}",
-                   (boundary_config.west == Outflow ? "Outflow" :
-                    boundary_config.west == Reflective ? "Reflective" : "Periodic"));
-      logger->info("---- Up Boundary: {}",
-                   (boundary_config.up == Outflow ? "Outflow" :
-                    boundary_config.up == Reflective ? "Reflective" : "Periodic"));
-      logger->info("---- Down Boundary: {}",
-                   (boundary_config.down == Outflow ? "Outflow" :
-                    boundary_config.down == Reflective ? "Reflective" : "Periodic"));
+      using BoundaryType = LinkedCellsConfig::BoundaryType;
+      logger->info("Container Type: Linked Cells");
+
+      const auto& linked_cells_data =
+          std::get<LinkedCellsConfig>(container_data);
+      logger->info("-- Domain: ({}, {}, {})", linked_cells_data.domain[0],
+                   linked_cells_data.domain[1], linked_cells_data.domain[2]);
+      logger->info("-- Cutoff Radius: {}", linked_cells_data.cutoff_radius);
+
+      logger->info("Boundary Configuration:");
+      logger->info("------------------------");
+      logger->info(
+          "North Boundary: {}",
+          (linked_cells_data.boundary_config.north == LinkedCellsConfig::Outflow
+               ? "Outflow"
+           : linked_cells_data.boundary_config.north == BoundaryType::Reflective
+               ? "Reflective"
+               : "Periodic"));
+      logger->info(
+          "South Boundary: {}",
+          (linked_cells_data.boundary_config.south == BoundaryType::Outflow
+               ? "Outflow"
+           : linked_cells_data.boundary_config.south == BoundaryType::Reflective
+               ? "Reflective"
+               : "Periodic"));
+      logger->info(
+          "East Boundary: {}",
+          (linked_cells_data.boundary_config.east == BoundaryType::Outflow
+               ? "Outflow"
+           : linked_cells_data.boundary_config.east == BoundaryType::Reflective
+               ? "Reflective"
+               : "Periodic"));
+      logger->info(
+          "West Boundary: {}",
+          (linked_cells_data.boundary_config.west == BoundaryType::Outflow
+               ? "Outflow"
+           : linked_cells_data.boundary_config.west == BoundaryType::Reflective
+               ? "Reflective"
+               : "Periodic"));
+      logger->info(
+          "Up Boundary: {}",
+          (linked_cells_data.boundary_config.up == BoundaryType::Outflow
+               ? "Outflow"
+           : linked_cells_data.boundary_config.up == BoundaryType::Reflective
+               ? "Reflective"
+               : "Periodic"));
+      logger->info(
+          "Down Boundary: {}",
+          (linked_cells_data.boundary_config.down == BoundaryType::Outflow
+               ? "Outflow"
+           : linked_cells_data.boundary_config.down == BoundaryType::Reflective
+               ? "Reflective"
+               : "Periodic"));
+
+    } else {
+      logger->info("Container Type: Direct Sum");
     }
 
     logger->info("============================");
