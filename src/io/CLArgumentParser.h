@@ -6,23 +6,11 @@
 #define CLARGUMENTPARSER_H
 
 #include <algorithm>
-#include <memory>
+#include <filesystem>
+#include <tuple>
 
-#include "forces/Force.h"
-#include "io/file/in/FileReader.h"
-
-/**
- * @brief struct to hold command line arguments
- */
-struct Arguments {
-  std::string inputFile;
-  double t_end;
-  double delta_t;
-  double output_time_step_size;
-  std::string logLevel;
-  std::unique_ptr<Force> force;
-  std::unique_ptr<FileReader> reader;
-};
+#include "defs/Simulation.h"
+#include "defs/containers/ParticleContainer.h"
 
 /**
  * @brief Static class to encapsulate CLI argument parsin
@@ -36,10 +24,10 @@ class CLArgumentParser {
    * @note prints usage if failed
    * @param argc Directly from main
    * @param argv Directly from main
-   * @param arguments argument struct (should hold default arguments)
-   * @return -1 Failure, 0 Success
+   * @returns path to the input file
    */
-  static int parse(int argc, char *argv[], Arguments &arguments);
+  static std::tuple<std::filesystem::path, double> parse(int argc,
+                                                         char *argv[]);
 
   /**
    * @brief print usage
@@ -48,6 +36,23 @@ class CLArgumentParser {
    */
   static void printUsage(const std::string &additionalNote,
                          const std::string &programName);
+
+  /**
+   * @brief parses an input to a double with inbuilt error handling
+   * @throws invalid_argument
+   * @param arg input from cli
+   * @param option_name name of the option that is being parsed
+   * @return the parsed double if successfull
+   */
+  static double parseDouble(const char *arg, const std::string &option_name);
+
+  /**
+   * @brief Validates the existence and validity of an input file.
+   * @param file_path The path to the input file to be validated.
+   * @throws std::invalid_argument if the file does not exist, is a directory,
+   * or is empty.
+   */
+  static void validateInputFile(const std::filesystem::path &file_path);
 };
 
 /**

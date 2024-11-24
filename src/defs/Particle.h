@@ -10,9 +10,9 @@
 #include <array>
 #include <string>
 
-using dvec3 = std::array<double, 3>;
+#include "defs/types.h"
 
-class Particle {
+class Particle final {
  private:
   /**
    * Position of the particle
@@ -66,9 +66,9 @@ class Particle {
       // for visualization, we need always 3 coordinates
       // -> in case of 2d, we use only the first and the second
       const std::array<double, 3> &x_arg, const std::array<double, 3> &v_arg,
-      double m_arg, const double _epsilon, const double _sigma, int type = 0);
+      double m_arg, double _epsilon, double _sigma, int type = 0);
 
-  virtual ~Particle();
+  ~Particle();
 
   [[nodiscard]] const std::array<double, 3> &getX() const;
 
@@ -97,6 +97,8 @@ class Particle {
   void setEpsilon(const double &epsilon);
 
   void setSigma(const double &sigma);
+
+  void updateForceInTime();
 
   bool operator==(const Particle &other) const;
 
