@@ -63,7 +63,7 @@ int main(int argc, char* argv[]) {
         linked_cells_data.domain, linked_cells_data.cutoff_radius);
     container->addParticles(particles);
     container->imposeInvariant();
-  } else if (std::holds_alternative<DirectSumContainer>(
+  } else if (std::holds_alternative<DirectSumConfig>(
                  arguments.container_data)) {
     container = std::make_unique<DirectSumContainer>();
     container->addParticles(particles);
