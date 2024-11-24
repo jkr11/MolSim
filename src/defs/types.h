@@ -9,4 +9,4 @@
 using dvec3 = std::array<double, 3>;
 using ivec3 = std::array<int, 3>;
 
-#endif //TYPES_H
+#endif  // TYPES_H
