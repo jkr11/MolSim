@@ -13,7 +13,8 @@
 #include "defs/Particle.h"
 #include "utils/SpdWrapper.h"
 
-LinkedCellsContainer::LinkedCellsContainer(const LinkedCellsConfig &linked_cells_config) {
+LinkedCellsContainer::LinkedCellsContainer(
+    const LinkedCellsConfig &linked_cells_config) {
   ivec3 domain = linked_cells_config.domain;
 
   DEBUG_PRINT("LinkedCellsContainer instantiated");
@@ -24,11 +25,11 @@ LinkedCellsContainer::LinkedCellsContainer(const LinkedCellsConfig &linked_cells
   this->cutoff = linked_cells_config.cutoff_radius;
 
   cell_count = {std::max(static_cast<int>(std::floor(domain[0] / cutoff)), 1),
-               std::max(static_cast<int>(std::floor(domain[1] / cutoff)), 1),
-               std::max(static_cast<int>(std::floor(domain[2] / cutoff)), 1)};
+                std::max(static_cast<int>(std::floor(domain[1] / cutoff)), 1),
+                std::max(static_cast<int>(std::floor(domain[2] / cutoff)), 1)};
 
   cell_dim = {domain[0] / cell_count[0], domain[1] / cell_count[1],
-             domain[2] / cell_count[2]};
+              domain[2] / cell_count[2]};
   // add 2 for halo
 
   cell_count = {cell_count[0] + 2, cell_count[1] + 2, cell_count[2] + 2};
@@ -36,6 +37,19 @@ LinkedCellsContainer::LinkedCellsContainer(const LinkedCellsConfig &linked_cells
   cells.resize(cell_count[0] * cell_count[1] * cell_count[2]);
 
   this->boundary_config = linked_cells_config.boundary_config;
+
+  // precalculate special cells
+  for (std::size_t cell_index = 0; cell_index < cells.size(); cell_index++) {
+    auto halo_directions = halo_direction(cell_index);
+    auto boundary_directions = boundary_direction(cell_index);
+
+    for (std::size_t i = 0; i < halo_directions.size(); i++) {
+      halo_direction_cells[i].push_back(cell_index);
+    }
+    for (std::size_t i = 0; i < boundary_directions.size(); i++) {
+      boundary_direction_cells[i].push_back(cell_index);
+    }
+  }
 
   // TODO: pretty
   SpdWrapper::get()->info("cell dim: {}, {}, {}; cell count: {}, {}, {}",
@@ -74,9 +88,7 @@ void LinkedCellsContainer::removeParticle(const Particle &p) {
 
 std::vector<Particle *> LinkedCellsContainer::getParticles() {
   std::vector<Particle *> res;
-  singleIterator([&res](Particle &p) {
-    res.push_back(&p);
-  });
+  singleIterator([&res](Particle &p) { res.push_back(&p); });
 
   return res;
 }
@@ -281,4 +293,62 @@ inline bool LinkedCellsContainer::isBoundary(
     const std::size_t cellIndex) const {
   const ivec3 cellCoord = cellIndexToCoord(cellIndex);
   return isBoundary(cellCoord);
+}
+
+std::vector<std::size_t> LinkedCellsContainer::halo_direction(
+    const std::size_t cellIndex) const {
+  if (!isHalo(cellIndex)) return {};
+
+  std::vector<std::size_t> directions = {};
+  const ivec3 cellCoord = cellIndexToCoord(cellIndex);
+
+  if (cellCoord[0] == -1) {
+    directions.push_back(1);  // west
+  }
+  if (cellCoord[0] == (cell_count[0] - 2)) {
+    directions.push_back(2);  // east
+  }
+  if (cellCoord[1] == -1) {
+    directions.push_back(3);  // down
+  }
+  if (cellCoord[1] == (cell_count[1] - 2)) {
+    directions.push_back(4);  // up
+  }
+  if (cellCoord[2] == -1) {
+    directions.push_back(5);  // down
+  }
+  if (cellCoord[2] == (cell_count[2] - 2)) {
+    directions.push_back(6);  // up
+  }
+
+  return directions;
+}
+
+std::vector<std::size_t> LinkedCellsContainer::boundary_direction(
+    const std::size_t cellIndex) const {
+  if (!isBoundary(cellIndex)) return {};
+
+  std::vector<std::size_t> directions = {};
+  const ivec3 cellCoord = cellIndexToCoord(cellIndex);
+
+  if (cellCoord[0] == 0) {
+    directions.push_back(1);  // west
+  }
+  if (cellCoord[0] == (cell_count[0] - 3)) {
+    directions.push_back(2);  // east
+  }
+  if (cellCoord[1] == 0) {
+    directions.push_back(3);  // down
+  }
+  if (cellCoord[1] == (cell_count[1] - 3)) {
+    directions.push_back(4);  // up
+  }
+  if (cellCoord[2] == 0) {
+    directions.push_back(5);  // down
+  }
+  if (cellCoord[2] == (cell_count[2] - 3)) {
+    directions.push_back(6);  // up
+  }
+
+  return directions;
 }

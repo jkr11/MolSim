@@ -24,6 +24,20 @@ class LinkedCellsContainer final : public ParticleContainer {
 
   /**
    * @brief
+   * stores the indexes of all halo_cells for faster iteration in the
+   * corresponding direction vector
+   */
+  std::array<std::vector<std::size_t>, 6> halo_direction_cells;
+
+  /**
+   * @brief
+   * stores the indexes of all halo_cells for faster iteration in the
+   * corresponding direction vector
+   */
+  std::array<std::vector<std::size_t>, 6> boundary_direction_cells;
+
+  /**
+   * @brief
    * number of cells for domain + 2 (halo)
    */
   ivec3 cell_count{};
@@ -203,6 +217,35 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @return If cell is part of the boundary
    */
   [[nodiscard]] inline bool isBoundary(std::size_t cellIndex) const;
+
+  /**
+   * @brief calculates all directions of the halo cell
+   *  empty: no halo cell
+   *  0: west
+   *  1: east
+   *  2: down
+   *  3: up
+   *  4: south
+   *  5: north
+   * @param cellIndex cell index to be checked
+   * @return the direction of the halo cell
+   */
+  [[nodiscard]] std::vector<std::size_t> halo_direction(std::size_t cellIndex) const;
+
+  /**
+   * @brief calculates all directions of the boundary cell
+   *
+   *  empty: no boundary cell
+   *  0: west
+   *  1: east
+   *  2: down
+   *  3: up
+   *  4: south
+   *  5: north
+   * @param cellIndex cell index to be checked
+   * @return the directions of the boundary cell
+   */
+  [[nodiscard]] std::vector<std::size_t> boundary_direction(std::size_t cellIndex) const;
 
   /**
    * @brief Debug method to get direct access to the cells vector

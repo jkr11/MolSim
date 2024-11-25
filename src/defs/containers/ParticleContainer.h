@@ -48,7 +48,7 @@ class ParticleContainer {
 
   /**
    * @brief Impose the invariant, that the particles are spatially sorted into
-   * the correct vectors
+   * the correct vectors and apply boundary condition
    */
   virtual void imposeInvariant() = 0;
 
