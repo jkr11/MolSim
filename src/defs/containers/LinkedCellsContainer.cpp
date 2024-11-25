@@ -71,9 +71,7 @@ void LinkedCellsContainer::removeParticle(const Particle &p) {
 
 std::vector<Particle *> LinkedCellsContainer::getParticles() {
   std::vector<Particle *> res;
-  singleIterator([&res](Particle &p) {
-    res.push_back(&p);
-  });
+  singleIterator([&res](Particle &p) { res.push_back(&p); });
 
   return res;
 }
@@ -148,8 +146,14 @@ void LinkedCellsContainer::pairIterator(
                     cellCoordinate[2], isHalo(cellIndex));
 
     // iterate over particles inside cell
+
     for (std::size_t i = 0; i < cellParticles.size(); ++i) {
       for (std::size_t j = i + 1; j < cellParticles.size(); ++j) {
+        const dvec3 p = cellParticles[i].getX();
+        const dvec3 q = cellParticles[j].getX();
+        if (dvec3 d = {p[0] - q[0], p[1] - q[1], p[2] - q[2]};
+            d[0] * d[0] + d[1] * d[1] + d[2] * d[2] > cutoff * cutoff)
+          continue;
         f(cellParticles[i], cellParticles[j]);
         DEBUG_PRINT_FMT("Intra cell pair: ({}, {})", cellParticles[i].getType(),
                         cellParticles[j].getType());
