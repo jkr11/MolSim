@@ -47,6 +47,12 @@ class ParticleContainer {
   [[nodiscard]] virtual std::size_t size() const = 0;
 
   /**
+   * @brief Impose the invariant, that the particles are spatially sorted into
+   * the correct vectors
+   */
+  virtual void imposeInvariant() = 0;
+
+  /**
    * @brief Apply a function to each single particle.
    * @param f Lambda to be applied to each particle (p).
    */
@@ -60,5 +66,4 @@ class ParticleContainer {
   virtual void pairIterator(
       const std::function<void(Particle&, Particle&)>& f) = 0;
 
-  virtual void imposeInvariant() = 0;
 };

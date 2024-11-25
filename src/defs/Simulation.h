@@ -19,12 +19,12 @@ struct LinkedCellsConfig {
   double cutoff_radius;
   enum BoundaryType { Outflow, Reflective, Periodic } boundary_type;
   struct BoundaryConfig {
-    BoundaryType north;
-    BoundaryType south;
-    BoundaryType east;
-    BoundaryType west;
-    BoundaryType up;
-    BoundaryType down;
+    BoundaryType north;  // positive z, only 3D
+    BoundaryType south;  // negative z, only 3D
+    BoundaryType east;   // positive x
+    BoundaryType west;   // negative x
+    BoundaryType up;     // positive y
+    BoundaryType down;   // negative y
   } boundary_config;
 };
 

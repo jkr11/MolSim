@@ -78,7 +78,7 @@ class LinkedCellsContainer final : public ParticleContainer {
   [[nodiscard]] std::size_t size() const override;
 
   /**
-   * @brief Impose the invarient, that the particles are spatially sorted into
+   * @brief Impose the invariant, that the particles are spatially sorted into
    * the correct vectors
    */
   void imposeInvariant() override;
