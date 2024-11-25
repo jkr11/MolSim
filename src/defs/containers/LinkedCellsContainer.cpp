@@ -146,16 +146,28 @@ void LinkedCellsContainer::pairIterator(
                     cellCoordinate[2], isHalo(cellIndex));
 
     // iterate over particles inside cell
-    for (std::size_t i = 0; i < cellParticles.size(); ++i) {
-      for (std::size_t j = i + 1; j < cellParticles.size(); ++j) {
-        const dvec3 p = cellParticles[i].getX();
-        const dvec3 q = cellParticles[j].getX();
-        if (dvec3 d = {p[0] - q[0], p[1] - q[1], p[2] - q[2]};
-            d[0] * d[0] + d[1] * d[1] + d[2] * d[2] > cutoff * cutoff)
-          continue;
-        f(cellParticles[i], cellParticles[j]);
-        DEBUG_PRINT_FMT("Intra cell pair: ({}, {})", cellParticles[i].getType(),
-                        cellParticles[j].getType());
+    if (cutoff > cellDim[0] | cutoff > cellDim[1] | cutoff > cellDim[2]) {
+      for (std::size_t i = 0; i < cellParticles.size(); ++i) {
+        for (std::size_t j = i + 1; j < cellParticles.size(); ++j) {
+          const dvec3 p = cellParticles[i].getX();
+          const dvec3 q = cellParticles[j].getX();
+          if (dvec3 d = {p[0] - q[0], p[1] - q[1], p[2] - q[2]};
+              d[0] * d[0] + d[1] * d[1] + d[2] * d[2] > cutoff * cutoff)
+            continue;
+          f(cellParticles[i], cellParticles[j]);
+          DEBUG_PRINT_FMT("Intra cell pair: ({}, {})",
+                          cellParticles[i].getType(),
+                          cellParticles[j].getType());
+        }
+      }
+    } else {
+      for (std::size_t i = 0; i < cellParticles.size(); ++i) {
+        for (std::size_t j = i + 1; j < cellParticles.size(); ++j) {
+          f(cellParticles[i], cellParticles[j]);
+          DEBUG_PRINT_FMT("Intra cell pair: ({}, {})",
+                          cellParticles[i].getType(),
+                          cellParticles[j].getType());
+        }
       }
     }
 
