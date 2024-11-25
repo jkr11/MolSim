@@ -60,7 +60,7 @@ int main(int argc, char* argv[]) {
     // TODO: make it possible to just pass the entire struct into this or
     // write a translation unit
     container = std::make_unique<LinkedCellsContainer>(
-        linked_cells_data.domain, linked_cells_data.cutoff_radius);
+        linked_cells_data);
     container->addParticles(particles);
     container->imposeInvariant();
   } else if (std::holds_alternative<DirectSumConfig>(

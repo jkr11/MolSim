@@ -15,16 +15,16 @@
  * @brief holds the specification for the LinkedCellsContainer
  */
 struct LinkedCellsConfig {
-  ivec3 domain;
+  ivec3 domain;  // size of the dimensions
   double cutoff_radius;
   enum BoundaryType { Outflow, Reflective, Periodic } boundary_type;
   struct BoundaryConfig {
-    BoundaryType north;  // positive z, only 3D
-    BoundaryType south;  // negative z, only 3D
-    BoundaryType east;   // positive x
-    BoundaryType west;   // negative x
-    BoundaryType up;     // positive y
-    BoundaryType down;   // negative y
+    BoundaryType north;  // z-axis
+    BoundaryType south;  // z-axis
+    BoundaryType east;   // x-axis
+    BoundaryType west;   // x-axis
+    BoundaryType up;     // y-axis
+    BoundaryType down;   // y-axis
   } boundary_config;
 };
 

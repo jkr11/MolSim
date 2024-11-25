@@ -4,11 +4,16 @@
 #include <vector>
 
 #include "defs/Particle.h"
+#include "defs/Simulation.h"
 #include "defs/containers/ParticleContainer.h"
 
+/**
+ * @brief a particle container with linked cells
+ */
 class LinkedCellsContainer final : public ParticleContainer {
  private:
   /**
+   * @brief
    * x is left - right
    * y is up - down
    * z is back - front
@@ -17,12 +22,29 @@ class LinkedCellsContainer final : public ParticleContainer {
    */
   std::vector<std::vector<Particle>> cells;
 
-  // number of cells for domain + 2 (halo)
-  ivec3 cellCount{};
-  // cell dimensions
-  ivec3 cellDim{};
-  // cutoff distance
+  /**
+   * @brief
+   * number of cells for domain + 2 (halo)
+   */
+  ivec3 cell_count{};
+
+  /**
+   * @brief
+   * cell dimensions
+   */
+  ivec3 cell_dim{};
+
+  /**
+   * @brief
+   * cutoff radius
+   */
   double cutoff{};
+
+  /**
+   * @brief
+   * the boundary config of each direction of the simulation
+   */
+  LinkedCellsConfig::BoundaryConfig boundary_config{};
 
  public:
   /**
@@ -34,10 +56,9 @@ class LinkedCellsContainer final : public ParticleContainer {
   /**
    * @brief Constructs a ParticleContainer which is implemented using
    * linkedCells
-   * @param domain Domain of the container
-   * @param cutoff maximum distance between valid particle pairs
+   * @param linked_cells_config configuration struct of the simulation
    */
-  explicit LinkedCellsContainer(const ivec3& domain, double cutoff);
+  explicit LinkedCellsContainer(const LinkedCellsConfig& linked_cells_config);
 
   /**
    * @brief Destructor
@@ -117,13 +138,13 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @brief Get the amount of cells in each dimension
    * @return ivec3 of cells in each dimension
    */
-  [[nodiscard]] std::array<int, 3> getCellCount() const { return cellCount; }
+  [[nodiscard]] std::array<int, 3> getCellCount() const { return cell_count; }
 
   /**
    * @brief Get the dimensions of a all cells in the container
    * @return dvec3 of the dimensions of all cells
    */
-  [[nodiscard]] ivec3 getCellDim() const { return cellDim; }
+  [[nodiscard]] ivec3 getCellDim() const { return cell_dim; }
 
   /**
    * @brief Gets the cell index of a position

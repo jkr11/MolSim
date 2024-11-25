@@ -13,31 +13,34 @@
 #include "defs/Particle.h"
 #include "utils/SpdWrapper.h"
 
-LinkedCellsContainer::LinkedCellsContainer(const ivec3 &domain,
-                                           const double cutoff) {
+LinkedCellsContainer::LinkedCellsContainer(const LinkedCellsConfig &linked_cells_config) {
+  ivec3 domain = linked_cells_config.domain;
+
   DEBUG_PRINT("LinkedCellsContainer instantiated");
   SpdWrapper::get()->info("domain size: ({}, {}, {})", domain[0], domain[1],
                           domain[2]);
 
   cells = {};
-  this->cutoff = cutoff;
+  this->cutoff = linked_cells_config.cutoff_radius;
 
-  cellCount = {std::max(static_cast<int>(std::floor(domain[0] / cutoff)), 1),
+  cell_count = {std::max(static_cast<int>(std::floor(domain[0] / cutoff)), 1),
                std::max(static_cast<int>(std::floor(domain[1] / cutoff)), 1),
                std::max(static_cast<int>(std::floor(domain[2] / cutoff)), 1)};
 
-  cellDim = {domain[0] / cellCount[0], domain[1] / cellCount[1],
-             domain[2] / cellCount[2]};
+  cell_dim = {domain[0] / cell_count[0], domain[1] / cell_count[1],
+             domain[2] / cell_count[2]};
   // add 2 for halo
 
-  cellCount = {cellCount[0] + 2, cellCount[1] + 2, cellCount[2] + 2};
+  cell_count = {cell_count[0] + 2, cell_count[1] + 2, cell_count[2] + 2};
 
-  cells.resize(cellCount[0] * cellCount[1] * cellCount[2]);
+  cells.resize(cell_count[0] * cell_count[1] * cell_count[2]);
+
+  this->boundary_config = linked_cells_config.boundary_config;
 
   // TODO: pretty
   SpdWrapper::get()->info("cell dim: {}, {}, {}; cell count: {}, {}, {}",
-                          cellDim[0], cellDim[1], cellDim[2], cellCount[0],
-                          cellCount[1], cellCount[2]);
+                          cell_dim[0], cell_dim[1], cell_dim[2], cell_count[0],
+                          cell_count[1], cell_count[2]);
 }
 
 void LinkedCellsContainer::addParticle(const Particle &p) {
@@ -223,42 +226,42 @@ void LinkedCellsContainer::haloIterator(
 inline std::size_t LinkedCellsContainer::dvec3ToCellIndex(
     const dvec3 &position) const {
   const std::array<int, 3> cellCoords = {
-      static_cast<int>(std::floor(position[0] / cellDim[0])),
-      static_cast<int>(std::floor(position[1] / cellDim[1])),
-      static_cast<int>(std::floor(position[2] / cellDim[2]))};
+      static_cast<int>(std::floor(position[0] / cell_dim[0])),
+      static_cast<int>(std::floor(position[1] / cell_dim[1])),
+      static_cast<int>(std::floor(position[2] / cell_dim[2]))};
 
   return cellCoordToIndex(cellCoords);
 }
 
 inline std::size_t LinkedCellsContainer::cellCoordToIndex(
     const ivec3 position) const {
-  return (position[0] + 1) * (cellCount[1] * cellCount[2]) +
-         (position[1] + 1) * (cellCount[2]) + (position[2] + 1);
+  return (position[0] + 1) * (cell_count[1] * cell_count[2]) +
+         (position[1] + 1) * (cell_count[2]) + (position[2] + 1);
 }
 
 inline ivec3 LinkedCellsContainer::cellIndexToCoord(
     std::size_t cellIndex) const {
-  const int x = static_cast<int>(cellIndex / (cellCount[1] * cellCount[2]));
-  cellIndex = cellIndex - (x * cellCount[1] * cellCount[2]);
+  const int x = static_cast<int>(cellIndex / (cell_count[1] * cell_count[2]));
+  cellIndex = cellIndex - (x * cell_count[1] * cell_count[2]);
 
-  const int y = static_cast<int>(cellIndex / cellCount[2]);
-  const int z = static_cast<int>(cellIndex - (y * cellCount[2]));
+  const int y = static_cast<int>(cellIndex / cell_count[2]);
+  const int z = static_cast<int>(cellIndex - (y * cell_count[2]));
 
   return {x - 1, y - 1, z - 1};
 }
 
 inline bool LinkedCellsContainer::isValidCellCoordinate(
     const ivec3 coordinate) const {
-  return (-1 <= coordinate[0] && coordinate[0] <= (cellCount[0] - 2)) &&
-         (-1 <= coordinate[1] && coordinate[1] <= (cellCount[1] - 2)) &&
-         (-1 <= coordinate[2] && coordinate[2] <= (cellCount[2] - 2));
+  return (-1 <= coordinate[0] && coordinate[0] <= (cell_count[0] - 2)) &&
+         (-1 <= coordinate[1] && coordinate[1] <= (cell_count[1] - 2)) &&
+         (-1 <= coordinate[2] && coordinate[2] <= (cell_count[2] - 2));
 }
 
 inline bool LinkedCellsContainer::isHalo(const ivec3 cellCoord) const {
   return cellCoord[0] == -1 || cellCoord[1] == -1 || cellCoord[2] == -1 ||
-         cellCoord[0] == (cellCount[0] - 2) ||
-         cellCoord[1] == (cellCount[1] - 2) ||
-         cellCoord[2] == (cellCount[2] - 2);
+         cellCoord[0] == (cell_count[0] - 2) ||
+         cellCoord[1] == (cell_count[1] - 2) ||
+         cellCoord[2] == (cell_count[2] - 2);
 }
 
 inline bool LinkedCellsContainer::isHalo(const std::size_t cellIndex) const {
@@ -268,9 +271,9 @@ inline bool LinkedCellsContainer::isHalo(const std::size_t cellIndex) const {
 
 inline bool LinkedCellsContainer::isBoundary(const ivec3 cellCoord) const {
   return (cellCoord[0] == 0 || cellCoord[1] == 0 || cellCoord[2] == 0 ||
-          cellCoord[0] == (cellCount[0] - 3) ||
-          cellCoord[1] == (cellCount[1] - 3) ||
-          cellCoord[2] == (cellCount[2] - 3)) &&
+          cellCoord[0] == (cell_count[0] - 3) ||
+          cellCoord[1] == (cell_count[1] - 3) ||
+          cellCoord[2] == (cell_count[2] - 3)) &&
          !isHalo(cellCoord);
 }
 
