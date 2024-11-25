@@ -82,7 +82,8 @@ int main(int argc, char *argv[]) {
       // check if next percentage complete
       if (const double t = 100 * current_time / t_end; t >= percentage) {
         percentage++;
-        auto eta = (stopwatch.elapsed() / percentage) * 100 - stopwatch.elapsed();
+        auto elapsed = stopwatch.elapsed();
+        auto eta = (elapsed / percentage) * 100 - elapsed;
         auto h = std::chrono::duration_cast<std::chrono::hours>(eta).count();
         eta -= std::chrono::hours(h);
         auto m = std::chrono::duration_cast<std::chrono::minutes>(eta).count();
@@ -97,7 +98,6 @@ int main(int argc, char *argv[]) {
     iteration++;
     current_time = delta_t * iteration;
   }
-  std::cout << std::endl;
   SpdWrapper::get()->info("Output written. Terminating...");
 
   return 0;
