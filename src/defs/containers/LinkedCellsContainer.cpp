@@ -70,7 +70,12 @@ void LinkedCellsContainer::removeParticle(const Particle &p) {
 }
 
 std::vector<Particle *> LinkedCellsContainer::getParticles() {
-  // TODO
+  std::vector<Particle *> res;
+  singleIterator([&res](Particle &p) {
+    res.push_back(&p);
+  });
+  
+  return res;
 }
 
 [[nodiscard]] std::size_t LinkedCellsContainer::size() const {
