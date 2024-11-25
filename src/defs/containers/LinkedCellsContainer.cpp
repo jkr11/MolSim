@@ -74,7 +74,7 @@ std::vector<Particle *> LinkedCellsContainer::getParticles() {
   singleIterator([&res](Particle &p) {
     res.push_back(&p);
   });
-  
+
   return res;
 }
 

@@ -39,18 +39,21 @@ class FlattenedLinkedCellsContainer final : public ParticleContainer {
   /**
    * @brief Add a particle to the container
    * @param p Particle to be added
+   * @note Does not impose the invariant automatically!
    */
   void addParticle(const Particle& p) override;
 
   /**
    * @brief adds an entire vector to the container.
    * @param particles particles to be added
+   * @note Does not impose the invariant automatically!
    */
   void addParticles(const std::vector<Particle>& particles) override;
 
   /**
    * @brief Remove a particle from the container
    * @param p Particle to be removed
+   * @note Does not impose the invariant automatically!
    */
   void removeParticle(const Particle& p) override;
 

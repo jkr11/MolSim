@@ -66,7 +66,6 @@ class DirectSumContainer : public ParticleContainer {
   /**
    * @brief Single iterator over all particles in the container
    * @param f Function to be applied
-   * @note Does not impose the invariant automatically!
    */
   void singleIterator(const std::function<void(Particle&)>& f) override;
 
@@ -74,7 +73,6 @@ class DirectSumContainer : public ParticleContainer {
    * @brief Pair iterator over all distinct particle pairs in the container with
    * distance <= cutoff
    * @param f Function to be applied
-   * @note Does not impose the invariant automatically!
    */
   void pairIterator(
       const std::function<void(Particle&, Particle&)>& f) override;
