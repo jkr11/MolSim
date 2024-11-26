@@ -3,34 +3,7 @@
             xsi:noNamespaceSchemaLocation="input.xsd">
     <metadata>
         <container>
-            <linkedCells>
-                <domain>
-                    <x>100</x>
-                    <y>100</y>
-                    <z>100</z>
-                </domain>
-                <r_cutoff>3.0</r_cutoff>
-                <boundary>
-                    <north>
-                        <Reflective/>
-                    </north>
-                    <south>
-                        <Reflective/>
-                    </south>
-                    <east>
-                        <Reflective/>
-                    </east>
-                    <west>
-                        <Reflective/>
-                    </west>
-                    <up>
-                        <Reflective/>
-                    </up>
-                    <down>
-                        <Reflective/>
-                    </down>
-                </boundary>
-            </linkedCells>
+            <directSum/>
         </container>
         <force>
             <LennardJones/>
@@ -52,8 +25,8 @@
                 <z>1</z>
             </corner>
             <dimensions>
-                <x>32</x>
-                <y>32</y>
+                <x>64</x>
+                <y>64</y>
                 <z>1</z>
             </dimensions>
             <type>1</type>
