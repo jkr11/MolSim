@@ -15,13 +15,6 @@
  * optional as it is currently handled by CLArgumentParser
  */
 class XmlReader : public FileReader {
- private:
-  // Arguments simulation_parameters;
-  // double delta_t{};
-  // double t_end{};
-  // double cutoff_radius{};
-  // ivec3 domain{};
-
  public:
   XmlReader() = default;
 

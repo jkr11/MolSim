@@ -58,8 +58,9 @@ class DirectSumContainer final : public ParticleContainer {
   [[nodiscard]] std::size_t size() const override;
 
   /**
-   * @brief Impose the invarient, that the particles are spatially sorted into
-   * the correct vectors
+   * @brief Impose the invariant, that the particles are spatially sorted into
+   * the correct vectors.
+   * @note as this is a directSum container, this does nothing
    */
   void imposeInvariant() override;
 
