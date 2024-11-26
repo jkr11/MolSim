@@ -16,7 +16,7 @@
         <cuboid>
             <velocity>
                 <x>0.0</x>
-                <y>0.0</y>
+                    <y>0.0</y>
                 <z>0.0</z>
             </velocity>
             <corner>
@@ -25,8 +25,8 @@
                 <z>1</z>
             </corner>
             <dimensions>
-                <x>32</x>
-                <y>32</y>
+                <x>91</x>
+                <y>91</y>
                 <z>1</z>
             </dimensions>
             <type>1</type>
