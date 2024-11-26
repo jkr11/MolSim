@@ -6,7 +6,7 @@ import os
 script_dir = os.path.dirname(os.path.abspath(__file__))
 executable = os.path.join(script_dir, "../build/src/MolSim")
 input_dir = os.path.join(script_dir, "../input")
-input_file_template_lc = "task32_{}k.xml"
+input_file_template_lc = "task32_{}k.xml" # TODO: rename this lc
 input_file_template_ds = "task32_{}k_ds.xml"
 a_values = [1, 2, 4, 8]
 execution_times_ds = []
@@ -60,9 +60,12 @@ execution_times_ds = [14.52, 50.81, 192.51, 771.44]
 plt.figure(figsize=(8, 6))
 plt.plot([a * 1000 for a in a_values],
          execution_times_ds,
+         marker='o',
+         label="Execution Time DirectSum")
+plt.plot([a * 1000 for a in a_values],
          execution_times_lc,
          marker='o',
-         label="Execution Time")
+         label="Execution Time LinkedCells")
 plt.title(
     "Execution Time vs number of particles running on Intel i7 13700H, 32Gb")
 plt.xlabel("Particles")
