@@ -90,7 +90,7 @@ int main(int argc, char* argv[]) {
   int writes = 0;
   int percentage = 0;
   double next_output_time = 0;
-
+  const auto start_time = std::chrono::high_resolution_clock::now();
   while (current_time <= arguments.t_end) {
     verlet_integrator.step(*container);
 
@@ -111,6 +111,9 @@ int main(int argc, char* argv[]) {
     iteration++;
     current_time = arguments.delta_t * iteration;  // + start_time
   }
+  const auto end_time = std::chrono::high_resolution_clock::now();
+  const std::chrono::duration<double> elapsed_time = end_time - start_time;
+  std::cout << "Simulation Time: " << elapsed_time.count() << " seconds" << std::endl;
   std::cout << std::endl;
   SpdWrapper::get()->info("Output written. Terminating...");
 
