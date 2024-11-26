@@ -115,7 +115,7 @@ void LinkedCellsContainer::pairIterator(
   // - for better cache usage (in flattened version) minimize max distance
   //   between values
   // - direction of traversal: z, y, x
-  std::size_t count_of_pairs = 0;
+  // std::size_t count_of_pairs = 0; // TODO: remove this
   const std::array<ivec3, 13> offsets = {{
       // 9 x facing
       {{1, -1, -1}},
@@ -155,7 +155,7 @@ void LinkedCellsContainer::pairIterator(
             d[0] * d[0] + d[1] * d[1] + d[2] * d[2] > cutoff * cutoff)
           continue;
         f(cellParticles[i], cellParticles[j]);
-        count_of_pairs++;
+        // count_of_pairs++;
         DEBUG_PRINT_FMT("Intra cell pair: ({}, {})", cellParticles[i].getType(),
                         cellParticles[j].getType());
       }
@@ -194,14 +194,15 @@ void LinkedCellsContainer::pairIterator(
             continue;
 
           f(cellParticle, neighbourParticle);
-          count_of_pairs++;
+          // count_of_pairs++;
           DEBUG_PRINT_FMT("Cross cell pair: ({}, {})", cellParticle.getType(),
                           neighbourParticle.getType())
         }
       }
     }
   }
-  std::cout << "Total number of pairs processed" << count_of_pairs << std::endl;
+  // std::cout << "Total number of pairs processed" << count_of_pairs <<
+  // std::endl;
 }
 
 void LinkedCellsContainer::boundaryIterator(
@@ -228,6 +229,16 @@ void LinkedCellsContainer::haloIterator(
 
 inline std::size_t LinkedCellsContainer::dvec3ToCellIndex(
     const dvec3 &position) const {
+  if (position[0] < 0 || position[1] < 0 || position[2] < 0 ||
+      position[0] >= (cellDim[0] * cellCount[0]) ||
+      position[1] >= (cellDim[1] * cellCount[1]) ||
+      position[2] >= (cellDim[2] * cellCount[2])) {
+    SpdWrapper::get()->error("Particle position ({}, {}, {}) is out of bounds!",
+                             position[0], position[1], position[2]);
+    std::cout << position[0] << ", " << position[1] << ", " << position[2] << std::endl;
+    throw std::out_of_range("Particle position is out of bounds.");
+  }
+
   const std::array<int, 3> cellCoords = {
       static_cast<int>(std::floor(position[0] / cellDim[0])),
       static_cast<int>(std::floor(position[1] / cellDim[1])),
@@ -238,6 +249,12 @@ inline std::size_t LinkedCellsContainer::dvec3ToCellIndex(
 
 inline std::size_t LinkedCellsContainer::cellCoordToIndex(
     const ivec3 position) const {
+  if (!isValidCellCoordinate(position)) {
+    SpdWrapper::get()->error(
+        "Cell coordinates ({}, {}, {}) are invalid!", position[0], position[1],
+        position[2]);
+    throw std::out_of_range("Cell coordinates are invalid.");
+  }
   return (position[0] + 1) * (cellCount[1] * cellCount[2]) +
          (position[1] + 1) * (cellCount[2]) + (position[2] + 1);
 }
