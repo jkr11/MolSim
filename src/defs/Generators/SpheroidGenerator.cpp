@@ -54,7 +54,7 @@ void SpheroidGenerator::generate(std::vector<Particle>& particles) {
         }
         const double spaceRadius = radius * h;
         dvec3 point = {i * h, j * h, k * h};
-        if (const double dist = ArrayUtils::L2Norm((1 / spaceRadius) * point);
+        if (const double dist = ArrayUtils::L2Norm(1 / spaceRadius * point);
             dist <= 1.0) {
           dvec3 position = origin + point;
           dvec3 V = initialVelocity +

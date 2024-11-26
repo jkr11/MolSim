@@ -85,8 +85,9 @@ inline void printConfiguration(const Arguments& args) {
   logger->info("delta_t: {}", args.delta_t);
 
   logger->info("Force Type: {}",
-               (args.force_type == Arguments::LennardJones ? "Lennard-Jones"
-                                                           : "Gravity"));
+               args.force_type == Arguments::LennardJones
+                                     ? "Lennard-Jones"
+                                     : "Gravity");
 
   if (std::holds_alternative<LinkedCellsConfig>(args.container_data)) {
     logger->info("Container Type: Linked Cells");

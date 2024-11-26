@@ -26,7 +26,7 @@ void XmlReader::read(std::vector<Particle>& particles,
                                 path.string());
   }
   try {
-    const std::unique_ptr<::simulation> config = simulation_(filepath);
+    const std::unique_ptr<simulation> config = simulation_(filepath);
     SpdWrapper::get()->info("Reading XML file {}", filepath);
     auto& metadata = config->metadata();
     if (auto& container = metadata.container();

@@ -237,7 +237,7 @@ inline std::size_t LinkedCellsContainer::dvec3ToCellIndex(
 inline std::size_t LinkedCellsContainer::cellCoordToIndex(
     const ivec3 position) const {
   return (position[0] + 1) * (cellCount[1] * cellCount[2]) +
-         (position[1] + 1) * (cellCount[2]) + (position[2] + 1);
+         (position[1] + 1) * cellCount[2] + (position[2] + 1);
 }
 
 inline ivec3 LinkedCellsContainer::cellIndexToCoord(

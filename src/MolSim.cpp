@@ -15,7 +15,7 @@
 #include "utils/ArrayUtils.h"
 #include "utils/SpdWrapper.h"
 
-int main(int argc, char* argv[]) {
+int main(const int argc, char* argv[]) {
   SpdWrapper::get()->info("Application started");
 
   Arguments arguments = {

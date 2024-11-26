@@ -6,7 +6,7 @@
 #include "defs/Particle.h"
 #include "defs/containers/ParticleContainer.h"
 
-class DirectSumContainer : public ParticleContainer {
+class DirectSumContainer final : public ParticleContainer {
  private:
   std::vector<Particle> particles;
 
