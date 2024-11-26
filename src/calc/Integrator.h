@@ -18,7 +18,7 @@ class Integrator {
    * @note Since this is an interface, it's invalid
    */
   Integrator(Force &force, const double delta_t)
-      : force(force), delta_t(delta_t) {};
+      : force(force), delta_t(delta_t) {}
 
   /**
    * @brief Virtual destructor for all Integrator inheritors

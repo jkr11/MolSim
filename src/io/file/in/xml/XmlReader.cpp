@@ -26,18 +26,15 @@ void XmlReader::read(std::vector<Particle>& particles,
                                 path.string());
   }
   try {
-    const std::unique_ptr<::simulation> config = simulation_(filepath);
+    const std::unique_ptr<simulation> config = simulation_(filepath);
     SpdWrapper::get()->info("Reading XML file {}", filepath);
     auto& metadata = config->metadata();
     if (auto& container = metadata.container();
         container.directSum().present()) {
-      simulation_parameters.container_type = Arguments::DirectSum;
       DirectSumConfig direct_sum_config;
-      // This is always an empty struct
       simulation_parameters.container_data = direct_sum_config;
       DEBUG_PRINT("Using DirectSum container")
     } else if (container.linkedCells().present()) {
-      simulation_parameters.container_type = Arguments::LinkedCells;
       LinkedCellsConfig linked_cells_config{};
       const auto& domain = container.linkedCells().get().domain();
       linked_cells_config.domain =
@@ -55,7 +52,6 @@ void XmlReader::read(std::vector<Particle>& particles,
       };
       linked_cells_config.boundary_config = boundary_config;
       simulation_parameters.container_data = linked_cells_config;
-      // TODO: not initialized is concerning
       DEBUG_PRINT("Using LinkedCells container");
     } else {
       SpdWrapper::get()->warn(
@@ -115,7 +111,7 @@ void XmlReader::read(std::vector<Particle>& particles,
 
 using LBoundaryType =
     LinkedCellsConfig::BoundaryType;  // BoundaryType is double used by the xsd
-                                      // config files
+                                      // config files so be carefull
 template <typename BT>
 LBoundaryType toBoundaryType(const BT& boundary_type) {
   if (boundary_type.Outflow().present()) {
@@ -129,18 +125,3 @@ LBoundaryType toBoundaryType(const BT& boundary_type) {
   }
   throw std::runtime_error("Unknown boundary type");
 }
-
-// TODO: dead code, discuss
-/*
-
-std::tuple<double, double, double, ivec3, Arguments::ForceType,
-           Arguments::ContainerType>
-XmlReader::pass() const {
-  return {simulation_parameters.delta_t,
-          simulation_parameters.t_end,
-          simulation_parameters.cutoff_radius,
-          simulation_parameters.domain,
-          simulation_parameters.force_type,
-          simulation_parameters.container_type};
-}
-*/

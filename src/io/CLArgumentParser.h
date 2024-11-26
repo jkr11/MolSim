@@ -10,7 +10,6 @@
 #include <tuple>
 
 #include "defs/Simulation.h"
-#include "defs/containers/ParticleContainer.h"
 
 /**
  * @brief Static class to encapsulate CLI argument parsin
@@ -38,19 +37,11 @@ class CLArgumentParser {
                          const std::string &programName);
 
   /**
-   * @brief parses an input to a double with inbuilt error handling
-   * @throws invalid_argument
-   * @param arg input from cli
-   * @param option_name name of the option that is being parsed
-   * @return the parsed double if successfull
-   */
-  static double parseDouble(const char *arg, const std::string &option_name);
-
-  /**
    * @brief Validates the existence and validity of an input file.
    * @param file_path The path to the input file to be validated.
    * @throws std::invalid_argument if the file does not exist, is a directory,
    * or is empty.
+   * @note verification that this is actually an xml file is done in XmlReader.
    */
   static void validateInputFile(const std::filesystem::path &file_path);
 };

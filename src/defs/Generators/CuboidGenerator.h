@@ -18,11 +18,16 @@ class CuboidGenerator final : public ParticleGenerator {
   double m;
   const dvec3 initialVelocity;
   double mv;
+  /**
+   * technically these are only relevant for week 4 but here they dont really
+   * matter right now
+   */
   double epsilon;
   double sigma;
   const int type{};
   /**
    * here this just describes the behaviour of the brownian motion
+   * initialization
    */
   const bool twoD{};
 
