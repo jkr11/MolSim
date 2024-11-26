@@ -58,5 +58,5 @@ void CuboidGenerator::generate(std::vector<Particle> &particles) {
       }
     }
   }
-  DEBUG_PRINT("particles: " + particles.size());
+  DEBUG_PRINT("particles: " + std::to_string(particles.size()));
 }
