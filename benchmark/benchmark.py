@@ -15,7 +15,6 @@ execution_times_lc = []
 if not os.path.exists(executable):
   raise FileNotFoundError(f"Executable not found at {executable}")
 
-"""
 for a in a_values:
   print(f"Running for a = {a}...")
   input_file = os.path.join(input_dir, input_file_template_ds.format(a))
@@ -34,7 +33,6 @@ for a in a_values:
   elapsed_time = end_time - start_time
   execution_times_ds.append(elapsed_time)
   print(f"Execution time for a = {a}: {elapsed_time:.2f} seconds")
-"""
 
 for a in a_values:
   print(f"Running for a = {a}...")
@@ -55,7 +53,7 @@ for a in a_values:
   execution_times_lc.append(elapsed_time)
   print(f"Execution time for a = {a}: {elapsed_time:.2f} seconds")
 
-execution_times_ds = [14.52, 50.81, 192.51, 771.44]
+# execution_times_ds = [14.52, 50.81, 192.51, 771.44] // this is for build with dt = 0.0005 and t = 1
 
 plt.figure(figsize=(8, 6))
 plt.plot([a * 1000 for a in a_values],
