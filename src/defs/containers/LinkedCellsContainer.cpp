@@ -115,6 +115,7 @@ void LinkedCellsContainer::pairIterator(
   // - for better cache usage (in flattened version) minimize max distance
   //   between values
   // - direction of traversal: z, y, x
+  std::size_t count_of_pairs = 0;
   const std::array<ivec3, 13> offsets = {{
       // 9 x facing
       {{1, -1, -1}},
@@ -154,6 +155,7 @@ void LinkedCellsContainer::pairIterator(
             d[0] * d[0] + d[1] * d[1] + d[2] * d[2] > cutoff * cutoff)
           continue;
         f(cellParticles[i], cellParticles[j]);
+        count_of_pairs++;
         DEBUG_PRINT_FMT("Intra cell pair: ({}, {})", cellParticles[i].getType(),
                         cellParticles[j].getType());
       }
@@ -187,18 +189,19 @@ void LinkedCellsContainer::pairIterator(
         for (auto &neighbourParticle : neighbourParticles) {
           auto p = cellParticle.getX();
           auto q = neighbourParticle.getX();
-
           if (dvec3 d = {p[0] - q[0], p[1] - q[1], p[2] - q[2]};
               d[0] * d[0] + d[1] * d[1] + d[2] * d[2] > cutoff * cutoff)
             continue;
 
           f(cellParticle, neighbourParticle);
+          count_of_pairs++;
           DEBUG_PRINT_FMT("Cross cell pair: ({}, {})", cellParticle.getType(),
                           neighbourParticle.getType())
         }
       }
     }
   }
+  std::cout << "Total number of pairs processed" << count_of_pairs << std::endl;
 }
 
 void LinkedCellsContainer::boundaryIterator(
