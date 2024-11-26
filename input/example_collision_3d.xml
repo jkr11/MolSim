@@ -6,11 +6,11 @@
         <container>
             <linkedCells>
                 <domain>
-                    <x>500</x>
-                    <y>500</y>
-                    <z>500</z>
+                    <x>100</x>
+                    <y>100</y>
+                    <z>100</z>
                 </domain>
-                <r_cutoff>8.5</r_cutoff>
+                <r_cutoff>3.0</r_cutoff>
                 <boundary>
                     <north>
                         <Reflective/>
@@ -36,8 +36,8 @@
         <force>
             <LennardJones/>
         </force>
-        <delta_t>0.001</delta_t>
-        <t_end>20</t_end>
+        <delta_t>0.0005</delta_t>
+        <t_end>1</t_end>
         <twoD>false</twoD>
     </metadata>
     <cuboids>
@@ -59,10 +59,10 @@
             </dimensions>
             <type>1</type>
             <h>1.1225</h>
-            <mass>100</mass>
-            <epsilon>120</epsilon>
-            <sigma>3.4</sigma>
-            <mv>0</mv>
+            <mass>1</mass>
+            <epsilon>5.0</epsilon>
+            <sigma>1.0</sigma>
+            <mv>0.1</mv>
         </cuboid>
         <cuboid>
             <velocity>
@@ -82,10 +82,10 @@
             </dimensions>
             <type>2</type>
             <h>1.1225</h>
-            <mass>100</mass>
-            <epsilon>120</epsilon>
-            <sigma>3.4</sigma>
-            <mv>0</mv>
+            <mass>1</mass>
+            <epsilon>5.0</epsilon>
+            <sigma>1.0</sigma>
+            <mv>0.1</mv>
         </cuboid>
     </cuboids>
 
