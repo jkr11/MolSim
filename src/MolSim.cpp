@@ -19,13 +19,9 @@ int main(int argc, char* argv[]) {
   SpdWrapper::get()->info("Application started");
 
   Arguments arguments = {
-      //.input_file = "",
       .t_end = 5,
       .delta_t = 0.0002,
-      //.output_time_step_size = 1,
-      .log_level = "info",
       .force_type = Arguments::LennardJones,
-      .container_type = Arguments::LinkedCells,
       .container_data =
           LinkedCellsConfig{.domain = {100, 100, 100},
                             .cutoff_radius = 3.0,
@@ -40,25 +36,21 @@ int main(int argc, char* argv[]) {
                                 }},
   };
   auto [input_file, step_size] = CLArgumentParser::parse(argc, argv);
-  SpdWrapper::get()->info("Step size: {}", step_size);
-  //  TODO: Should we change this so it doesnt get read here but the reader
-  //  instantiates the container and then writes the shapes to the container?
+
+  //  TODO: Should we change this so the reader only reads configs? probably.
   std::vector<Particle> particles;
 
   XmlReader::read(particles, input_file, arguments);
 
-  arguments.printConfiguration();
+  printConfiguration(arguments);
+  SpdWrapper::get()->info("Step size: {}", step_size);
+  // TODO: we should pass step size to reader but right now its useful for
+  // testing
 
   std::unique_ptr<ParticleContainer> container;
-  // So this exists pretty cool we can save another field in the struct
-  // this is also much safer I guess
-  // TODO: i really hope lrz is c++ 17 and not 14 else we can revert all of this
-  // yikes
   if (std::holds_alternative<LinkedCellsConfig>(arguments.container_data)) {
     const auto& linked_cells_data =
         std::get<LinkedCellsConfig>(arguments.container_data);
-    // TODO: make it possible to just pass the entire struct into this or
-    // write a translation unit
     container = std::make_unique<LinkedCellsContainer>(
         linked_cells_data.domain, linked_cells_data.cutoff_radius);
     container->addParticles(particles);

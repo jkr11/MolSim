@@ -37,7 +37,7 @@ class XmlReader : public FileReader {
 };
 
 /**
- * @brief converts the xsd type
+ * @brief converts the xsd type to a ::Arguments:: type
  * @param boundary_type is the choice type passed from the xsd schema
  * specification
  * @return the enum type for arguments
