@@ -229,16 +229,6 @@ void LinkedCellsContainer::haloIterator(
 
 inline std::size_t LinkedCellsContainer::dvec3ToCellIndex(
     const dvec3 &position) const {
-  if (position[0] < 0 || position[1] < 0 || position[2] < 0 ||
-      position[0] >= (cellDim[0] * cellCount[0]) ||
-      position[1] >= (cellDim[1] * cellCount[1]) ||
-      position[2] >= (cellDim[2] * cellCount[2])) {
-    SpdWrapper::get()->error("Particle position ({}, {}, {}) is out of bounds!",
-                             position[0], position[1], position[2]);
-    std::cout << position[0] << ", " << position[1] << ", " << position[2] << std::endl;
-    throw std::out_of_range("Particle position is out of bounds.");
-  }
-
   const std::array<int, 3> cellCoords = {
       static_cast<int>(std::floor(position[0] / cellDim[0])),
       static_cast<int>(std::floor(position[1] / cellDim[1])),
@@ -249,12 +239,6 @@ inline std::size_t LinkedCellsContainer::dvec3ToCellIndex(
 
 inline std::size_t LinkedCellsContainer::cellCoordToIndex(
     const ivec3 position) const {
-  if (!isValidCellCoordinate(position)) {
-    SpdWrapper::get()->error(
-        "Cell coordinates ({}, {}, {}) are invalid!", position[0], position[1],
-        position[2]);
-    throw std::out_of_range("Cell coordinates are invalid.");
-  }
   return (position[0] + 1) * (cellCount[1] * cellCount[2]) +
          (position[1] + 1) * (cellCount[2]) + (position[2] + 1);
 }

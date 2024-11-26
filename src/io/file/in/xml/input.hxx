@@ -31,8 +31,17 @@
 // in the accompanying FLOSSE file.
 //
 
+/**
+ * @file
+ * @brief Generated from input.xsd.
+ */
+
 #ifndef CXX___SRC_IO_FILE_IN_XML_INPUT_HXX
 #define CXX___SRC_IO_FILE_IN_XML_INPUT_HXX
+
+#ifndef XSD_CXX11
+#define XSD_CXX11
+#endif
 
 #ifndef XSD_USE_CHAR
 #define XSD_USE_CHAR
@@ -74,140 +83,456 @@
 #include <xsd/cxx/xml/dom/auto-ptr.hxx>
 #include <xsd/cxx/xml/error-handler.hxx>
 
+/**
+ * @brief C++ namespace for the %http://www.w3.org/2001/XMLSchema
+ * schema namespace.
+ */
 namespace xml_schema {
 // anyType and anySimpleType.
 //
+
+/**
+ * @brief C++ type corresponding to the anyType XML Schema
+ * built-in type.
+ */
 typedef ::xsd::cxx::tree::type type;
+
+/**
+ * @brief C++ type corresponding to the anySimpleType XML Schema
+ * built-in type.
+ */
 typedef ::xsd::cxx::tree::simple_type<char, type> simple_type;
+
+/**
+ * @brief Alias for the anyType type.
+ */
 typedef ::xsd::cxx::tree::type container;
 
 // 8-bit
 //
+
+/**
+ * @brief C++ type corresponding to the byte XML Schema
+ * built-in type.
+ */
 typedef signed char byte;
+
+/**
+ * @brief C++ type corresponding to the unsignedByte XML Schema
+ * built-in type.
+ */
 typedef unsigned char unsigned_byte;
 
 // 16-bit
 //
+
+/**
+ * @brief C++ type corresponding to the short XML Schema
+ * built-in type.
+ */
 typedef short short_;
+
+/**
+ * @brief C++ type corresponding to the unsignedShort XML Schema
+ * built-in type.
+ */
 typedef unsigned short unsigned_short;
 
 // 32-bit
 //
+
+/**
+ * @brief C++ type corresponding to the int XML Schema
+ * built-in type.
+ */
 typedef int int_;
+
+/**
+ * @brief C++ type corresponding to the unsignedInt XML Schema
+ * built-in type.
+ */
 typedef unsigned int unsigned_int;
 
 // 64-bit
 //
+
+/**
+ * @brief C++ type corresponding to the long XML Schema
+ * built-in type.
+ */
 typedef long long long_;
+
+/**
+ * @brief C++ type corresponding to the unsignedLong XML Schema
+ * built-in type.
+ */
 typedef unsigned long long unsigned_long;
 
 // Supposed to be arbitrary-length integral types.
 //
+
+/**
+ * @brief C++ type corresponding to the integer XML Schema
+ * built-in type.
+ */
 typedef long long integer;
+
+/**
+ * @brief C++ type corresponding to the nonPositiveInteger XML Schema
+ * built-in type.
+ */
 typedef long long non_positive_integer;
+
+/**
+ * @brief C++ type corresponding to the nonNegativeInteger XML Schema
+ * built-in type.
+ */
 typedef unsigned long long non_negative_integer;
+
+/**
+ * @brief C++ type corresponding to the positiveInteger XML Schema
+ * built-in type.
+ */
 typedef unsigned long long positive_integer;
+
+/**
+ * @brief C++ type corresponding to the negativeInteger XML Schema
+ * built-in type.
+ */
 typedef long long negative_integer;
 
 // Boolean.
 //
+
+/**
+ * @brief C++ type corresponding to the boolean XML Schema
+ * built-in type.
+ */
 typedef bool boolean;
 
 // Floating-point types.
 //
+
+/**
+ * @brief C++ type corresponding to the float XML Schema
+ * built-in type.
+ */
 typedef float float_;
+
+/**
+ * @brief C++ type corresponding to the double XML Schema
+ * built-in type.
+ */
 typedef double double_;
+
+/**
+ * @brief C++ type corresponding to the decimal XML Schema
+ * built-in type.
+ */
 typedef double decimal;
 
 // String types.
 //
+
+/**
+ * @brief C++ type corresponding to the string XML Schema
+ * built-in type.
+ */
 typedef ::xsd::cxx::tree::string<char, simple_type> string;
+
+/**
+ * @brief C++ type corresponding to the normalizedString XML Schema
+ * built-in type.
+ */
 typedef ::xsd::cxx::tree::normalized_string<char, string> normalized_string;
+
+/**
+ * @brief C++ type corresponding to the token XML Schema
+ * built-in type.
+ */
 typedef ::xsd::cxx::tree::token<char, normalized_string> token;
+
+/**
+ * @brief C++ type corresponding to the Name XML Schema
+ * built-in type.
+ */
 typedef ::xsd::cxx::tree::name<char, token> name;
+
+/**
+ * @brief C++ type corresponding to the NMTOKEN XML Schema
+ * built-in type.
+ */
 typedef ::xsd::cxx::tree::nmtoken<char, token> nmtoken;
+
+/**
+ * @brief C++ type corresponding to the NMTOKENS XML Schema
+ * built-in type.
+ */
 typedef ::xsd::cxx::tree::nmtokens<char, simple_type, nmtoken> nmtokens;
+
+/**
+ * @brief C++ type corresponding to the NCName XML Schema
+ * built-in type.
+ */
 typedef ::xsd::cxx::tree::ncname<char, name> ncname;
+
+/**
+ * @brief C++ type corresponding to the language XML Schema
+ * built-in type.
+ */
 typedef ::xsd::cxx::tree::language<char, token> language;
 
 // ID/IDREF.
 //
+
+/**
+ * @brief C++ type corresponding to the ID XML Schema
+ * built-in type.
+ */
 typedef ::xsd::cxx::tree::id<char, ncname> id;
+
+/**
+ * @brief C++ type corresponding to the IDREF XML Schema
+ * built-in type.
+ */
 typedef ::xsd::cxx::tree::idref<char, ncname, type> idref;
+
+/**
+ * @brief C++ type corresponding to the IDREFS XML Schema
+ * built-in type.
+ */
 typedef ::xsd::cxx::tree::idrefs<char, simple_type, idref> idrefs;
 
 // URI.
 //
+
+/**
+ * @brief C++ type corresponding to the anyURI XML Schema
+ * built-in type.
+ */
 typedef ::xsd::cxx::tree::uri<char, simple_type> uri;
 
 // Qualified name.
 //
+
+/**
+ * @brief C++ type corresponding to the QName XML Schema
+ * built-in type.
+ */
 typedef ::xsd::cxx::tree::qname<char, simple_type, uri, ncname> qname;
 
 // Binary.
 //
+
+/**
+ * @brief Binary buffer type.
+ */
 typedef ::xsd::cxx::tree::buffer<char> buffer;
+
+/**
+ * @brief C++ type corresponding to the base64Binary XML Schema
+ * built-in type.
+ */
 typedef ::xsd::cxx::tree::base64_binary<char, simple_type> base64_binary;
+
+/**
+ * @brief C++ type corresponding to the hexBinary XML Schema
+ * built-in type.
+ */
 typedef ::xsd::cxx::tree::hex_binary<char, simple_type> hex_binary;
 
 // Date/time.
 //
+
+/**
+ * @brief Time zone type.
+ */
 typedef ::xsd::cxx::tree::time_zone time_zone;
+
+/**
+ * @brief C++ type corresponding to the date XML Schema
+ * built-in type.
+ */
 typedef ::xsd::cxx::tree::date<char, simple_type> date;
+
+/**
+ * @brief C++ type corresponding to the dateTime XML Schema
+ * built-in type.
+ */
 typedef ::xsd::cxx::tree::date_time<char, simple_type> date_time;
+
+/**
+ * @brief C++ type corresponding to the duration XML Schema
+ * built-in type.
+ */
 typedef ::xsd::cxx::tree::duration<char, simple_type> duration;
+
+/**
+ * @brief C++ type corresponding to the gDay XML Schema
+ * built-in type.
+ */
 typedef ::xsd::cxx::tree::gday<char, simple_type> gday;
+
+/**
+ * @brief C++ type corresponding to the gMonth XML Schema
+ * built-in type.
+ */
 typedef ::xsd::cxx::tree::gmonth<char, simple_type> gmonth;
+
+/**
+ * @brief C++ type corresponding to the gMonthDay XML Schema
+ * built-in type.
+ */
 typedef ::xsd::cxx::tree::gmonth_day<char, simple_type> gmonth_day;
+
+/**
+ * @brief C++ type corresponding to the gYear XML Schema
+ * built-in type.
+ */
 typedef ::xsd::cxx::tree::gyear<char, simple_type> gyear;
+
+/**
+ * @brief C++ type corresponding to the gYearMonth XML Schema
+ * built-in type.
+ */
 typedef ::xsd::cxx::tree::gyear_month<char, simple_type> gyear_month;
+
+/**
+ * @brief C++ type corresponding to the time XML Schema
+ * built-in type.
+ */
 typedef ::xsd::cxx::tree::time<char, simple_type> time;
 
 // Entity.
 //
+
+/**
+ * @brief C++ type corresponding to the ENTITY XML Schema
+ * built-in type.
+ */
 typedef ::xsd::cxx::tree::entity<char, ncname> entity;
+
+/**
+ * @brief C++ type corresponding to the ENTITIES XML Schema
+ * built-in type.
+ */
 typedef ::xsd::cxx::tree::entities<char, simple_type, entity> entities;
 
+/**
+ * @brief Content order sequence entry.
+ */
 typedef ::xsd::cxx::tree::content_order content_order;
 // Flags and properties.
 //
+
+/**
+ * @brief Parsing and serialization flags.
+ */
 typedef ::xsd::cxx::tree::flags flags;
+
+/**
+ * @brief Parsing properties.
+ */
 typedef ::xsd::cxx::tree::properties<char> properties;
 
 // Parsing/serialization diagnostics.
 //
+
+/**
+ * @brief Error severity.
+ */
 typedef ::xsd::cxx::tree::severity severity;
+
+/**
+ * @brief Error condition.
+ */
 typedef ::xsd::cxx::tree::error<char> error;
+
+/**
+ * @brief List of %error conditions.
+ */
 typedef ::xsd::cxx::tree::diagnostics<char> diagnostics;
 
 // Exceptions.
 //
+
+/**
+ * @brief Root of the C++/Tree %exception hierarchy.
+ */
 typedef ::xsd::cxx::tree::exception<char> exception;
+
+/**
+ * @brief Exception indicating that the size argument exceeds
+ * the capacity argument.
+ */
 typedef ::xsd::cxx::tree::bounds<char> bounds;
+
+/**
+ * @brief Exception indicating that a duplicate ID value
+ * was encountered in the object model.
+ */
 typedef ::xsd::cxx::tree::duplicate_id<char> duplicate_id;
+
+/**
+ * @brief Exception indicating a parsing failure.
+ */
 typedef ::xsd::cxx::tree::parsing<char> parsing;
+
+/**
+ * @brief Exception indicating that an expected element
+ * was not encountered.
+ */
 typedef ::xsd::cxx::tree::expected_element<char> expected_element;
+
+/**
+ * @brief Exception indicating that an unexpected element
+ * was encountered.
+ */
 typedef ::xsd::cxx::tree::unexpected_element<char> unexpected_element;
+
+/**
+ * @brief Exception indicating that an expected attribute
+ * was not encountered.
+ */
 typedef ::xsd::cxx::tree::expected_attribute<char> expected_attribute;
+
+/**
+ * @brief Exception indicating that an unexpected enumerator
+ * was encountered.
+ */
 typedef ::xsd::cxx::tree::unexpected_enumerator<char> unexpected_enumerator;
+
+/**
+ * @brief Exception indicating that the text content was
+ * expected for an element.
+ */
 typedef ::xsd::cxx::tree::expected_text_content<char> expected_text_content;
+
+/**
+ * @brief Exception indicating that a prefix-namespace
+ * mapping was not provided.
+ */
 typedef ::xsd::cxx::tree::no_prefix_mapping<char> no_prefix_mapping;
 
-// Error handler callback interface.
-//
+/**
+ * @brief Error handler callback interface.
+ */
 typedef ::xsd::cxx::xml::error_handler<char> error_handler;
 
-// DOM interaction.
-//
+/**
+ * @brief DOM interaction.
+ */
 namespace dom {
-// Automatic pointer for DOMDocument.
-//
-using ::xsd::cxx::xml::dom::auto_ptr;
+/**
+ * @brief Automatic pointer for DOMDocument.
+ */
+using ::xsd::cxx::xml::dom::unique_ptr;
 
 #ifndef XSD_CXX_TREE_TREE_NODE_KEY__XML_SCHEMA
 #define XSD_CXX_TREE_TREE_NODE_KEY__XML_SCHEMA
-// DOM user data key for back pointers to tree nodes.
-//
+/**
+ * @brief DOM user data key for back pointers to tree nodes.
+ */
 const XMLCh* const tree_node_key = ::xsd::cxx::tree::user_data_keys::node;
 #endif
 }  // namespace dom
@@ -232,7 +557,8 @@ class spheroids;
 
 #include <algorithm>  // std::binary_search
 #include <limits>     // std::numeric_limits
-#include <memory>     // ::std::auto_ptr
+#include <memory>     // ::std::unique_ptr
+#include <utility>    // std::move
 #include <xsd/cxx/tree/containers.hxx>
 #include <xsd/cxx/tree/elements.hxx>
 #include <xsd/cxx/tree/exceptions.hxx>
@@ -240,94 +566,339 @@ class spheroids;
 #include <xsd/cxx/xml/char-utf8.hxx>
 #include <xsd/cxx/xml/dom/parsing-header.hxx>
 
+/**
+ * @brief Class corresponding to the %MetadataType schema type.
+ *
+ * @nosubgrouping
+ */
 class MetadataType : public ::xml_schema::type {
  public:
-  // container
-  //
+  /**
+   * @name container
+   *
+   * @brief Accessor and modifier functions for the %container
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::ContainerType container_type;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<container_type, char> container_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
   const container_type& container() const;
 
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
   container_type& container();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void container(const container_type& x);
 
-  void container(::std::auto_ptr<container_type> p);
+  /**
+   * @brief Set the element value without copying.
+   *
+   * @param p A new value to use.
+   *
+   * This function will try to use the passed value directly
+   * instead of making a copy.
+   */
+  void container(::std::unique_ptr<container_type> p);
 
-  // force
-  //
+  //@}
+
+  /**
+   * @name force
+   *
+   * @brief Accessor and modifier functions for the %force
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::ForceType force_type;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<force_type, char> force_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
   const force_type& force() const;
 
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
   force_type& force();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void force(const force_type& x);
 
-  void force(::std::auto_ptr<force_type> p);
+  /**
+   * @brief Set the element value without copying.
+   *
+   * @param p A new value to use.
+   *
+   * This function will try to use the passed value directly
+   * instead of making a copy.
+   */
+  void force(::std::unique_ptr<force_type> p);
 
-  // delta_t
-  //
+  //@}
+
+  /**
+   * @name delta_t
+   *
+   * @brief Accessor and modifier functions for the %delta_t
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::xml_schema::decimal delta_t_type;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<delta_t_type, char,
                                    ::xsd::cxx::tree::schema_type::decimal>
       delta_t_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
   const delta_t_type& delta_t() const;
 
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
   delta_t_type& delta_t();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void delta_t(const delta_t_type& x);
 
-  // t_end
-  //
+  //@}
+
+  /**
+   * @name t_end
+   *
+   * @brief Accessor and modifier functions for the %t_end
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::xml_schema::double_ t_end_type;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<t_end_type, char,
                                    ::xsd::cxx::tree::schema_type::double_>
       t_end_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
   const t_end_type& t_end() const;
 
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
   t_end_type& t_end();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void t_end(const t_end_type& x);
 
-  // twoD
-  //
+  //@}
+
+  /**
+   * @name twoD
+   *
+   * @brief Accessor and modifier functions for the %twoD
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::xml_schema::boolean twoD_type;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<twoD_type, char> twoD_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
   const twoD_type& twoD() const;
 
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
   twoD_type& twoD();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void twoD(const twoD_type& x);
 
-  // Constructors.
-  //
+  //@}
+
+  /**
+   * @name Constructors
+   */
+  //@{
+
+  /**
+   * @brief Create an instance from the ultimate base and
+   * initializers for required elements and attributes.
+   */
   MetadataType(const container_type&, const force_type&, const delta_t_type&,
                const t_end_type&, const twoD_type&);
 
-  MetadataType(::std::auto_ptr<container_type>, ::std::auto_ptr<force_type>,
+  /**
+   * @brief Create an instance from the ultimate base and
+   * initializers for required elements and attributes
+   * (::std::unique_ptr version).
+   *
+   * This constructor will try to use the passed values directly
+   * instead of making copies.
+   */
+  MetadataType(::std::unique_ptr<container_type>, ::std::unique_ptr<force_type>,
                const delta_t_type&, const t_end_type&, const twoD_type&);
 
+  /**
+   * @brief Create an instance from a DOM element.
+   *
+   * @param e A DOM element to extract the data from.
+   * @param f Flags to create the new instance with.
+   * @param c A pointer to the object that will contain the new
+   * instance.
+   */
   MetadataType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
                ::xml_schema::container* c = 0);
 
+  /**
+   * @brief Copy constructor.
+   *
+   * @param x An instance to make a copy of.
+   * @param f Flags to create the copy with.
+   * @param c A pointer to the object that will contain the copy.
+   *
+   * For polymorphic object models use the @c _clone function instead.
+   */
   MetadataType(const MetadataType& x, ::xml_schema::flags f = 0,
                ::xml_schema::container* c = 0);
 
+  /**
+   * @brief Copy the instance polymorphically.
+   *
+   * @param f Flags to create the copy with.
+   * @param c A pointer to the object that will contain the copy.
+   * @return A pointer to the dynamically allocated copy.
+   *
+   * This function ensures that the dynamic type of the instance is
+   * used for copying and should be used for polymorphic object
+   * models instead of the copy constructor.
+   */
   virtual MetadataType* _clone(::xml_schema::flags f = 0,
                                ::xml_schema::container* c = 0) const;
 
+  /**
+   * @brief Copy assignment operator.
+   *
+   * @param x An instance to make a copy of.
+   * @return A reference to itself.
+   *
+   * For polymorphic object models use the @c _clone function instead.
+   */
   MetadataType& operator=(const MetadataType& x);
 
+  //@}
+
+  /**
+   * @brief Destructor.
+   */
   virtual ~MetadataType();
 
   // Implementation.
   //
+
+  //@cond
+
  protected:
   void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
 
@@ -337,151 +908,538 @@ class MetadataType : public ::xml_schema::type {
   ::xsd::cxx::tree::one<delta_t_type> delta_t_;
   ::xsd::cxx::tree::one<t_end_type> t_end_;
   ::xsd::cxx::tree::one<twoD_type> twoD_;
+
+  //@endcond
 };
 
+/**
+ * @brief Class corresponding to the %cuboidType schema type.
+ *
+ * @nosubgrouping
+ */
 class cuboidType : public ::xml_schema::type {
  public:
-  // velocity
-  //
+  /**
+   * @name velocity
+   *
+   * @brief Accessor and modifier functions for the %velocity
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::Dvec3Type velocity_type;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<velocity_type, char> velocity_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
   const velocity_type& velocity() const;
 
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
   velocity_type& velocity();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void velocity(const velocity_type& x);
 
-  void velocity(::std::auto_ptr<velocity_type> p);
+  /**
+   * @brief Set the element value without copying.
+   *
+   * @param p A new value to use.
+   *
+   * This function will try to use the passed value directly
+   * instead of making a copy.
+   */
+  void velocity(::std::unique_ptr<velocity_type> p);
 
-  // corner
-  //
+  //@}
+
+  /**
+   * @name corner
+   *
+   * @brief Accessor and modifier functions for the %corner
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::Dvec3Type corner_type;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<corner_type, char> corner_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
   const corner_type& corner() const;
 
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
   corner_type& corner();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void corner(const corner_type& x);
 
-  void corner(::std::auto_ptr<corner_type> p);
+  /**
+   * @brief Set the element value without copying.
+   *
+   * @param p A new value to use.
+   *
+   * This function will try to use the passed value directly
+   * instead of making a copy.
+   */
+  void corner(::std::unique_ptr<corner_type> p);
 
-  // dimensions
-  //
+  //@}
+
+  /**
+   * @name dimensions
+   *
+   * @brief Accessor and modifier functions for the %dimensions
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::Ivec3Type dimensions_type;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<dimensions_type, char> dimensions_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
   const dimensions_type& dimensions() const;
 
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
   dimensions_type& dimensions();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void dimensions(const dimensions_type& x);
 
-  void dimensions(::std::auto_ptr<dimensions_type> p);
+  /**
+   * @brief Set the element value without copying.
+   *
+   * @param p A new value to use.
+   *
+   * This function will try to use the passed value directly
+   * instead of making a copy.
+   */
+  void dimensions(::std::unique_ptr<dimensions_type> p);
 
-  // type
-  //
+  //@}
+
+  /**
+   * @name type
+   *
+   * @brief Accessor and modifier functions for the %type
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::xml_schema::int_ type_type;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<type_type, char> type_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
   const type_type& type() const;
 
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
   type_type& type();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void type(const type_type& x);
 
-  // h
-  //
+  //@}
+
+  /**
+   * @name h
+   *
+   * @brief Accessor and modifier functions for the %h
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::xml_schema::decimal h_type;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<h_type, char,
                                    ::xsd::cxx::tree::schema_type::decimal>
       h_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
   const h_type& h() const;
 
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
   h_type& h();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void h(const h_type& x);
 
-  // mass
-  //
+  //@}
+
+  /**
+   * @name mass
+   *
+   * @brief Accessor and modifier functions for the %mass
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::xml_schema::decimal mass_type;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<mass_type, char,
                                    ::xsd::cxx::tree::schema_type::decimal>
       mass_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
   const mass_type& mass() const;
 
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
   mass_type& mass();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void mass(const mass_type& x);
 
-  // epsilon
-  //
+  //@}
+
+  /**
+   * @name epsilon
+   *
+   * @brief Accessor and modifier functions for the %epsilon
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::xml_schema::decimal epsilon_type;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<epsilon_type, char,
                                    ::xsd::cxx::tree::schema_type::decimal>
       epsilon_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
   const epsilon_type& epsilon() const;
 
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
   epsilon_type& epsilon();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void epsilon(const epsilon_type& x);
 
-  // sigma
-  //
+  //@}
+
+  /**
+   * @name sigma
+   *
+   * @brief Accessor and modifier functions for the %sigma
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::xml_schema::decimal sigma_type;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<sigma_type, char,
                                    ::xsd::cxx::tree::schema_type::decimal>
       sigma_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
   const sigma_type& sigma() const;
 
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
   sigma_type& sigma();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void sigma(const sigma_type& x);
 
-  // mv
-  //
+  //@}
+
+  /**
+   * @name mv
+   *
+   * @brief Accessor and modifier functions for the %mv
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::xml_schema::decimal mv_type;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<mv_type, char,
                                    ::xsd::cxx::tree::schema_type::decimal>
       mv_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
   const mv_type& mv() const;
 
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
   mv_type& mv();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void mv(const mv_type& x);
 
-  // Constructors.
-  //
+  //@}
+
+  /**
+   * @name Constructors
+   */
+  //@{
+
+  /**
+   * @brief Create an instance from the ultimate base and
+   * initializers for required elements and attributes.
+   */
   cuboidType(const velocity_type&, const corner_type&, const dimensions_type&,
              const type_type&, const h_type&, const mass_type&,
              const epsilon_type&, const sigma_type&, const mv_type&);
 
-  cuboidType(::std::auto_ptr<velocity_type>, ::std::auto_ptr<corner_type>,
-             ::std::auto_ptr<dimensions_type>, const type_type&, const h_type&,
-             const mass_type&, const epsilon_type&, const sigma_type&,
-             const mv_type&);
+  /**
+   * @brief Create an instance from the ultimate base and
+   * initializers for required elements and attributes
+   * (::std::unique_ptr version).
+   *
+   * This constructor will try to use the passed values directly
+   * instead of making copies.
+   */
+  cuboidType(::std::unique_ptr<velocity_type>, ::std::unique_ptr<corner_type>,
+             ::std::unique_ptr<dimensions_type>, const type_type&,
+             const h_type&, const mass_type&, const epsilon_type&,
+             const sigma_type&, const mv_type&);
 
+  /**
+   * @brief Create an instance from a DOM element.
+   *
+   * @param e A DOM element to extract the data from.
+   * @param f Flags to create the new instance with.
+   * @param c A pointer to the object that will contain the new
+   * instance.
+   */
   cuboidType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
              ::xml_schema::container* c = 0);
 
+  /**
+   * @brief Copy constructor.
+   *
+   * @param x An instance to make a copy of.
+   * @param f Flags to create the copy with.
+   * @param c A pointer to the object that will contain the copy.
+   *
+   * For polymorphic object models use the @c _clone function instead.
+   */
   cuboidType(const cuboidType& x, ::xml_schema::flags f = 0,
              ::xml_schema::container* c = 0);
 
+  /**
+   * @brief Copy the instance polymorphically.
+   *
+   * @param f Flags to create the copy with.
+   * @param c A pointer to the object that will contain the copy.
+   * @return A pointer to the dynamically allocated copy.
+   *
+   * This function ensures that the dynamic type of the instance is
+   * used for copying and should be used for polymorphic object
+   * models instead of the copy constructor.
+   */
   virtual cuboidType* _clone(::xml_schema::flags f = 0,
                              ::xml_schema::container* c = 0) const;
 
+  /**
+   * @brief Copy assignment operator.
+   *
+   * @param x An instance to make a copy of.
+   * @return A reference to itself.
+   *
+   * For polymorphic object models use the @c _clone function instead.
+   */
   cuboidType& operator=(const cuboidType& x);
 
+  //@}
+
+  /**
+   * @brief Destructor.
+   */
   virtual ~cuboidType();
 
   // Implementation.
   //
+
+  //@cond
+
  protected:
   void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
 
@@ -495,135 +1453,481 @@ class cuboidType : public ::xml_schema::type {
   ::xsd::cxx::tree::one<epsilon_type> epsilon_;
   ::xsd::cxx::tree::one<sigma_type> sigma_;
   ::xsd::cxx::tree::one<mv_type> mv_;
+
+  //@endcond
 };
 
+/**
+ * @brief Class corresponding to the %spheroidType schema type.
+ *
+ * @nosubgrouping
+ */
 class spheroidType : public ::xml_schema::type {
  public:
-  // velocity
-  //
+  /**
+   * @name velocity
+   *
+   * @brief Accessor and modifier functions for the %velocity
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::Dvec3Type velocity_type;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<velocity_type, char> velocity_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
   const velocity_type& velocity() const;
 
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
   velocity_type& velocity();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void velocity(const velocity_type& x);
 
-  void velocity(::std::auto_ptr<velocity_type> p);
+  /**
+   * @brief Set the element value without copying.
+   *
+   * @param p A new value to use.
+   *
+   * This function will try to use the passed value directly
+   * instead of making a copy.
+   */
+  void velocity(::std::unique_ptr<velocity_type> p);
 
-  // origin
-  //
+  //@}
+
+  /**
+   * @name origin
+   *
+   * @brief Accessor and modifier functions for the %origin
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::Dvec3Type origin_type;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<origin_type, char> origin_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
   const origin_type& origin() const;
 
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
   origin_type& origin();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void origin(const origin_type& x);
 
-  void origin(::std::auto_ptr<origin_type> p);
+  /**
+   * @brief Set the element value without copying.
+   *
+   * @param p A new value to use.
+   *
+   * This function will try to use the passed value directly
+   * instead of making a copy.
+   */
+  void origin(::std::unique_ptr<origin_type> p);
 
-  // radius
-  //
+  //@}
+
+  /**
+   * @name radius
+   *
+   * @brief Accessor and modifier functions for the %radius
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::xml_schema::int_ radius_type;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<radius_type, char> radius_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
   const radius_type& radius() const;
 
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
   radius_type& radius();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void radius(const radius_type& x);
 
-  // type
-  //
+  //@}
+
+  /**
+   * @name type
+   *
+   * @brief Accessor and modifier functions for the %type
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::xml_schema::int_ type_type;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<type_type, char> type_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
   const type_type& type() const;
 
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
   type_type& type();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void type(const type_type& x);
 
-  // h
-  //
+  //@}
+
+  /**
+   * @name h
+   *
+   * @brief Accessor and modifier functions for the %h
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::xml_schema::decimal h_type;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<h_type, char,
                                    ::xsd::cxx::tree::schema_type::decimal>
       h_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
   const h_type& h() const;
 
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
   h_type& h();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void h(const h_type& x);
 
-  // mass
-  //
+  //@}
+
+  /**
+   * @name mass
+   *
+   * @brief Accessor and modifier functions for the %mass
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::xml_schema::decimal mass_type;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<mass_type, char,
                                    ::xsd::cxx::tree::schema_type::decimal>
       mass_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
   const mass_type& mass() const;
 
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
   mass_type& mass();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void mass(const mass_type& x);
 
-  // epsilon
-  //
+  //@}
+
+  /**
+   * @name epsilon
+   *
+   * @brief Accessor and modifier functions for the %epsilon
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::xml_schema::decimal epsilon_type;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<epsilon_type, char,
                                    ::xsd::cxx::tree::schema_type::decimal>
       epsilon_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
   const epsilon_type& epsilon() const;
 
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
   epsilon_type& epsilon();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void epsilon(const epsilon_type& x);
 
-  // sigma
-  //
+  //@}
+
+  /**
+   * @name sigma
+   *
+   * @brief Accessor and modifier functions for the %sigma
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::xml_schema::decimal sigma_type;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<sigma_type, char,
                                    ::xsd::cxx::tree::schema_type::decimal>
       sigma_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
   const sigma_type& sigma() const;
 
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
   sigma_type& sigma();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void sigma(const sigma_type& x);
 
-  // Constructors.
-  //
+  //@}
+
+  /**
+   * @name Constructors
+   */
+  //@{
+
+  /**
+   * @brief Create an instance from the ultimate base and
+   * initializers for required elements and attributes.
+   */
   spheroidType(const velocity_type&, const origin_type&, const radius_type&,
                const type_type&, const h_type&, const mass_type&,
                const epsilon_type&, const sigma_type&);
 
-  spheroidType(::std::auto_ptr<velocity_type>, ::std::auto_ptr<origin_type>,
+  /**
+   * @brief Create an instance from the ultimate base and
+   * initializers for required elements and attributes
+   * (::std::unique_ptr version).
+   *
+   * This constructor will try to use the passed values directly
+   * instead of making copies.
+   */
+  spheroidType(::std::unique_ptr<velocity_type>, ::std::unique_ptr<origin_type>,
                const radius_type&, const type_type&, const h_type&,
                const mass_type&, const epsilon_type&, const sigma_type&);
 
+  /**
+   * @brief Create an instance from a DOM element.
+   *
+   * @param e A DOM element to extract the data from.
+   * @param f Flags to create the new instance with.
+   * @param c A pointer to the object that will contain the new
+   * instance.
+   */
   spheroidType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
                ::xml_schema::container* c = 0);
 
+  /**
+   * @brief Copy constructor.
+   *
+   * @param x An instance to make a copy of.
+   * @param f Flags to create the copy with.
+   * @param c A pointer to the object that will contain the copy.
+   *
+   * For polymorphic object models use the @c _clone function instead.
+   */
   spheroidType(const spheroidType& x, ::xml_schema::flags f = 0,
                ::xml_schema::container* c = 0);
 
+  /**
+   * @brief Copy the instance polymorphically.
+   *
+   * @param f Flags to create the copy with.
+   * @param c A pointer to the object that will contain the copy.
+   * @return A pointer to the dynamically allocated copy.
+   *
+   * This function ensures that the dynamic type of the instance is
+   * used for copying and should be used for polymorphic object
+   * models instead of the copy constructor.
+   */
   virtual spheroidType* _clone(::xml_schema::flags f = 0,
                                ::xml_schema::container* c = 0) const;
 
+  /**
+   * @brief Copy assignment operator.
+   *
+   * @param x An instance to make a copy of.
+   * @return A reference to itself.
+   *
+   * For polymorphic object models use the @c _clone function instead.
+   */
   spheroidType& operator=(const spheroidType& x);
 
+  //@}
+
+  /**
+   * @brief Destructor.
+   */
   virtual ~spheroidType();
 
   // Implementation.
   //
+
+  //@cond
+
  protected:
   void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
 
@@ -636,68 +1940,225 @@ class spheroidType : public ::xml_schema::type {
   ::xsd::cxx::tree::one<mass_type> mass_;
   ::xsd::cxx::tree::one<epsilon_type> epsilon_;
   ::xsd::cxx::tree::one<sigma_type> sigma_;
+
+  //@endcond
 };
 
+/**
+ * @brief Class corresponding to the %Dvec3Type schema type.
+ *
+ * @nosubgrouping
+ */
 class Dvec3Type : public ::xml_schema::type {
  public:
-  // x
-  //
+  /**
+   * @name x
+   *
+   * @brief Accessor and modifier functions for the %x
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::xml_schema::decimal x_type;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<x_type, char,
                                    ::xsd::cxx::tree::schema_type::decimal>
       x_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
   const x_type& x() const;
 
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
   x_type& x();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void x(const x_type& x);
 
-  // y
-  //
+  //@}
+
+  /**
+   * @name y
+   *
+   * @brief Accessor and modifier functions for the %y
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::xml_schema::decimal y_type;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<y_type, char,
                                    ::xsd::cxx::tree::schema_type::decimal>
       y_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
   const y_type& y() const;
 
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
   y_type& y();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void y(const y_type& x);
 
-  // z
-  //
+  //@}
+
+  /**
+   * @name z
+   *
+   * @brief Accessor and modifier functions for the %z
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::xml_schema::decimal z_type;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<z_type, char,
                                    ::xsd::cxx::tree::schema_type::decimal>
       z_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
   const z_type& z() const;
 
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
   z_type& z();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void z(const z_type& x);
 
-  // Constructors.
-  //
+  //@}
+
+  /**
+   * @name Constructors
+   */
+  //@{
+
+  /**
+   * @brief Create an instance from the ultimate base and
+   * initializers for required elements and attributes.
+   */
   Dvec3Type(const x_type&, const y_type&, const z_type&);
 
+  /**
+   * @brief Create an instance from a DOM element.
+   *
+   * @param e A DOM element to extract the data from.
+   * @param f Flags to create the new instance with.
+   * @param c A pointer to the object that will contain the new
+   * instance.
+   */
   Dvec3Type(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
             ::xml_schema::container* c = 0);
 
+  /**
+   * @brief Copy constructor.
+   *
+   * @param x An instance to make a copy of.
+   * @param f Flags to create the copy with.
+   * @param c A pointer to the object that will contain the copy.
+   *
+   * For polymorphic object models use the @c _clone function instead.
+   */
   Dvec3Type(const Dvec3Type& x, ::xml_schema::flags f = 0,
             ::xml_schema::container* c = 0);
 
+  /**
+   * @brief Copy the instance polymorphically.
+   *
+   * @param f Flags to create the copy with.
+   * @param c A pointer to the object that will contain the copy.
+   * @return A pointer to the dynamically allocated copy.
+   *
+   * This function ensures that the dynamic type of the instance is
+   * used for copying and should be used for polymorphic object
+   * models instead of the copy constructor.
+   */
   virtual Dvec3Type* _clone(::xml_schema::flags f = 0,
                             ::xml_schema::container* c = 0) const;
 
+  /**
+   * @brief Copy assignment operator.
+   *
+   * @param x An instance to make a copy of.
+   * @return A reference to itself.
+   *
+   * For polymorphic object models use the @c _clone function instead.
+   */
   Dvec3Type& operator=(const Dvec3Type& x);
 
+  //@}
+
+  /**
+   * @brief Destructor.
+   */
   virtual ~Dvec3Type();
 
   // Implementation.
   //
+
+  //@cond
+
  protected:
   void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
 
@@ -705,62 +2166,219 @@ class Dvec3Type : public ::xml_schema::type {
   ::xsd::cxx::tree::one<x_type> x_;
   ::xsd::cxx::tree::one<y_type> y_;
   ::xsd::cxx::tree::one<z_type> z_;
+
+  //@endcond
 };
 
+/**
+ * @brief Class corresponding to the %Ivec3Type schema type.
+ *
+ * @nosubgrouping
+ */
 class Ivec3Type : public ::xml_schema::type {
  public:
-  // x
-  //
+  /**
+   * @name x
+   *
+   * @brief Accessor and modifier functions for the %x
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::xml_schema::int_ x_type;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<x_type, char> x_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
   const x_type& x() const;
 
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
   x_type& x();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void x(const x_type& x);
 
-  // y
-  //
+  //@}
+
+  /**
+   * @name y
+   *
+   * @brief Accessor and modifier functions for the %y
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::xml_schema::int_ y_type;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<y_type, char> y_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
   const y_type& y() const;
 
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
   y_type& y();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void y(const y_type& x);
 
-  // z
-  //
+  //@}
+
+  /**
+   * @name z
+   *
+   * @brief Accessor and modifier functions for the %z
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::xml_schema::int_ z_type;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<z_type, char> z_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
   const z_type& z() const;
 
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
   z_type& z();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void z(const z_type& x);
 
-  // Constructors.
-  //
+  //@}
+
+  /**
+   * @name Constructors
+   */
+  //@{
+
+  /**
+   * @brief Create an instance from the ultimate base and
+   * initializers for required elements and attributes.
+   */
   Ivec3Type(const x_type&, const y_type&, const z_type&);
 
+  /**
+   * @brief Create an instance from a DOM element.
+   *
+   * @param e A DOM element to extract the data from.
+   * @param f Flags to create the new instance with.
+   * @param c A pointer to the object that will contain the new
+   * instance.
+   */
   Ivec3Type(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
             ::xml_schema::container* c = 0);
 
+  /**
+   * @brief Copy constructor.
+   *
+   * @param x An instance to make a copy of.
+   * @param f Flags to create the copy with.
+   * @param c A pointer to the object that will contain the copy.
+   *
+   * For polymorphic object models use the @c _clone function instead.
+   */
   Ivec3Type(const Ivec3Type& x, ::xml_schema::flags f = 0,
             ::xml_schema::container* c = 0);
 
+  /**
+   * @brief Copy the instance polymorphically.
+   *
+   * @param f Flags to create the copy with.
+   * @param c A pointer to the object that will contain the copy.
+   * @return A pointer to the dynamically allocated copy.
+   *
+   * This function ensures that the dynamic type of the instance is
+   * used for copying and should be used for polymorphic object
+   * models instead of the copy constructor.
+   */
   virtual Ivec3Type* _clone(::xml_schema::flags f = 0,
                             ::xml_schema::container* c = 0) const;
 
+  /**
+   * @brief Copy assignment operator.
+   *
+   * @param x An instance to make a copy of.
+   * @return A reference to itself.
+   *
+   * For polymorphic object models use the @c _clone function instead.
+   */
   Ivec3Type& operator=(const Ivec3Type& x);
 
+  //@}
+
+  /**
+   * @brief Destructor.
+   */
   virtual ~Ivec3Type();
 
   // Implementation.
   //
+
+  //@cond
+
  protected:
   void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
 
@@ -768,133 +2386,482 @@ class Ivec3Type : public ::xml_schema::type {
   ::xsd::cxx::tree::one<x_type> x_;
   ::xsd::cxx::tree::one<y_type> y_;
   ::xsd::cxx::tree::one<z_type> z_;
+
+  //@endcond
 };
 
+/**
+ * @brief Class corresponding to the %ContainerType schema type.
+ *
+ * @nosubgrouping
+ */
 class ContainerType : public ::xml_schema::type {
  public:
-  // directSum
-  //
+  /**
+   * @name directSum
+   *
+   * @brief Accessor and modifier functions for the %directSum
+   * optional element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::DirectSumType directSum_type;
+
+  /**
+   * @brief Element optional container type.
+   */
   typedef ::xsd::cxx::tree::optional<directSum_type> directSum_optional;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<directSum_type, char> directSum_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element
+   * container.
+   *
+   * @return A constant reference to the optional container.
+   */
   const directSum_optional& directSum() const;
 
+  /**
+   * @brief Return a read-write reference to the element container.
+   *
+   * @return A reference to the optional container.
+   */
   directSum_optional& directSum();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void directSum(const directSum_type& x);
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x An optional container with the new value to set.
+   *
+   * If the value is present in @a x then this function makes a copy
+   * of this value and sets it as the new value of the element.
+   * Otherwise the element container is set the 'not present' state.
+   */
   void directSum(const directSum_optional& x);
 
-  void directSum(::std::auto_ptr<directSum_type> p);
+  /**
+   * @brief Set the element value without copying.
+   *
+   * @param p A new value to use.
+   *
+   * This function will try to use the passed value directly instead
+   * of making a copy.
+   */
+  void directSum(::std::unique_ptr<directSum_type> p);
 
-  // linkedCells
-  //
+  //@}
+
+  /**
+   * @name linkedCells
+   *
+   * @brief Accessor and modifier functions for the %linkedCells
+   * optional element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::LinkedCellsType linkedCells_type;
+
+  /**
+   * @brief Element optional container type.
+   */
   typedef ::xsd::cxx::tree::optional<linkedCells_type> linkedCells_optional;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<linkedCells_type, char> linkedCells_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element
+   * container.
+   *
+   * @return A constant reference to the optional container.
+   */
   const linkedCells_optional& linkedCells() const;
 
+  /**
+   * @brief Return a read-write reference to the element container.
+   *
+   * @return A reference to the optional container.
+   */
   linkedCells_optional& linkedCells();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void linkedCells(const linkedCells_type& x);
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x An optional container with the new value to set.
+   *
+   * If the value is present in @a x then this function makes a copy
+   * of this value and sets it as the new value of the element.
+   * Otherwise the element container is set the 'not present' state.
+   */
   void linkedCells(const linkedCells_optional& x);
 
-  void linkedCells(::std::auto_ptr<linkedCells_type> p);
+  /**
+   * @brief Set the element value without copying.
+   *
+   * @param p A new value to use.
+   *
+   * This function will try to use the passed value directly instead
+   * of making a copy.
+   */
+  void linkedCells(::std::unique_ptr<linkedCells_type> p);
 
-  // Constructors.
-  //
+  //@}
+
+  /**
+   * @name Constructors
+   */
+  //@{
+
+  /**
+   * @brief Create an instance from the ultimate base and
+   * initializers for required elements and attributes.
+   */
   ContainerType();
 
+  /**
+   * @brief Create an instance from a DOM element.
+   *
+   * @param e A DOM element to extract the data from.
+   * @param f Flags to create the new instance with.
+   * @param c A pointer to the object that will contain the new
+   * instance.
+   */
   ContainerType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
                 ::xml_schema::container* c = 0);
 
+  /**
+   * @brief Copy constructor.
+   *
+   * @param x An instance to make a copy of.
+   * @param f Flags to create the copy with.
+   * @param c A pointer to the object that will contain the copy.
+   *
+   * For polymorphic object models use the @c _clone function instead.
+   */
   ContainerType(const ContainerType& x, ::xml_schema::flags f = 0,
                 ::xml_schema::container* c = 0);
 
+  /**
+   * @brief Copy the instance polymorphically.
+   *
+   * @param f Flags to create the copy with.
+   * @param c A pointer to the object that will contain the copy.
+   * @return A pointer to the dynamically allocated copy.
+   *
+   * This function ensures that the dynamic type of the instance is
+   * used for copying and should be used for polymorphic object
+   * models instead of the copy constructor.
+   */
   virtual ContainerType* _clone(::xml_schema::flags f = 0,
                                 ::xml_schema::container* c = 0) const;
 
+  /**
+   * @brief Copy assignment operator.
+   *
+   * @param x An instance to make a copy of.
+   * @return A reference to itself.
+   *
+   * For polymorphic object models use the @c _clone function instead.
+   */
   ContainerType& operator=(const ContainerType& x);
 
+  //@}
+
+  /**
+   * @brief Destructor.
+   */
   virtual ~ContainerType();
 
   // Implementation.
   //
+
+  //@cond
+
  protected:
   void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
 
  protected:
   directSum_optional directSum_;
   linkedCells_optional linkedCells_;
+
+  //@endcond
 };
 
+/**
+ * @brief Class corresponding to the %LinkedCellsType schema type.
+ *
+ * @nosubgrouping
+ */
 class LinkedCellsType : public ::xml_schema::type {
  public:
-  // domain
-  //
+  /**
+   * @name domain
+   *
+   * @brief Accessor and modifier functions for the %domain
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::Ivec3Type domain_type;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<domain_type, char> domain_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
   const domain_type& domain() const;
 
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
   domain_type& domain();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void domain(const domain_type& x);
 
-  void domain(::std::auto_ptr<domain_type> p);
+  /**
+   * @brief Set the element value without copying.
+   *
+   * @param p A new value to use.
+   *
+   * This function will try to use the passed value directly
+   * instead of making a copy.
+   */
+  void domain(::std::unique_ptr<domain_type> p);
 
-  // r_cutoff
-  //
+  //@}
+
+  /**
+   * @name r_cutoff
+   *
+   * @brief Accessor and modifier functions for the %r_cutoff
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::xml_schema::decimal r_cutoff_type;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<r_cutoff_type, char,
                                    ::xsd::cxx::tree::schema_type::decimal>
       r_cutoff_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
   const r_cutoff_type& r_cutoff() const;
 
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
   r_cutoff_type& r_cutoff();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void r_cutoff(const r_cutoff_type& x);
 
-  // boundary
-  //
+  //@}
+
+  /**
+   * @name boundary
+   *
+   * @brief Accessor and modifier functions for the %boundary
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::BoundaryConfigType boundary_type;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<boundary_type, char> boundary_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
   const boundary_type& boundary() const;
 
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
   boundary_type& boundary();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void boundary(const boundary_type& x);
 
-  void boundary(::std::auto_ptr<boundary_type> p);
+  /**
+   * @brief Set the element value without copying.
+   *
+   * @param p A new value to use.
+   *
+   * This function will try to use the passed value directly
+   * instead of making a copy.
+   */
+  void boundary(::std::unique_ptr<boundary_type> p);
 
-  // Constructors.
-  //
+  //@}
+
+  /**
+   * @name Constructors
+   */
+  //@{
+
+  /**
+   * @brief Create an instance from the ultimate base and
+   * initializers for required elements and attributes.
+   */
   LinkedCellsType(const domain_type&, const r_cutoff_type&,
                   const boundary_type&);
 
-  LinkedCellsType(::std::auto_ptr<domain_type>, const r_cutoff_type&,
-                  ::std::auto_ptr<boundary_type>);
+  /**
+   * @brief Create an instance from the ultimate base and
+   * initializers for required elements and attributes
+   * (::std::unique_ptr version).
+   *
+   * This constructor will try to use the passed values directly
+   * instead of making copies.
+   */
+  LinkedCellsType(::std::unique_ptr<domain_type>, const r_cutoff_type&,
+                  ::std::unique_ptr<boundary_type>);
 
+  /**
+   * @brief Create an instance from a DOM element.
+   *
+   * @param e A DOM element to extract the data from.
+   * @param f Flags to create the new instance with.
+   * @param c A pointer to the object that will contain the new
+   * instance.
+   */
   LinkedCellsType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
                   ::xml_schema::container* c = 0);
 
+  /**
+   * @brief Copy constructor.
+   *
+   * @param x An instance to make a copy of.
+   * @param f Flags to create the copy with.
+   * @param c A pointer to the object that will contain the copy.
+   *
+   * For polymorphic object models use the @c _clone function instead.
+   */
   LinkedCellsType(const LinkedCellsType& x, ::xml_schema::flags f = 0,
                   ::xml_schema::container* c = 0);
 
+  /**
+   * @brief Copy the instance polymorphically.
+   *
+   * @param f Flags to create the copy with.
+   * @param c A pointer to the object that will contain the copy.
+   * @return A pointer to the dynamically allocated copy.
+   *
+   * This function ensures that the dynamic type of the instance is
+   * used for copying and should be used for polymorphic object
+   * models instead of the copy constructor.
+   */
   virtual LinkedCellsType* _clone(::xml_schema::flags f = 0,
                                   ::xml_schema::container* c = 0) const;
 
+  /**
+   * @brief Copy assignment operator.
+   *
+   * @param x An instance to make a copy of.
+   * @return A reference to itself.
+   *
+   * For polymorphic object models use the @c _clone function instead.
+   */
   LinkedCellsType& operator=(const LinkedCellsType& x);
 
+  //@}
+
+  /**
+   * @brief Destructor.
+   */
   virtual ~LinkedCellsType();
 
   // Implementation.
   //
+
+  //@cond
+
  protected:
   void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
 
@@ -902,101 +2869,386 @@ class LinkedCellsType : public ::xml_schema::type {
   ::xsd::cxx::tree::one<domain_type> domain_;
   ::xsd::cxx::tree::one<r_cutoff_type> r_cutoff_;
   ::xsd::cxx::tree::one<boundary_type> boundary_;
+
+  //@endcond
 };
 
+/**
+ * @brief Class corresponding to the %DirectSumType schema type.
+ *
+ * @nosubgrouping
+ */
 class DirectSumType : public ::xml_schema::type {
  public:
-  // Constructors.
-  //
+  /**
+   * @name Constructors
+   */
+  //@{
+
+  /**
+   * @brief Create an instance from the ultimate base and
+   * initializers for required elements and attributes.
+   */
   DirectSumType();
 
+  /**
+   * @brief Create an instance from a DOM element.
+   *
+   * @param e A DOM element to extract the data from.
+   * @param f Flags to create the new instance with.
+   * @param c A pointer to the object that will contain the new
+   * instance.
+   */
   DirectSumType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
                 ::xml_schema::container* c = 0);
 
+  /**
+   * @brief Create an instance from a DOM attribute.
+   *
+   * @param a A DOM attribute to extract the data from.
+   * @param f Flags to create the new instance with.
+   * @param c A pointer to the object that will contain the new
+   * instance.
+   */
   DirectSumType(const ::xercesc::DOMAttr& a, ::xml_schema::flags f = 0,
                 ::xml_schema::container* c = 0);
 
+  /**
+   * @brief Create an instance from a string fragment.
+   *
+   * @param s A string fragment to extract the data from.
+   * @param e A pointer to DOM element containing the string fragment.
+   * @param f Flags to create the new instance with.
+   * @param c A pointer to the object that will contain the new
+   * instance.
+   */
   DirectSumType(const ::std::string& s, const ::xercesc::DOMElement* e,
                 ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
 
+  /**
+   * @brief Copy constructor.
+   *
+   * @param x An instance to make a copy of.
+   * @param f Flags to create the copy with.
+   * @param c A pointer to the object that will contain the copy.
+   *
+   * For polymorphic object models use the @c _clone function instead.
+   */
   DirectSumType(const DirectSumType& x, ::xml_schema::flags f = 0,
                 ::xml_schema::container* c = 0);
 
+  /**
+   * @brief Copy the instance polymorphically.
+   *
+   * @param f Flags to create the copy with.
+   * @param c A pointer to the object that will contain the copy.
+   * @return A pointer to the dynamically allocated copy.
+   *
+   * This function ensures that the dynamic type of the instance is
+   * used for copying and should be used for polymorphic object
+   * models instead of the copy constructor.
+   */
   virtual DirectSumType* _clone(::xml_schema::flags f = 0,
                                 ::xml_schema::container* c = 0) const;
 
+  //@}
+
+  /**
+   * @brief Destructor.
+   */
   virtual ~DirectSumType();
 };
 
+/**
+ * @brief Class corresponding to the %BoundaryType schema type.
+ *
+ * @nosubgrouping
+ */
 class BoundaryType : public ::xml_schema::type {
  public:
-  // Outflow
-  //
+  /**
+   * @name Outflow
+   *
+   * @brief Accessor and modifier functions for the %Outflow
+   * optional element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::xml_schema::type Outflow_type;
+
+  /**
+   * @brief Element optional container type.
+   */
   typedef ::xsd::cxx::tree::optional<Outflow_type> Outflow_optional;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<Outflow_type, char> Outflow_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element
+   * container.
+   *
+   * @return A constant reference to the optional container.
+   */
   const Outflow_optional& Outflow() const;
 
+  /**
+   * @brief Return a read-write reference to the element container.
+   *
+   * @return A reference to the optional container.
+   */
   Outflow_optional& Outflow();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void Outflow(const Outflow_type& x);
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x An optional container with the new value to set.
+   *
+   * If the value is present in @a x then this function makes a copy
+   * of this value and sets it as the new value of the element.
+   * Otherwise the element container is set the 'not present' state.
+   */
   void Outflow(const Outflow_optional& x);
 
-  void Outflow(::std::auto_ptr<Outflow_type> p);
+  /**
+   * @brief Set the element value without copying.
+   *
+   * @param p A new value to use.
+   *
+   * This function will try to use the passed value directly instead
+   * of making a copy.
+   */
+  void Outflow(::std::unique_ptr<Outflow_type> p);
 
-  // Reflective
-  //
+  //@}
+
+  /**
+   * @name Reflective
+   *
+   * @brief Accessor and modifier functions for the %Reflective
+   * optional element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::xml_schema::type Reflective_type;
+
+  /**
+   * @brief Element optional container type.
+   */
   typedef ::xsd::cxx::tree::optional<Reflective_type> Reflective_optional;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<Reflective_type, char> Reflective_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element
+   * container.
+   *
+   * @return A constant reference to the optional container.
+   */
   const Reflective_optional& Reflective() const;
 
+  /**
+   * @brief Return a read-write reference to the element container.
+   *
+   * @return A reference to the optional container.
+   */
   Reflective_optional& Reflective();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void Reflective(const Reflective_type& x);
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x An optional container with the new value to set.
+   *
+   * If the value is present in @a x then this function makes a copy
+   * of this value and sets it as the new value of the element.
+   * Otherwise the element container is set the 'not present' state.
+   */
   void Reflective(const Reflective_optional& x);
 
-  void Reflective(::std::auto_ptr<Reflective_type> p);
+  /**
+   * @brief Set the element value without copying.
+   *
+   * @param p A new value to use.
+   *
+   * This function will try to use the passed value directly instead
+   * of making a copy.
+   */
+  void Reflective(::std::unique_ptr<Reflective_type> p);
 
-  // Periodic
-  //
+  //@}
+
+  /**
+   * @name Periodic
+   *
+   * @brief Accessor and modifier functions for the %Periodic
+   * optional element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::xml_schema::type Periodic_type;
+
+  /**
+   * @brief Element optional container type.
+   */
   typedef ::xsd::cxx::tree::optional<Periodic_type> Periodic_optional;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<Periodic_type, char> Periodic_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element
+   * container.
+   *
+   * @return A constant reference to the optional container.
+   */
   const Periodic_optional& Periodic() const;
 
+  /**
+   * @brief Return a read-write reference to the element container.
+   *
+   * @return A reference to the optional container.
+   */
   Periodic_optional& Periodic();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void Periodic(const Periodic_type& x);
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x An optional container with the new value to set.
+   *
+   * If the value is present in @a x then this function makes a copy
+   * of this value and sets it as the new value of the element.
+   * Otherwise the element container is set the 'not present' state.
+   */
   void Periodic(const Periodic_optional& x);
 
-  void Periodic(::std::auto_ptr<Periodic_type> p);
+  /**
+   * @brief Set the element value without copying.
+   *
+   * @param p A new value to use.
+   *
+   * This function will try to use the passed value directly instead
+   * of making a copy.
+   */
+  void Periodic(::std::unique_ptr<Periodic_type> p);
 
-  // Constructors.
-  //
+  //@}
+
+  /**
+   * @name Constructors
+   */
+  //@{
+
+  /**
+   * @brief Create an instance from the ultimate base and
+   * initializers for required elements and attributes.
+   */
   BoundaryType();
 
+  /**
+   * @brief Create an instance from a DOM element.
+   *
+   * @param e A DOM element to extract the data from.
+   * @param f Flags to create the new instance with.
+   * @param c A pointer to the object that will contain the new
+   * instance.
+   */
   BoundaryType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
                ::xml_schema::container* c = 0);
 
+  /**
+   * @brief Copy constructor.
+   *
+   * @param x An instance to make a copy of.
+   * @param f Flags to create the copy with.
+   * @param c A pointer to the object that will contain the copy.
+   *
+   * For polymorphic object models use the @c _clone function instead.
+   */
   BoundaryType(const BoundaryType& x, ::xml_schema::flags f = 0,
                ::xml_schema::container* c = 0);
 
+  /**
+   * @brief Copy the instance polymorphically.
+   *
+   * @param f Flags to create the copy with.
+   * @param c A pointer to the object that will contain the copy.
+   * @return A pointer to the dynamically allocated copy.
+   *
+   * This function ensures that the dynamic type of the instance is
+   * used for copying and should be used for polymorphic object
+   * models instead of the copy constructor.
+   */
   virtual BoundaryType* _clone(::xml_schema::flags f = 0,
                                ::xml_schema::container* c = 0) const;
 
+  /**
+   * @brief Copy assignment operator.
+   *
+   * @param x An instance to make a copy of.
+   * @return A reference to itself.
+   *
+   * For polymorphic object models use the @c _clone function instead.
+   */
   BoundaryType& operator=(const BoundaryType& x);
 
+  //@}
+
+  /**
+   * @brief Destructor.
+   */
   virtual ~BoundaryType();
 
   // Implementation.
   //
+
+  //@cond
+
  protected:
   void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
 
@@ -1004,112 +3256,425 @@ class BoundaryType : public ::xml_schema::type {
   Outflow_optional Outflow_;
   Reflective_optional Reflective_;
   Periodic_optional Periodic_;
+
+  //@endcond
 };
 
+/**
+ * @brief Class corresponding to the %BoundaryConfigType schema type.
+ *
+ * @nosubgrouping
+ */
 class BoundaryConfigType : public ::xml_schema::type {
  public:
-  // north
-  //
+  /**
+   * @name north
+   *
+   * @brief Accessor and modifier functions for the %north
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::BoundaryType north_type;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<north_type, char> north_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
   const north_type& north() const;
 
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
   north_type& north();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void north(const north_type& x);
 
-  void north(::std::auto_ptr<north_type> p);
+  /**
+   * @brief Set the element value without copying.
+   *
+   * @param p A new value to use.
+   *
+   * This function will try to use the passed value directly
+   * instead of making a copy.
+   */
+  void north(::std::unique_ptr<north_type> p);
 
-  // south
-  //
+  //@}
+
+  /**
+   * @name south
+   *
+   * @brief Accessor and modifier functions for the %south
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::BoundaryType south_type;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<south_type, char> south_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
   const south_type& south() const;
 
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
   south_type& south();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void south(const south_type& x);
 
-  void south(::std::auto_ptr<south_type> p);
+  /**
+   * @brief Set the element value without copying.
+   *
+   * @param p A new value to use.
+   *
+   * This function will try to use the passed value directly
+   * instead of making a copy.
+   */
+  void south(::std::unique_ptr<south_type> p);
 
-  // east
-  //
+  //@}
+
+  /**
+   * @name east
+   *
+   * @brief Accessor and modifier functions for the %east
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::BoundaryType east_type;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<east_type, char> east_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
   const east_type& east() const;
 
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
   east_type& east();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void east(const east_type& x);
 
-  void east(::std::auto_ptr<east_type> p);
+  /**
+   * @brief Set the element value without copying.
+   *
+   * @param p A new value to use.
+   *
+   * This function will try to use the passed value directly
+   * instead of making a copy.
+   */
+  void east(::std::unique_ptr<east_type> p);
 
-  // west
-  //
+  //@}
+
+  /**
+   * @name west
+   *
+   * @brief Accessor and modifier functions for the %west
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::BoundaryType west_type;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<west_type, char> west_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
   const west_type& west() const;
 
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
   west_type& west();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void west(const west_type& x);
 
-  void west(::std::auto_ptr<west_type> p);
+  /**
+   * @brief Set the element value without copying.
+   *
+   * @param p A new value to use.
+   *
+   * This function will try to use the passed value directly
+   * instead of making a copy.
+   */
+  void west(::std::unique_ptr<west_type> p);
 
-  // up
-  //
+  //@}
+
+  /**
+   * @name up
+   *
+   * @brief Accessor and modifier functions for the %up
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::BoundaryType up_type;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<up_type, char> up_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
   const up_type& up() const;
 
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
   up_type& up();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void up(const up_type& x);
 
-  void up(::std::auto_ptr<up_type> p);
+  /**
+   * @brief Set the element value without copying.
+   *
+   * @param p A new value to use.
+   *
+   * This function will try to use the passed value directly
+   * instead of making a copy.
+   */
+  void up(::std::unique_ptr<up_type> p);
 
-  // down
-  //
+  //@}
+
+  /**
+   * @name down
+   *
+   * @brief Accessor and modifier functions for the %down
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::BoundaryType down_type;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<down_type, char> down_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
   const down_type& down() const;
 
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
   down_type& down();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void down(const down_type& x);
 
-  void down(::std::auto_ptr<down_type> p);
+  /**
+   * @brief Set the element value without copying.
+   *
+   * @param p A new value to use.
+   *
+   * This function will try to use the passed value directly
+   * instead of making a copy.
+   */
+  void down(::std::unique_ptr<down_type> p);
 
-  // Constructors.
-  //
+  //@}
+
+  /**
+   * @name Constructors
+   */
+  //@{
+
+  /**
+   * @brief Create an instance from the ultimate base and
+   * initializers for required elements and attributes.
+   */
   BoundaryConfigType(const north_type&, const south_type&, const east_type&,
                      const west_type&, const up_type&, const down_type&);
 
-  BoundaryConfigType(::std::auto_ptr<north_type>, ::std::auto_ptr<south_type>,
-                     ::std::auto_ptr<east_type>, ::std::auto_ptr<west_type>,
-                     ::std::auto_ptr<up_type>, ::std::auto_ptr<down_type>);
+  /**
+   * @brief Create an instance from the ultimate base and
+   * initializers for required elements and attributes
+   * (::std::unique_ptr version).
+   *
+   * This constructor will try to use the passed values directly
+   * instead of making copies.
+   */
+  BoundaryConfigType(::std::unique_ptr<north_type>,
+                     ::std::unique_ptr<south_type>,
+                     ::std::unique_ptr<east_type>, ::std::unique_ptr<west_type>,
+                     ::std::unique_ptr<up_type>, ::std::unique_ptr<down_type>);
 
+  /**
+   * @brief Create an instance from a DOM element.
+   *
+   * @param e A DOM element to extract the data from.
+   * @param f Flags to create the new instance with.
+   * @param c A pointer to the object that will contain the new
+   * instance.
+   */
   BoundaryConfigType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
                      ::xml_schema::container* c = 0);
 
+  /**
+   * @brief Copy constructor.
+   *
+   * @param x An instance to make a copy of.
+   * @param f Flags to create the copy with.
+   * @param c A pointer to the object that will contain the copy.
+   *
+   * For polymorphic object models use the @c _clone function instead.
+   */
   BoundaryConfigType(const BoundaryConfigType& x, ::xml_schema::flags f = 0,
                      ::xml_schema::container* c = 0);
 
+  /**
+   * @brief Copy the instance polymorphically.
+   *
+   * @param f Flags to create the copy with.
+   * @param c A pointer to the object that will contain the copy.
+   * @return A pointer to the dynamically allocated copy.
+   *
+   * This function ensures that the dynamic type of the instance is
+   * used for copying and should be used for polymorphic object
+   * models instead of the copy constructor.
+   */
   virtual BoundaryConfigType* _clone(::xml_schema::flags f = 0,
                                      ::xml_schema::container* c = 0) const;
 
+  /**
+   * @brief Copy assignment operator.
+   *
+   * @param x An instance to make a copy of.
+   * @return A reference to itself.
+   *
+   * For polymorphic object models use the @c _clone function instead.
+   */
   BoundaryConfigType& operator=(const BoundaryConfigType& x);
 
+  //@}
+
+  /**
+   * @brief Destructor.
+   */
   virtual ~BoundaryConfigType();
 
   // Implementation.
   //
+
+  //@cond
+
  protected:
   void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
 
@@ -1120,137 +3685,522 @@ class BoundaryConfigType : public ::xml_schema::type {
   ::xsd::cxx::tree::one<west_type> west_;
   ::xsd::cxx::tree::one<up_type> up_;
   ::xsd::cxx::tree::one<down_type> down_;
+
+  //@endcond
 };
 
+/**
+ * @brief Class corresponding to the %ForceType schema type.
+ *
+ * @nosubgrouping
+ */
 class ForceType : public ::xml_schema::type {
  public:
-  // Gravity
-  //
+  /**
+   * @name Gravity
+   *
+   * @brief Accessor and modifier functions for the %Gravity
+   * optional element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::xml_schema::type Gravity_type;
+
+  /**
+   * @brief Element optional container type.
+   */
   typedef ::xsd::cxx::tree::optional<Gravity_type> Gravity_optional;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<Gravity_type, char> Gravity_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element
+   * container.
+   *
+   * @return A constant reference to the optional container.
+   */
   const Gravity_optional& Gravity() const;
 
+  /**
+   * @brief Return a read-write reference to the element container.
+   *
+   * @return A reference to the optional container.
+   */
   Gravity_optional& Gravity();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void Gravity(const Gravity_type& x);
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x An optional container with the new value to set.
+   *
+   * If the value is present in @a x then this function makes a copy
+   * of this value and sets it as the new value of the element.
+   * Otherwise the element container is set the 'not present' state.
+   */
   void Gravity(const Gravity_optional& x);
 
-  void Gravity(::std::auto_ptr<Gravity_type> p);
+  /**
+   * @brief Set the element value without copying.
+   *
+   * @param p A new value to use.
+   *
+   * This function will try to use the passed value directly instead
+   * of making a copy.
+   */
+  void Gravity(::std::unique_ptr<Gravity_type> p);
 
-  // LennardJones
-  //
+  //@}
+
+  /**
+   * @name LennardJones
+   *
+   * @brief Accessor and modifier functions for the %LennardJones
+   * optional element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::xml_schema::type LennardJones_type;
+
+  /**
+   * @brief Element optional container type.
+   */
   typedef ::xsd::cxx::tree::optional<LennardJones_type> LennardJones_optional;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<LennardJones_type, char> LennardJones_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element
+   * container.
+   *
+   * @return A constant reference to the optional container.
+   */
   const LennardJones_optional& LennardJones() const;
 
+  /**
+   * @brief Return a read-write reference to the element container.
+   *
+   * @return A reference to the optional container.
+   */
   LennardJones_optional& LennardJones();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void LennardJones(const LennardJones_type& x);
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x An optional container with the new value to set.
+   *
+   * If the value is present in @a x then this function makes a copy
+   * of this value and sets it as the new value of the element.
+   * Otherwise the element container is set the 'not present' state.
+   */
   void LennardJones(const LennardJones_optional& x);
 
-  void LennardJones(::std::auto_ptr<LennardJones_type> p);
+  /**
+   * @brief Set the element value without copying.
+   *
+   * @param p A new value to use.
+   *
+   * This function will try to use the passed value directly instead
+   * of making a copy.
+   */
+  void LennardJones(::std::unique_ptr<LennardJones_type> p);
 
-  // Constructors.
-  //
+  //@}
+
+  /**
+   * @name Constructors
+   */
+  //@{
+
+  /**
+   * @brief Create an instance from the ultimate base and
+   * initializers for required elements and attributes.
+   */
   ForceType();
 
+  /**
+   * @brief Create an instance from a DOM element.
+   *
+   * @param e A DOM element to extract the data from.
+   * @param f Flags to create the new instance with.
+   * @param c A pointer to the object that will contain the new
+   * instance.
+   */
   ForceType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
             ::xml_schema::container* c = 0);
 
+  /**
+   * @brief Copy constructor.
+   *
+   * @param x An instance to make a copy of.
+   * @param f Flags to create the copy with.
+   * @param c A pointer to the object that will contain the copy.
+   *
+   * For polymorphic object models use the @c _clone function instead.
+   */
   ForceType(const ForceType& x, ::xml_schema::flags f = 0,
             ::xml_schema::container* c = 0);
 
+  /**
+   * @brief Copy the instance polymorphically.
+   *
+   * @param f Flags to create the copy with.
+   * @param c A pointer to the object that will contain the copy.
+   * @return A pointer to the dynamically allocated copy.
+   *
+   * This function ensures that the dynamic type of the instance is
+   * used for copying and should be used for polymorphic object
+   * models instead of the copy constructor.
+   */
   virtual ForceType* _clone(::xml_schema::flags f = 0,
                             ::xml_schema::container* c = 0) const;
 
+  /**
+   * @brief Copy assignment operator.
+   *
+   * @param x An instance to make a copy of.
+   * @return A reference to itself.
+   *
+   * For polymorphic object models use the @c _clone function instead.
+   */
   ForceType& operator=(const ForceType& x);
 
+  //@}
+
+  /**
+   * @brief Destructor.
+   */
   virtual ~ForceType();
 
   // Implementation.
   //
+
+  //@cond
+
  protected:
   void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
 
  protected:
   Gravity_optional Gravity_;
   LennardJones_optional LennardJones_;
+
+  //@endcond
 };
 
+/**
+ * @brief Class corresponding to the %simulation schema type.
+ *
+ * @nosubgrouping
+ */
 class simulation : public ::xml_schema::type {
  public:
-  // metadata
-  //
+  /**
+   * @name metadata
+   *
+   * @brief Accessor and modifier functions for the %metadata
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::MetadataType metadata_type;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<metadata_type, char> metadata_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
   const metadata_type& metadata() const;
 
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
   metadata_type& metadata();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void metadata(const metadata_type& x);
 
-  void metadata(::std::auto_ptr<metadata_type> p);
+  /**
+   * @brief Set the element value without copying.
+   *
+   * @param p A new value to use.
+   *
+   * This function will try to use the passed value directly
+   * instead of making a copy.
+   */
+  void metadata(::std::unique_ptr<metadata_type> p);
 
-  // cuboids
-  //
+  //@}
+
+  /**
+   * @name cuboids
+   *
+   * @brief Accessor and modifier functions for the %cuboids
+   * optional element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::cuboids cuboids_type;
+
+  /**
+   * @brief Element optional container type.
+   */
   typedef ::xsd::cxx::tree::optional<cuboids_type> cuboids_optional;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<cuboids_type, char> cuboids_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element
+   * container.
+   *
+   * @return A constant reference to the optional container.
+   */
   const cuboids_optional& cuboids() const;
 
+  /**
+   * @brief Return a read-write reference to the element container.
+   *
+   * @return A reference to the optional container.
+   */
   cuboids_optional& cuboids();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void cuboids(const cuboids_type& x);
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x An optional container with the new value to set.
+   *
+   * If the value is present in @a x then this function makes a copy
+   * of this value and sets it as the new value of the element.
+   * Otherwise the element container is set the 'not present' state.
+   */
   void cuboids(const cuboids_optional& x);
 
-  void cuboids(::std::auto_ptr<cuboids_type> p);
+  /**
+   * @brief Set the element value without copying.
+   *
+   * @param p A new value to use.
+   *
+   * This function will try to use the passed value directly instead
+   * of making a copy.
+   */
+  void cuboids(::std::unique_ptr<cuboids_type> p);
 
-  // spheroids
-  //
+  //@}
+
+  /**
+   * @name spheroids
+   *
+   * @brief Accessor and modifier functions for the %spheroids
+   * optional element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::spheroids spheroids_type;
+
+  /**
+   * @brief Element optional container type.
+   */
   typedef ::xsd::cxx::tree::optional<spheroids_type> spheroids_optional;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<spheroids_type, char> spheroids_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element
+   * container.
+   *
+   * @return A constant reference to the optional container.
+   */
   const spheroids_optional& spheroids() const;
 
+  /**
+   * @brief Return a read-write reference to the element container.
+   *
+   * @return A reference to the optional container.
+   */
   spheroids_optional& spheroids();
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
   void spheroids(const spheroids_type& x);
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x An optional container with the new value to set.
+   *
+   * If the value is present in @a x then this function makes a copy
+   * of this value and sets it as the new value of the element.
+   * Otherwise the element container is set the 'not present' state.
+   */
   void spheroids(const spheroids_optional& x);
 
-  void spheroids(::std::auto_ptr<spheroids_type> p);
+  /**
+   * @brief Set the element value without copying.
+   *
+   * @param p A new value to use.
+   *
+   * This function will try to use the passed value directly instead
+   * of making a copy.
+   */
+  void spheroids(::std::unique_ptr<spheroids_type> p);
 
-  // Constructors.
-  //
+  //@}
+
+  /**
+   * @name Constructors
+   */
+  //@{
+
+  /**
+   * @brief Create an instance from the ultimate base and
+   * initializers for required elements and attributes.
+   */
   simulation(const metadata_type&);
 
-  simulation(::std::auto_ptr<metadata_type>);
+  /**
+   * @brief Create an instance from the ultimate base and
+   * initializers for required elements and attributes
+   * (::std::unique_ptr version).
+   *
+   * This constructor will try to use the passed values directly
+   * instead of making copies.
+   */
+  simulation(::std::unique_ptr<metadata_type>);
 
+  /**
+   * @brief Create an instance from a DOM element.
+   *
+   * @param e A DOM element to extract the data from.
+   * @param f Flags to create the new instance with.
+   * @param c A pointer to the object that will contain the new
+   * instance.
+   */
   simulation(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
              ::xml_schema::container* c = 0);
 
+  /**
+   * @brief Copy constructor.
+   *
+   * @param x An instance to make a copy of.
+   * @param f Flags to create the copy with.
+   * @param c A pointer to the object that will contain the copy.
+   *
+   * For polymorphic object models use the @c _clone function instead.
+   */
   simulation(const simulation& x, ::xml_schema::flags f = 0,
              ::xml_schema::container* c = 0);
 
+  /**
+   * @brief Copy the instance polymorphically.
+   *
+   * @param f Flags to create the copy with.
+   * @param c A pointer to the object that will contain the copy.
+   * @return A pointer to the dynamically allocated copy.
+   *
+   * This function ensures that the dynamic type of the instance is
+   * used for copying and should be used for polymorphic object
+   * models instead of the copy constructor.
+   */
   virtual simulation* _clone(::xml_schema::flags f = 0,
                              ::xml_schema::container* c = 0) const;
 
+  /**
+   * @brief Copy assignment operator.
+   *
+   * @param x An instance to make a copy of.
+   * @return A reference to itself.
+   *
+   * For polymorphic object models use the @c _clone function instead.
+   */
   simulation& operator=(const simulation& x);
 
+  //@}
+
+  /**
+   * @brief Destructor.
+   */
   virtual ~simulation();
 
   // Implementation.
   //
+
+  //@cond
+
  protected:
   void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
 
@@ -1258,90 +4208,302 @@ class simulation : public ::xml_schema::type {
   ::xsd::cxx::tree::one<metadata_type> metadata_;
   cuboids_optional cuboids_;
   spheroids_optional spheroids_;
+
+  //@endcond
 };
 
+/**
+ * @brief Class corresponding to the %cuboids schema type.
+ *
+ * @nosubgrouping
+ */
 class cuboids : public ::xml_schema::type {
  public:
-  // cuboid
-  //
+  /**
+   * @name cuboid
+   *
+   * @brief Accessor and modifier functions for the %cuboid
+   * sequence element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::cuboidType cuboid_type;
+
+  /**
+   * @brief Element sequence container type.
+   */
   typedef ::xsd::cxx::tree::sequence<cuboid_type> cuboid_sequence;
+
+  /**
+   * @brief Element iterator type.
+   */
   typedef cuboid_sequence::iterator cuboid_iterator;
+
+  /**
+   * @brief Element constant iterator type.
+   */
   typedef cuboid_sequence::const_iterator cuboid_const_iterator;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<cuboid_type, char> cuboid_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element
+   * sequence.
+   *
+   * @return A constant reference to the sequence container.
+   */
   const cuboid_sequence& cuboid() const;
 
+  /**
+   * @brief Return a read-write reference to the element sequence.
+   *
+   * @return A reference to the sequence container.
+   */
   cuboid_sequence& cuboid();
 
+  /**
+   * @brief Copy elements from a given sequence.
+   *
+   * @param s A sequence to copy elements from.
+   *
+   * For each element in @a s this function makes a copy and adds it
+   * to the sequence. Note that this operation completely changes the
+   * sequence and all old elements will be lost.
+   */
   void cuboid(const cuboid_sequence& s);
 
-  // Constructors.
-  //
+  //@}
+
+  /**
+   * @name Constructors
+   */
+  //@{
+
+  /**
+   * @brief Create an instance from the ultimate base and
+   * initializers for required elements and attributes.
+   */
   cuboids();
 
+  /**
+   * @brief Create an instance from a DOM element.
+   *
+   * @param e A DOM element to extract the data from.
+   * @param f Flags to create the new instance with.
+   * @param c A pointer to the object that will contain the new
+   * instance.
+   */
   cuboids(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
           ::xml_schema::container* c = 0);
 
+  /**
+   * @brief Copy constructor.
+   *
+   * @param x An instance to make a copy of.
+   * @param f Flags to create the copy with.
+   * @param c A pointer to the object that will contain the copy.
+   *
+   * For polymorphic object models use the @c _clone function instead.
+   */
   cuboids(const cuboids& x, ::xml_schema::flags f = 0,
           ::xml_schema::container* c = 0);
 
+  /**
+   * @brief Copy the instance polymorphically.
+   *
+   * @param f Flags to create the copy with.
+   * @param c A pointer to the object that will contain the copy.
+   * @return A pointer to the dynamically allocated copy.
+   *
+   * This function ensures that the dynamic type of the instance is
+   * used for copying and should be used for polymorphic object
+   * models instead of the copy constructor.
+   */
   virtual cuboids* _clone(::xml_schema::flags f = 0,
                           ::xml_schema::container* c = 0) const;
 
+  /**
+   * @brief Copy assignment operator.
+   *
+   * @param x An instance to make a copy of.
+   * @return A reference to itself.
+   *
+   * For polymorphic object models use the @c _clone function instead.
+   */
   cuboids& operator=(const cuboids& x);
 
+  //@}
+
+  /**
+   * @brief Destructor.
+   */
   virtual ~cuboids();
 
   // Implementation.
   //
+
+  //@cond
+
  protected:
   void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
 
  protected:
   cuboid_sequence cuboid_;
+
+  //@endcond
 };
 
+/**
+ * @brief Class corresponding to the %spheroids schema type.
+ *
+ * @nosubgrouping
+ */
 class spheroids : public ::xml_schema::type {
  public:
-  // spheroid
-  //
+  /**
+   * @name spheroid
+   *
+   * @brief Accessor and modifier functions for the %spheroid
+   * sequence element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
   typedef ::spheroidType spheroid_type;
+
+  /**
+   * @brief Element sequence container type.
+   */
   typedef ::xsd::cxx::tree::sequence<spheroid_type> spheroid_sequence;
+
+  /**
+   * @brief Element iterator type.
+   */
   typedef spheroid_sequence::iterator spheroid_iterator;
+
+  /**
+   * @brief Element constant iterator type.
+   */
   typedef spheroid_sequence::const_iterator spheroid_const_iterator;
+
+  /**
+   * @brief Element traits type.
+   */
   typedef ::xsd::cxx::tree::traits<spheroid_type, char> spheroid_traits;
 
+  /**
+   * @brief Return a read-only (constant) reference to the element
+   * sequence.
+   *
+   * @return A constant reference to the sequence container.
+   */
   const spheroid_sequence& spheroid() const;
 
+  /**
+   * @brief Return a read-write reference to the element sequence.
+   *
+   * @return A reference to the sequence container.
+   */
   spheroid_sequence& spheroid();
 
+  /**
+   * @brief Copy elements from a given sequence.
+   *
+   * @param s A sequence to copy elements from.
+   *
+   * For each element in @a s this function makes a copy and adds it
+   * to the sequence. Note that this operation completely changes the
+   * sequence and all old elements will be lost.
+   */
   void spheroid(const spheroid_sequence& s);
 
-  // Constructors.
-  //
+  //@}
+
+  /**
+   * @name Constructors
+   */
+  //@{
+
+  /**
+   * @brief Create an instance from the ultimate base and
+   * initializers for required elements and attributes.
+   */
   spheroids();
 
+  /**
+   * @brief Create an instance from a DOM element.
+   *
+   * @param e A DOM element to extract the data from.
+   * @param f Flags to create the new instance with.
+   * @param c A pointer to the object that will contain the new
+   * instance.
+   */
   spheroids(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
             ::xml_schema::container* c = 0);
 
+  /**
+   * @brief Copy constructor.
+   *
+   * @param x An instance to make a copy of.
+   * @param f Flags to create the copy with.
+   * @param c A pointer to the object that will contain the copy.
+   *
+   * For polymorphic object models use the @c _clone function instead.
+   */
   spheroids(const spheroids& x, ::xml_schema::flags f = 0,
             ::xml_schema::container* c = 0);
 
+  /**
+   * @brief Copy the instance polymorphically.
+   *
+   * @param f Flags to create the copy with.
+   * @param c A pointer to the object that will contain the copy.
+   * @return A pointer to the dynamically allocated copy.
+   *
+   * This function ensures that the dynamic type of the instance is
+   * used for copying and should be used for polymorphic object
+   * models instead of the copy constructor.
+   */
   virtual spheroids* _clone(::xml_schema::flags f = 0,
                             ::xml_schema::container* c = 0) const;
 
+  /**
+   * @brief Copy assignment operator.
+   *
+   * @param x An instance to make a copy of.
+   * @return A reference to itself.
+   *
+   * For polymorphic object models use the @c _clone function instead.
+   */
   spheroids& operator=(const spheroids& x);
 
+  //@}
+
+  /**
+   * @brief Destructor.
+   */
   virtual ~spheroids();
 
   // Implementation.
   //
+
+  //@cond
+
  protected:
   void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
 
  protected:
   spheroid_sequence spheroid_;
+
+  //@endcond
 };
 
 #include <iosfwd>
@@ -1349,82 +4511,242 @@ class spheroids : public ::xml_schema::type {
 #include <xercesc/dom/DOMErrorHandler.hpp>
 #include <xercesc/sax/InputSource.hpp>
 
-// Parse a URI or a local file.
-//
+/**
+ * @name Parsing functions for the %simulation document root.
+ */
+//@{
 
-::std::auto_ptr< ::simulation> simulation_(
+/**
+ * @brief Parse a URI or a local file.
+ *
+ * @param uri A URI or a local file name.
+ * @param f Parsing flags.
+ * @param p Parsing properties.
+ * @return A pointer to the root of the object model.
+ *
+ * This function uses exceptions to report parsing errors.
+ */
+::std::unique_ptr< ::simulation> simulation_(
     const ::std::string& uri, ::xml_schema::flags f = 0,
     const ::xml_schema::properties& p = ::xml_schema::properties());
 
-::std::auto_ptr< ::simulation> simulation_(
+/**
+ * @brief Parse a URI or a local file with an error handler.
+ *
+ * @param uri A URI or a local file name.
+ * @param eh An error handler.
+ * @param f Parsing flags.
+ * @param p Parsing properties.
+ * @return A pointer to the root of the object model.
+ *
+ * This function reports parsing errors by calling the error handler.
+ */
+::std::unique_ptr< ::simulation> simulation_(
     const ::std::string& uri, ::xml_schema::error_handler& eh,
     ::xml_schema::flags f = 0,
     const ::xml_schema::properties& p = ::xml_schema::properties());
 
-::std::auto_ptr< ::simulation> simulation_(
+/**
+ * @brief Parse a URI or a local file with a Xerces-C++ DOM error
+ * handler.
+ *
+ * @param uri A URI or a local file name.
+ * @param eh A Xerces-C++ DOM error handler.
+ * @param f Parsing flags.
+ * @param p Parsing properties.
+ * @return A pointer to the root of the object model.
+ *
+ * This function reports parsing errors by calling the error handler.
+ */
+::std::unique_ptr< ::simulation> simulation_(
     const ::std::string& uri, ::xercesc::DOMErrorHandler& eh,
     ::xml_schema::flags f = 0,
     const ::xml_schema::properties& p = ::xml_schema::properties());
 
-// Parse std::istream.
-//
-
-::std::auto_ptr< ::simulation> simulation_(
+/**
+ * @brief Parse a standard input stream.
+ *
+ * @param is A standrad input stream.
+ * @param f Parsing flags.
+ * @param p Parsing properties.
+ * @return A pointer to the root of the object model.
+ *
+ * This function uses exceptions to report parsing errors.
+ */
+::std::unique_ptr< ::simulation> simulation_(
     ::std::istream& is, ::xml_schema::flags f = 0,
     const ::xml_schema::properties& p = ::xml_schema::properties());
 
-::std::auto_ptr< ::simulation> simulation_(
+/**
+ * @brief Parse a standard input stream with an error handler.
+ *
+ * @param is A standrad input stream.
+ * @param eh An error handler.
+ * @param f Parsing flags.
+ * @param p Parsing properties.
+ * @return A pointer to the root of the object model.
+ *
+ * This function reports parsing errors by calling the error handler.
+ */
+::std::unique_ptr< ::simulation> simulation_(
     ::std::istream& is, ::xml_schema::error_handler& eh,
     ::xml_schema::flags f = 0,
     const ::xml_schema::properties& p = ::xml_schema::properties());
 
-::std::auto_ptr< ::simulation> simulation_(
+/**
+ * @brief Parse a standard input stream with a Xerces-C++ DOM error
+ * handler.
+ *
+ * @param is A standrad input stream.
+ * @param eh A Xerces-C++ DOM error handler.
+ * @param f Parsing flags.
+ * @param p Parsing properties.
+ * @return A pointer to the root of the object model.
+ *
+ * This function reports parsing errors by calling the error handler.
+ */
+::std::unique_ptr< ::simulation> simulation_(
     ::std::istream& is, ::xercesc::DOMErrorHandler& eh,
     ::xml_schema::flags f = 0,
     const ::xml_schema::properties& p = ::xml_schema::properties());
 
-::std::auto_ptr< ::simulation> simulation_(
+/**
+ * @brief Parse a standard input stream with a resource id.
+ *
+ * @param is A standrad input stream.
+ * @param id A resource id.
+ * @param f Parsing flags.
+ * @param p Parsing properties.
+ * @return A pointer to the root of the object model.
+ *
+ * The resource id is used to identify the document being parsed in
+ * diagnostics as well as to resolve relative paths.
+ *
+ * This function uses exceptions to report parsing errors.
+ */
+::std::unique_ptr< ::simulation> simulation_(
     ::std::istream& is, const ::std::string& id, ::xml_schema::flags f = 0,
     const ::xml_schema::properties& p = ::xml_schema::properties());
 
-::std::auto_ptr< ::simulation> simulation_(
+/**
+ * @brief Parse a standard input stream with a resource id and an
+ * error handler.
+ *
+ * @param is A standrad input stream.
+ * @param id A resource id.
+ * @param eh An error handler.
+ * @param f Parsing flags.
+ * @param p Parsing properties.
+ * @return A pointer to the root of the object model.
+ *
+ * The resource id is used to identify the document being parsed in
+ * diagnostics as well as to resolve relative paths.
+ *
+ * This function reports parsing errors by calling the error handler.
+ */
+::std::unique_ptr< ::simulation> simulation_(
     ::std::istream& is, const ::std::string& id,
     ::xml_schema::error_handler& eh, ::xml_schema::flags f = 0,
     const ::xml_schema::properties& p = ::xml_schema::properties());
 
-::std::auto_ptr< ::simulation> simulation_(
+/**
+ * @brief Parse a standard input stream with a resource id and a
+ * Xerces-C++ DOM error handler.
+ *
+ * @param is A standrad input stream.
+ * @param id A resource id.
+ * @param eh A Xerces-C++ DOM error handler.
+ * @param f Parsing flags.
+ * @param p Parsing properties.
+ * @return A pointer to the root of the object model.
+ *
+ * The resource id is used to identify the document being parsed in
+ * diagnostics as well as to resolve relative paths.
+ *
+ * This function reports parsing errors by calling the error handler.
+ */
+::std::unique_ptr< ::simulation> simulation_(
     ::std::istream& is, const ::std::string& id, ::xercesc::DOMErrorHandler& eh,
     ::xml_schema::flags f = 0,
     const ::xml_schema::properties& p = ::xml_schema::properties());
 
-// Parse xercesc::InputSource.
-//
-
-::std::auto_ptr< ::simulation> simulation_(
+/**
+ * @brief Parse a Xerces-C++ input source.
+ *
+ * @param is A Xerces-C++ input source.
+ * @param f Parsing flags.
+ * @param p Parsing properties.
+ * @return A pointer to the root of the object model.
+ *
+ * This function uses exceptions to report parsing errors.
+ */
+::std::unique_ptr< ::simulation> simulation_(
     ::xercesc::InputSource& is, ::xml_schema::flags f = 0,
     const ::xml_schema::properties& p = ::xml_schema::properties());
 
-::std::auto_ptr< ::simulation> simulation_(
+/**
+ * @brief Parse a Xerces-C++ input source with an error handler.
+ *
+ * @param is A Xerces-C++ input source.
+ * @param eh An error handler.
+ * @param f Parsing flags.
+ * @param p Parsing properties.
+ * @return A pointer to the root of the object model.
+ *
+ * This function reports parsing errors by calling the error handler.
+ */
+::std::unique_ptr< ::simulation> simulation_(
     ::xercesc::InputSource& is, ::xml_schema::error_handler& eh,
     ::xml_schema::flags f = 0,
     const ::xml_schema::properties& p = ::xml_schema::properties());
 
-::std::auto_ptr< ::simulation> simulation_(
+/**
+ * @brief Parse a Xerces-C++ input source with a Xerces-C++ DOM
+ * error handler.
+ *
+ * @param is A Xerces-C++ input source.
+ * @param eh A Xerces-C++ DOM error handler.
+ * @param f Parsing flags.
+ * @param p Parsing properties.
+ * @return A pointer to the root of the object model.
+ *
+ * This function reports parsing errors by calling the error handler.
+ */
+::std::unique_ptr< ::simulation> simulation_(
     ::xercesc::InputSource& is, ::xercesc::DOMErrorHandler& eh,
     ::xml_schema::flags f = 0,
     const ::xml_schema::properties& p = ::xml_schema::properties());
 
-// Parse xercesc::DOMDocument.
-//
-
-::std::auto_ptr< ::simulation> simulation_(
+/**
+ * @brief Parse a Xerces-C++ DOM document.
+ *
+ * @param d A Xerces-C++ DOM document.
+ * @param f Parsing flags.
+ * @param p Parsing properties.
+ * @return A pointer to the root of the object model.
+ */
+::std::unique_ptr< ::simulation> simulation_(
     const ::xercesc::DOMDocument& d, ::xml_schema::flags f = 0,
     const ::xml_schema::properties& p = ::xml_schema::properties());
 
-::std::auto_ptr< ::simulation> simulation_(
-    ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument> d,
+/**
+ * @brief Parse a Xerces-C++ DOM document.
+ *
+ * @param d A pointer to the Xerces-C++ DOM document.
+ * @param f Parsing flags.
+ * @param p Parsing properties.
+ * @return A pointer to the root of the object model.
+ *
+ * This function is normally used together with the keep_dom and
+ * own_dom parsing flags to assign ownership of the DOM document
+ * to the object model.
+ */
+::std::unique_ptr< ::simulation> simulation_(
+    ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument> d,
     ::xml_schema::flags f = 0,
     const ::xml_schema::properties& p = ::xml_schema::properties());
+
+//@}
 
 #include <xsd/cxx/post.hxx>
 

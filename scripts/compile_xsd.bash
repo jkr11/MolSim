@@ -3,7 +3,7 @@
 INPUT_XSD="../src/io/file/in/xml/input.xsd"
 INPUT_DIR=$(dirname "$INPUT_XSD")
 echo "Running xsdcxx tree compiler on $INPUT_XSD"
-xsdcxx cxx-tree --output-dir "$INPUT_DIR" "$INPUT_XSD"
+xsdcxx cxx-tree --output-dir "$INPUT_DIR" --std c++11 --generate-doxygen "$INPUT_XSD"
 
 if [ $? -ne 0 ]; then
   echo "Error: xsdcxx failed to compile the XSD file."
