@@ -84,8 +84,7 @@ inline void printConfiguration(const Arguments& args) {
   logger->info("t_end: {}", args.t_end);
   logger->info("delta_t: {}", args.delta_t);
 
-  logger->info("Force Type: {}",
-               args.force_type == Arguments::LennardJones
+  logger->info("Force Type: {}", args.force_type == Arguments::LennardJones
                                      ? "Lennard-Jones"
                                      : "Gravity");
 

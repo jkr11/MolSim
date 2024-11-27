@@ -82,6 +82,7 @@ int main(const int argc, char* argv[]) {
   int writes = 0;
   int percentage = 0;
   double next_output_time = 0;
+  spdlog::stopwatch stopwatch;
 
   while (current_time <= arguments.t_end) {
     verlet_integrator.step(*container);
@@ -94,16 +95,23 @@ int main(const int argc, char* argv[]) {
       if (const double t = 100 * current_time / arguments.t_end;
           t >= percentage) {
         percentage++;
-        SpdWrapper::get()->info("[{:.0f} %]: Iteration {}",
-                                100 * current_time / arguments.t_end,
-                                iteration);
+        auto elapsed = stopwatch.elapsed();
+        auto eta = (elapsed / percentage) * 100 - elapsed;
+        auto h = std::chrono::duration_cast<std::chrono::hours>(eta).count();
+        eta -= std::chrono::hours(h);
+        auto m = std::chrono::duration_cast<std::chrono::minutes>(eta).count();
+        eta -= std::chrono::minutes(m);
+        auto s = std::chrono::duration_cast<std::chrono::seconds>(eta).count();
+
+        SpdWrapper::get()->info(
+            "[{:.0f} %]: Iteration {:<12} | [ETA: {}:{:02}:{:02}]",
+            100 * current_time / t_end, iteration, h, m, s);
       }
     }
 
     iteration++;
-    current_time = arguments.delta_t * iteration;  // + start_time
+    current_time = delta_t * iteration;
   }
-  std::cout << std::endl;
   SpdWrapper::get()->info("Output written. Terminating...");
 
   return 0;
