@@ -12,6 +12,7 @@
 #include "debug/debug_print.h"
 #include "defs/Particle.h"
 #include "utils/SpdWrapper.h"
+#include "defs/GhostParticle.h"
 
 LinkedCellsContainer::LinkedCellsContainer(
     const LinkedCellsConfig &linked_cells_config) {
@@ -52,12 +53,12 @@ LinkedCellsContainer::LinkedCellsContainer(
   }
 
   boundaries = {
-    linked_cells_config.boundary_config.west,
-    linked_cells_config.boundary_config.east,
-    linked_cells_config.boundary_config.down,
-    linked_cells_config.boundary_config.up,
-    linked_cells_config.boundary_config.south,
-    linked_cells_config.boundary_config.north,
+      linked_cells_config.boundary_config.west,
+      linked_cells_config.boundary_config.east,
+      linked_cells_config.boundary_config.down,
+      linked_cells_config.boundary_config.up,
+      linked_cells_config.boundary_config.south,
+      linked_cells_config.boundary_config.north,
   };
 
   // TODO: pretty
@@ -126,14 +127,14 @@ void LinkedCellsContainer::imposeInvariant() {
   }
 
   // apply boundary condition
-  // TODO: this is heavily inefficient in 2D, make dimension accessible
+  // TODO: this is heavily inefficient in 2D, make dimension accessible, 4 instead of 6
 
-  // delete everything in the halo cells, required by both Outflow and Reflecting
-  // edge cells may be iterated twice or thrice, should not be a problem
+  // delete everything in the halo cells, required by both Outflow and
+  // Reflecting edge cells may be iterated twice or thrice, should not be a
+  // problem
   for (size_t dimension = 0; dimension < 6; ++dimension) {
     for (const size_t cell_index : halo_direction_cells[dimension]) {
-      cells[cell_index].clear();  // does not delete the particle from memory
-      // we could call the destructor here if we are sure that we do not have any references left
+      cells[cell_index].clear();  // does not delete the particle from memory, do we have any references left
     }
   }
 
@@ -144,15 +145,13 @@ void LinkedCellsContainer::imposeInvariant() {
         break;
       }
       case LinkedCellsConfig::BoundaryType::Reflective: {
-        // the slides do not state what to do if it is an edge, so we place a particle for every dimension it is too close to
-        break;
-      }
-      case LinkedCellsConfig::BoundaryType::Periodic: {
-        DEBUG_PRINT_FMT("Periodic Boundary for dimension {} is not yet supported", dimension);
+        // the slides do not state what to do if it is an edge, so we place a
+        // particle for every dimension it is too close to
         break;
       }
       default: {
-        DEBUG_PRINT_FMT("BoundaryType {} for dimension {} unknown", boundaries[dimension], dimension);
+        DEBUG_PRINT_FMT("BoundaryType {} for dimension {} unknown",
+                        boundaries[dimension], dimension);
         break;
       }
     }
