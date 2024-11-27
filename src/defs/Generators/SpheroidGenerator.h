@@ -14,7 +14,7 @@ class SpheroidGenerator final : public ParticleGenerator {
   dvec3 origin{};
   /**
    * @brief this is an integer as it's the number of particles possible along
-   * the radius of the spheroid
+   * the radius of the spheroid, so we move along the radii in increments of h
    */
   const int radius;
   double h{};
@@ -37,7 +37,7 @@ class SpheroidGenerator final : public ParticleGenerator {
   /**
    * @brief generates a 1 or 2 sphere of particles, vector size is approximated
    * by volume of 2-sphere as disk is contained.
-   * @param particles particles into which the spheroid is place
+   * @param particles particles into which the spheroid is placed
    */
   void generate(std::vector<Particle> &particles) override;
 };

@@ -1,5 +1,4 @@
 #include <filesystem>
-#include <iostream>
 
 #include "calc/VerletIntegrator.h"
 #include "defs/containers/DirectSumContainer.h"
@@ -12,20 +11,17 @@
 #include "io/file/out/OutputHelper.h"
 #include "io/file/out/VTKWriter.h"
 #include "spdlog/fmt/bundled/chrono.h"
+#include "spdlog/stopwatch.h"
 #include "utils/ArrayUtils.h"
 #include "utils/SpdWrapper.h"
 
-int main(int argc, char* argv[]) {
+int main(const int argc, char* argv[]) {
   SpdWrapper::get()->info("Application started");
 
   Arguments arguments = {
-      //.input_file = "",
       .t_end = 5,
       .delta_t = 0.0002,
-      //.output_time_step_size = 1,
-      .log_level = "info",
       .force_type = Arguments::LennardJones,
-      .container_type = Arguments::LinkedCells,
       .container_data =
           LinkedCellsConfig{.domain = {100, 100, 100},
                             .cutoff_radius = 3.0,
@@ -40,25 +36,21 @@ int main(int argc, char* argv[]) {
                                 }},
   };
   auto [input_file, step_size] = CLArgumentParser::parse(argc, argv);
-  SpdWrapper::get()->info("Step size: {}", step_size);
-  //  TODO: Should we change this so it doesnt get read here but the reader
-  //  instantiates the container and then writes the shapes to the container?
+
+  //  TODO: Should we change this so the reader only reads configs? probably.
   std::vector<Particle> particles;
 
   XmlReader::read(particles, input_file, arguments);
 
-  arguments.printConfiguration();
+  printConfiguration(arguments);
+  SpdWrapper::get()->info("Step size: {}", step_size);
+  // TODO: we should pass step size to reader but right now its useful for
+  // testing
 
   std::unique_ptr<ParticleContainer> container;
-  // So this exists pretty cool we can save another field in the struct
-  // this is also much safer I guess
-  // TODO: i really hope lrz is c++ 17 and not 14 else we can revert all of this
-  // yikes
   if (std::holds_alternative<LinkedCellsConfig>(arguments.container_data)) {
     const auto& linked_cells_data =
         std::get<LinkedCellsConfig>(arguments.container_data);
-    // TODO: make it possible to just pass the entire struct into this or
-    // write a translation unit
     container = std::make_unique<LinkedCellsContainer>(
         linked_cells_data);
     container->addParticles(particles);
@@ -90,7 +82,7 @@ int main(int argc, char* argv[]) {
   int writes = 0;
   int percentage = 0;
   double next_output_time = 0;
-
+  spdlog::stopwatch stopwatch;
   while (current_time <= arguments.t_end) {
     verlet_integrator.step(*container);
 
@@ -101,17 +93,25 @@ int main(int argc, char* argv[]) {
       // check if next percentage complete
       if (const double t = 100 * current_time / arguments.t_end;
           t >= percentage) {
+
         percentage++;
-        SpdWrapper::get()->info("[{:.0f} %]: Iteration {}",
-                                100 * current_time / arguments.t_end,
-                                iteration);
+        auto elapsed = stopwatch.elapsed();
+        auto eta = (elapsed / percentage) * 100 - elapsed;
+        auto h = std::chrono::duration_cast<std::chrono::hours>(eta).count();
+        eta -= std::chrono::hours(h);
+        auto m = std::chrono::duration_cast<std::chrono::minutes>(eta).count();
+        eta -= std::chrono::minutes(m);
+        auto s = std::chrono::duration_cast<std::chrono::seconds>(eta).count();
+
+        SpdWrapper::get()->info(
+            "[{:.0f} %]: Iteration {:<12} | [ETA: {}:{:02}:{:02}]",
+            100 * current_time / arguments.t_end, iteration, h, m, s);
       }
     }
 
     iteration++;
-    current_time = arguments.delta_t * iteration;  // + start_time
+    current_time = arguments.delta_t * iteration;
   }
-  std::cout << std::endl;
   SpdWrapper::get()->info("Output written. Terminating...");
 
   return 0;

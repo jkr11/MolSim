@@ -11,9 +11,6 @@
  */
 class Gravity final : public Force {
  public:
-  /**
-   *
-   */
   Gravity() = default;
 
   /**

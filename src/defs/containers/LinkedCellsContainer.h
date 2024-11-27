@@ -82,7 +82,6 @@ class LinkedCellsContainer final : public ParticleContainer {
 
   /**
    * Empty constructor
-   * TODO: why does this even exist?
    */
   LinkedCellsContainer() = default;
 

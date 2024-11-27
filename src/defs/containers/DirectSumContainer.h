@@ -6,7 +6,7 @@
 #include "defs/Particle.h"
 #include "defs/containers/ParticleContainer.h"
 
-class DirectSumContainer : public ParticleContainer {
+class DirectSumContainer final : public ParticleContainer {
  private:
   std::vector<Particle> particles;
 
@@ -59,7 +59,8 @@ class DirectSumContainer : public ParticleContainer {
 
   /**
    * @brief Impose the invariant, that the particles are spatially sorted into
-   * the correct vectors
+   * the correct vectors.
+   * @note as this is a directSum container, this does nothing
    */
   void imposeInvariant() override;
 

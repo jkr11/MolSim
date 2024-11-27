@@ -241,6 +241,11 @@ void LinkedCellsContainer::pairIterator(
     // iterate over particles inside cell
     for (std::size_t i = 0; i < cellParticles.size(); ++i) {
       for (std::size_t j = i + 1; j < cellParticles.size(); ++j) {
+        const dvec3 p = cellParticles[i].getX();
+        const dvec3 q = cellParticles[j].getX();
+        if (dvec3 d = {p[0] - q[0], p[1] - q[1], p[2] - q[2]};
+            d[0] * d[0] + d[1] * d[1] + d[2] * d[2] > cutoff * cutoff)
+          continue;
         f(cellParticles[i], cellParticles[j]);
         DEBUG_PRINT_FMT("Intra cell pair: ({}, {})", cellParticles[i].getType(),
                         cellParticles[j].getType());
@@ -255,8 +260,8 @@ void LinkedCellsContainer::pairIterator(
                                     cellCoordinate[2] + offset[2]};
 
       if (!isValidCellCoordinate(neighbourCoord)) {
-        // DEBUG_PRINT_FMT("Invalid coord: ({}, {}, {})", neighbourCoord[0],
-        //                 neighbourCoord[1], neighbourCoord[2])
+        DEBUG_PRINT_FMT("Invalid coord: ({}, {}, {})", neighbourCoord[0],
+                        neighbourCoord[1], neighbourCoord[2])
         continue;
       }
 
@@ -302,19 +307,11 @@ void LinkedCellsContainer::boundaryIterator(
 
 void LinkedCellsContainer::haloIterator(
     const std::function<void(Particle &)> &f) {
-  // for (std::size_t index = 0; index < cells.size(); index++) {
-  //   if (!isHalo(index)) continue;
-  //
-  //   for (auto &p : cells[index]) {
-  //     f(p);
-  //   }
-  // }
+  for (std::size_t index = 0; index < cells.size(); index++) {
+    if (!isHalo(index)) continue;
 
-  for (std::size_t direction = 0; direction < 6; ++direction) {
-    for (const std::size_t cell_index : halo_direction_cells[direction]) {
-      for (Particle &p : cells[cell_index]) {
-        f(p);
-      }
+    for (auto &p : cells[index]) {
+      f(p);
     }
   }
 }

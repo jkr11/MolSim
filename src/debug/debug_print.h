@@ -6,7 +6,7 @@
 #ifndef DEBUG_H
 #define DEBUG_H
 
-#include <iostream>
+#include <iostream>  // Also careful here, when clion is not in debug mode it tells you to remove this
 
 #include "utils/SpdWrapper.h"
 
