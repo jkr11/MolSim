@@ -38,6 +38,12 @@ class LinkedCellsContainer final : public ParticleContainer {
 
   /**
    * @brief
+   * a more processing friendly storage of LinkedCellsConfig::BoundaryConfig
+   */
+  std::array<LinkedCellsConfig::BoundaryType, 6> boundaries;
+
+  /**
+   * @brief
    * number of cells for domain + 2 (halo)
    */
   ivec3 cell_count{};
@@ -230,7 +236,8 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @param cellIndex cell index to be checked
    * @return the direction of the halo cell
    */
-  [[nodiscard]] std::vector<std::size_t> halo_direction(std::size_t cellIndex) const;
+  [[nodiscard]] std::vector<std::size_t> halo_direction(
+      std::size_t cellIndex) const;
 
   /**
    * @brief calculates all directions of the boundary cell
@@ -245,7 +252,8 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @param cellIndex cell index to be checked
    * @return the directions of the boundary cell
    */
-  [[nodiscard]] std::vector<std::size_t> boundary_direction(std::size_t cellIndex) const;
+  [[nodiscard]] std::vector<std::size_t> boundary_direction(
+      std::size_t cellIndex) const;
 
   /**
    * @brief Debug method to get direct access to the cells vector

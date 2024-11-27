@@ -39,17 +39,26 @@ LinkedCellsContainer::LinkedCellsContainer(
   this->boundary_config = linked_cells_config.boundary_config;
 
   // precalculate special cells
-  for (std::size_t cell_index = 0; cell_index < cells.size(); cell_index++) {
+  for (std::size_t cell_index = 0; cell_index < cells.size(); ++cell_index) {
     auto halo_directions = halo_direction(cell_index);
     auto boundary_directions = boundary_direction(cell_index);
 
-    for (std::size_t i = 0; i < halo_directions.size(); i++) {
+    for (std::size_t i = 0; i < halo_directions.size(); ++i) {
       halo_direction_cells[i].push_back(cell_index);
     }
-    for (std::size_t i = 0; i < boundary_directions.size(); i++) {
+    for (std::size_t i = 0; i < boundary_directions.size(); ++i) {
       boundary_direction_cells[i].push_back(cell_index);
     }
   }
+
+  boundaries = {
+    linked_cells_config.boundary_config.west,
+    linked_cells_config.boundary_config.east,
+    linked_cells_config.boundary_config.down,
+    linked_cells_config.boundary_config.up,
+    linked_cells_config.boundary_config.south,
+    linked_cells_config.boundary_config.north,
+  };
 
   // TODO: pretty
   SpdWrapper::get()->info("cell dim: {}, {}, {}; cell count: {}, {}, {}",
@@ -102,6 +111,7 @@ std::vector<Particle *> LinkedCellsContainer::getParticles() {
 }
 
 void LinkedCellsContainer::imposeInvariant() {
+  // register in corresponding cell
   for (std::size_t index = 0; index < cells.size(); index++) {
     for (auto it = cells[index].begin(); it < cells[index].end();) {
       const std::size_t shouldBeIndex = dvec3ToCellIndex(it->getX());
@@ -112,6 +122,39 @@ void LinkedCellsContainer::imposeInvariant() {
 
       cells[shouldBeIndex].push_back(*it);
       it = cells[index].erase(it);
+    }
+  }
+
+  // apply boundary condition
+  // TODO: this is heavily inefficient in 2D, make dimension accessible
+
+  // delete everything in the halo cells, required by both Outflow and Reflecting
+  // edge cells may be iterated twice or thrice, should not be a problem
+  for (size_t dimension = 0; dimension < 6; ++dimension) {
+    for (const size_t cell_index : halo_direction_cells[dimension]) {
+      cells[cell_index].clear();  // does not delete the particle from memory
+      // we could call the destructor here if we are sure that we do not have any references left
+    }
+  }
+
+  for (size_t dimension = 0; dimension < 6; ++dimension) {
+    switch (boundaries[dimension]) {
+      case LinkedCellsConfig::BoundaryType::Outflow: {
+        // already done by clearing the halo cells before this
+        break;
+      }
+      case LinkedCellsConfig::BoundaryType::Reflective: {
+        // the slides do not state what to do if it is an edge, so we place a particle for every dimension it is too close to
+        break;
+      }
+      case LinkedCellsConfig::BoundaryType::Periodic: {
+        DEBUG_PRINT_FMT("Periodic Boundary for dimension {} is not yet supported", dimension);
+        break;
+      }
+      default: {
+        DEBUG_PRINT_FMT("BoundaryType {} for dimension {} unknown", boundaries[dimension], dimension);
+        break;
+      }
     }
   }
 }
@@ -226,11 +269,19 @@ void LinkedCellsContainer::boundaryIterator(
 
 void LinkedCellsContainer::haloIterator(
     const std::function<void(Particle &)> &f) {
-  for (std::size_t index = 0; index < cells.size(); index++) {
-    if (!isHalo(index)) continue;
+  // for (std::size_t index = 0; index < cells.size(); index++) {
+  //   if (!isHalo(index)) continue;
+  //
+  //   for (auto &p : cells[index]) {
+  //     f(p);
+  //   }
+  // }
 
-    for (auto &p : cells[index]) {
-      f(p);
+  for (std::size_t direction = 0; direction < 6; ++direction) {
+    for (const std::size_t cell_index : halo_direction_cells[direction]) {
+      for (Particle &p : cells[cell_index]) {
+        f(p);
+      }
     }
   }
 }
@@ -303,22 +354,22 @@ std::vector<std::size_t> LinkedCellsContainer::halo_direction(
   const ivec3 cellCoord = cellIndexToCoord(cellIndex);
 
   if (cellCoord[0] == -1) {
-    directions.push_back(1);  // west
+    directions.push_back(0);  // west
   }
   if (cellCoord[0] == (cell_count[0] - 2)) {
-    directions.push_back(2);  // east
+    directions.push_back(1);  // east
   }
   if (cellCoord[1] == -1) {
-    directions.push_back(3);  // down
+    directions.push_back(2);  // down
   }
   if (cellCoord[1] == (cell_count[1] - 2)) {
-    directions.push_back(4);  // up
+    directions.push_back(3);  // up
   }
   if (cellCoord[2] == -1) {
-    directions.push_back(5);  // down
+    directions.push_back(4);  // south
   }
   if (cellCoord[2] == (cell_count[2] - 2)) {
-    directions.push_back(6);  // up
+    directions.push_back(5);  // north
   }
 
   return directions;
@@ -332,22 +383,22 @@ std::vector<std::size_t> LinkedCellsContainer::boundary_direction(
   const ivec3 cellCoord = cellIndexToCoord(cellIndex);
 
   if (cellCoord[0] == 0) {
-    directions.push_back(1);  // west
+    directions.push_back(0);  // west
   }
   if (cellCoord[0] == (cell_count[0] - 3)) {
-    directions.push_back(2);  // east
+    directions.push_back(1);  // east
   }
   if (cellCoord[1] == 0) {
-    directions.push_back(3);  // down
+    directions.push_back(2);  // down
   }
   if (cellCoord[1] == (cell_count[1] - 3)) {
-    directions.push_back(4);  // up
+    directions.push_back(3);  // up
   }
   if (cellCoord[2] == 0) {
-    directions.push_back(5);  // down
+    directions.push_back(4);  // south
   }
   if (cellCoord[2] == (cell_count[2] - 3)) {
-    directions.push_back(6);  // up
+    directions.push_back(5);  // north
   }
 
   return directions;
