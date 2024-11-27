@@ -1,5 +1,4 @@
 #include <filesystem>
-#include <iostream>
 
 #include "calc/VerletIntegrator.h"
 #include "defs/containers/DirectSumContainer.h"
@@ -12,6 +11,7 @@
 #include "io/file/out/OutputHelper.h"
 #include "io/file/out/VTKWriter.h"
 #include "spdlog/fmt/bundled/chrono.h"
+#include "spdlog/stopwatch.h"
 #include "utils/ArrayUtils.h"
 #include "utils/SpdWrapper.h"
 
@@ -83,7 +83,6 @@ int main(const int argc, char* argv[]) {
   int percentage = 0;
   double next_output_time = 0;
   spdlog::stopwatch stopwatch;
-
   while (current_time <= arguments.t_end) {
     verlet_integrator.step(*container);
 
@@ -94,6 +93,7 @@ int main(const int argc, char* argv[]) {
       // check if next percentage complete
       if (const double t = 100 * current_time / arguments.t_end;
           t >= percentage) {
+
         percentage++;
         auto elapsed = stopwatch.elapsed();
         auto eta = (elapsed / percentage) * 100 - elapsed;
@@ -105,12 +105,12 @@ int main(const int argc, char* argv[]) {
 
         SpdWrapper::get()->info(
             "[{:.0f} %]: Iteration {:<12} | [ETA: {}:{:02}:{:02}]",
-            100 * current_time / t_end, iteration, h, m, s);
+            100 * current_time / arguments.t_end, iteration, h, m, s);
       }
     }
 
     iteration++;
-    current_time = delta_t * iteration;
+    current_time = arguments.delta_t * iteration;
   }
   SpdWrapper::get()->info("Output written. Terminating...");
 
