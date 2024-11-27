@@ -456,86 +456,88 @@ void BoundaryType::Periodic(::std::auto_ptr<Periodic_type> x) {
 // BoundaryConfigType
 //
 
-const BoundaryConfigType::north_type& BoundaryConfigType::north() const {
-  return this->north_.get();
+const BoundaryConfigType::x_high_type& BoundaryConfigType::x_high() const {
+  return this->x_high_.get();
 }
 
-BoundaryConfigType::north_type& BoundaryConfigType::north() {
-  return this->north_.get();
+BoundaryConfigType::x_high_type& BoundaryConfigType::x_high() {
+  return this->x_high_.get();
 }
 
-void BoundaryConfigType::north(const north_type& x) { this->north_.set(x); }
+void BoundaryConfigType::x_high(const x_high_type& x) { this->x_high_.set(x); }
 
-void BoundaryConfigType::north(::std::auto_ptr<north_type> x) {
-  this->north_.set(x);
+void BoundaryConfigType::x_high(::std::auto_ptr<x_high_type> x) {
+  this->x_high_.set(x);
 }
 
-const BoundaryConfigType::south_type& BoundaryConfigType::south() const {
-  return this->south_.get();
+const BoundaryConfigType::x_low_type& BoundaryConfigType::x_low() const {
+  return this->x_low_.get();
 }
 
-BoundaryConfigType::south_type& BoundaryConfigType::south() {
-  return this->south_.get();
+BoundaryConfigType::x_low_type& BoundaryConfigType::x_low() {
+  return this->x_low_.get();
 }
 
-void BoundaryConfigType::south(const south_type& x) { this->south_.set(x); }
+void BoundaryConfigType::x_low(const x_low_type& x) { this->x_low_.set(x); }
 
-void BoundaryConfigType::south(::std::auto_ptr<south_type> x) {
-  this->south_.set(x);
+void BoundaryConfigType::x_low(::std::auto_ptr<x_low_type> x) {
+  this->x_low_.set(x);
 }
 
-const BoundaryConfigType::east_type& BoundaryConfigType::east() const {
-  return this->east_.get();
+const BoundaryConfigType::y_high_type& BoundaryConfigType::y_high() const {
+  return this->y_high_.get();
 }
 
-BoundaryConfigType::east_type& BoundaryConfigType::east() {
-  return this->east_.get();
+BoundaryConfigType::y_high_type& BoundaryConfigType::y_high() {
+  return this->y_high_.get();
 }
 
-void BoundaryConfigType::east(const east_type& x) { this->east_.set(x); }
+void BoundaryConfigType::y_high(const y_high_type& x) { this->y_high_.set(x); }
 
-void BoundaryConfigType::east(::std::auto_ptr<east_type> x) {
-  this->east_.set(x);
+void BoundaryConfigType::y_high(::std::auto_ptr<y_high_type> x) {
+  this->y_high_.set(x);
 }
 
-const BoundaryConfigType::west_type& BoundaryConfigType::west() const {
-  return this->west_.get();
+const BoundaryConfigType::y_low_type& BoundaryConfigType::y_low() const {
+  return this->y_low_.get();
 }
 
-BoundaryConfigType::west_type& BoundaryConfigType::west() {
-  return this->west_.get();
+BoundaryConfigType::y_low_type& BoundaryConfigType::y_low() {
+  return this->y_low_.get();
 }
 
-void BoundaryConfigType::west(const west_type& x) { this->west_.set(x); }
+void BoundaryConfigType::y_low(const y_low_type& x) { this->y_low_.set(x); }
 
-void BoundaryConfigType::west(::std::auto_ptr<west_type> x) {
-  this->west_.set(x);
+void BoundaryConfigType::y_low(::std::auto_ptr<y_low_type> x) {
+  this->y_low_.set(x);
 }
 
-const BoundaryConfigType::up_type& BoundaryConfigType::up() const {
-  return this->up_.get();
+const BoundaryConfigType::z_high_type& BoundaryConfigType::z_high() const {
+  return this->z_high_.get();
 }
 
-BoundaryConfigType::up_type& BoundaryConfigType::up() {
-  return this->up_.get();
+BoundaryConfigType::z_high_type& BoundaryConfigType::z_high() {
+  return this->z_high_.get();
 }
 
-void BoundaryConfigType::up(const up_type& x) { this->up_.set(x); }
+void BoundaryConfigType::z_high(const z_high_type& x) { this->z_high_.set(x); }
 
-void BoundaryConfigType::up(::std::auto_ptr<up_type> x) { this->up_.set(x); }
-
-const BoundaryConfigType::down_type& BoundaryConfigType::down() const {
-  return this->down_.get();
+void BoundaryConfigType::z_high(::std::auto_ptr<z_high_type> x) {
+  this->z_high_.set(x);
 }
 
-BoundaryConfigType::down_type& BoundaryConfigType::down() {
-  return this->down_.get();
+const BoundaryConfigType::z_low_type& BoundaryConfigType::z_low() const {
+  return this->z_low_.get();
 }
 
-void BoundaryConfigType::down(const down_type& x) { this->down_.set(x); }
+BoundaryConfigType::z_low_type& BoundaryConfigType::z_low() {
+  return this->z_low_.get();
+}
 
-void BoundaryConfigType::down(::std::auto_ptr<down_type> x) {
-  this->down_.set(x);
+void BoundaryConfigType::z_low(const z_low_type& x) { this->z_low_.set(x); }
+
+void BoundaryConfigType::z_low(::std::auto_ptr<z_low_type> x) {
+  this->z_low_.set(x);
 }
 
 // ForceType
@@ -1718,54 +1720,55 @@ BoundaryType::~BoundaryType() {}
 // BoundaryConfigType
 //
 
-BoundaryConfigType::BoundaryConfigType(const north_type& north,
-                                       const south_type& south,
-                                       const east_type& east,
-                                       const west_type& west, const up_type& up,
-                                       const down_type& down)
+BoundaryConfigType::BoundaryConfigType(const x_high_type& x_high,
+                                       const x_low_type& x_low,
+                                       const y_high_type& y_high,
+                                       const y_low_type& y_low,
+                                       const z_high_type& z_high,
+                                       const z_low_type& z_low)
     : ::xml_schema::type(),
-      north_(north, this),
-      south_(south, this),
-      east_(east, this),
-      west_(west, this),
-      up_(up, this),
-      down_(down, this) {}
+      x_high_(x_high, this),
+      x_low_(x_low, this),
+      y_high_(y_high, this),
+      y_low_(y_low, this),
+      z_high_(z_high, this),
+      z_low_(z_low, this) {}
 
-BoundaryConfigType::BoundaryConfigType(::std::auto_ptr<north_type> north,
-                                       ::std::auto_ptr<south_type> south,
-                                       ::std::auto_ptr<east_type> east,
-                                       ::std::auto_ptr<west_type> west,
-                                       ::std::auto_ptr<up_type> up,
-                                       ::std::auto_ptr<down_type> down)
+BoundaryConfigType::BoundaryConfigType(::std::auto_ptr<x_high_type> x_high,
+                                       ::std::auto_ptr<x_low_type> x_low,
+                                       ::std::auto_ptr<y_high_type> y_high,
+                                       ::std::auto_ptr<y_low_type> y_low,
+                                       ::std::auto_ptr<z_high_type> z_high,
+                                       ::std::auto_ptr<z_low_type> z_low)
     : ::xml_schema::type(),
-      north_(north, this),
-      south_(south, this),
-      east_(east, this),
-      west_(west, this),
-      up_(up, this),
-      down_(down, this) {}
+      x_high_(x_high, this),
+      x_low_(x_low, this),
+      y_high_(y_high, this),
+      y_low_(y_low, this),
+      z_high_(z_high, this),
+      z_low_(z_low, this) {}
 
 BoundaryConfigType::BoundaryConfigType(const BoundaryConfigType& x,
                                        ::xml_schema::flags f,
                                        ::xml_schema::container* c)
     : ::xml_schema::type(x, f, c),
-      north_(x.north_, f, this),
-      south_(x.south_, f, this),
-      east_(x.east_, f, this),
-      west_(x.west_, f, this),
-      up_(x.up_, f, this),
-      down_(x.down_, f, this) {}
+      x_high_(x.x_high_, f, this),
+      x_low_(x.x_low_, f, this),
+      y_high_(x.y_high_, f, this),
+      y_low_(x.y_low_, f, this),
+      z_high_(x.z_high_, f, this),
+      z_low_(x.z_low_, f, this) {}
 
 BoundaryConfigType::BoundaryConfigType(const ::xercesc::DOMElement& e,
                                        ::xml_schema::flags f,
                                        ::xml_schema::container* c)
     : ::xml_schema::type(e, f | ::xml_schema::flags::base, c),
-      north_(this),
-      south_(this),
-      east_(this),
-      west_(this),
-      up_(this),
-      down_(this) {
+      x_high_(this),
+      x_low_(this),
+      y_high_(this),
+      y_low_(this),
+      z_high_(this),
+      z_low_(this) {
   if ((f & ::xml_schema::flags::base) == 0) {
     ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
     this->parse(p, f);
@@ -1779,68 +1782,68 @@ void BoundaryConfigType::parse(::xsd::cxx::xml::dom::parser<char>& p,
     const ::xsd::cxx::xml::qualified_name<char> n(
         ::xsd::cxx::xml::dom::name<char>(i));
 
-    // north
+    // x_high
     //
-    if (n.name() == "north" && n.namespace_().empty()) {
-      ::std::auto_ptr<north_type> r(north_traits::create(i, f, this));
+    if (n.name() == "x_high" && n.namespace_().empty()) {
+      ::std::auto_ptr<x_high_type> r(x_high_traits::create(i, f, this));
 
-      if (!north_.present()) {
-        this->north_.set(r);
+      if (!x_high_.present()) {
+        this->x_high_.set(r);
         continue;
       }
     }
 
-    // south
+    // x_low
     //
-    if (n.name() == "south" && n.namespace_().empty()) {
-      ::std::auto_ptr<south_type> r(south_traits::create(i, f, this));
+    if (n.name() == "x_low" && n.namespace_().empty()) {
+      ::std::auto_ptr<x_low_type> r(x_low_traits::create(i, f, this));
 
-      if (!south_.present()) {
-        this->south_.set(r);
+      if (!x_low_.present()) {
+        this->x_low_.set(r);
         continue;
       }
     }
 
-    // east
+    // y_high
     //
-    if (n.name() == "east" && n.namespace_().empty()) {
-      ::std::auto_ptr<east_type> r(east_traits::create(i, f, this));
+    if (n.name() == "y_high" && n.namespace_().empty()) {
+      ::std::auto_ptr<y_high_type> r(y_high_traits::create(i, f, this));
 
-      if (!east_.present()) {
-        this->east_.set(r);
+      if (!y_high_.present()) {
+        this->y_high_.set(r);
         continue;
       }
     }
 
-    // west
+    // y_low
     //
-    if (n.name() == "west" && n.namespace_().empty()) {
-      ::std::auto_ptr<west_type> r(west_traits::create(i, f, this));
+    if (n.name() == "y_low" && n.namespace_().empty()) {
+      ::std::auto_ptr<y_low_type> r(y_low_traits::create(i, f, this));
 
-      if (!west_.present()) {
-        this->west_.set(r);
+      if (!y_low_.present()) {
+        this->y_low_.set(r);
         continue;
       }
     }
 
-    // up
+    // z_high
     //
-    if (n.name() == "up" && n.namespace_().empty()) {
-      ::std::auto_ptr<up_type> r(up_traits::create(i, f, this));
+    if (n.name() == "z_high" && n.namespace_().empty()) {
+      ::std::auto_ptr<z_high_type> r(z_high_traits::create(i, f, this));
 
-      if (!up_.present()) {
-        this->up_.set(r);
+      if (!z_high_.present()) {
+        this->z_high_.set(r);
         continue;
       }
     }
 
-    // down
+    // z_low
     //
-    if (n.name() == "down" && n.namespace_().empty()) {
-      ::std::auto_ptr<down_type> r(down_traits::create(i, f, this));
+    if (n.name() == "z_low" && n.namespace_().empty()) {
+      ::std::auto_ptr<z_low_type> r(z_low_traits::create(i, f, this));
 
-      if (!down_.present()) {
-        this->down_.set(r);
+      if (!z_low_.present()) {
+        this->z_low_.set(r);
         continue;
       }
     }
@@ -1848,28 +1851,28 @@ void BoundaryConfigType::parse(::xsd::cxx::xml::dom::parser<char>& p,
     break;
   }
 
-  if (!north_.present()) {
-    throw ::xsd::cxx::tree::expected_element<char>("north", "");
+  if (!x_high_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("x_high", "");
   }
 
-  if (!south_.present()) {
-    throw ::xsd::cxx::tree::expected_element<char>("south", "");
+  if (!x_low_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("x_low", "");
   }
 
-  if (!east_.present()) {
-    throw ::xsd::cxx::tree::expected_element<char>("east", "");
+  if (!y_high_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("y_high", "");
   }
 
-  if (!west_.present()) {
-    throw ::xsd::cxx::tree::expected_element<char>("west", "");
+  if (!y_low_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("y_low", "");
   }
 
-  if (!up_.present()) {
-    throw ::xsd::cxx::tree::expected_element<char>("up", "");
+  if (!z_high_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("z_high", "");
   }
 
-  if (!down_.present()) {
-    throw ::xsd::cxx::tree::expected_element<char>("down", "");
+  if (!z_low_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("z_low", "");
   }
 }
 
@@ -1881,12 +1884,12 @@ BoundaryConfigType* BoundaryConfigType::_clone(
 BoundaryConfigType& BoundaryConfigType::operator=(const BoundaryConfigType& x) {
   if (this != &x) {
     static_cast< ::xml_schema::type&>(*this) = x;
-    this->north_ = x.north_;
-    this->south_ = x.south_;
-    this->east_ = x.east_;
-    this->west_ = x.west_;
-    this->up_ = x.up_;
-    this->down_ = x.down_;
+    this->x_high_ = x.x_high_;
+    this->x_low_ = x.x_low_;
+    this->y_high_ = x.y_high_;
+    this->y_low_ = x.y_low_;
+    this->z_high_ = x.z_high_;
+    this->z_low_ = x.z_low_;
   }
 
   return *this;

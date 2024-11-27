@@ -27,12 +27,12 @@ int main(const int argc, char* argv[]) {
                             .cutoff_radius = 3.0,
                             .boundary_config =
                                 {
-                                    .north = LinkedCellsConfig::Outflow,
-                                    .south = LinkedCellsConfig::Outflow,
-                                    .east = LinkedCellsConfig::Outflow,
-                                    .west = LinkedCellsConfig::Outflow,
-                                    .up = LinkedCellsConfig::Outflow,
-                                    .down = LinkedCellsConfig::Outflow,
+                                    .x_high = LinkedCellsConfig::Outflow,
+                                    .x_low = LinkedCellsConfig::Outflow,
+                                    .y_high = LinkedCellsConfig::Outflow,
+                                    .y_low = LinkedCellsConfig::Outflow,
+                                    .z_high = LinkedCellsConfig::Outflow,
+                                    .z_low = LinkedCellsConfig::Outflow,
                                 }},
   };
   auto [input_file, step_size] = CLArgumentParser::parse(argc, argv);
