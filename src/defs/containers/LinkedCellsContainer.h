@@ -3,6 +3,7 @@
 #include <functional>
 #include <vector>
 
+#include "defs/GhostParticle.h"
 #include "defs/Particle.h"
 #include "defs/Simulation.h"
 #include "defs/containers/ParticleContainer.h"
@@ -40,7 +41,7 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @brief
    * a more processing friendly storage of LinkedCellsConfig::BoundaryConfig
    */
-  std::array<LinkedCellsConfig::BoundaryType, 6> boundaries;
+  std::array<LinkedCellsConfig::BoundaryType, 6> boundaries{};
 
   /**
    * @brief
@@ -62,11 +63,24 @@ class LinkedCellsContainer final : public ParticleContainer {
 
   /**
    * @brief
+   * the domain of the container
+   */
+  ivec3 domain{};
+
+  /**
+   * @brief
    * the boundary config of each direction of the simulation
    */
   LinkedCellsConfig::BoundaryConfig boundary_config{};
 
  public:
+  /**
+   * 6th root of 2
+   */
+  static const double sigma_factor;
+
+
+
   /**
    * Empty constructor
    * TODO: why does this even exist?

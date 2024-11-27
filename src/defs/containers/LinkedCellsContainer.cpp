@@ -10,13 +10,16 @@
 #include <vector>
 
 #include "debug/debug_print.h"
-#include "defs/Particle.h"
-#include "utils/SpdWrapper.h"
 #include "defs/GhostParticle.h"
+#include "defs/Particle.h"
+#include "forces/LennardJones.h"
+#include "utils/SpdWrapper.h"
+
+const double LinkedCellsContainer::sigma_factor = std::pow(2.0, 1.0 / 6.0);
 
 LinkedCellsContainer::LinkedCellsContainer(
     const LinkedCellsConfig &linked_cells_config) {
-  ivec3 domain = linked_cells_config.domain;
+  domain = linked_cells_config.domain;
 
   DEBUG_PRINT("LinkedCellsContainer instantiated");
   SpdWrapper::get()->info("domain size: ({}, {}, {})", domain[0], domain[1],
@@ -52,7 +55,7 @@ LinkedCellsContainer::LinkedCellsContainer(
     }
   }
 
-  boundaries = {
+  this->boundaries = {
       linked_cells_config.boundary_config.west,
       linked_cells_config.boundary_config.east,
       linked_cells_config.boundary_config.down,
@@ -127,26 +130,55 @@ void LinkedCellsContainer::imposeInvariant() {
   }
 
   // apply boundary condition
-  // TODO: this is heavily inefficient in 2D, make dimension accessible, 4 instead of 6
-
-  // delete everything in the halo cells, required by both Outflow and
-  // Reflecting edge cells may be iterated twice or thrice, should not be a
-  // problem
-  for (size_t dimension = 0; dimension < 6; ++dimension) {
-    for (const size_t cell_index : halo_direction_cells[dimension]) {
-      cells[cell_index].clear();  // does not delete the particle from memory, do we have any references left
-    }
-  }
-
+  // it is assumed that GhostParticles do not have to persist, so we dont have
+  // to iterate over the halo cells of Reflective Boundaries
+  // TODO: this is heavily inefficient in 2D, make dimension accessible, 4
+  // instead of 6
   for (size_t dimension = 0; dimension < 6; ++dimension) {
     switch (boundaries[dimension]) {
       case LinkedCellsConfig::BoundaryType::Outflow: {
-        // already done by clearing the halo cells before this
+        for (const size_t cell_index : halo_direction_cells[dimension]) {
+          cells[cell_index].clear();
+        }
         break;
       }
       case LinkedCellsConfig::BoundaryType::Reflective: {
         // the slides do not state what to do if it is an edge, so we place a
         // particle for every dimension it is too close to
+
+        // ensure that GhostParticle only interacts with specific particle
+        // assumed: epsilon and sigma are the same as of the problematic
+        // Particle
+        const std::size_t problematic_dimension = dimension / 2;
+        const std::size_t problematic_dimension_direction = dimension % 2;
+
+        for (const std::size_t cell_index : boundary_direction_cells[dimension]) {
+          for (Particle &p : cells[cell_index]) {
+            // check if it is too close
+            double pos = p.getX()[problematic_dimension];
+            const double boundary_position = domain[problematic_dimension];
+            const double double_dist_to_boundary =
+                2 *
+                std::min(pos, boundary_position -
+                                  pos);  // if both of them are so small that
+                                         // they would trigger the boundary, the
+                                         // simulation itself is already broken
+            if (double_dist_to_boundary < sigma_factor * p.getSigma()) {
+              const double force =
+                  LennardJones::simpleForce(p, double_dist_to_boundary);
+              dvec3 p_force = p.getF();
+              p_force[problematic_dimension] +=
+                  force *
+                  std::pow(
+                      -1.0,
+                      problematic_dimension_direction);  // invert the direction
+                                                         // for boundary in
+                                                         // ascending coordinate
+                                                         // direction
+              p.setF(p_force);
+            }
+          }
+        }
         break;
       }
       default: {
