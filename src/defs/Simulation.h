@@ -19,12 +19,12 @@ struct LinkedCellsConfig {
   double cutoff_radius;
   enum BoundaryType { Outflow, Reflective, Periodic } boundary_type;
   struct BoundaryConfig {
-    BoundaryType north;  // z-axis
-    BoundaryType south;  // z-axis
-    BoundaryType east;   // x-axis
-    BoundaryType west;   // x-axis
-    BoundaryType up;     // y-axis
-    BoundaryType down;   // y-axis
+    BoundaryType x_high;
+    BoundaryType x_low;
+    BoundaryType y_high;
+    BoundaryType y_low;
+    BoundaryType z_high;
+    BoundaryType z_low;
   } boundary_config;
 };
 
@@ -100,14 +100,14 @@ inline void printConfiguration(const Arguments& args) {
     logger->info("Boundary Configuration:");
     logger->info("------------------------");
 
-    const auto& [north, south, east, west, up, down] =
+    const auto& [x_high, x_low, y_high, y_low, z_high, z_low] =
         linked_cells_data.boundary_config;
-    printBoundary("North", north);
-    printBoundary("South", south);
-    printBoundary("East", east);
-    printBoundary("West", west);
-    printBoundary("Up", up);
-    printBoundary("Down", down);
+    printBoundary("x_high", x_high);
+    printBoundary("x_low", x_low);
+    printBoundary("y_high", y_high);
+    printBoundary("y_low", y_low);
+    printBoundary("z_high", z_high);
+    printBoundary("z_low", z_low);
 
   } else {
     logger->info("Container Type: Direct Sum");

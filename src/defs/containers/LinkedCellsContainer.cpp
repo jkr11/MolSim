@@ -54,16 +54,16 @@ LinkedCellsContainer::LinkedCellsContainer(
     }
   }
 
-  this->boundaries = {
-      linked_cells_config.boundary_config.west,
-      linked_cells_config.boundary_config.east,
-      linked_cells_config.boundary_config.down,
-      linked_cells_config.boundary_config.up,
-      linked_cells_config.boundary_config.south,
-      linked_cells_config.boundary_config.north,
-  };
-
   // TODO: pretty
+  this->boundaries = {
+      linked_cells_config.boundary_config.x_low,
+      linked_cells_config.boundary_config.x_high,
+      linked_cells_config.boundary_config.y_low,
+      linked_cells_config.boundary_config.y_high,
+      linked_cells_config.boundary_config.z_low,
+      linked_cells_config.boundary_config.z_high,
+
+  };
   SpdWrapper::get()->info("cell dim: {}, {}, {}; cell count: {}, {}, {}",
                           cell_dim[0], cell_dim[1], cell_dim[2], cell_count[0],
                           cell_count[1], cell_count[2]);

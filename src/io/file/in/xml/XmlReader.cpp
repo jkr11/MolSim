@@ -43,12 +43,12 @@ void XmlReader::read(std::vector<Particle>& particles,
           container.linkedCells().get().r_cutoff();
       const auto& boundaries = container.linkedCells().get().boundary();
       const LinkedCellsConfig::BoundaryConfig boundary_config = {
-          .north = toBoundaryType(boundaries.north()),
-          .south = toBoundaryType(boundaries.south()),
-          .east = toBoundaryType(boundaries.east()),
-          .west = toBoundaryType(boundaries.west()),
-          .up = toBoundaryType(boundaries.up()),
-          .down = toBoundaryType(boundaries.down()),
+          .x_high = toBoundaryType(boundaries.x_high()),
+          .x_low = toBoundaryType(boundaries.x_low()),
+          .y_high = toBoundaryType(boundaries.y_high()),
+          .y_low = toBoundaryType(boundaries.y_low()),
+          .z_high = toBoundaryType(boundaries.z_high()),
+          .z_low = toBoundaryType(boundaries.z_low()),
       };
       linked_cells_config.boundary_config = boundary_config;
       simulation_parameters.container_data = linked_cells_config;

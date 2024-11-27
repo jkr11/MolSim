@@ -5,39 +5,39 @@
         <container>
             <linkedCells>
                 <domain>
-                    <x>100</x>
-                    <y>100</y>
-                    <z>100</z>
+                    <x>300</x>
+                    <y>300</y>
+                    <z>1</z>
                 </domain>
                 <r_cutoff>3.0</r_cutoff>
                 <boundary>
-                    <north>
-                        <Reflective/>
-                    </north>
-                    <south>
-                        <Reflective/>
-                    </south>
-                    <east>
-                        <Reflective/>
-                    </east>
-                    <west>
-                        <Reflective/>
-                    </west>
-                    <up>
-                        <Reflective/>
-                    </up>
-                    <down>
-                        <Reflective/>
-                    </down>
+                    <x_high>
+                        <Outflow/>
+                    </x_high>
+                    <x_low>
+                        <Outflow/>
+                    </x_low>
+                    <y_high>
+                        <Outflow/>
+                    </y_high>
+                    <y_low>
+                        <Outflow/>
+                    </y_low>
+                    <z_high>
+                        <Outflow/>
+                    </z_high>
+                    <z_low>
+                        <Outflow/>
+                    </z_low>
                 </boundary>
             </linkedCells>
         </container>
         <force>
             <LennardJones/>
         </force>
-        <delta_t>0.00005</delta_t>
-        <t_end>20</t_end>
-        <twoD>false</twoD>
+        <delta_t>0.0005</delta_t>
+        <t_end>1</t_end>
+        <twoD>true</twoD>
     </metadata>
     <cuboids>
         <cuboid>
