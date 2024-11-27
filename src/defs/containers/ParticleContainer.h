@@ -65,5 +65,4 @@ class ParticleContainer {
    */
   virtual void pairIterator(
       const std::function<void(Particle&, Particle&)>& f) = 0;
-
 };

@@ -24,6 +24,7 @@ double LennardJones::simpleForce(Particle& p, double distance) {
   const double sr = p.getSigma() / distance;
   const double sr6 = std::pow(sr, 6);
   const double sr12 = std::pow(sr6, 2);
-  const double force_magnitude = 24 * p.getEpsilon() * (sr6 - 2 * sr12) / (std::pow(distance, 2));
+  const double force_magnitude =
+      24 * p.getEpsilon() * (sr6 - 2 * sr12) / (std::pow(distance, 2));
   return force_magnitude;
 }

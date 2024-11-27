@@ -15,4 +15,3 @@ dvec3 Gravity::directionalForce(Particle& p1, Particle& p2) const {
 }
 
 double Gravity::simpleForce(Particle& p, double distance) { return 0; }
-

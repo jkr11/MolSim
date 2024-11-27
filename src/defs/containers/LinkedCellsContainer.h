@@ -78,8 +78,6 @@ class LinkedCellsContainer final : public ParticleContainer {
    */
   static const double sigma_factor;
 
-
-
   /**
    * Empty constructor
    */

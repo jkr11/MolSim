@@ -51,8 +51,7 @@ int main(const int argc, char* argv[]) {
   if (std::holds_alternative<LinkedCellsConfig>(arguments.container_data)) {
     const auto& linked_cells_data =
         std::get<LinkedCellsConfig>(arguments.container_data);
-    container = std::make_unique<LinkedCellsContainer>(
-        linked_cells_data);
+    container = std::make_unique<LinkedCellsContainer>(linked_cells_data);
     container->addParticles(particles);
     container->imposeInvariant();
   } else if (std::holds_alternative<DirectSumConfig>(
@@ -93,7 +92,6 @@ int main(const int argc, char* argv[]) {
       // check if next percentage complete
       if (const double t = 100 * current_time / arguments.t_end;
           t >= percentage) {
-
         percentage++;
         auto elapsed = stopwatch.elapsed();
         auto eta = (elapsed / percentage) * 100 - elapsed;

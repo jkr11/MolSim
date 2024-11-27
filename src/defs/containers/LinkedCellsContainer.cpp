@@ -151,7 +151,8 @@ void LinkedCellsContainer::imposeInvariant() {
         const std::size_t problematic_dimension = dimension / 2;
         const std::size_t problematic_dimension_direction = dimension % 2;
 
-        for (const std::size_t cell_index : boundary_direction_cells[dimension]) {
+        for (const std::size_t cell_index :
+             boundary_direction_cells[dimension]) {
           for (Particle &p : cells[cell_index]) {
             // check if it is too close
             double pos = p.getX()[problematic_dimension];
@@ -162,9 +163,12 @@ void LinkedCellsContainer::imposeInvariant() {
                                   pos);  // if both of them are so small that
                                          // they would trigger the boundary, the
                                          // simulation itself is already broken
-            DEBUG_PRINT_FMT("dimension={}, double_distance={}", dimension, double_dist_to_boundary);
+            DEBUG_PRINT_FMT("dimension={}, double_distance={}", dimension,
+                            double_dist_to_boundary);
             if (double_dist_to_boundary < sigma_factor * p.getSigma()) {
-              DEBUG_PRINT_FMT("Particle at {}, {}, {} too close to Reflective Boundary", p.getX()[0], p.getX()[1], p.getX()[2]);
+              DEBUG_PRINT_FMT(
+                  "Particle at {}, {}, {} too close to Reflective Boundary",
+                  p.getX()[0], p.getX()[1], p.getX()[2]);
               const double force =
                   LennardJones::simpleForce(p, double_dist_to_boundary);
               dvec3 p_force = p.getF();
@@ -177,7 +181,10 @@ void LinkedCellsContainer::imposeInvariant() {
                                                          // ascending coordinate
                                                          // direction
               p.setF(p_force);
-              DEBUG_PRINT_FMT("Applied Force=[{}, {}, {}] to Particle at [{}, {}, {}]", p.getF()[0], p.getF()[1], p.getF()[2], p.getX()[0], p.getX()[1], p.getX()[2]);
+              DEBUG_PRINT_FMT(
+                  "Applied Force=[{}, {}, {}] to Particle at [{}, {}, {}]",
+                  p.getF()[0], p.getF()[1], p.getF()[2], p.getX()[0],
+                  p.getX()[1], p.getX()[2]);
             }
           }
         }
