@@ -72,8 +72,7 @@ std::tuple<std::filesystem::path, double> CLArgumentParser::parse(
 
 void CLArgumentParser::validateInputFile(
     const std::filesystem::path &file_path) {
-  if (!exists(file_path) ||
-      is_directory(file_path)) {
+  if (!exists(file_path) || is_directory(file_path)) {
     printUsage("File does not exist", file_path);
     throw std::invalid_argument("Input file '" + std::string(file_path) +
                                 "' does not exist or is a directory");

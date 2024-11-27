@@ -103,14 +103,14 @@ int main(const int argc, char* argv[]) {
         eta -= std::chrono::minutes(m);
         auto s = std::chrono::duration_cast<std::chrono::seconds>(eta).count();
 
-        SpdWrapper::get()->info("[{:.0f} %]: Iteration {:<12} | [ETA: {}:{:02}:{:02}]",
-                                100 * current_time / t_end, iteration, h, m , s);
+        SpdWrapper::get()->info(
+            "[{:.0f} %]: Iteration {:<12} | [ETA: {}:{:02}:{:02}]",
+            100 * current_time / t_end, iteration, h, m, s);
       }
     }
 
     iteration++;
     current_time = delta_t * iteration;
-
   }
   SpdWrapper::get()->info("Output written. Terminating...");
 
