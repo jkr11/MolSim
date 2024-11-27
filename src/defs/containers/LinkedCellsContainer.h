@@ -3,7 +3,6 @@
 #include <functional>
 #include <vector>
 
-#include "defs/GhostParticle.h"
 #include "defs/Particle.h"
 #include "defs/Simulation.h"
 #include "defs/containers/ParticleContainer.h"

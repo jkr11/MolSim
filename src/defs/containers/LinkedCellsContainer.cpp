@@ -10,7 +10,6 @@
 #include <vector>
 
 #include "debug/debug_print.h"
-#include "defs/GhostParticle.h"
 #include "defs/Particle.h"
 #include "forces/LennardJones.h"
 #include "utils/SpdWrapper.h"
