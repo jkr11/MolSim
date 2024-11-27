@@ -240,12 +240,12 @@ class LinkedCellsContainer final : public ParticleContainer {
   /**
    * @brief calculates all directions of the halo cell
    *  empty: no halo cell
-   *  0: west
-   *  1: east
-   *  2: down
-   *  3: up
-   *  4: south
-   *  5: north
+   *  0: west | low x
+   *  1: east | high x
+   *  2: down | low y
+   *  3: up | high y
+   *  4: south | low z
+   *  5: north | high z
    * @param cellIndex cell index to be checked
    * @return the direction of the halo cell
    */

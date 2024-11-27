@@ -147,7 +147,7 @@ void LinkedCellsContainer::imposeInvariant() {
 
         // ensure that GhostParticle only interacts with specific particle
         // assumed: epsilon and sigma are the same as of the problematic
-        // Particle
+        // Particle, the cutoff is larger than half of sigma_factor * sigma
         const std::size_t problematic_dimension = dimension / 2;
         const std::size_t problematic_dimension_direction = dimension % 2;
 
@@ -162,7 +162,9 @@ void LinkedCellsContainer::imposeInvariant() {
                                   pos);  // if both of them are so small that
                                          // they would trigger the boundary, the
                                          // simulation itself is already broken
+            DEBUG_PRINT_FMT("dimension={}, double_distance={}", dimension, double_dist_to_boundary);
             if (double_dist_to_boundary < sigma_factor * p.getSigma()) {
+              DEBUG_PRINT_FMT("Particle at {}, {}, {} too close to Reflective Boundary", p.getX()[0], p.getX()[1], p.getX()[2]);
               const double force =
                   LennardJones::simpleForce(p, double_dist_to_boundary);
               dvec3 p_force = p.getF();
@@ -175,6 +177,7 @@ void LinkedCellsContainer::imposeInvariant() {
                                                          // ascending coordinate
                                                          // direction
               p.setF(p_force);
+              DEBUG_PRINT_FMT("Applied Force=[{}, {}, {}] to Particle at [{}, {}, {}]", p.getF()[0], p.getF()[1], p.getF()[2], p.getX()[0], p.getX()[1], p.getX()[2]);
             }
           }
         }
@@ -182,7 +185,7 @@ void LinkedCellsContainer::imposeInvariant() {
       }
       default: {
         DEBUG_PRINT_FMT("BoundaryType {} for dimension {} unknown",
-                        boundaries[dimension], dimension);
+                        static_cast<int>(boundaries[dimension]), dimension);
         break;
       }
     }
@@ -252,8 +255,8 @@ void LinkedCellsContainer::pairIterator(
                                     cellCoordinate[2] + offset[2]};
 
       if (!isValidCellCoordinate(neighbourCoord)) {
-        DEBUG_PRINT_FMT("Invalid coord: ({}, {}, {})", neighbourCoord[0],
-                        neighbourCoord[1], neighbourCoord[2])
+        // DEBUG_PRINT_FMT("Invalid coord: ({}, {}, {})", neighbourCoord[0],
+        //                 neighbourCoord[1], neighbourCoord[2])
         continue;
       }
 
