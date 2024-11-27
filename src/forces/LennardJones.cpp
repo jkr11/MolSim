@@ -15,6 +15,15 @@ dvec3 LennardJones::directionalForce(Particle& p1, Particle& p2) const {
   const double sr6 = std::pow(sr, 6);
   const double sr12 = std::pow(sr6, 2);
   const double force_magnitude =
-      24 * epsilon * (sr6 - 2 * sr12) / (std::pow(r, 2));
+      24 * epsilon * (sr6 - 2 * sr12) / (std::pow(r, 2)); // TODO: this is now only a 2D simulation?
   return force_magnitude * rv;
+}
+
+double LennardJones::simpleForce(Particle& p, double distance) {
+  if (distance <= 0) return 0;
+  const double sr = p.getSigma() / distance;
+  const double sr6 = std::pow(sr, 6);
+  const double sr12 = std::pow(sr6, 2);
+  const double force_magnitude = 24 * p.getEpsilon() * (sr6 - 2 * sr12) / (std::pow(distance, 2));
+  return force_magnitude;
 }

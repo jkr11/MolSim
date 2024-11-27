@@ -12,9 +12,9 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
     p.setX(new_x);
   });
 
-  particle_container.imposeInvariant();
-
   particle_container.singleIterator([](Particle& p) { p.updateForceInTime(); });
+
+  particle_container.imposeInvariant();
 
   particle_container.pairIterator([this](Particle& p1, Particle& p2) {
     const dvec3 g12 = force.directionalForce(p1, p2);
