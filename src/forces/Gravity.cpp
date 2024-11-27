@@ -13,3 +13,5 @@ dvec3 Gravity::directionalForce(Particle& p1, Particle& p2) const {
   const double F = (p1.getM() * p2.getM()) / std::pow(dist, 2);
   return F / dist * (p2.getX() - p1.getX());
 }
+
+double Gravity::simpleForce(Particle& p, double distance) { return 0; }

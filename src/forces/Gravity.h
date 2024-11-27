@@ -20,4 +20,13 @@ class Gravity final : public Force {
    * @return Force-vector
    */
   dvec3 directionalForce(Particle& p1, Particle& p2) const override;
+
+  /**
+   * @brief calculates the force of the ghost particle, not implemented for this
+   * Force
+   * @param p Particle to calculate Force for
+   * @param distance the distance to the boundary
+   * @return the force in just one dimension
+   */
+  static double simpleForce(Particle& p, double distance);
 };

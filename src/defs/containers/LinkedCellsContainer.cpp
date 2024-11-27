@@ -11,33 +11,62 @@
 
 #include "debug/debug_print.h"
 #include "defs/Particle.h"
+#include "forces/LennardJones.h"
 #include "utils/SpdWrapper.h"
 
-LinkedCellsContainer::LinkedCellsContainer(const ivec3 &domain,
-                                           const double cutoff) {
+const double LinkedCellsContainer::sigma_factor = std::pow(2.0, 1.0 / 6.0);
+
+LinkedCellsContainer::LinkedCellsContainer(
+    const LinkedCellsConfig &linked_cells_config) {
+  domain = linked_cells_config.domain;
+
   DEBUG_PRINT("LinkedCellsContainer instantiated");
   SpdWrapper::get()->info("domain size: ({}, {}, {})", domain[0], domain[1],
                           domain[2]);
 
   cells = {};
-  this->cutoff = cutoff;
+  this->cutoff = linked_cells_config.cutoff_radius;
 
-  cellCount = {std::max(static_cast<int>(std::floor(domain[0] / cutoff)), 1),
-               std::max(static_cast<int>(std::floor(domain[1] / cutoff)), 1),
-               std::max(static_cast<int>(std::floor(domain[2] / cutoff)), 1)};
+  cell_count = {std::max(static_cast<int>(std::floor(domain[0] / cutoff)), 1),
+                std::max(static_cast<int>(std::floor(domain[1] / cutoff)), 1),
+                std::max(static_cast<int>(std::floor(domain[2] / cutoff)), 1)};
 
-  cellDim = {domain[0] / cellCount[0], domain[1] / cellCount[1],
-             domain[2] / cellCount[2]};
+  cell_dim = {domain[0] / cell_count[0], domain[1] / cell_count[1],
+              domain[2] / cell_count[2]};
   // add 2 for halo
 
-  cellCount = {cellCount[0] + 2, cellCount[1] + 2, cellCount[2] + 2};
+  cell_count = {cell_count[0] + 2, cell_count[1] + 2, cell_count[2] + 2};
 
-  cells.resize(cellCount[0] * cellCount[1] * cellCount[2]);
+  cells.resize(cell_count[0] * cell_count[1] * cell_count[2]);
+
+  this->boundary_config = linked_cells_config.boundary_config;
+
+  // precalculate special cells
+  for (std::size_t cell_index = 0; cell_index < cells.size(); ++cell_index) {
+    auto halo_directions = halo_direction(cell_index);
+    auto boundary_directions = boundary_direction(cell_index);
+
+    for (std::size_t i = 0; i < halo_directions.size(); ++i) {
+      halo_direction_cells[i].push_back(cell_index);
+    }
+    for (std::size_t i = 0; i < boundary_directions.size(); ++i) {
+      boundary_direction_cells[i].push_back(cell_index);
+    }
+  }
+
+  this->boundaries = {
+      linked_cells_config.boundary_config.west,
+      linked_cells_config.boundary_config.east,
+      linked_cells_config.boundary_config.down,
+      linked_cells_config.boundary_config.up,
+      linked_cells_config.boundary_config.south,
+      linked_cells_config.boundary_config.north,
+  };
 
   // TODO: pretty
   SpdWrapper::get()->info("cell dim: {}, {}, {}; cell count: {}, {}, {}",
-                          cellDim[0], cellDim[1], cellDim[2], cellCount[0],
-                          cellCount[1], cellCount[2]);
+                          cell_dim[0], cell_dim[1], cell_dim[2], cell_count[0],
+                          cell_count[1], cell_count[2]);
 }
 
 void LinkedCellsContainer::addParticle(const Particle &p) {
@@ -85,6 +114,7 @@ std::vector<Particle *> LinkedCellsContainer::getParticles() {
 }
 
 void LinkedCellsContainer::imposeInvariant() {
+  // register in corresponding cell
   for (std::size_t index = 0; index < cells.size(); index++) {
     for (auto it = cells[index].begin(); it < cells[index].end();) {
       const std::size_t shouldBeIndex = dvec3ToCellIndex(it->getX());
@@ -95,6 +125,76 @@ void LinkedCellsContainer::imposeInvariant() {
 
       cells[shouldBeIndex].push_back(*it);
       it = cells[index].erase(it);
+    }
+  }
+
+  // apply boundary condition
+  // it is assumed that GhostParticles do not have to persist, so we dont have
+  // to iterate over the halo cells of Reflective Boundaries
+  // TODO: this is heavily inefficient in 2D, make dimension accessible, 4
+  // instead of 6
+  for (size_t dimension = 0; dimension < 6; ++dimension) {
+    switch (boundaries[dimension]) {
+      case LinkedCellsConfig::BoundaryType::Outflow: {
+        for (const size_t cell_index : halo_direction_cells[dimension]) {
+          cells[cell_index].clear();
+        }
+        break;
+      }
+      case LinkedCellsConfig::BoundaryType::Reflective: {
+        // the slides do not state what to do if it is an edge, so we place a
+        // particle for every dimension it is too close to
+
+        // ensure that GhostParticle only interacts with specific particle
+        // assumed: epsilon and sigma are the same as of the problematic
+        // Particle, the cutoff is larger than half of sigma_factor * sigma
+        const std::size_t problematic_dimension = dimension / 2;
+        const std::size_t problematic_dimension_direction = dimension % 2;
+
+        for (const std::size_t cell_index :
+             boundary_direction_cells[dimension]) {
+          for (Particle &p : cells[cell_index]) {
+            // check if it is too close
+            double pos = p.getX()[problematic_dimension];
+            const double boundary_position = domain[problematic_dimension];
+            const double double_dist_to_boundary =
+                2 *
+                std::min(pos, boundary_position -
+                                  pos);  // if both of them are so small that
+                                         // they would trigger the boundary, the
+                                         // simulation itself is already broken
+            DEBUG_PRINT_FMT("dimension={}, double_distance={}", dimension,
+                            double_dist_to_boundary);
+            if (double_dist_to_boundary < sigma_factor * p.getSigma()) {
+              DEBUG_PRINT_FMT(
+                  "Particle at {}, {}, {} too close to Reflective Boundary",
+                  p.getX()[0], p.getX()[1], p.getX()[2]);
+              const double force =
+                  LennardJones::simpleForce(p, double_dist_to_boundary);
+              dvec3 p_force = p.getF();
+              p_force[problematic_dimension] +=
+                  force *
+                  std::pow(
+                      -1.0,
+                      problematic_dimension_direction);  // invert the direction
+                                                         // for boundary in
+                                                         // ascending coordinate
+                                                         // direction
+              p.setF(p_force);
+              DEBUG_PRINT_FMT(
+                  "Applied Force=[{}, {}, {}] to Particle at [{}, {}, {}]",
+                  p.getF()[0], p.getF()[1], p.getF()[2], p.getX()[0],
+                  p.getX()[1], p.getX()[2]);
+            }
+          }
+        }
+        break;
+      }
+      default: {
+        DEBUG_PRINT_FMT("BoundaryType {} for dimension {} unknown",
+                        static_cast<int>(boundaries[dimension]), dimension);
+        break;
+      }
     }
   }
 }
@@ -146,7 +246,6 @@ void LinkedCellsContainer::pairIterator(
                     cellCoordinate[2], isHalo(cellIndex));
 
     // iterate over particles inside cell
-
     for (std::size_t i = 0; i < cellParticles.size(); ++i) {
       for (std::size_t j = i + 1; j < cellParticles.size(); ++j) {
         const dvec3 p = cellParticles[i].getX();
@@ -227,42 +326,42 @@ void LinkedCellsContainer::haloIterator(
 inline std::size_t LinkedCellsContainer::dvec3ToCellIndex(
     const dvec3 &position) const {
   const std::array<int, 3> cellCoords = {
-      static_cast<int>(std::floor(position[0] / cellDim[0])),
-      static_cast<int>(std::floor(position[1] / cellDim[1])),
-      static_cast<int>(std::floor(position[2] / cellDim[2]))};
+      static_cast<int>(std::floor(position[0] / cell_dim[0])),
+      static_cast<int>(std::floor(position[1] / cell_dim[1])),
+      static_cast<int>(std::floor(position[2] / cell_dim[2]))};
 
   return cellCoordToIndex(cellCoords);
 }
 
 inline std::size_t LinkedCellsContainer::cellCoordToIndex(
     const ivec3 position) const {
-  return (position[0] + 1) * (cellCount[1] * cellCount[2]) +
-         (position[1] + 1) * cellCount[2] + (position[2] + 1);
+  return (position[0] + 1) * (cell_count[1] * cell_count[2]) +
+         (position[1] + 1) * (cell_count[2]) + (position[2] + 1);
 }
 
 inline ivec3 LinkedCellsContainer::cellIndexToCoord(
     std::size_t cellIndex) const {
-  const int x = static_cast<int>(cellIndex / (cellCount[1] * cellCount[2]));
-  cellIndex = cellIndex - (x * cellCount[1] * cellCount[2]);
+  const int x = static_cast<int>(cellIndex / (cell_count[1] * cell_count[2]));
+  cellIndex = cellIndex - (x * cell_count[1] * cell_count[2]);
 
-  const int y = static_cast<int>(cellIndex / cellCount[2]);
-  const int z = static_cast<int>(cellIndex - (y * cellCount[2]));
+  const int y = static_cast<int>(cellIndex / cell_count[2]);
+  const int z = static_cast<int>(cellIndex - (y * cell_count[2]));
 
   return {x - 1, y - 1, z - 1};
 }
 
 inline bool LinkedCellsContainer::isValidCellCoordinate(
     const ivec3 coordinate) const {
-  return (-1 <= coordinate[0] && coordinate[0] <= (cellCount[0] - 2)) &&
-         (-1 <= coordinate[1] && coordinate[1] <= (cellCount[1] - 2)) &&
-         (-1 <= coordinate[2] && coordinate[2] <= (cellCount[2] - 2));
+  return (-1 <= coordinate[0] && coordinate[0] <= (cell_count[0] - 2)) &&
+         (-1 <= coordinate[1] && coordinate[1] <= (cell_count[1] - 2)) &&
+         (-1 <= coordinate[2] && coordinate[2] <= (cell_count[2] - 2));
 }
 
 inline bool LinkedCellsContainer::isHalo(const ivec3 cellCoord) const {
   return cellCoord[0] == -1 || cellCoord[1] == -1 || cellCoord[2] == -1 ||
-         cellCoord[0] == (cellCount[0] - 2) ||
-         cellCoord[1] == (cellCount[1] - 2) ||
-         cellCoord[2] == (cellCount[2] - 2);
+         cellCoord[0] == (cell_count[0] - 2) ||
+         cellCoord[1] == (cell_count[1] - 2) ||
+         cellCoord[2] == (cell_count[2] - 2);
 }
 
 inline bool LinkedCellsContainer::isHalo(const std::size_t cellIndex) const {
@@ -272,9 +371,9 @@ inline bool LinkedCellsContainer::isHalo(const std::size_t cellIndex) const {
 
 inline bool LinkedCellsContainer::isBoundary(const ivec3 cellCoord) const {
   return (cellCoord[0] == 0 || cellCoord[1] == 0 || cellCoord[2] == 0 ||
-          cellCoord[0] == (cellCount[0] - 3) ||
-          cellCoord[1] == (cellCount[1] - 3) ||
-          cellCoord[2] == (cellCount[2] - 3)) &&
+          cellCoord[0] == (cell_count[0] - 3) ||
+          cellCoord[1] == (cell_count[1] - 3) ||
+          cellCoord[2] == (cell_count[2] - 3)) &&
          !isHalo(cellCoord);
 }
 
@@ -282,4 +381,62 @@ inline bool LinkedCellsContainer::isBoundary(
     const std::size_t cellIndex) const {
   const ivec3 cellCoord = cellIndexToCoord(cellIndex);
   return isBoundary(cellCoord);
+}
+
+std::vector<std::size_t> LinkedCellsContainer::halo_direction(
+    const std::size_t cellIndex) const {
+  if (!isHalo(cellIndex)) return {};
+
+  std::vector<std::size_t> directions = {};
+  const ivec3 cellCoord = cellIndexToCoord(cellIndex);
+
+  if (cellCoord[0] == -1) {
+    directions.push_back(0);  // west
+  }
+  if (cellCoord[0] == (cell_count[0] - 2)) {
+    directions.push_back(1);  // east
+  }
+  if (cellCoord[1] == -1) {
+    directions.push_back(2);  // down
+  }
+  if (cellCoord[1] == (cell_count[1] - 2)) {
+    directions.push_back(3);  // up
+  }
+  if (cellCoord[2] == -1) {
+    directions.push_back(4);  // south
+  }
+  if (cellCoord[2] == (cell_count[2] - 2)) {
+    directions.push_back(5);  // north
+  }
+
+  return directions;
+}
+
+std::vector<std::size_t> LinkedCellsContainer::boundary_direction(
+    const std::size_t cellIndex) const {
+  if (!isBoundary(cellIndex)) return {};
+
+  std::vector<std::size_t> directions = {};
+  const ivec3 cellCoord = cellIndexToCoord(cellIndex);
+
+  if (cellCoord[0] == 0) {
+    directions.push_back(0);  // west
+  }
+  if (cellCoord[0] == (cell_count[0] - 3)) {
+    directions.push_back(1);  // east
+  }
+  if (cellCoord[1] == 0) {
+    directions.push_back(2);  // down
+  }
+  if (cellCoord[1] == (cell_count[1] - 3)) {
+    directions.push_back(3);  // up
+  }
+  if (cellCoord[2] == 0) {
+    directions.push_back(4);  // south
+  }
+  if (cellCoord[2] == (cell_count[2] - 3)) {
+    directions.push_back(5);  // north
+  }
+
+  return directions;
 }

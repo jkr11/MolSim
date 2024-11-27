@@ -4,11 +4,16 @@
 #include <vector>
 
 #include "defs/Particle.h"
+#include "defs/Simulation.h"
 #include "defs/containers/ParticleContainer.h"
 
+/**
+ * @brief a particle container with linked cells
+ */
 class LinkedCellsContainer final : public ParticleContainer {
  private:
   /**
+   * @brief
    * x is left - right
    * y is up - down
    * z is back - front
@@ -17,14 +22,62 @@ class LinkedCellsContainer final : public ParticleContainer {
    */
   std::vector<std::vector<Particle>> cells;
 
-  // number of cells for domain + 2 (halo)
-  ivec3 cellCount{};
-  // cell dimensions
-  ivec3 cellDim{};
-  // cutoff distance
+  /**
+   * @brief
+   * stores the indexes of all halo_cells for faster iteration in the
+   * corresponding direction vector
+   */
+  std::array<std::vector<std::size_t>, 6> halo_direction_cells;
+
+  /**
+   * @brief
+   * stores the indexes of all halo_cells for faster iteration in the
+   * corresponding direction vector
+   */
+  std::array<std::vector<std::size_t>, 6> boundary_direction_cells;
+
+  /**
+   * @brief
+   * a more processing friendly storage of LinkedCellsConfig::BoundaryConfig
+   */
+  std::array<LinkedCellsConfig::BoundaryType, 6> boundaries{};
+
+  /**
+   * @brief
+   * number of cells for domain + 2 (halo)
+   */
+  ivec3 cell_count{};
+
+  /**
+   * @brief
+   * cell dimensions
+   */
+  ivec3 cell_dim{};
+
+  /**
+   * @brief
+   * cutoff radius
+   */
   double cutoff{};
 
+  /**
+   * @brief
+   * the domain of the container
+   */
+  ivec3 domain{};
+
+  /**
+   * @brief
+   * the boundary config of each direction of the simulation
+   */
+  LinkedCellsConfig::BoundaryConfig boundary_config{};
+
  public:
+  /**
+   * 6th root of 2
+   */
+  static const double sigma_factor;
+
   /**
    * Empty constructor
    */
@@ -33,10 +86,9 @@ class LinkedCellsContainer final : public ParticleContainer {
   /**
    * @brief Constructs a ParticleContainer which is implemented using
    * linkedCells
-   * @param domain Domain of the container
-   * @param cutoff maximum distance between valid particle pairs
+   * @param linked_cells_config configuration struct of the simulation
    */
-  explicit LinkedCellsContainer(const ivec3& domain, double cutoff);
+  explicit LinkedCellsContainer(const LinkedCellsConfig& linked_cells_config);
 
   /**
    * @brief Destructor
@@ -77,7 +129,7 @@ class LinkedCellsContainer final : public ParticleContainer {
   [[nodiscard]] std::size_t size() const override;
 
   /**
-   * @brief Impose the invarient, that the particles are spatially sorted into
+   * @brief Impose the invariant, that the particles are spatially sorted into
    * the correct vectors
    */
   void imposeInvariant() override;
@@ -116,13 +168,13 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @brief Get the amount of cells in each dimension
    * @return ivec3 of cells in each dimension
    */
-  [[nodiscard]] std::array<int, 3> getCellCount() const { return cellCount; }
+  [[nodiscard]] std::array<int, 3> getCellCount() const { return cell_count; }
 
   /**
    * @brief Get the dimensions of a all cells in the container
    * @return dvec3 of the dimensions of all cells
    */
-  [[nodiscard]] ivec3 getCellDim() const { return cellDim; }
+  [[nodiscard]] ivec3 getCellDim() const { return cell_dim; }
 
   /**
    * @brief Gets the cell index of a position
@@ -181,6 +233,37 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @return If cell is part of the boundary
    */
   [[nodiscard]] inline bool isBoundary(std::size_t cellIndex) const;
+
+  /**
+   * @brief calculates all directions of the halo cell
+   *  empty: no halo cell
+   *  0: west | low x
+   *  1: east | high x
+   *  2: down | low y
+   *  3: up | high y
+   *  4: south | low z
+   *  5: north | high z
+   * @param cellIndex cell index to be checked
+   * @return the direction of the halo cell
+   */
+  [[nodiscard]] std::vector<std::size_t> halo_direction(
+      std::size_t cellIndex) const;
+
+  /**
+   * @brief calculates all directions of the boundary cell
+   *
+   *  empty: no boundary cell
+   *  0: west
+   *  1: east
+   *  2: down
+   *  3: up
+   *  4: south
+   *  5: north
+   * @param cellIndex cell index to be checked
+   * @return the directions of the boundary cell
+   */
+  [[nodiscard]] std::vector<std::size_t> boundary_direction(
+      std::size_t cellIndex) const;
 
   /**
    * @brief Debug method to get direct access to the cells vector
