@@ -86,11 +86,11 @@ inline std::size_t FlattenedLinkedCellsContainer::dvec3ToCellIndex(
 }
 
 inline std::size_t FlattenedLinkedCellsContainer::cellCoordToIndex(
-    const std::array<int, 3> position) const {
+    const ivec3 position) const {
   // TODO
 }
 
-inline std::array<int, 3> FlattenedLinkedCellsContainer::cellIndexToCoord(
+inline ivec3 FlattenedLinkedCellsContainer::cellIndexToCoord(
     std::size_t cellIndex) const {
   // TODO
 }

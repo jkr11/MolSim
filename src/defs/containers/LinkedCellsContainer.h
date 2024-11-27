@@ -18,7 +18,7 @@ class LinkedCellsContainer final : public ParticleContainer {
   std::vector<std::vector<Particle>> cells;
 
   // number of cells for domain + 2 (halo)
-  std::array<int, 3> cellCount{};
+  ivec3 cellCount{};
   // cell dimensions
   ivec3 cellDim{};
   // cutoff distance
@@ -27,7 +27,6 @@ class LinkedCellsContainer final : public ParticleContainer {
  public:
   /**
    * Empty constructor
-   * TODO: why does this even exist?
    */
   LinkedCellsContainer() = default;
 
@@ -47,18 +46,21 @@ class LinkedCellsContainer final : public ParticleContainer {
   /**
    * @brief Add a particle to the container
    * @param p Particle to be added
+   * @note Does not impose the invariant automatically!
    */
   void addParticle(const Particle& p) override;
 
   /**
    * @brief Add a vector of particles to the container
    * @param particles Particles to be added
+   * @note Does not impose the invariant automatically!
    */
   void addParticles(const std::vector<Particle>& particles) override;
 
   /**
    * @brief Remove a particle from the container
    * @param p Particle to be removed
+   * @note Does not impose the invariant automatically!
    */
   void removeParticle(const Particle& p) override;
 
@@ -143,8 +145,7 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @param cellIndex Index of the cell
    * @return Cell coodinate in 3 dimensions
    */
-  [[nodiscard]] inline std::array<int, 3> cellIndexToCoord(
-      std::size_t cellIndex) const;
+  [[nodiscard]] inline ivec3 cellIndexToCoord(std::size_t cellIndex) const;
 
   /**
    * @brief Checks if a cell coordinate exists in the container

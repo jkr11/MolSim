@@ -29,6 +29,7 @@ class VerletIntegrator final : public Integrator {
    * @brief Advance particle-system by one time-step.
    * @note Update order: \n
    *   1) Particle positions \n
+   *   1.5) impose Invariant if LinkedCells \n
    *   2) Intra particular forces \n
    *   3) Particle velocities \n
    *

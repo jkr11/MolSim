@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:noNamespaceSchemaLocation="input.xsd">
+    <metadata>
+        <container>
+            <directSum/>
+        </container>
+        <force>
+            <Gravity/>
+        </force>
+        <delta_t>0.014</delta_t>
+        <t_end>1000</t_end>
+        <twoD>true</twoD>
+    </metadata>
     <cuboids>
         <cuboid>
             <velocity>
@@ -24,6 +35,7 @@
             <epsilon>0.0</epsilon>
             <sigma>0.0</sigma>
             <mv>0.0</mv>
+            <!--<twoD>false</twoD>-->
         </cuboid>
         <cuboid>
             <velocity>
@@ -47,6 +59,7 @@
             <epsilon>0.0</epsilon>
             <sigma>0.0</sigma>
             <mv>0.0</mv>
+            <!--<twoD>false</twoD>-->
         </cuboid>
         <cuboid>
             <velocity>
@@ -70,6 +83,7 @@
             <epsilon>0.0</epsilon>
             <sigma>0.0</sigma>
             <mv>0.0</mv>
+            <!--<twoD>false</twoD>-->
         </cuboid>
         <cuboid>
             <velocity>
@@ -93,6 +107,7 @@
             <epsilon>0.0</epsilon>
             <sigma>0.0</sigma>
             <mv>0.0</mv>
+            <!--<twoD>false</twoD>-->
         </cuboid>
     </cuboids>
 </simulation>

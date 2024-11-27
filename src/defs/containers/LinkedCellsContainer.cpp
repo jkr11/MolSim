@@ -15,6 +15,7 @@
 
 LinkedCellsContainer::LinkedCellsContainer(const ivec3 &domain,
                                            const double cutoff) {
+  DEBUG_PRINT("LinkedCellsContainer instantiated");
   SpdWrapper::get()->info("domain size: ({}, {}, {})", domain[0], domain[1],
                           domain[2]);
 
@@ -69,7 +70,10 @@ void LinkedCellsContainer::removeParticle(const Particle &p) {
 }
 
 std::vector<Particle *> LinkedCellsContainer::getParticles() {
-  // TODO
+  std::vector<Particle *> res;
+  singleIterator([&res](Particle &p) { res.push_back(&p); });
+
+  return res;
 }
 
 [[nodiscard]] std::size_t LinkedCellsContainer::size() const {
@@ -134,16 +138,22 @@ void LinkedCellsContainer::pairIterator(
   for (std::size_t cellIndex = 0; cellIndex < cells.size(); cellIndex++) {
     std::vector<Particle> &cellParticles = cells[cellIndex];
 
+    if (cellParticles.empty()) continue;
+
     ivec3 cellCoordinate = cellIndexToCoord(cellIndex);
     DEBUG_PRINT_FMT("cell index: {}; coord = ({}, {}, {}); halo? = {}",
                     cellIndex, cellCoordinate[0], cellCoordinate[1],
                     cellCoordinate[2], isHalo(cellIndex));
 
-    if (cellParticles.empty()) continue;
-
     // iterate over particles inside cell
+
     for (std::size_t i = 0; i < cellParticles.size(); ++i) {
       for (std::size_t j = i + 1; j < cellParticles.size(); ++j) {
+        const dvec3 p = cellParticles[i].getX();
+        const dvec3 q = cellParticles[j].getX();
+        if (dvec3 d = {p[0] - q[0], p[1] - q[1], p[2] - q[2]};
+            d[0] * d[0] + d[1] * d[1] + d[2] * d[2] > cutoff * cutoff)
+          continue;
         f(cellParticles[i], cellParticles[j]);
         DEBUG_PRINT_FMT("Intra cell pair: ({}, {})", cellParticles[i].getType(),
                         cellParticles[j].getType());
@@ -225,12 +235,12 @@ inline std::size_t LinkedCellsContainer::dvec3ToCellIndex(
 }
 
 inline std::size_t LinkedCellsContainer::cellCoordToIndex(
-    const std::array<int, 3> position) const {
+    const ivec3 position) const {
   return (position[0] + 1) * (cellCount[1] * cellCount[2]) +
-         (position[1] + 1) * (cellCount[2]) + (position[2] + 1);
+         (position[1] + 1) * cellCount[2] + (position[2] + 1);
 }
 
-inline std::array<int, 3> LinkedCellsContainer::cellIndexToCoord(
+inline ivec3 LinkedCellsContainer::cellIndexToCoord(
     std::size_t cellIndex) const {
   const int x = static_cast<int>(cellIndex / (cellCount[1] * cellCount[2]));
   cellIndex = cellIndex - (x * cellCount[1] * cellCount[2]);

@@ -624,8 +624,8 @@ class Cells;
  */
 class DataArrayList_t
     : public ::xml_schema::simple_type,
-      public ::xsd::cxx::tree::list< ::xml_schema::decimal, char,
-                                     ::xsd::cxx::tree::schema_type::decimal> {
+      public ::xsd::cxx::tree::list<::xml_schema::decimal, char,
+                                    ::xsd::cxx::tree::schema_type::decimal> {
  public:
   /**
    * @brief Default constructor.
@@ -655,8 +655,8 @@ class DataArrayList_t
    */
   template <typename I>
   DataArrayList_t(const I& begin, const I& end)
-      : ::xsd::cxx::tree::list< ::xml_schema::decimal, char,
-                                ::xsd::cxx::tree::schema_type::decimal>(
+      : ::xsd::cxx::tree::list<::xml_schema::decimal, char,
+                               ::xsd::cxx::tree::schema_type::decimal>(
             begin, end, this) {}
 
   /**
@@ -2892,7 +2892,7 @@ class Cells : public ::xml_schema::type {
  *
  * This function uses exceptions to report parsing errors.
  */
-::std::unique_ptr< ::VTKFile_t> VTKFile(
+::std::unique_ptr<::VTKFile_t> VTKFile(
     const ::std::string& uri, ::xml_schema::flags f = 0,
     const ::xml_schema::properties& p = ::xml_schema::properties());
 
@@ -2907,7 +2907,7 @@ class Cells : public ::xml_schema::type {
  *
  * This function reports parsing errors by calling the error handler.
  */
-::std::unique_ptr< ::VTKFile_t> VTKFile(
+::std::unique_ptr<::VTKFile_t> VTKFile(
     const ::std::string& uri, ::xml_schema::error_handler& eh,
     ::xml_schema::flags f = 0,
     const ::xml_schema::properties& p = ::xml_schema::properties());
@@ -2924,7 +2924,7 @@ class Cells : public ::xml_schema::type {
  *
  * This function reports parsing errors by calling the error handler.
  */
-::std::unique_ptr< ::VTKFile_t> VTKFile(
+::std::unique_ptr<::VTKFile_t> VTKFile(
     const ::std::string& uri, ::xercesc::DOMErrorHandler& eh,
     ::xml_schema::flags f = 0,
     const ::xml_schema::properties& p = ::xml_schema::properties());
@@ -2939,7 +2939,7 @@ class Cells : public ::xml_schema::type {
  *
  * This function uses exceptions to report parsing errors.
  */
-::std::unique_ptr< ::VTKFile_t> VTKFile(
+::std::unique_ptr<::VTKFile_t> VTKFile(
     ::std::istream& is, ::xml_schema::flags f = 0,
     const ::xml_schema::properties& p = ::xml_schema::properties());
 
@@ -2954,7 +2954,7 @@ class Cells : public ::xml_schema::type {
  *
  * This function reports parsing errors by calling the error handler.
  */
-::std::unique_ptr< ::VTKFile_t> VTKFile(
+::std::unique_ptr<::VTKFile_t> VTKFile(
     ::std::istream& is, ::xml_schema::error_handler& eh,
     ::xml_schema::flags f = 0,
     const ::xml_schema::properties& p = ::xml_schema::properties());
@@ -2971,7 +2971,7 @@ class Cells : public ::xml_schema::type {
  *
  * This function reports parsing errors by calling the error handler.
  */
-::std::unique_ptr< ::VTKFile_t> VTKFile(
+::std::unique_ptr<::VTKFile_t> VTKFile(
     ::std::istream& is, ::xercesc::DOMErrorHandler& eh,
     ::xml_schema::flags f = 0,
     const ::xml_schema::properties& p = ::xml_schema::properties());
@@ -2990,7 +2990,7 @@ class Cells : public ::xml_schema::type {
  *
  * This function uses exceptions to report parsing errors.
  */
-::std::unique_ptr< ::VTKFile_t> VTKFile(
+::std::unique_ptr<::VTKFile_t> VTKFile(
     ::std::istream& is, const ::std::string& id, ::xml_schema::flags f = 0,
     const ::xml_schema::properties& p = ::xml_schema::properties());
 
@@ -3010,7 +3010,7 @@ class Cells : public ::xml_schema::type {
  *
  * This function reports parsing errors by calling the error handler.
  */
-::std::unique_ptr< ::VTKFile_t> VTKFile(
+::std::unique_ptr<::VTKFile_t> VTKFile(
     ::std::istream& is, const ::std::string& id,
     ::xml_schema::error_handler& eh, ::xml_schema::flags f = 0,
     const ::xml_schema::properties& p = ::xml_schema::properties());
@@ -3031,7 +3031,7 @@ class Cells : public ::xml_schema::type {
  *
  * This function reports parsing errors by calling the error handler.
  */
-::std::unique_ptr< ::VTKFile_t> VTKFile(
+::std::unique_ptr<::VTKFile_t> VTKFile(
     ::std::istream& is, const ::std::string& id, ::xercesc::DOMErrorHandler& eh,
     ::xml_schema::flags f = 0,
     const ::xml_schema::properties& p = ::xml_schema::properties());
@@ -3046,7 +3046,7 @@ class Cells : public ::xml_schema::type {
  *
  * This function uses exceptions to report parsing errors.
  */
-::std::unique_ptr< ::VTKFile_t> VTKFile(
+::std::unique_ptr<::VTKFile_t> VTKFile(
     ::xercesc::InputSource& is, ::xml_schema::flags f = 0,
     const ::xml_schema::properties& p = ::xml_schema::properties());
 
@@ -3061,7 +3061,7 @@ class Cells : public ::xml_schema::type {
  *
  * This function reports parsing errors by calling the error handler.
  */
-::std::unique_ptr< ::VTKFile_t> VTKFile(
+::std::unique_ptr<::VTKFile_t> VTKFile(
     ::xercesc::InputSource& is, ::xml_schema::error_handler& eh,
     ::xml_schema::flags f = 0,
     const ::xml_schema::properties& p = ::xml_schema::properties());
@@ -3078,7 +3078,7 @@ class Cells : public ::xml_schema::type {
  *
  * This function reports parsing errors by calling the error handler.
  */
-::std::unique_ptr< ::VTKFile_t> VTKFile(
+::std::unique_ptr<::VTKFile_t> VTKFile(
     ::xercesc::InputSource& is, ::xercesc::DOMErrorHandler& eh,
     ::xml_schema::flags f = 0,
     const ::xml_schema::properties& p = ::xml_schema::properties());
@@ -3091,7 +3091,7 @@ class Cells : public ::xml_schema::type {
  * @param p Parsing properties.
  * @return A pointer to the root of the object model.
  */
-::std::unique_ptr< ::VTKFile_t> VTKFile(
+::std::unique_ptr<::VTKFile_t> VTKFile(
     const ::xercesc::DOMDocument& d, ::xml_schema::flags f = 0,
     const ::xml_schema::properties& p = ::xml_schema::properties());
 
@@ -3107,8 +3107,8 @@ class Cells : public ::xml_schema::type {
  * own_dom parsing flags to assign ownership of the DOM document
  * to the object model.
  */
-::std::unique_ptr< ::VTKFile_t> VTKFile(
-    ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument> d,
+::std::unique_ptr<::VTKFile_t> VTKFile(
+    ::xml_schema::dom::unique_ptr<::xercesc::DOMDocument> d,
     ::xml_schema::flags f = 0,
     const ::xml_schema::properties& p = ::xml_schema::properties());
 
@@ -3277,7 +3277,7 @@ void VTKFile(::xercesc::DOMDocument& d, const ::VTKFile_t& x,
  * @param f Serialization flags.
  * @return A pointer to the new Xerces-C++ DOM document.
  */
-::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument> VTKFile(
+::xml_schema::dom::unique_ptr<::xercesc::DOMDocument> VTKFile(
     const ::VTKFile_t& x,
     const ::xml_schema::namespace_infomap& m =
         ::xml_schema::namespace_infomap(),

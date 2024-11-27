@@ -28,6 +28,11 @@ target_link_libraries(MolSimLib
 target_compile_features(MolSimLib
         PUBLIC cxx_std_17
 )
+#target_compile_options(MolSimLib
+#        PRIVATE
+#        $<$<CXX_COMPILER_ID:GNU>: -w>
+#        $<$<CXX_COMPILER_ID:Clang>: -w>
+#)
 
 target_include_directories(MolSimLib PUBLIC
         ${libxsd_SOURCE_DIR}
@@ -45,14 +50,6 @@ add_executable(MolSim MolSim.cpp
         defs/Generators/SpheroidGenerator.h
         defs/Generators/SpheroidGenerator.cpp
 )
-target_link_libraries(MolSim PUBLIC MolSimLib)
-
-target_compile_options(MolSimLib
-        PUBLIC
-        $<$<CXX_COMPILER_ID:GNU>:-Wall>
-        # disable some spam warnings for icpc...
-        $<$<CXX_COMPILER_ID:Intel>:-w3 -wd383,981,1418,1572,2259>
-)
 
 set(FILES_TO_DISABLE_WARNINGS
         io/file/in/xml/input.cxx
@@ -63,3 +60,14 @@ set_source_files_properties(${FILES_TO_DISABLE_WARNINGS}
         PROPERTIES
         COMPILE_OPTIONS "-w"
 )
+
+target_link_libraries(MolSim PUBLIC MolSimLib)
+
+target_compile_options(MolSimLib
+        PUBLIC
+        $<$<CXX_COMPILER_ID:GNU>:-Wall -Wno-nan-infinity-disabled>
+        $<$<CXX_COMPILER_ID:Clang>:-Wall -Wno-nan-infinity-disabled>
+        # disable some spam warnings for icpc...
+        $<$<CXX_COMPILER_ID:Intel>:-w3 -wd383,981,1418,1572,2259>
+)
+

@@ -6,7 +6,7 @@
 #include "defs/Particle.h"
 #include "defs/containers/ParticleContainer.h"
 
-class DirectSumContainer : public ParticleContainer {
+class DirectSumContainer final : public ParticleContainer {
  private:
   std::vector<Particle> particles;
 
@@ -58,15 +58,15 @@ class DirectSumContainer : public ParticleContainer {
   [[nodiscard]] std::size_t size() const override;
 
   /**
-   * @brief Impose the invarient, that the particles are spatially sorted into
-   * the correct vectors
+   * @brief Impose the invariant, that the particles are spatially sorted into
+   * the correct vectors.
+   * @note as this is a directSum container, this does nothing
    */
   void imposeInvariant() override;
 
   /**
    * @brief Single iterator over all particles in the container
    * @param f Function to be applied
-   * @note Does not impose the invariant automatically!
    */
   void singleIterator(const std::function<void(Particle&)>& f) override;
 
@@ -74,7 +74,6 @@ class DirectSumContainer : public ParticleContainer {
    * @brief Pair iterator over all distinct particle pairs in the container with
    * distance <= cutoff
    * @param f Function to be applied
-   * @note Does not impose the invariant automatically!
    */
   void pairIterator(
       const std::function<void(Particle&, Particle&)>& f) override;
