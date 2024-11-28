@@ -32,8 +32,8 @@ LinkedCellsContainer::LinkedCellsContainer(
                 std::max(static_cast<int>(std::floor(domain[2] / cutoff)), 1)};
 
   cell_dim = {static_cast<double>(domain[0]) / cell_count[0],
-            static_cast<double>(domain[1]) / cell_count[1],
-            static_cast<double>(domain[2]) / cell_count[2]};
+              static_cast<double>(domain[1]) / cell_count[1],
+              static_cast<double>(domain[2]) / cell_count[2]};
 
   // add 2 for halo
   cell_count = {cell_count[0] + 2, cell_count[1] + 2, cell_count[2] + 2};
@@ -50,7 +50,6 @@ LinkedCellsContainer::LinkedCellsContainer(
   for (std::size_t cell_index = 0; cell_index < cells.size(); ++cell_index) {
     auto halo_directions = halo_direction(cell_index);
     auto boundary_directions = boundary_direction(cell_index);
-
 
     if (!halo_directions.empty()) {
       for (const unsigned long halo_direction : halo_directions) {
@@ -140,8 +139,8 @@ void LinkedCellsContainer::imposeInvariant() {
   // apply boundary condition
   // it is assumed that GhostParticles do not have to persist, so we dont have
   // to iterate over the halo cells of Reflective Boundaries
-  // TODO: this is heavily inefficient in 2D if 6 is used, make dimension accessible, 4
-  // instead of 6
+  // TODO: this is heavily inefficient in 2D if 6 is used, make dimension
+  // accessible, 4 instead of 6
 
   // clear halo, 4 hardcoded due to 2D simulation
   // should not be needed to perform on Reflective Boundaries, but in case of an
@@ -150,9 +149,12 @@ void LinkedCellsContainer::imposeInvariant() {
     for (const size_t cell_index : halo_direction_cells[dimension]) {
       if (!cells[cell_index].empty()) {
         ivec3 cellcoord = cellIndexToCoord(cell_index);
-        SpdWrapper::get()->info("Deleting particle in cell [{}, {}, {}]", cellcoord[0], cellcoord[1], cellcoord[2]);
-        for (const auto& p : cells[cell_index]) {
-          SpdWrapper::get()->info("\tat [{}, {}, {}] with v=[{}, {}, {}]", p.getX()[0], p.getX()[1], p.getX()[2], p.getV()[0], p.getV()[1], p.getV()[2]);
+        SpdWrapper::get()->info("Deleting particle in cell [{}, {}, {}]",
+                                cellcoord[0], cellcoord[1], cellcoord[2]);
+        for (const auto &p : cells[cell_index]) {
+          SpdWrapper::get()->info("\tat [{}, {}, {}] with v=[{}, {}, {}]",
+                                  p.getX()[0], p.getX()[1], p.getX()[2],
+                                  p.getV()[0], p.getV()[1], p.getV()[2]);
         }
       }
       cells[cell_index].clear();
@@ -162,7 +164,6 @@ void LinkedCellsContainer::imposeInvariant() {
   for (size_t dimension = 0; dimension < 4; ++dimension) {
     switch (boundaries[dimension]) {
       case LinkedCellsConfig::BoundaryType::Outflow: {
-
         break;
       }
       case LinkedCellsConfig::BoundaryType::Reflective: {
@@ -196,10 +197,12 @@ void LinkedCellsContainer::imposeInvariant() {
                   force *
                   std::pow(
                       -1.0,
-                      1 - problematic_dimension_direction);  // invert the direction
-                                                         // for boundary in
-                                                         // ascending coordinate
-                                                         // direction
+                      1 - problematic_dimension_direction);  // invert the
+                                                             // direction for
+                                                             // boundary in
+                                                             // ascending
+                                                             // coordinate
+                                                             // direction
               p.setF(p_force);
               DEBUG_PRINT_FMT(
                   "Applied Force=[{}, {}, {}] to Particle at [{}, {}, {}]",
