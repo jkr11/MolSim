@@ -87,7 +87,7 @@ int main(const int argc, char* argv[]) {
   const auto start_time = std::chrono::high_resolution_clock::now();
   while (current_time <= arguments.t_end) {
     verlet_integrator.step(*container);
-    /*
+#ifndef BENCHMARK
     if (current_time >= next_output_time) {
       plotParticles(outputDirectory, iteration, writer, *container);
       writes++;
@@ -111,7 +111,7 @@ int main(const int argc, char* argv[]) {
       }
 
     }
-    */
+#endif
     iteration++;
     current_time = arguments.delta_t * iteration;
   }

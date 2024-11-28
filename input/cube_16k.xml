@@ -5,9 +5,9 @@
         <container>
             <linkedCells>
                 <domain>
-                    <x>300</x>
-                    <y>300</y>
-                    <z>1</z>
+                    <x>30</x>
+                    <y>30</y>
+                    <z>30</z>
                 </domain>
                 <r_cutoff>3.0</r_cutoff>
                 <boundary>
@@ -37,7 +37,7 @@
         </force>
         <delta_t>0.0005</delta_t>
         <t_end>1</t_end>
-        <twoD>true</twoD>
+        <twoD>false</twoD>
     </metadata>
     <cuboids>
         <cuboid>
@@ -52,9 +52,9 @@
                 <z>0</z>
             </corner>
             <dimensions>
-                <x>126</x>
-                <y>126</y>
-                <z>1</z>
+                <x>25</x>
+                <y>25</y>
+                <z>25</z>
             </dimensions>
             <type>1</type>
             <h>1.1225</h>

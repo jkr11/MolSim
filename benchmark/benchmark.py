@@ -79,7 +79,7 @@ def run_and_plot(a_values):
              marker='o',
              label="Execution Time LinkedCells")
     plt.title(
-        "Execution Time vs number of particles running on Intel i7 13700H, 32Gb")
+        "Execution Time vs number of particles running on Intel i7 13700H, 32Gb with domain=(300,300,1) and $r_cutoff = 3.0")
     plt.xlabel("Particles")
     plt.ylabel("Execution Time (seconds)")
     #plt.xscale('log',base=2)
@@ -110,5 +110,5 @@ def run_and_plot_lc(a_values):
     plt.show()
 
 
-# run_and_plot_lc([1, 2, 4, 8, 16])
-run_and_plot([1,2,4,8])
+run_and_plot_lc([1, 2, 4, 8, 16, 32])
+# run_and_plot([1,2,4,8])
