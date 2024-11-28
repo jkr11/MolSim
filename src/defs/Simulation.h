@@ -8,6 +8,7 @@
 
 #include <variant>
 
+#include "Generators/ParticleGenerator.h"
 #include "defs/types.h"
 #include "utils/SpdWrapper.h"
 
@@ -80,7 +81,7 @@ struct Arguments {
   double delta_t;
   enum ForceType { LennardJones, Gravity } force_type;
   std::variant<LinkedCellsConfig, DirectSumConfig> container_data;
-  std::vector<GeneratorConfig> generator_configs;
+  std::vector<std::unique_ptr<ParticleGenerator>> generator_configs;
 };
 
 /**

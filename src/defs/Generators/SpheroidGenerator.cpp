@@ -44,7 +44,7 @@ void SpheroidGenerator::generate(std::vector<Particle>& particles) {
   } else {
     size = static_cast<int>(0.75 * M_PI * std::pow(radius, 3));
   }
-  particles.reserve(size);
+  particles.reserve(particles.size() + size);
   DEBUG_PRINT("Reserved " + std::to_string(size));
   for (int i = -radius; i <= radius; i++) {
     for (int j = -radius; j <= radius; j++) {

@@ -7,6 +7,7 @@
 #include <filesystem>
 
 #include "debug/debug_print.h"
+#include "defs/Generators/CuboidGenerator.h"
 #include "defs/Generators/SpheroidGenerator.h"
 #include "defs/types.h"
 #include "input.hxx"
@@ -80,7 +81,7 @@ void XmlReader::read(std::vector<Particle>& particles,
             unwrapVec<const Ivec3Type&, ivec3>(_dimensions, "dimensions");
         const dvec3 velocity =
             unwrapVec<const Dvec3Type&, dvec3>(_velocity, "velocity");
-
+        /*
         CuboidConfig cuboid_config = {.left_corner = corner,
                                       .dimensions = dimensions,
                                       .initial_velocity = velocity,
@@ -92,11 +93,12 @@ void XmlReader::read(std::vector<Particle>& particles,
                                       .type = cubes.type(),
                                       .twoD = twoD};
         simulation_parameters.generator_configs.emplace_back(cuboid_config);
-
-        // CuboidGenerator cg(corner, dimensions, cubes.h(), cubes.mass(),
-        //                   velocity, cubes.mv(), cubes.epsilon(),
-        //                   cubes.sigma(), cubes.type(), twoD);
-
+        */
+        CuboidGenerator cg(corner, dimensions, cubes.h(), cubes.mass(),
+                           velocity, cubes.mv(), cubes.epsilon(), cubes.sigma(),
+                           cubes.type(), twoD);
+        simulation_parameters.generator_configs.emplace_back(
+            std::make_unique<CuboidGenerator>(cg));
         // cg.generate(particles);
       }
     }
@@ -108,6 +110,7 @@ void XmlReader::read(std::vector<Particle>& particles,
         const dvec3 origin = {_origin.x(), _origin.y(), _origin.z()};
         const dvec3 velocity = {_velocity.x(), _velocity.y(), _velocity.z()};
 
+        /*
         SphereoidConfig sphereoid_config = {
             .origin = origin,
             .radius = static_cast<double>(spheres.radius()),
@@ -119,12 +122,13 @@ void XmlReader::read(std::vector<Particle>& particles,
             .type = spheres.type(),
             .twoD = twoD};
 
-        simulation_parameters.generator_configs.emplace_back(sphereoid_config);
-
-        // SpheroidGenerator sg(origin, spheres.radius(), spheres.h(),
-        //                     spheres.mass(), velocity, spheres.epsilon(),
-        //                     spheres.sigma(), spheres.type(), twoD);
-
+        simulation_parameters.generator_configs.emplace_back(spheroid_config);
+        */
+        SpheroidGenerator sg(origin, spheres.radius(), spheres.h(),
+                             spheres.mass(), velocity, spheres.epsilon(),
+                             spheres.sigma(), spheres.type(), twoD);
+        simulation_parameters.generator_configs.emplace_back(
+            std::make_unique<SpheroidGenerator>(sg));
         // sg.generate(particles);
       }
     }
@@ -136,7 +140,7 @@ void XmlReader::read(std::vector<Particle>& particles,
 
 using LBoundaryType =
     LinkedCellsConfig::BoundaryType;  // BoundaryType is double used by the xsd
-                                      // config files so be carefull
+                                      // config files so be careful
 template <typename BT>
 LBoundaryType toBoundaryType(const BT& boundary_type) {
   if (boundary_type.Outflow().present()) {

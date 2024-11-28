@@ -42,7 +42,7 @@ CuboidGenerator::CuboidGenerator(const dvec3 &corner,
 
 void CuboidGenerator::generate(std::vector<Particle> &particles) {
   const int size = dimensions[0] * dimensions[1] * dimensions[2];
-  particles.reserve(size);
+  particles.reserve(particles.size() + size);
   DEBUG_PRINT("reserved: " + std::to_string(size) + "particles");
 
   for (int i = 0; i < dimensions[0]; i++) {

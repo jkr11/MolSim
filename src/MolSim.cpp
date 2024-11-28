@@ -1,8 +1,6 @@
 #include <filesystem>
 
 #include "calc/VerletIntegrator.h"
-#include "defs/Generators/CuboidGenerator.h"
-#include "defs/Generators/SpheroidGenerator.h"
 #include "defs/containers/DirectSumContainer.h"
 #include "defs/containers/LinkedCellsContainer.h"
 #include "forces/Gravity.h"
@@ -50,6 +48,7 @@ int main(const int argc, char* argv[]) {
   // testing
   // TODO: i think we use visit here as there are going to be more inputs i
   // think, also variadic unions are cool i guess
+  /*
   for (const auto& generator_config : arguments.generator_configs) {
     std::visit(
         [&particles](const auto& config) {
@@ -72,22 +71,25 @@ int main(const int argc, char* argv[]) {
         },
         generator_config);
   }
+  */
+  for (const auto& generator : arguments.generator_configs) {
+    generator->generate(particles);
+  }
 
   std::unique_ptr<ParticleContainer> container;
   if (std::holds_alternative<LinkedCellsConfig>(arguments.container_data)) {
     const auto& linked_cells_data =
         std::get<LinkedCellsConfig>(arguments.container_data);
     container = std::make_unique<LinkedCellsContainer>(linked_cells_data);
-    container->addParticles(particles);
-    container->imposeInvariant();
   } else if (std::holds_alternative<DirectSumConfig>(
                  arguments.container_data)) {
     container = std::make_unique<DirectSumContainer>();
-    container->addParticles(particles);
   } else {
     SpdWrapper::get()->error("Unrecognized container type");
     throw std::runtime_error("Unrecognized container type");
   }
+  container->addParticles(particles);
+  container->imposeInvariant();
 
   std::unique_ptr<Force> force;
   if (arguments.force_type == Arguments::Gravity) {
