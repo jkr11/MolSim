@@ -5,9 +5,9 @@
         <container>
             <linkedCells>
                 <domain>
-                    <x>100</x>
-                    <y>100</y>
-                    <z>100</z>
+                    <x>300</x>
+                    <y>300</y>
+                    <z>1</z>
                 </domain>
                 <r_cutoff>3.0</r_cutoff>
                 <boundary>
@@ -35,25 +35,25 @@
         <force>
             <LennardJones/>
         </force>
-        <delta_t>0.00005</delta_t>
-        <t_end>20</t_end>
-        <twoD>false</twoD>
+        <delta_t>0.0005</delta_t>
+        <t_end>1</t_end>
+        <twoD>true</twoD>
     </metadata>
     <cuboids>
         <cuboid>
             <velocity>
                 <x>0.0</x>
-                    <y>0.0</y>
+                <y>0.0</y>
                 <z>0.0</z>
             </velocity>
             <corner>
-                <x>1</x>
-                <y>1</y>
-                <z>1</z>
+                <x>0</x>
+                <y>0</y>
+                <z>0</z>
             </corner>
             <dimensions>
-                <x>91</x>
-                <y>91</y>
+                <x>32</x>
+                <y>32</y>
                 <z>1</z>
             </dimensions>
             <type>1</type>

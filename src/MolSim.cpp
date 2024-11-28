@@ -1,4 +1,5 @@
 #include <filesystem>
+#include <iostream>
 
 #include "calc/VerletIntegrator.h"
 #include "defs/containers/DirectSumContainer.h"
@@ -14,10 +15,11 @@
 #include "spdlog/stopwatch.h"
 #include "utils/ArrayUtils.h"
 #include "utils/SpdWrapper.h"
-
+#define BENCHMARK
 int main(const int argc, char* argv[]) {
+#ifndef BENCHMARK
   SpdWrapper::get()->info("Application started");
-
+#endif
   Arguments arguments = {
       .t_end = 5,
       .delta_t = 0.0002,
@@ -82,9 +84,10 @@ int main(const int argc, char* argv[]) {
   int percentage = 0;
   double next_output_time = 0;
   spdlog::stopwatch stopwatch;
+  const auto start_time = std::chrono::high_resolution_clock::now();
   while (current_time <= arguments.t_end) {
     verlet_integrator.step(*container);
-
+    /*
     if (current_time >= next_output_time) {
       plotParticles(outputDirectory, iteration, writer, *container);
       writes++;
@@ -92,6 +95,7 @@ int main(const int argc, char* argv[]) {
       // check if next percentage complete
       if (const double t = 100 * current_time / arguments.t_end;
           t >= percentage) {
+        /Ü
         percentage++;
         auto elapsed = stopwatch.elapsed();
         auto eta = (elapsed / percentage) * 100 - elapsed;
@@ -105,11 +109,18 @@ int main(const int argc, char* argv[]) {
             "[{:.0f} %]: Iteration {:<12} | [ETA: {}:{:02}:{:02}]",
             100 * current_time / arguments.t_end, iteration, h, m, s);
       }
-    }
 
+    }
+    */
     iteration++;
     current_time = arguments.delta_t * iteration;
   }
+  const auto end_time = std::chrono::high_resolution_clock::now();
+  const std::chrono::duration<double> elapsed_time = end_time - start_time;
+#ifdef BENCHMARK
+  std::cout << "Simulation Time: " << elapsed_time.count() << " seconds"
+            << std::endl;
+#endif
   SpdWrapper::get()->info("Output written. Terminating...");
 
   return 0;
