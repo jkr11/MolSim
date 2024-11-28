@@ -36,6 +36,43 @@ struct LinkedCellsConfig {
 struct DirectSumConfig {};
 
 /**
+ * @brief input for the CuboidGenerator class
+ */
+struct CuboidConfig {
+  dvec3 left_corner;
+  ivec3 dimensions;
+  dvec3 initial_velocity;
+  double h;
+  double mass;
+  double mean_velocity;
+  double epsilon;
+  double sigma;
+  int type;
+  bool twoD;
+};
+
+/**
+ * @brief input for the sphereoidGenerator class
+ */
+struct SphereoidConfig {
+  dvec3 origin;
+  double radius;
+  dvec3 initial_velocity;
+  double h;
+  double mass;
+  double mean_velocity;
+  double epsilon;
+  double sigma;
+  int type;
+  bool twoD;
+};
+
+/**
+ * @brief extensible type for holding the input shapes
+ */
+using GeneratorConfig = std::variant<CuboidConfig, SphereoidConfig>;
+
+/**
  * @brief struct to hold command line arguments
  */
 struct Arguments {
@@ -43,6 +80,7 @@ struct Arguments {
   double delta_t;
   enum ForceType { LennardJones, Gravity } force_type;
   std::variant<LinkedCellsConfig, DirectSumConfig> container_data;
+  std::vector<GeneratorConfig> generator_configs;
 };
 
 /**

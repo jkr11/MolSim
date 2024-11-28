@@ -7,7 +7,6 @@
 #include <filesystem>
 
 #include "debug/debug_print.h"
-#include "defs/Generators/CuboidGenerator.h"
 #include "defs/Generators/SpheroidGenerator.h"
 #include "defs/types.h"
 #include "input.hxx"
@@ -75,17 +74,30 @@ void XmlReader::read(std::vector<Particle>& particles,
         const auto& _corner = cubes.corner();
         const auto& _dimensions = cubes.dimensions();
         const auto& _velocity = cubes.velocity();
-        dvec3 corner = unwrapVec<const Dvec3Type&, dvec3>(_corner, "corner");
-        ivec3 dimensions =
+        const dvec3 corner =
+            unwrapVec<const Dvec3Type&, dvec3>(_corner, "corner");
+        const ivec3 dimensions =
             unwrapVec<const Ivec3Type&, ivec3>(_dimensions, "dimensions");
-        dvec3 velocity =
+        const dvec3 velocity =
             unwrapVec<const Dvec3Type&, dvec3>(_velocity, "velocity");
 
-        CuboidGenerator cg(corner, dimensions, cubes.h(), cubes.mass(),
-                           velocity, cubes.mv(), cubes.epsilon(), cubes.sigma(),
-                           cubes.type(), twoD);
+        CuboidConfig cuboid_config = {.left_corner = corner,
+                                      .dimensions = dimensions,
+                                      .initial_velocity = velocity,
+                                      .h = cubes.h(),
+                                      .mass = cubes.mass(),
+                                      .mean_velocity = cubes.mv(),
+                                      .epsilon = cubes.epsilon(),
+                                      .sigma = cubes.sigma(),
+                                      .type = cubes.type(),
+                                      .twoD = twoD};
+        simulation_parameters.generator_configs.emplace_back(cuboid_config);
 
-        cg.generate(particles);
+        // CuboidGenerator cg(corner, dimensions, cubes.h(), cubes.mass(),
+        //                   velocity, cubes.mv(), cubes.epsilon(),
+        //                   cubes.sigma(), cubes.type(), twoD);
+
+        // cg.generate(particles);
       }
     }
 
@@ -93,14 +105,27 @@ void XmlReader::read(std::vector<Particle>& particles,
       for (const auto& spheres : config->spheroids()->spheroid()) {
         const auto& _origin = spheres.origin();
         const auto& _velocity = spheres.velocity();
-        dvec3 origin = {_origin.x(), _origin.y(), _origin.z()};
-        dvec3 velocity = {_velocity.x(), _velocity.y(), _velocity.z()};
+        const dvec3 origin = {_origin.x(), _origin.y(), _origin.z()};
+        const dvec3 velocity = {_velocity.x(), _velocity.y(), _velocity.z()};
 
-        SpheroidGenerator sg(origin, spheres.radius(), spheres.h(),
-                             spheres.mass(), velocity, spheres.epsilon(),
-                             spheres.sigma(), spheres.type(), twoD);
+        SphereoidConfig sphereoid_config = {
+            .origin = origin,
+            .radius = static_cast<double>(spheres.radius()),
+            .initial_velocity = velocity,
+            .h = spheres.h(),
+            .mass = spheres.mass(),
+            .epsilon = spheres.epsilon(),
+            .sigma = spheres.sigma(),
+            .type = spheres.type(),
+            .twoD = twoD};
 
-        sg.generate(particles);
+        simulation_parameters.generator_configs.emplace_back(sphereoid_config);
+
+        // SpheroidGenerator sg(origin, spheres.radius(), spheres.h(),
+        //                     spheres.mass(), velocity, spheres.epsilon(),
+        //                     spheres.sigma(), spheres.type(), twoD);
+
+        // sg.generate(particles);
       }
     }
   } catch (const std::exception& e) {

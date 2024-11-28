@@ -1,6 +1,8 @@
 #include <filesystem>
 
 #include "calc/VerletIntegrator.h"
+#include "defs/Generators/CuboidGenerator.h"
+#include "defs/Generators/SpheroidGenerator.h"
 #include "defs/containers/DirectSumContainer.h"
 #include "defs/containers/LinkedCellsContainer.h"
 #include "forces/Gravity.h"
@@ -39,13 +41,37 @@ int main(const int argc, char* argv[]) {
 
   //  TODO: Should we change this so the reader only reads configs? probably.
   std::vector<Particle> particles;
-
+  // TODO: we can remove particles here
   XmlReader::read(particles, input_file, arguments);
 
   printConfiguration(arguments);
   SpdWrapper::get()->info("Step size: {}", step_size);
   // TODO: we should pass step size to reader but right now its useful for
   // testing
+  // TODO: i think we use visit here as there are going to be more inputs i
+  // think, also variadic unions are cool i guess
+  for (const auto& generator_config : arguments.generator_configs) {
+    std::visit(
+        [&particles](const auto& config) {
+          if constexpr (std::is_same_v<decltype(config), CuboidConfig>) {
+            const auto& [corner, dimensions, initial_velocity, h, mass,
+                         mean_velocity, epsilon, sigma, type, twoD] = config;
+            CuboidGenerator generator(corner, dimensions, h, mass,
+                                      initial_velocity, mean_velocity, epsilon,
+                                      sigma, type, twoD);
+            generator.generate(particles);
+          } else if constexpr (std::is_same_v<decltype(config),
+                                              SphereoidConfig>) {
+            const auto& [origin, radius, initial_velocity, h, mass,
+                         mean_velocity, epsilon, sigma, type, twoD] = config;
+            SpheroidGenerator generator(origin, radius, h, mass,
+                                        initial_velocity, mean_velocity,
+                                        epsilon, sigma, type, twoD);
+            generator.generate(particles);
+          }
+        },
+        generator_config);
+  }
 
   std::unique_ptr<ParticleContainer> container;
   if (std::holds_alternative<LinkedCellsConfig>(arguments.container_data)) {
