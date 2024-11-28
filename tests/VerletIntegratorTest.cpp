@@ -22,7 +22,7 @@ TEST(VerletIntegrator, step1) {
 
   integrator.step(container);
 
-  p = container.getParticles()[0];
+  p = *container.getParticles()[0];
   DVEC3_NEAR(p.getX(), {1.01, 0.00005, 0}, "Position wrong.", 1e-5f);
   DVEC3_NEAR(p.getOldF(), {0, 1, 0}, "Old force wrong.", 1e-5f);
   DVEC3_NEAR(p.getF(), {0, 0, 0}, "New F wrong.", 1e-5f);
@@ -46,13 +46,13 @@ TEST(VerletIntegrator, step2) {
 
   integrator.step(container);
 
-  p = container.getParticles()[0];
+  p = *container.getParticles()[0];
   DVEC3_NEAR(p.getX(), {1, 0.00005, 0}, "Position of p wrong.", 1e-5f);
   DVEC3_NEAR(p.getOldF(), {0, 1, 0}, "Old force of p wrong.", 1e-5f);
   DVEC3_NEAR(p.getF(), {-1.12516, 1.12511, 0}, "New F of p wrong.", 1e-5f);
   DVEC3_NEAR(p.getV(), {-0.005625, 0.01062, 0}, "Velocity of p wrong.", 1e-5f);
 
-  q = container.getParticles()[1];
+  q = *container.getParticles()[1];
   DVEC3_NEAR(q.getX(), {0, 1, 0}, "Position of q wrong.", 1e-5f);
   DVEC3_NEAR(q.getOldF(), {0, 0, 0}, "Old force of q wrong.", 1e-5f);
   DVEC3_NEAR(q.getF(), {1.12516, -1.12511, 0}, "New F of q wrong.", 1e-5f);
