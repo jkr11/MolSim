@@ -52,7 +52,7 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @brief
    * cell dimensions
    */
-  ivec3 cell_dim{};
+  dvec3 cell_dim{};
 
   /**
    * @brief
@@ -174,7 +174,7 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @brief Get the dimensions of a all cells in the container
    * @return dvec3 of the dimensions of all cells
    */
-  [[nodiscard]] ivec3 getCellDim() const { return cell_dim; }
+  [[nodiscard]] dvec3 getCellDim() const { return cell_dim; }
 
   /**
    * @brief Gets the cell index of a position
