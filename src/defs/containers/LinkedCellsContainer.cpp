@@ -466,6 +466,3 @@ std::size_t LinkedCellsContainer::dvec3ToCellIndex_testing(
     const dvec3 &position) const {
   return dvec3ToCellIndex(position);
 }
-
-
-
