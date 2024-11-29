@@ -20,12 +20,10 @@ class XmlReader : public FileReader {
 
   /**
    * @brief supports reading cuboids and sphereoids as specified in input.xsd
-   * @param particles particles in which we store the configuration passed
    * @param filepath path at which the xml file is located
    * @param simulation_parameters passed form MolSim.cpp
    */
-  static void read(std::vector<Particle>& particles,
-                   const std::string& filepath,
+  static void read(const std::string& filepath,
                    Arguments& simulation_parameters);
 };
 

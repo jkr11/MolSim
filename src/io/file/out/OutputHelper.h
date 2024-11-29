@@ -4,6 +4,7 @@
 #pragma once
 #ifndef OUTPUTHELPER_H
 #define OUTPUTHELPER_H
+#include <filesystem>
 #include <fstream>
 
 #include "VTKWriter.h"

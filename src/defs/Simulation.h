@@ -9,7 +9,10 @@
 #include <variant>
 
 #include "Generators/ParticleGenerator.h"
+#include "calc/VerletIntegrator.h"
 #include "defs/types.h"
+#include "forces/Force.h"
+#include "spdlog/stopwatch.h"
 #include "utils/SpdWrapper.h"
 
 /**
@@ -82,6 +85,26 @@ struct Arguments {
   enum ForceType { LennardJones, Gravity } force_type;
   std::variant<LinkedCellsConfig, DirectSumConfig> container_data;
   std::vector<std::unique_ptr<ParticleGenerator>> generator_configs;
+};
+
+class Simulation {
+ private:
+  Arguments arguments;
+  std::vector<Particle> particles;
+  std::unique_ptr<ParticleContainer> container;
+  std::unique_ptr<Force> forces;
+  std::unique_ptr<VerletIntegrator> integrator;
+  std::string output_directory;
+  double step_size;
+
+ public:
+  explicit Simulation(Arguments arguments, std::string output_directory,
+                      double step_size);
+  ~Simulation();
+
+  void initParticles();
+  void initParams();
+  void run() const;
 };
 
 /**

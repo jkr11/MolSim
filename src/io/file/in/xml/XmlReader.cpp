@@ -14,8 +14,7 @@
 #include "spdlog/fmt/bundled/args.h"
 #include "utils/SpdWrapper.h"
 
-void XmlReader::read(std::vector<Particle>& particles,
-                     const std::string& filepath,
+void XmlReader::read(const std::string& filepath,
                      Arguments& simulation_parameters) {
   const std::filesystem::path path(filepath);
   if (!exists(path)) {

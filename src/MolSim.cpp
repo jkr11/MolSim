@@ -36,109 +36,19 @@ int main(const int argc, char* argv[]) {
                                 }},
   };
   auto [input_file, step_size] = CLArgumentParser::parse(argc, argv);
-
-  //  TODO: Should we change this so the reader only reads configs? probably.
-  std::vector<Particle> particles;
-  // TODO: we can remove particles here
-  XmlReader::read(particles, input_file, arguments);
+  XmlReader::read(input_file, arguments);
 
   printConfiguration(arguments);
+
   SpdWrapper::get()->info("Step size: {}", step_size);
-  // TODO: we should pass step size to reader but right now its useful for
-  // testing
-  // TODO: i think we use visit here as there are going to be more inputs i
-  // think, also variadic unions are cool i guess
-  /*
-  for (const auto& generator_config : arguments.generator_configs) {
-    std::visit(
-        [&particles](const auto& config) {
-          if constexpr (std::is_same_v<decltype(config), CuboidConfig>) {
-            const auto& [corner, dimensions, initial_velocity, h, mass,
-                         mean_velocity, epsilon, sigma, type, twoD] = config;
-            CuboidGenerator generator(corner, dimensions, h, mass,
-                                      initial_velocity, mean_velocity, epsilon,
-                                      sigma, type, twoD);
-            generator.generate(particles);
-          } else if constexpr (std::is_same_v<decltype(config),
-                                              SphereoidConfig>) {
-            const auto& [origin, radius, initial_velocity, h, mass,
-                         mean_velocity, epsilon, sigma, type, twoD] = config;
-            SpheroidGenerator generator(origin, radius, h, mass,
-                                        initial_velocity, mean_velocity,
-                                        epsilon, sigma, type, twoD);
-            generator.generate(particles);
-          }
-        },
-        generator_config);
-  }
-  */
-  for (const auto& generator : arguments.generator_configs) {
-    generator->generate(particles);
-  }
-
-  std::unique_ptr<ParticleContainer> container;
-  if (std::holds_alternative<LinkedCellsConfig>(arguments.container_data)) {
-    const auto& linked_cells_data =
-        std::get<LinkedCellsConfig>(arguments.container_data);
-    container = std::make_unique<LinkedCellsContainer>(linked_cells_data);
-  } else if (std::holds_alternative<DirectSumConfig>(
-                 arguments.container_data)) {
-    container = std::make_unique<DirectSumContainer>();
-  } else {
-    SpdWrapper::get()->error("Unrecognized container type");
-    throw std::runtime_error("Unrecognized container type");
-  }
-  container->addParticles(particles);
-  container->imposeInvariant();
-
-  std::unique_ptr<Force> force;
-  if (arguments.force_type == Arguments::Gravity) {
-    force = std::make_unique<Gravity>();
-  } else if (arguments.force_type == Arguments::LennardJones) {
-    force = std::make_unique<LennardJones>();
-  }
-
-  VerletIntegrator verlet_integrator(*force, arguments.delta_t);
-  outputWriter::VTKWriter writer;
 
   const std::string outputDirectory =
       createOutputDirectory("./output/", argc, argv);
 
-  double current_time = 0;
-  int iteration = 0;
-  int writes = 0;
-  int percentage = 0;
-  double next_output_time = 0;
-  spdlog::stopwatch stopwatch;
-  while (current_time <= arguments.t_end) {
-    verlet_integrator.step(*container);
-
-    if (current_time >= next_output_time) {
-      plotParticles(outputDirectory, iteration, writer, *container);
-      writes++;
-      next_output_time = writes * step_size;
-      // check if next percentage complete
-      if (const double t = 100 * current_time / arguments.t_end;
-          t >= percentage) {
-        percentage++;
-        auto elapsed = stopwatch.elapsed();
-        auto eta = (elapsed / percentage) * 100 - elapsed;
-        auto h = std::chrono::duration_cast<std::chrono::hours>(eta).count();
-        eta -= std::chrono::hours(h);
-        auto m = std::chrono::duration_cast<std::chrono::minutes>(eta).count();
-        eta -= std::chrono::minutes(m);
-        auto s = std::chrono::duration_cast<std::chrono::seconds>(eta).count();
-
-        SpdWrapper::get()->info(
-            "[{:.0f} %]: Iteration {:<12} | [ETA: {}:{:02}:{:02}]",
-            100 * current_time / arguments.t_end, iteration, h, m, s);
-      }
-    }
-
-    iteration++;
-    current_time = arguments.delta_t * iteration;
-  }
-  SpdWrapper::get()->info("Output written. Terminating...");
+  Simulation simulation(arguments, outputDirectory, step_size);
+  simulation.initParams();
+  simulation.initParticles();
+  simulation.run();
 
   return 0;
 }
