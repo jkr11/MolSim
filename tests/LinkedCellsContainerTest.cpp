@@ -119,7 +119,7 @@ TEST(LinkedCellsContainer, isHalo) {
 TEST(LinkedCellsContainer,
      cellIndexToCoord_cellCoordToIndex_isValidCellCoordinate) {
   LinkedCellsConfig config = {.domain = {10, 10, 10},
-                              .cutoff_radius = 5,
+                              .cutoff_radius = 3,
                               .boundary_config = {
                                   .x_high = LinkedCellsConfig::Outflow,
                                   .x_low = LinkedCellsConfig::Outflow,
@@ -138,16 +138,16 @@ TEST(LinkedCellsContainer,
   EXPECT_EQ(container.cellIndexToCoord(0)[2], -1)
       << ".cellIndexToCoord(...) z coordinate wrong";
 
-  EXPECT_EQ(container.cellIndexToCoord(48)[0], 1)
+  EXPECT_EQ(container.cellIndexToCoord(69)[0], 1)
       << ".cellIndexToCoord(...) x coordinate wrong";
-  EXPECT_EQ(container.cellIndexToCoord(48)[1], 2)
+  EXPECT_EQ(container.cellIndexToCoord(69)[1], 2)
       << ".cellIndexToCoord(...) y coordinate wrong";
-  EXPECT_EQ(container.cellIndexToCoord(48)[2], 3)
+  EXPECT_EQ(container.cellIndexToCoord(69)[2], 3)
       << ".cellIndexToCoord(...) z coordinate wrong";
 
   EXPECT_EQ(container.cellCoordToIndex({-1, -1, -1}), 0)
       << ".cellCoordToIndex(...) index wrong";
-  EXPECT_EQ(container.cellCoordToIndex({1, 2, 3}), 48)
+  EXPECT_EQ(container.cellCoordToIndex({1, 2, 3}), 69)
       << ".cellCoordToIndex(...) index wrong";
 
   EXPECT_TRUE(container.isValidCellCoordinate({-1, -1, -1}))
