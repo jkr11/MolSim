@@ -147,16 +147,6 @@ void LinkedCellsContainer::imposeInvariant() {
   // error prevents the simulation from crashing
   for (size_t dimension = 0; dimension < 4; ++dimension) {
     for (const size_t cell_index : halo_direction_cells[dimension]) {
-      if (!cells[cell_index].empty()) {
-        ivec3 cellcoord = cellIndexToCoord(cell_index);
-        SpdWrapper::get()->info("Deleting particle in cell [{}, {}, {}]",
-                                cellcoord[0], cellcoord[1], cellcoord[2]);
-        for (const auto &p : cells[cell_index]) {
-          SpdWrapper::get()->info("\tat [{}, {}, {}] with v=[{}, {}, {}]",
-                                  p.getX()[0], p.getX()[1], p.getX()[2],
-                                  p.getV()[0], p.getV()[1], p.getV()[2]);
-        }
-      }
       cells[cell_index].clear();
     }
   }
@@ -400,7 +390,7 @@ inline bool LinkedCellsContainer::isBoundary(const ivec3 cellCoord) const {
          !isHalo(cellCoord);
 }
 
-inline bool LinkedCellsContainer::isBoundary(
+ bool LinkedCellsContainer::isBoundary(
     const std::size_t cellIndex) const {
   const ivec3 cellCoord = cellIndexToCoord(cellIndex);
   return isBoundary(cellCoord);
@@ -463,3 +453,19 @@ std::vector<std::size_t> LinkedCellsContainer::boundary_direction(
 
   return directions;
 }
+
+bool LinkedCellsContainer::isBoundary_testing(std::size_t cellIndex) const {
+  return isBoundary(cellIndex);
+}
+
+bool LinkedCellsContainer::isHalo_testing(std::size_t cellIndex) const {
+  return isHalo(cellIndex);
+}
+
+std::size_t LinkedCellsContainer::dvec3ToCellIndex_testing(
+    const dvec3 &position) const {
+  return dvec3ToCellIndex(position);
+}
+
+
+
