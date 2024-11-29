@@ -40,5 +40,5 @@ jobs:
       run: cd buildDir/Release && cmake --build . -- -"j$(nproc)"
 
     - name: Test
-      run: cd buildDir/Release && ctest
+      run: cd buildDir/Release/tests && ctest
 
