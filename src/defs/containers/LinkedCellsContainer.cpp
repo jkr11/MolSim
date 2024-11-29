@@ -390,7 +390,7 @@ inline bool LinkedCellsContainer::isBoundary(const ivec3 cellCoord) const {
          !isHalo(cellCoord);
 }
 
- bool LinkedCellsContainer::isBoundary(
+inline bool LinkedCellsContainer::isBoundary(
     const std::size_t cellIndex) const {
   const ivec3 cellCoord = cellIndexToCoord(cellIndex);
   return isBoundary(cellCoord);
