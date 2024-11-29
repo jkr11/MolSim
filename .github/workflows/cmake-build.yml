@@ -34,7 +34,7 @@ jobs:
       run: mkdir buildDir && cd buildDir && mkdir Release && cd Release
 
     - name: Configure CMake
-      run: cd buildDir/Release && cmake ../../CMakeLists.txt && cmake -DCMAKE_BUILD_TYPE=Release .
+      run: cd buildDir/Release && cmake ../../CMakeLists.txt && cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON .
 
     - name: Build
       run: cd buildDir/Release && cmake --build . -- -"j$(nproc)"
