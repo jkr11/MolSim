@@ -17,6 +17,7 @@ if (BUILD_TESTS)
             DirectSumContainerTest.cpp
             LennardJonesTest.cpp
             VerletIntegratorTest.cpp
+            BoundaryConditionsTest.cpp
             testUtil.h)
 
     target_link_libraries(MolSimTest MolSimLib GTest::gtest_main)
