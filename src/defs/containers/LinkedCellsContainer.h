@@ -190,7 +190,7 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @return Associated cell index
    */
   [[nodiscard]] inline std::size_t cellCoordToIndex(
-      std::array<int, 3> position) const;
+       ivec3 position) const;
 
   /**
    * @brief Gets the cell coordinate from the cell index
