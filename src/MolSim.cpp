@@ -40,8 +40,8 @@ int main(const int argc, char* argv[]) {
 
   Simulation simulation(std::move(arguments), outputDirectory, step_size);
   simulation.initParams();
-  simulation.initParticles();
-  simulation.run();
+  // simulation.initParticles();
+  // simulation.run();
 
   return 0;
 }

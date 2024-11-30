@@ -70,7 +70,7 @@ LinkedCellsContainer::LinkedCellsContainer(
 }
 
 void LinkedCellsContainer::addParticle(const Particle &p) {
-  // SpdWrapper::get()->info("addParticle");
+  //SpdWrapper::get()->info("addParticle");
   const std::size_t index = dvec3ToCellIndex(p.getX());
   cells[index].emplace_back(p);
 

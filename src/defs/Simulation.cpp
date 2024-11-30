@@ -50,16 +50,21 @@ void Simulation::initParams() {
 
   const VerletIntegrator verlet_integrator(*force, arguments.delta_t);
   integrator = std::make_unique<VerletIntegrator>(verlet_integrator);
+  initParticles();
+  run();
 }
 
 void Simulation::initParticles() {
   for (const auto& generator : arguments.generator_configs) {
     generator->generate(particles);
   }
-  DEBUG_PRINT_FMT("Initialized {} particles", particles.size());
+  SpdWrapper::get()->info("Initialized {} particles", particles.size());
+  container->addParticles(particles);
+  container->imposeInvariant();
 }
 
 void Simulation::run() const {
+  SpdWrapper::get()->info("Running simulation");
   outputWriter::VTKWriter writer;
   double current_time = 0;
   int iteration = 0;
