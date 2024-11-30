@@ -10,15 +10,18 @@
 #include "calc/VerletIntegrator.h"
 #include "containers/DirectSumContainer.h"
 #include "containers/LinkedCellsContainer.h"
+#include "debug/debug_print.h"
 #include "forces/Gravity.h"
 #include "forces/LennardJones.h"
 #include "io/file/out/OutputHelper.h"
 #include "io/file/out/VTKWriter.h"
 #include "spdlog/stopwatch.h"
 
-Simulation::Simulation(Arguments arguments, std::string output_directory, const double step_size)
+Simulation::Simulation(Arguments arguments, std::string output_directory,
+                       const double step_size)
     : arguments(std::move(arguments)),
-      output_directory(std::move(output_directory)), step_size(step_size) {}
+      output_directory(std::move(output_directory)),
+      step_size(step_size) {}
 
 Simulation::~Simulation() = default;
 
@@ -40,6 +43,9 @@ void Simulation::initParams() {
     force = std::make_unique<Gravity>();
   } else if (arguments.force_type == Arguments::LennardJones) {
     force = std::make_unique<LennardJones>();
+  } else {
+    SpdWrapper::get()->error("Unrecognized force");
+    throw std::runtime_error("Unrecognized force");
   }
 
   const VerletIntegrator verlet_integrator(*force, arguments.delta_t);
@@ -50,6 +56,7 @@ void Simulation::initParticles() {
   for (const auto& generator : arguments.generator_configs) {
     generator->generate(particles);
   }
+  DEBUG_PRINT_FMT("Initialized {} particles", particles.size());
 }
 
 void Simulation::run() const {

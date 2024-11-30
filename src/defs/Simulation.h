@@ -86,6 +86,11 @@ struct Arguments {
   std::vector<std::unique_ptr<ParticleGenerator>> generator_configs;
 };
 
+/**
+ * This class holds all the necessary info and objects to run the simulation.
+ * This is done to clean up main and choosing a place to allocate the particle
+ * vector.
+ */
 class Simulation {
  private:
   Arguments arguments;
@@ -101,8 +106,17 @@ class Simulation {
                       double step_size);
   ~Simulation();
 
+  /**
+   * initializes all the necessary objects such as the containers and forces.
+   */
   void initParticles();
+  /**
+   * unpacks the specification from the generators into the particle vector.
+   */
   void initParams();
+  /**
+   * runs the main loop of the program.
+   */
   void run() const;
 };
 
