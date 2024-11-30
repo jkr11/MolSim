@@ -1,6 +1,6 @@
 #pragma once
-#include "../defs/containers/ParticleContainer.h"
-#include "../forces/Force.h"
+#include "defs/containers/ParticleContainer.h"
+#include "forces/Force.h"
 
 /**
  * @brief Interface for different types of integrators

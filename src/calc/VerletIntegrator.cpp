@@ -3,7 +3,7 @@
 //
 #include "VerletIntegrator.h"
 
-#include "../utils/ArrayUtils.h"
+#include "utils/ArrayUtils.h"
 
 void VerletIntegrator::step(ParticleContainer& particle_container) {
   particle_container.singleIterator([this](Particle& p) {

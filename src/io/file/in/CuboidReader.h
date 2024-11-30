@@ -7,7 +7,6 @@
 
 #include <string>
 
-#include "defs/containers/ParticleContainer.h"
 #include "io/file/in/FileReader.h"
 
 /**

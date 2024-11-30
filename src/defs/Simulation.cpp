@@ -3,8 +3,10 @@
 //
 #include "Simulation.h"
 
-#include <utility>
 #include <spdlog/spdlog.h>
+
+#include <utility>
+
 #include "calc/VerletIntegrator.h"
 #include "containers/DirectSumContainer.h"
 #include "containers/LinkedCellsContainer.h"
@@ -12,6 +14,7 @@
 #include "forces/LennardJones.h"
 #include "io/file/out/OutputHelper.h"
 #include "io/file/out/VTKWriter.h"
+#include "spdlog/stopwatch.h"
 
 Simulation::Simulation(Arguments arguments, std::string output_directory, const double step_size)
     : arguments(std::move(arguments)),

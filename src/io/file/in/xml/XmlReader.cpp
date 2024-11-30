@@ -80,30 +80,12 @@ void XmlReader::read(const std::string& filepath,
             unwrapVec<const Ivec3Type&, ivec3>(_dimensions, "dimensions");
         const dvec3 velocity =
             unwrapVec<const Dvec3Type&, dvec3>(_velocity, "velocity");
-        /*
-        CuboidConfig cuboid_config = {.left_corner = corner,
-                                      .dimensions = dimensions,
-                                      .initial_velocity = velocity,
-                                      .h = cubes.h(),
-                                      .mass = cubes.mass(),
-                                      .mean_velocity = cubes.mv(),
-                                      .epsilon = cubes.epsilon(),
-                                      .sigma = cubes.sigma(),
-                                      .type = cubes.type(),
-                                      .twoD = twoD};
-        simulation_parameters.generator_configs.emplace_back(cuboid_config);
-        */
+
         CuboidGenerator cg(corner, dimensions, cubes.h(), cubes.mass(),
                            velocity, cubes.mv(), cubes.epsilon(), cubes.sigma(),
                            cubes.type(), twoD);
         simulation_parameters.generator_configs.emplace_back(
             std::make_unique<CuboidGenerator>(std::move(cg)));
-
-        //simulation_parameters.generator_configs.emplace_back(std::make_unique<CuboidGenerator>(corner, dimensions, cubes.h(), cubes.mass(),
-        //           velocity, cubes.mv(), cubes.epsilon(), cubes.sigma(),
-        //           cubes.type(), twoD));
-
-        // cg.generate(particles);
       }
     }
 
@@ -114,27 +96,11 @@ void XmlReader::read(const std::string& filepath,
         const dvec3 origin = {_origin.x(), _origin.y(), _origin.z()};
         const dvec3 velocity = {_velocity.x(), _velocity.y(), _velocity.z()};
 
-        /*
-        SphereoidConfig sphereoid_config = {
-            .origin = origin,
-            .radius = static_cast<double>(spheres.radius()),
-            .initial_velocity = velocity,
-            .h = spheres.h(),
-            .mass = spheres.mass(),
-            .epsilon = spheres.epsilon(),
-            .sigma = spheres.sigma(),
-            .type = spheres.type(),
-            .twoD = twoD};
-
-        simulation_parameters.generator_configs.emplace_back(spheroid_config);
-        */
         SpheroidGenerator sg(origin, spheres.radius(), spheres.h(),
                              spheres.mass(), velocity, spheres.epsilon(),
                              spheres.sigma(), spheres.type(), twoD);
         simulation_parameters.generator_configs.emplace_back(
             std::make_unique<SpheroidGenerator>(std::move(sg)));
-
-        // sg.generate(particles);
       }
     }
   } catch (const std::exception& e) {

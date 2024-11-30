@@ -50,7 +50,6 @@ void CuboidGenerator::generate(std::vector<Particle> &particles) {
       for (int k = 0; k < dimensions[2]; k++) {
         dvec3 position = {corner[0] + i * h, corner[1] + j * h,
                           corner[2] + k * h};
-
         std::array<double, 3> V =
             initialVelocity +
             maxwellBoltzmannDistributedVelocity(mv, twoD ? 2 : 3);

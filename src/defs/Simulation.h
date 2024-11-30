@@ -12,14 +12,13 @@
 #include "calc/VerletIntegrator.h"
 #include "defs/types.h"
 #include "forces/Force.h"
-#include "spdlog/stopwatch.h"
 #include "utils/SpdWrapper.h"
 
 /**
  * @brief holds the specification for the LinkedCellsContainer
  */
 struct LinkedCellsConfig {
-  ivec3 domain;  // size of the dimensions
+  ivec3 domain;
   double cutoff_radius;
   enum BoundaryType { Outflow, Reflective, Periodic } boundary_type;
   struct BoundaryConfig {
