@@ -13,7 +13,6 @@
 #include "io/file/out/OutputHelper.h"
 #include "io/file/out/VTKWriter.h"
 
-class Force;
 Simulation::Simulation(Arguments arguments, std::string output_directory, const double step_size)
     : arguments(std::move(arguments)),
       output_directory(std::move(output_directory)), step_size(step_size) {}
@@ -21,7 +20,6 @@ Simulation::Simulation(Arguments arguments, std::string output_directory, const 
 Simulation::~Simulation() = default;
 
 void Simulation::initParams() {
-  // std::unique_ptr<ParticleContainer> container;
   if (std::holds_alternative<LinkedCellsConfig>(arguments.container_data)) {
     const auto& linked_cells_data =
         std::get<LinkedCellsConfig>(arguments.container_data);

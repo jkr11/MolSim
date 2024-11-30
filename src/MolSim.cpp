@@ -45,7 +45,7 @@ int main(const int argc, char* argv[]) {
   const std::string outputDirectory =
       createOutputDirectory("./output/", argc, argv);
 
-  Simulation simulation(arguments, outputDirectory, step_size);
+  Simulation simulation(std::move(arguments), outputDirectory, step_size);
   simulation.initParams();
   simulation.initParticles();
   simulation.run();

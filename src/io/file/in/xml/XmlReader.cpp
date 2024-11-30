@@ -97,7 +97,12 @@ void XmlReader::read(const std::string& filepath,
                            velocity, cubes.mv(), cubes.epsilon(), cubes.sigma(),
                            cubes.type(), twoD);
         simulation_parameters.generator_configs.emplace_back(
-            std::make_unique<CuboidGenerator>(cg));
+            std::make_unique<CuboidGenerator>(std::move(cg)));
+
+        //simulation_parameters.generator_configs.emplace_back(std::make_unique<CuboidGenerator>(corner, dimensions, cubes.h(), cubes.mass(),
+        //           velocity, cubes.mv(), cubes.epsilon(), cubes.sigma(),
+        //           cubes.type(), twoD));
+
         // cg.generate(particles);
       }
     }
@@ -127,7 +132,8 @@ void XmlReader::read(const std::string& filepath,
                              spheres.mass(), velocity, spheres.epsilon(),
                              spheres.sigma(), spheres.type(), twoD);
         simulation_parameters.generator_configs.emplace_back(
-            std::make_unique<SpheroidGenerator>(sg));
+            std::make_unique<SpheroidGenerator>(std::move(sg)));
+
         // sg.generate(particles);
       }
     }
