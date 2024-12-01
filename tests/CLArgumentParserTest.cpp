@@ -5,7 +5,6 @@
 #include <vector>
 
 #include "../src/io/CLArgumentParser.h"
-#include "../src/io/file/in/CuboidReader.h"
 
 /*
  * @brief Parse example CLI arguments correctly
