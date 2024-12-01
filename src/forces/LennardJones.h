@@ -25,6 +25,6 @@ class LennardJones final : public Force {
    * @param distance the distance to the boundary
    * @return the force in just one dimension
    */
-  static double simpleForce(Particle& p, double distance);
+  static double simpleForce(const Particle& p, double distance);
 };
 #endif  // LENNARDJONES_H

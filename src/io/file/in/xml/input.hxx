@@ -599,15 +599,29 @@ class spheroidType : public ::xml_schema::type {
 
   void sigma(const sigma_type& x);
 
+  // mv
+  //
+  typedef ::xml_schema::decimal mv_type;
+  typedef ::xsd::cxx::tree::traits<mv_type, char,
+                                   ::xsd::cxx::tree::schema_type::decimal>
+      mv_traits;
+
+  const mv_type& mv() const;
+
+  mv_type& mv();
+
+  void mv(const mv_type& x);
+
   // Constructors.
   //
   spheroidType(const velocity_type&, const origin_type&, const radius_type&,
                const type_type&, const h_type&, const mass_type&,
-               const epsilon_type&, const sigma_type&);
+               const epsilon_type&, const sigma_type&, const mv_type&);
 
   spheroidType(::std::auto_ptr<velocity_type>, ::std::auto_ptr<origin_type>,
                const radius_type&, const type_type&, const h_type&,
-               const mass_type&, const epsilon_type&, const sigma_type&);
+               const mass_type&, const epsilon_type&, const sigma_type&,
+               const mv_type&);
 
   spheroidType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
                ::xml_schema::container* c = 0);
@@ -636,6 +650,7 @@ class spheroidType : public ::xml_schema::type {
   ::xsd::cxx::tree::one<mass_type> mass_;
   ::xsd::cxx::tree::one<epsilon_type> epsilon_;
   ::xsd::cxx::tree::one<sigma_type> sigma_;
+  ::xsd::cxx::tree::one<mv_type> mv_;
 };
 
 class Dvec3Type : public ::xml_schema::type {

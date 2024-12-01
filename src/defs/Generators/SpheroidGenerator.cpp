@@ -13,7 +13,8 @@ SpheroidGenerator::SpheroidGenerator(const dvec3& origin, const int radius,
                                      const double h, const double m,
                                      const dvec3& initialVelocity,
                                      const double epsilon, const double sigma,
-                                     const int type, const bool twoD)
+                                     const int type, const double mv,
+                                     const bool twoD)
     : origin(origin),
       radius(radius),
       h(h),
@@ -22,6 +23,7 @@ SpheroidGenerator::SpheroidGenerator(const dvec3& origin, const int radius,
       epsilon(epsilon),
       sigma(sigma),
       type(type),
+      mv(mv),
       twoD(twoD) {
   DEBUG_PRINT_FMT("SpheroidGenerator of dim {} created with parameters:",
                   twoD ? 2 : 3);

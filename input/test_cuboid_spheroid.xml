@@ -55,6 +55,7 @@
             <mass>3.0</mass>
             <epsilon>5</epsilon>
             <sigma>1</sigma>
+            <mv>0.1</mv>
         </spheroid>
     </spheroids>
 </simulation>
