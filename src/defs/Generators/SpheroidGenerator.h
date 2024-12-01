@@ -32,7 +32,7 @@ class SpheroidGenerator final : public ParticleGenerator {
  public:
   SpheroidGenerator(const dvec3 &origin, int radius, double h, double m,
                     const dvec3 &initialVelocity, double epsilon, double sigma,
-                    int type, bool twoD);
+                    int type, double mv, bool twoD);
 
   /**
    * @brief generates a 1 or 2 sphere of particles, vector size is approximated

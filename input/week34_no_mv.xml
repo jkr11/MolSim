@@ -5,23 +5,23 @@
         <container>
             <linkedCells>
                 <domain>
-                    <x>100</x>
-                    <y>100</y>
-                    <z>100</z>
+                    <x>120</x>
+                    <y>50</y>
+                    <z>1</z>
                 </domain>
                 <r_cutoff>3.0</r_cutoff>
                 <boundary>
                     <x_high>
-                        <Outflow/>
+                        <Reflective/>
                     </x_high>
                     <x_low>
-                        <Outflow/>
+                        <Reflective/>
                     </x_low>
                     <y_high>
-                        <Outflow/>
+                        <Reflective/>
                     </y_high>
                     <y_low>
-                        <Outflow/>
+                        <Reflective/>
                     </y_low>
                     <z_high>
                         <Outflow/>
@@ -35,33 +35,29 @@
         <force>
             <LennardJones/>
         </force>
-        <delta_t>0.0005</delta_t>
-        <t_end>20</t_end>
+        <delta_t>0.00005</delta_t>
+        <t_end>10</t_end>
         <twoD>true</twoD>
     </metadata>
-    <cuboids>
-        <cuboid>
+    <spheroids>
+        <spheroid>
             <velocity>
                 <x>0.0</x>
-                <y>0.0</y>
+                <y>-10</y>
                 <z>0.0</z>
             </velocity>
-            <corner>
-                <x>1</x>
-                <y>1</y>
-                <z>1</z>
-            </corner>
-            <dimensions>
-                <x>46</x>
-                <y>46</y>
-                <z>1</z>
-            </dimensions>
-            <type>1</type>
+            <origin>
+                <x>60</x>
+                <y>25</y>
+                <z>0</z>
+            </origin>
+            <radius>15</radius>
+            <type>2</type>
             <h>1.1225</h>
             <mass>1.0</mass>
-            <epsilon>5.0</epsilon>
-            <sigma>1.0</sigma>
-            <mv>0.1</mv>
-        </cuboid>
-    </cuboids>
+            <epsilon>5</epsilon>
+            <sigma>1</sigma>
+            <mv>0.0</mv>
+        </spheroid>
+    </spheroids>
 </simulation>

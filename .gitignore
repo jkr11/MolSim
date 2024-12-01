@@ -71,3 +71,8 @@ coverage/
 spdlog/
 _deps
 
+*.png
+*.avi
+*.jpeg
+*.mp4
+!graph.png
