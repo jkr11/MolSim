@@ -148,12 +148,12 @@ void LinkedCellsContainer::imposeInvariant() {
     for (const size_t cell_index : halo_direction_cells[dimension]) {
       if (!cells[cell_index].empty()) {
         ivec3 cellcoord = cellIndexToCoord(cell_index);
-        SpdWrapper::get()->info("Deleting particle in cell [{}, {}, {}]",
-                                cellcoord[0], cellcoord[1], cellcoord[2]);
+        DEBUG_PRINT_FMT("Deleting particle in cell [{}, {}, {}]", cellcoord[0],
+                        cellcoord[1], cellcoord[2]);
         for (const auto &p : cells[cell_index]) {
-          SpdWrapper::get()->info("\tat [{}, {}, {}] with v=[{}, {}, {}]",
-                                  p.getX()[0], p.getX()[1], p.getX()[2],
-                                  p.getV()[0], p.getV()[1], p.getV()[2]);
+          DEBUG_PRINT_FMT("\tat [{}, {}, {}] with v=[{}, {}, {}]", p.getX()[0],
+                          p.getX()[1], p.getX()[2], p.getV()[0], p.getV()[1],
+                          p.getV()[2])
         }
       }
       cells[cell_index].clear();

@@ -15,7 +15,6 @@
 #include "spdlog/stopwatch.h"
 #include "utils/ArrayUtils.h"
 #include "utils/SpdWrapper.h"
-#define BENCHMARK
 int main(const int argc, char* argv[]) {
 #ifndef BENCHMARK
   SpdWrapper::get()->info("Application started");
@@ -95,8 +94,7 @@ int main(const int argc, char* argv[]) {
       // check if next percentage complete
       if (const double t = 100 * current_time / arguments.t_end;
           t >= percentage) {
-        /Ü
-        percentage++;
+        / Ü percentage++;
         auto elapsed = stopwatch.elapsed();
         auto eta = (elapsed / percentage) * 100 - elapsed;
         auto h = std::chrono::duration_cast<std::chrono::hours>(eta).count();
@@ -109,7 +107,6 @@ int main(const int argc, char* argv[]) {
             "[{:.0f} %]: Iteration {:<12} | [ETA: {}:{:02}:{:02}]",
             100 * current_time / arguments.t_end, iteration, h, m, s);
       }
-
     }
 #endif
     iteration++;
