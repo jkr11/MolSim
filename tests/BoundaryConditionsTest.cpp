@@ -4,7 +4,7 @@
 #include <gtest/gtest.h>
 
 #include "defs/Particle.h"
-#include "defs/containers/LinkedCellsContainer.h"
+#include "defs/containers/LinkedCellsContainer.cpp"
 #include "testUtil.h"
 #include "utils/ArrayUtils.h"
 
@@ -38,67 +38,67 @@ TEST(BoundaryConditions, Precalculations) {
   dvec3 left_center = {-2, -2, 1};
   dvec3 left_bottom = {-2, -2, 1};
 
-  EXPECT_EQ(container.isBoundary_testing(
-                container.dvec3ToCellIndex_testing(center_center)),
+  EXPECT_EQ(container.isBoundary(
+                container.dvec3ToCellIndex(center_center)),
             true);
-  EXPECT_EQ(container.isHalo_testing(
-                container.dvec3ToCellIndex_testing(center_center)),
+  EXPECT_EQ(container.isHalo(
+                container.dvec3ToCellIndex(center_center)),
             false);
 
-  EXPECT_EQ(container.isBoundary_testing(
-                container.dvec3ToCellIndex_testing(center_top)),
+  EXPECT_EQ(container.isBoundary(
+                container.dvec3ToCellIndex(center_top)),
             false);
   EXPECT_EQ(
-      container.isHalo_testing(container.dvec3ToCellIndex_testing(center_top)),
+      container.isHalo(container.dvec3ToCellIndex(center_top)),
       true);
 
-  EXPECT_EQ(container.isBoundary_testing(
-                container.dvec3ToCellIndex_testing(center_bottom)),
+  EXPECT_EQ(container.isBoundary(
+                container.dvec3ToCellIndex(center_bottom)),
             false);
-  EXPECT_EQ(container.isHalo_testing(
-                container.dvec3ToCellIndex_testing(center_bottom)),
+  EXPECT_EQ(container.isHalo(
+                container.dvec3ToCellIndex(center_bottom)),
             true);
 
-  EXPECT_EQ(container.isBoundary_testing(
-                container.dvec3ToCellIndex_testing(right_top)),
+  EXPECT_EQ(container.isBoundary(
+                container.dvec3ToCellIndex(right_top)),
             false);
   EXPECT_EQ(
-      container.isHalo_testing(container.dvec3ToCellIndex_testing(right_top)),
+      container.isHalo(container.dvec3ToCellIndex(right_top)),
       true);
 
-  EXPECT_EQ(container.isBoundary_testing(
-                container.dvec3ToCellIndex_testing(right_center)),
+  EXPECT_EQ(container.isBoundary(
+                container.dvec3ToCellIndex(right_center)),
             false);
-  EXPECT_EQ(container.isHalo_testing(
-                container.dvec3ToCellIndex_testing(right_center)),
+  EXPECT_EQ(container.isHalo(
+                container.dvec3ToCellIndex(right_center)),
             true);
 
-  EXPECT_EQ(container.isBoundary_testing(
-                container.dvec3ToCellIndex_testing(right_bottom)),
+  EXPECT_EQ(container.isBoundary(
+                container.dvec3ToCellIndex(right_bottom)),
             false);
-  EXPECT_EQ(container.isHalo_testing(
-                container.dvec3ToCellIndex_testing(right_bottom)),
+  EXPECT_EQ(container.isHalo(
+                container.dvec3ToCellIndex(right_bottom)),
             true);
 
-  EXPECT_EQ(container.isBoundary_testing(
-                container.dvec3ToCellIndex_testing(left_top)),
+  EXPECT_EQ(container.isBoundary(
+                container.dvec3ToCellIndex(left_top)),
             false);
   EXPECT_EQ(
-      container.isHalo_testing(container.dvec3ToCellIndex_testing(left_top)),
+      container.isHalo(container.dvec3ToCellIndex(left_top)),
       true);
 
-  EXPECT_EQ(container.isBoundary_testing(
-                container.dvec3ToCellIndex_testing(left_center)),
+  EXPECT_EQ(container.isBoundary(
+                container.dvec3ToCellIndex(left_center)),
             false);
   EXPECT_EQ(
-      container.isHalo_testing(container.dvec3ToCellIndex_testing(left_center)),
+      container.isHalo(container.dvec3ToCellIndex(left_center)),
       true);
 
-  EXPECT_EQ(container.isBoundary_testing(
-                container.dvec3ToCellIndex_testing(left_bottom)),
+  EXPECT_EQ(container.isBoundary(
+                container.dvec3ToCellIndex(left_bottom)),
             false);
   EXPECT_EQ(
-      container.isHalo_testing(container.dvec3ToCellIndex_testing(left_bottom)),
+      container.isHalo(container.dvec3ToCellIndex(left_bottom)),
       true);
 }
 

@@ -453,16 +453,3 @@ std::vector<std::size_t> LinkedCellsContainer::boundary_direction(
 
   return directions;
 }
-
-bool LinkedCellsContainer::isBoundary_testing(std::size_t cellIndex) const {
-  return isBoundary(cellIndex);
-}
-
-bool LinkedCellsContainer::isHalo_testing(std::size_t cellIndex) const {
-  return isHalo(cellIndex);
-}
-
-std::size_t LinkedCellsContainer::dvec3ToCellIndex_testing(
-    const dvec3 &position) const {
-  return dvec3ToCellIndex(position);
-}
