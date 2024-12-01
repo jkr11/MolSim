@@ -94,7 +94,7 @@ int main(const int argc, char* argv[]) {
       // check if next percentage complete
       if (const double t = 100 * current_time / arguments.t_end;
           t >= percentage) {
-        / Ü percentage++;
+        percentage++;
         auto elapsed = stopwatch.elapsed();
         auto eta = (elapsed / percentage) * 100 - elapsed;
         auto h = std::chrono::duration_cast<std::chrono::hours>(eta).count();
