@@ -12,7 +12,13 @@ file(GLOB_RECURSE MOLSIM_TEST
 option(BUILD_TESTS "Build tests executable" OFF)
 
 if (BUILD_TESTS)
-    add_executable(MolSimTest ${MOLSIM_TEST})
+    add_executable(MolSimTest ${MOLSIM_TEST}
+            CLArgumentParserTest.cpp
+            DirectSumContainerTest.cpp
+            LennardJonesTest.cpp
+            VerletIntegratorTest.cpp
+            BoundaryConditionsTest.cpp
+            testUtil.h)
 
     target_link_libraries(MolSimTest MolSimLib GTest::gtest_main)
     include(GoogleTest)

@@ -70,16 +70,18 @@ fi
 
 
 # test
-if [[ $RUN_TESTS == "On" ]]
+if [[ $RUN_TESTS == "ON" ]]
 then
+  cd tests || return 127
   echo ""
   printf "\033[32m--- TESTING: ---\033[0m\n"
   echo ""
   if ! ctest; then
     printf "\033[31mtests failed!\033[0m\n"
-    cd ../../scripts || return 127 # navigate back
+    cd ../../../scripts || return 127 # navigate back
     return 127
   fi
+  cd ..
 else
   echo ""
   echo "--- SKIPPED TESTING: ---"

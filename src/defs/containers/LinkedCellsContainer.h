@@ -185,6 +185,14 @@ class LinkedCellsContainer final : public ParticleContainer {
       const dvec3& position) const;
 
   /**
+   * @brief API for testing, because gtest does not like inline
+   * @param position Position in space
+   * @return Associated cell index
+   */
+  [[nodiscard]] std::size_t dvec3ToCellIndex_testing(
+      const dvec3& position) const;
+
+  /**
    * @brief Gets the cell index of the specified cell coordinate
    * @param position Cell coordinate in 3 dimensions
    * @return Associated cell index
@@ -221,6 +229,13 @@ class LinkedCellsContainer final : public ParticleContainer {
   [[nodiscard]] inline bool isHalo(std::size_t cellIndex) const;
 
   /**
+   * @brief API for testing
+   * @param cellIndex cell index to be checked
+   * @return If cell is part of the halo
+   */
+  [[nodiscard]] bool isHalo_testing(std::size_t cellIndex) const;
+
+  /**
    * @brief Checks if a cell coordinate is in the boundary of the container
    * @param cellCoord Cell coordinate to be checked
    * @return cell is part of the boundary
@@ -233,6 +248,13 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @return If cell is part of the boundary
    */
   [[nodiscard]] inline bool isBoundary(std::size_t cellIndex) const;
+
+  /**
+   * @brief API for testing, because gtest does not like inline
+   * @param cellIndex cell index to be checked
+   * @return If cell is part of the boundary
+   */
+  [[nodiscard]] bool isBoundary_testing(std::size_t cellIndex) const;
 
   /**
    * @brief calculates all directions of the halo cell
