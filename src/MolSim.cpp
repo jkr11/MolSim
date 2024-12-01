@@ -7,7 +7,6 @@
 #include "forces/Gravity.h"
 #include "forces/LennardJones.h"
 #include "io/CLArgumentParser.h"
-#include "io/file/in/CuboidReader.h"
 #include "io/file/in/xml/XmlReader.h"
 #include "io/file/out/OutputHelper.h"
 #include "io/file/out/VTKWriter.h"
