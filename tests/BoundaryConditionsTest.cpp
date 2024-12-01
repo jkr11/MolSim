@@ -10,7 +10,7 @@
 
 /**
  * all 9 cells IN 2D should have the right declaration of type of cell
- * z-axis is not tested as it is currently not a part of the simulation
+ * z-axis is not tested as it is currently not a part of the simulation (only 2D)
  */
 TEST(BoundaryConditions, Precalculations) {
   LinkedCellsContainer container({.domain = {3, 3, 3},
