@@ -265,6 +265,14 @@ spheroidType::sigma_type& spheroidType::sigma() { return this->sigma_.get(); }
 
 void spheroidType::sigma(const sigma_type& x) { this->sigma_.set(x); }
 
+const spheroidType::mv_type& spheroidType::mv() const {
+  return this->mv_.get();
+}
+
+spheroidType::mv_type& spheroidType::mv() { return this->mv_.get(); }
+
+void spheroidType::mv(const mv_type& x) { this->mv_.set(x); }
+
 // Dvec3Type
 //
 
@@ -1029,7 +1037,7 @@ spheroidType::spheroidType(const velocity_type& velocity,
                            const origin_type& origin, const radius_type& radius,
                            const type_type& type, const h_type& h,
                            const mass_type& mass, const epsilon_type& epsilon,
-                           const sigma_type& sigma)
+                           const sigma_type& sigma, const mv_type& mv)
     : ::xml_schema::type(),
       velocity_(velocity, this),
       origin_(origin, this),
@@ -1038,13 +1046,15 @@ spheroidType::spheroidType(const velocity_type& velocity,
       h_(h, this),
       mass_(mass, this),
       epsilon_(epsilon, this),
-      sigma_(sigma, this) {}
+      sigma_(sigma, this),
+      mv_(mv, this) {}
 
 spheroidType::spheroidType(::std::auto_ptr<velocity_type> velocity,
                            ::std::auto_ptr<origin_type> origin,
                            const radius_type& radius, const type_type& type,
                            const h_type& h, const mass_type& mass,
-                           const epsilon_type& epsilon, const sigma_type& sigma)
+                           const epsilon_type& epsilon, const sigma_type& sigma,
+                           const mv_type& mv)
     : ::xml_schema::type(),
       velocity_(velocity, this),
       origin_(origin, this),
@@ -1053,7 +1063,8 @@ spheroidType::spheroidType(::std::auto_ptr<velocity_type> velocity,
       h_(h, this),
       mass_(mass, this),
       epsilon_(epsilon, this),
-      sigma_(sigma, this) {}
+      sigma_(sigma, this),
+      mv_(mv, this) {}
 
 spheroidType::spheroidType(const spheroidType& x, ::xml_schema::flags f,
                            ::xml_schema::container* c)
@@ -1065,7 +1076,8 @@ spheroidType::spheroidType(const spheroidType& x, ::xml_schema::flags f,
       h_(x.h_, f, this),
       mass_(x.mass_, f, this),
       epsilon_(x.epsilon_, f, this),
-      sigma_(x.sigma_, f, this) {}
+      sigma_(x.sigma_, f, this),
+      mv_(x.mv_, f, this) {}
 
 spheroidType::spheroidType(const ::xercesc::DOMElement& e,
                            ::xml_schema::flags f, ::xml_schema::container* c)
@@ -1077,7 +1089,8 @@ spheroidType::spheroidType(const ::xercesc::DOMElement& e,
       h_(this),
       mass_(this),
       epsilon_(this),
-      sigma_(this) {
+      sigma_(this),
+      mv_(this) {
   if ((f & ::xml_schema::flags::base) == 0) {
     ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
     this->parse(p, f);
@@ -1167,6 +1180,15 @@ void spheroidType::parse(::xsd::cxx::xml::dom::parser<char>& p,
       }
     }
 
+    // mv
+    //
+    if (n.name() == "mv" && n.namespace_().empty()) {
+      if (!mv_.present()) {
+        this->mv_.set(mv_traits::create(i, f, this));
+        continue;
+      }
+    }
+
     break;
   }
 
@@ -1201,6 +1223,10 @@ void spheroidType::parse(::xsd::cxx::xml::dom::parser<char>& p,
   if (!sigma_.present()) {
     throw ::xsd::cxx::tree::expected_element<char>("sigma", "");
   }
+
+  if (!mv_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("mv", "");
+  }
 }
 
 spheroidType* spheroidType::_clone(::xml_schema::flags f,
@@ -1219,6 +1245,7 @@ spheroidType& spheroidType::operator=(const spheroidType& x) {
     this->mass_ = x.mass_;
     this->epsilon_ = x.epsilon_;
     this->sigma_ = x.sigma_;
+    this->mv_ = x.mv_;
   }
 
   return *this;

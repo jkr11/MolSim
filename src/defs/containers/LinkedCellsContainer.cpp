@@ -71,7 +71,6 @@ LinkedCellsContainer::LinkedCellsContainer(
       linked_cells_config.boundary_config.y_high,
       linked_cells_config.boundary_config.z_low,
       linked_cells_config.boundary_config.z_high,
-
   };
   SpdWrapper::get()->info("cell dim: {}, {}, {}; cell count: {}, {}, {}",
                           cell_dim[0], cell_dim[1], cell_dim[2], cell_count[0],

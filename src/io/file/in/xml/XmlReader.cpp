@@ -98,7 +98,8 @@ void XmlReader::read(std::vector<Particle>& particles,
 
         SpheroidGenerator sg(origin, spheres.radius(), spheres.h(),
                              spheres.mass(), velocity, spheres.epsilon(),
-                             spheres.sigma(), spheres.type(), twoD);
+                             spheres.sigma(), spheres.type(), spheres.mv(),
+                             twoD);
 
         sg.generate(particles);
       }
@@ -111,7 +112,7 @@ void XmlReader::read(std::vector<Particle>& particles,
 
 using LBoundaryType =
     LinkedCellsConfig::BoundaryType;  // BoundaryType is double used by the xsd
-                                      // config files so be carefull
+                                      // config files so be careful
 template <typename BT>
 LBoundaryType toBoundaryType(const BT& boundary_type) {
   if (boundary_type.Outflow().present()) {

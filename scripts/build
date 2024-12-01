@@ -13,6 +13,7 @@ help() {
 
 RELEASE_TYPE="Release"
 RUN_TESTS="OFF"
+ENABLE_BENCHMARK="OFF"
 
 # parse args
 for arg in "$@"; do
@@ -24,6 +25,10 @@ for arg in "$@"; do
   then
     RUN_TESTS="ON"
     echo "enabled testing"
+  elif [[ $arg == "-b" || $arg == "--benchmark" ]]
+  then
+    ENABLE_BENCHMARK="ON"
+    echo "enabled benchmarking"
   else
     RELEASE_TYPE="$arg"
     printf "changed Release Type to %s\n" "$RELEASE_TYPE"
@@ -49,7 +54,7 @@ echo ""
 start_time=$(date +%s%N)
 cd ../buildDir/"$RELEASE_TYPE" || exit 1
 cmake ../../CMakeLists.txt
-cmake -DCMAKE_BUILD_TYPE="$RELEASE_TYPE" -DBUILD_TESTS="$RUN_TESTS" .
+cmake -DCMAKE_BUILD_TYPE="$RELEASE_TYPE" -DBUILD_TESTS="$RUN_TESTS" -DENABLE_BENCHMARK="$ENABLE_BENCHMARK" .
 
 echo ""
 printf "\033[32m--- BUILDING: ---\033[0m\n"

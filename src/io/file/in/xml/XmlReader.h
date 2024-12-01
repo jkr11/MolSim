@@ -5,8 +5,8 @@
 #ifndef XMLREADER_H
 #define XMLREADER_H
 #pragma once
+#include "defs/Particle.h"
 #include "io/CLArgumentParser.h"
-#include "io/file/in/FileReader.h"
 
 /**
  * @brief class for reading xml files specified by input.xsd in /input/
@@ -14,7 +14,7 @@
  * Currently supports reading cuboids and spheroids simultaneously, metadata is
  * optional as it is currently handled by CLArgumentParser
  */
-class XmlReader : public FileReader {
+class XmlReader {
  public:
   XmlReader() = default;
 
