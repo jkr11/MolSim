@@ -135,15 +135,15 @@ def plot_results(a_values: list[int], execution_times_ds: list[float], execution
         plt.plot([a * 1000 for a in a_values],
                  execution_times_lc,
                  marker='o',
-                 label="Execution Time LinkedCells")
+                 label="Execution Time LinkedCells 2D")
     if execution_times_cube != []:
         plt.plot([a * 1000 for a in a_values],
                  execution_times_cube,
                  marker='o',
-                 label="Execution Time Cube")
+                 label="Execution Time LinkedCells 3D (with constrained boundaries)")
 
     plt.title(
-        "Execution Time vs Number of Particles on Intel i7-13700H, 32GB RAM\nDomain = (300,300,1), $r_{cutoff} = 3.0$")
+        "Execution Time vs Number of Particles on Intel i7-13700H, 32GB RAM\nDomain = $(300,300,1)$, $r_{cutoff} = 3.0$")
     plt.xlabel("Particles")
     plt.ylabel(f"average Execution Time (seconds) over {samples} runs")
     plt.grid(True)
