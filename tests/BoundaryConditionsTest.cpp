@@ -9,6 +9,12 @@
 #include "utils/ArrayUtils.h"
 
 /**
+ * uses an API for testing since the including part does not work for inlined
+ * functions
+ *
+ */
+
+/**
  * all 9 cells IN 2D should have the right declaration of type of cell
  * z-axis is not tested as it is currently not a part of the simulation
  */
