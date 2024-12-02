@@ -79,6 +79,10 @@ LinkedCellsContainer::LinkedCellsContainer(
 
 void LinkedCellsContainer::addParticle(const Particle &p) {
   const std::size_t index = dvec3ToCellIndex(p.getX());
+  if (!isValidCellCoordinate(cellIndexToCoord(index))) {
+    SpdWrapper::get()->error("Tried to add particle out of bounds");
+    exit(1);
+  }
   cells[index].emplace_back(p);
 
   DEBUG_PRINT_FMT("Added particle with coords ({}, {}, {}) into cell index: {}",
