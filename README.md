@@ -12,12 +12,15 @@ MolSim - Group A
   ```bash
   git clone https://github.com/jkr11/MolSim.git
   ```
-- Build the project using the provided build script by using source, add `-t` to also build tests
+- Build the project using the provided build script by using source, add `-t` to also build and run tests, add `-b` to run the benchmark
   ```bash
   cd MolSim/scripts
-  source build <CMAKE_BUILD_TYPE= Release | Debug | asan | asan-quiet>  [-t]
+  source build <CMAKE_BUILD_TYPE= Release (default) | Debug | asan | asan-quiet>  [-t|--test] [-b|--benchmark]
   ```
-- To run tests navigate to the `/buildDir/<CMAKE_BUILD_TYPE>/tests` and run `ctest`
+- Set the Input file by selecting the corresponding number during the script execution
+  ```bash
+  source set-input
+  ```
 
 - Creating documentation when doxygen is installed (has to be executed in the specific `buildDir/<CMAKE_BUILD_TYPE>`)
   ```bash
@@ -26,13 +29,11 @@ MolSim - Group A
   ```
 - Running the program
   ```bash
-  $BUILD <options>
+  $BUILD -f $INPUT <options>
   ``` 
-  Please note that `$BUILD` is only available if the script is executed via source and contains the path to the last compiled executable
-
-### Input
-To make file input easier, a script `set-input` is provided in `MolSim/scripts/`. Run it using `source set-input` and follow the prompt.
-The path is saved in `$INPUT`. Use `$BUILD -f $INPUT` to run.
+- `$BUILD` contains the location of the last compiled executable
+- `$INPUT` contains the location of the selected input file
+- Please note that `$BUILD` and `$INPUT` are only available if the scripts are executed via source.
 
 ### Options
 
@@ -49,7 +50,10 @@ The path is saved in `$INPUT`. Use `$BUILD -f $INPUT` to run.
 - Output is located in `./output/<current_time>`
 - `--step_size` is relative to the passed simulation time and not the number of iterations
 - `--loglevel debug` is only available if compiled with CMAKE_BUILD_TYPE=Debug
+- all other options are specified in the .xml input file
+- old inputs have been migrated to xml and support this pipeline
 
 ## LinkedCells vs DirectSum performance
+The LinkedCell implementation is more performant than the old DirectSum implementation.
 
-![figure](benchmark/graph.png)
+![Benchmark Graph](benchmark/graph.png)
