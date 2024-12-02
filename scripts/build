@@ -1,28 +1,49 @@
 #!/bin/bash
 
 help() {
-  printf "\033[31minvalid CMAKE_BUILD_TYPE '%s' specified!\033[0m\n" "$1"
   echo "builds the project in /buildDir/<CMAKE_BUILD_TYPE> and exports the path to the executable in \$BUILD"
-  echo "Usage: source build.sh <CMAKE_BUILD_TYPE>"
+  printf "predefined <CMAKE_BUILD_TYPE>s are:\t Release    (default)\n"
+  printf "\t\t\t\t\t Debug\n"
+  printf "\t\t\t\t\t asan\n"
+  printf "\t\t\t\t\t asan-quiet\n"
+  echo "use -t or --test to also test"
+  echo "Usage: source build.sh <CMAKE_BUILD_TYPE> [-t|--test]"
   return
 }
 
-# check for valid CMAKE_BUILD_TYPE
-if [[ "$#" -ne 1 || ( "$1" != "Debug"  &&  "$1" != "Release"  &&  "$1" != "asan"  &&  "$1" != "asan-strict" ) ]]
-then
-  help "$1"
-  return 127
-fi
+RELEASE_TYPE="Release"
+RUN_TESTS="OFF"
+ENABLE_BENCHMARK="OFF"
 
-printf "\033[32mbuilding '%s'\033[0m\n" "$1"
+# parse args
+for arg in "$@"; do
+  if [[ $arg == "--help" ]]
+  then
+    help
+    return
+  elif [[ $arg == "-t" || $arg == "--test" ]]
+  then
+    RUN_TESTS="ON"
+    echo "enabled testing"
+  elif [[ $arg == "-b" || $arg == "--benchmark" ]]
+  then
+    ENABLE_BENCHMARK="ON"
+    echo "enabled benchmarking"
+  else
+    RELEASE_TYPE="$arg"
+    printf "changed Release Type to %s\n" "$RELEASE_TYPE"
+  fi
+done
+
+printf "\033[32mbuilding '%s'\033[0m\n" "$RELEASE_TYPE"
 
 # create buildDir if needed
-if [ -d "../buildDir/$1" ]
+if [ -d "../buildDir/$RELEASE_TYPE" ]
 then
-  printf "\033[32mdetected existing 'buildDir/%s'\033[0m\n" "$1"
+  printf "\033[32mdetected existing 'buildDir/%s'\033[0m\n" "$RELEASE_TYPE"
 else
-  mkdir -p ../buildDir/"$1"
-  echo "created 'buildDir/$1'"
+  mkdir -p ../buildDir/"$RELEASE_TYPE"
+  echo "created 'buildDir/$RELEASE_TYPE'"
 fi
 
 echo ""
@@ -31,9 +52,9 @@ echo ""
 
 # setup cmake
 start_time=$(date +%s%N)
-cd ../buildDir/"$1" || exit 1
+cd ../buildDir/"$RELEASE_TYPE" || exit 1
 cmake ../../CMakeLists.txt
-cmake -DCMAKE_BUILD_TYPE="$1" .
+cmake -DCMAKE_BUILD_TYPE="$RELEASE_TYPE" -DBUILD_TESTS="$RUN_TESTS" -DENABLE_BENCHMARK="$ENABLE_BENCHMARK" .
 
 echo ""
 printf "\033[32m--- BUILDING: ---\033[0m\n"
@@ -46,15 +67,24 @@ if ! cmake --build . -- -"j$(nproc)"; then
   return 127
 fi
 
-echo ""
-printf "\033[32m--- TESTING: ---\033[0m\n"
-echo ""
+
 
 # test
-if ! ctest; then
-  printf "\033[31mtests failed!\033[0m\n"
-  cd ../../scripts || return 127 # navigate back
-  return 127
+if [[ $RUN_TESTS == "ON" ]]
+then
+  cd tests || return 127
+  echo ""
+  printf "\033[32m--- TESTING: ---\033[0m\n"
+  echo ""
+  if ! ctest; then
+    printf "\033[31mtests failed!\033[0m\n"
+    cd ../../../scripts || return 127 # navigate back
+    return 127
+  fi
+  cd ..
+else
+  echo ""
+  echo "--- SKIPPED TESTING: ---"
 fi
 
 echo ""
@@ -78,7 +108,7 @@ then
   return
 fi
 
-BUILD_FILE=$(dirname "$(realpath "$0")")"/MolSim"
+BUILD_FILE=$(dirname "$(realpath "$0")")"/src/MolSim"
 export BUILD="$BUILD_FILE"
 
 # navigate back since this is should have been executed with the same shell

@@ -1,64 +1,88 @@
 MolSim - Group A
 ===
 
-# Dependencies
+## Dependencies
 - Cmake 3.10
+- Doygen 1.9.8 (`sudo apt install doxygen`)
+- Libxerces (`sudo apt install libxerces-c-dev`)
 
-- Doygen 1.9.8
-
-    ```bash
-    sudo apt install doxygen
-    ```
-
-- Libxerces
-  ```bash
-  sudo apt install libxerces-c-dev
-  ```
-
-# Build
+## Build
 ### Configuration
 - Install
   ```bash
   git clone https://github.com/jkr11/MolSim.git
   ```
-- Build & test the project using the provided script by using source
+- Build the project using the provided build script by using source, add `-t` to also build and run tests, add `-b` to enable the BENCHMARK cmake macro
   ```bash
   cd MolSim/scripts
-  source build <CMAKE_BUILD_TYPE= Release | Debug | asan | asan-quiet>
+  source build <CMAKE_BUILD_TYPE= Release (default) | Debug | asan | asan-quiet>  [-t|--test] [-b|--benchmark]
   ```
-- Creating documentation when doxygen is installed (has to be executed in the specific buildDir <CMAKE_BUILD_TYPE>)
-- ```bash
+- Set the Input file by selecting the corresponding number during the script execution
+  ```bash
+  source set-input
+  ```
+
+- Creating documentation when doxygen is installed (has to be executed in the specific `buildDir/<CMAKE_BUILD_TYPE>`)
+  ```bash
   (cd ../buildDir/<CMAKE_BUILD_TYPE> when starting from /scripts)
   make doc_doxygen 
   ```
 - Running the program
   ```bash
-  $BUILD <options>
+  $BUILD -f $INPUT <options>
   ``` 
-Please note that $BUILD is only available if the script is executed via source and contains the path to the last compiled executable
+- `$BUILD` contains the location of the last compiled executable
+- `$INPUT` contains the location of the selected input file
+- Please note that `$BUILD` and `$INPUT` are only available if the scripts are executed via source.
 
 ### Options
 
-```console
+  ```console
   Options:
   --help | -h                     Show this help message
   --file | -f <filename>          Specify the input file
-  [--t_end | -t <double>]         Specify the simulation end time (t_end), default=100
-  [--delta_t | -d <double>]       Specify the simulation delta time (t_delta), default=0.014
   [--step_size | -s <double>]     Specify how often the output will be written wrt. time(step_size), default=1
-                                  Note that this is independent of the time resolution (t_delta) and dependent on the simulation time
+                                    Note that this is independent of the time resolution (t_delta) and dependent on the simulation time
   [--loglevel | -l <level>]       Specify the log level, default=info, valid=[off, error, warn, info, debug, trace]
-  [--force | -F <forceType>]      Specify what force to use, default=lennardjones, forceType=[lennardjones,gravity]
-  [--reader | -R <readerType>]    Specify reader type, default=cuboidreader, readerType=[cuboidreader,defaultreader]Example:
-  
-  Example Usage Week02:
-  $BUILD -f ../input/test.cuboid -t 5 -d 0.0002 -s 0.01 -l info
-  
-  Example Usage Week01
-  $BUILD -f ../input/eingabe-sonne.txt -t 10000 -s 10 --reader defaultreader --force gravity
+  Example usage:
+  $BUILD -f $INPUT -l <loglevel> -s <number>
+  ```
+- Output is located in `./output/<current_time>`
+- `--step_size` is relative to the passed simulation time and not the number of iterations
+- `--loglevel debug` is only available if compiled with CMAKE_BUILD_TYPE=Debug
+- all other options are specified in the .xml input file
+- old inputs have been migrated to xml and support this pipeline
+
+## LinkedCells vs DirectSum performance
+
+### Running benchmark.py
+
+For optimal performance run scripts/build with -b for benchmarking
+The python script uses the generated executable in buildDir/Release/src for execution.
+Ensure you have python 3.6 or later installed 
+```bash
+cd benchmark
+python -m vevn <name>
+source <name>/bin/activate
+pip3 install argparse matplotlib
+
+python3 benchmark.py <options> 
+options:
+  -h, --help            show this help message and exit
+  -a A_VALUES [A_VALUES ...], --a-values A_VALUES [A_VALUES ...]
+                        List of 'a' values (multipliers of 1000 particles) to
+                        simulate. Default: [1, 2, 4, 8].
+  -o OUTPUT, --output OUTPUT
+                        Path to save the output plot. Name it graph.png to
+                        push it to git.
+  -d, --cached-ds       Use default cached execution times for DirectSum
+                        instead of running it.
+  -s SAMPLES, --samples SAMPLES
+                        Number of runs for each a value. Default = 1
+  -c, --cubes           Compare three d files to two d files
+  -n, --no-ds           Removes direct sum benchmarks from the plot
 ```
 
-- Output is located in ./output/<current_time>
-- --step_size is relative to the passed simulation time and not the number of iterations
-- --loglevel debug is only available if compiled with CMAKE_BUILD_TYPE=Debug
-- --force gravity and --reader defaultReader are needed to simulate the behaviour of week01 
+The LinkedCell implementation is more performant than the old DirectSum implementation.
+
+![Benchmark Graph](benchmark/graph.png)
