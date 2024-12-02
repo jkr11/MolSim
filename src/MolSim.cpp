@@ -62,7 +62,7 @@ int main(const int argc, char* argv[]) {
     SpdWrapper::get()->error("Unrecognized container type");
     throw std::runtime_error("Unrecognized container type");
   }
-
+  std::cout << particles.size() << " particles" << std::endl;
   std::unique_ptr<Force> force;
   if (arguments.force_type == Arguments::Gravity) {
     force = std::make_unique<Gravity>();

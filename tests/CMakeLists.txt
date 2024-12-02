@@ -18,7 +18,8 @@ if (BUILD_TESTS)
             LennardJonesTest.cpp
             VerletIntegratorTest.cpp
             BoundaryConditionsTest.cpp
-            testUtil.h)
+            testUtil.h
+            XmlReaderTest.cpp)
 
     target_link_libraries(MolSimTest MolSimLib GTest::gtest_main)
     include(GoogleTest)
