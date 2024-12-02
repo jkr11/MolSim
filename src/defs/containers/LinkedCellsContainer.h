@@ -9,6 +9,7 @@
 
 /**
  * @brief a particle container with linked cells
+ * @image html benchmark/graph.png
  */
 class LinkedCellsContainer final : public ParticleContainer {
  private:

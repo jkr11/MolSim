@@ -62,3 +62,7 @@ Please note that $BUILD is only available if the script is executed via source a
 - --step_size is relative to the passed simulation time and not the number of iterations
 - --loglevel debug is only available if compiled with CMAKE_BUILD_TYPE=Debug
 - --force gravity and --reader defaultReader are needed to simulate the behaviour of week01 
+
+## LinkedCells vs DirectSum performance
+
+![figure](benchmark/graph.png)
