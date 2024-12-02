@@ -37,15 +37,12 @@ int main(const int argc, char* argv[]) {
   };
   auto [input_file, step_size] = CLArgumentParser::parse(argc, argv);
 
-  //  TODO: Should we change this so the reader only reads configs? probably.
   std::vector<Particle> particles;
 
   XmlReader::read(particles, input_file, arguments);
 
   printConfiguration(arguments);
   SpdWrapper::get()->info("Step size: {}", step_size);
-  // TODO: we should pass step size to reader but right now its useful for
-  // testing
 
   std::unique_ptr<ParticleContainer> container;
   if (std::holds_alternative<LinkedCellsConfig>(arguments.container_data)) {
