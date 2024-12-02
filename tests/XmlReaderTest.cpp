@@ -26,6 +26,9 @@ Arguments arguments = {
                               }},
 };
 
+/**
+ *  @brief tests if xmlReader fails for non xml files
+ */
 TEST(XmlReader, failOnNonXml) {
   if (std::ofstream file("testFile.txt"); file.is_open()) {
     file << "Hello, World!" << std::endl;
@@ -36,6 +39,9 @@ TEST(XmlReader, failOnNonXml) {
   EXPECT_ANY_THROW(XmlReader::read(particles, "testFile.txt", args));
 }
 
+/**
+ *  @brief checks if cuboids and DirectSum containers are read correctly
+ */
 TEST(XmlReader, testCuboid) {
   std::vector<Particle> particles;
   XmlReader::read(particles, "tests/test_cuboid.xml", arguments);
@@ -48,6 +54,9 @@ TEST(XmlReader, testCuboid) {
       std::holds_alternative<DirectSumConfig>(arguments.container_data));
 }
 
+/**
+ * @brief checks if both cuboids and spheroids are correct, LinkedCellsConfig
+ */
 TEST(XmlReader, testCuboidSpheroidLinkedCells) {
   std::vector<Particle> particles;
   XmlReader::read(particles, "tests/test_cuboid_spheroid.xml", arguments);
