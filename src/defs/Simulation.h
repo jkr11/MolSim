@@ -93,15 +93,13 @@ inline void printConfiguration(const Arguments& args) {
 
     const auto& [domain, cutoff_radius, boundary_type, boundary_config] =
         std::get<LinkedCellsConfig>(args.container_data);
-    logger->info("-- Domain: ({}, {}, {})", domain[0],
-                 domain[1], domain[2]);
+    logger->info("-- Domain: ({}, {}, {})", domain[0], domain[1], domain[2]);
     logger->info("-- Cutoff Radius: {}", cutoff_radius);
 
     logger->info("Boundary Configuration:");
     logger->info("------------------------");
 
-    const auto& [x_high, x_low, y_high, y_low, z_high, z_low] =
-        boundary_config;
+    const auto& [x_high, x_low, y_high, y_low, z_high, z_low] = boundary_config;
     printBoundary("x_high", x_high);
     printBoundary("x_low", x_low);
     printBoundary("y_high", y_high);

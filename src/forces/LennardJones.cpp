@@ -8,7 +8,7 @@
 dvec3 LennardJones::directionalForce(Particle& p1, Particle& p2) const {
   const dvec3 rv = p2.getX() - p1.getX();
   const double r = ArrayUtils::L2Norm(rv);
-  if (r == 0) return {0,0,0};
+  if (r == 0) return {0, 0, 0};
   constexpr double sigma = 1.0;
   constexpr double epsilon = 5.0;
   const double sr = sigma / r;
