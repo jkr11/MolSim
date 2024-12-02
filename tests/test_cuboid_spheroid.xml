@@ -1,9 +1,36 @@
 <?xml version="1.0"?>
 <simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:noNamespaceSchemaLocation="input.xsd">
+            xsi:noNamespaceSchemaLocation="../input/input.xsd">
     <metadata>
         <container>
-            <directSum/>
+            <linkedCells>
+                <domain>
+                    <x>400</x>
+                    <y>400</y>
+                    <z>1</z>
+                </domain>
+                <r_cutoff>3.0</r_cutoff>
+                <boundary>
+                    <x_high>
+                        <Outflow/>
+                    </x_high>
+                    <x_low>
+                        <Outflow/>
+                    </x_low>
+                    <y_high>
+                        <Outflow/>
+                    </y_high>
+                    <y_low>
+                        <Outflow/>
+                    </y_low>
+                    <z_high>
+                        <Outflow/>
+                    </z_high>
+                    <z_low>
+                        <Outflow/>
+                    </z_low>
+                </boundary>
+            </linkedCells>
         </container>
         <force>
             <LennardJones/>
