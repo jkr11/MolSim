@@ -16,7 +16,8 @@ SpheroidGenerator::SpheroidGenerator(const dvec3& origin, const int radius,
                                      const int type, const double mv,
                                      const bool twoD)
     : origin(origin),
-      radius(radius),
+      radius(radius -
+             1),  // needs to be minus one because we consider the origin as one
       h(h),
       m(m),
       initialVelocity(initialVelocity),
@@ -28,7 +29,7 @@ SpheroidGenerator::SpheroidGenerator(const dvec3& origin, const int radius,
   DEBUG_PRINT_FMT("SpheroidGenerator of dim {} created with parameters:",
                   twoD ? 2 : 3);
   DEBUG_PRINT_FMT("origin: ({}, {}, {})", origin[0], origin[1], origin[2]);
-  DEBUG_PRINT_FMT("radius: {}", radius);
+  DEBUG_PRINT_FMT("radius: {}", radius + 1);
   DEBUG_PRINT_FMT("h: {}", h);
   DEBUG_PRINT_FMT("m: {}", m);
   DEBUG_PRINT_FMT("initialVelocity: ({}, {}, {})", initialVelocity[0],
