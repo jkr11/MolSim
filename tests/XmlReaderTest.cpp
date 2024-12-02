@@ -41,10 +41,12 @@ TEST(XmlReader, failOnNonXml) {
 
 /**
  *  @brief checks if cuboids and DirectSum containers are read correctly
+ *  this test will only pass if it is executed via our build script due to hardcoded file paths
  */
 TEST(XmlReader, testCuboid) {
+
   std::vector<Particle> particles;
-  XmlReader::read(particles, "tests/test_cuboid.xml", arguments);
+  XmlReader::read(particles, "../../../tests/test_cuboid.xml", arguments);
 
   EXPECT_EQ(particles.size(), 20);
   EXPECT_EQ(arguments.t_end, 15);
@@ -56,10 +58,11 @@ TEST(XmlReader, testCuboid) {
 
 /**
  * @brief checks if both cuboids and spheroids are correct, LinkedCellsConfig
+ * this test will only pass if it is executed via our build script due to hardcoded file paths
  */
 TEST(XmlReader, testCuboidSpheroidLinkedCells) {
   std::vector<Particle> particles;
-  XmlReader::read(particles, "tests/test_cuboid_spheroid.xml", arguments);
+  XmlReader::read(particles, "../../../tests/test_cuboid_spheroid.xml", arguments);
   EXPECT_EQ(particles.size(), 1515);
   EXPECT_EQ(arguments.t_end, 15);
   EXPECT_EQ(arguments.delta_t, 0.015);

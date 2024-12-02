@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:noNamespaceSchemaLocation="input.xsd">
+            xsi:noNamespaceSchemaLocation="../input/input.xsd">
     <metadata>
         <container>
             <linkedCells>
