@@ -12,7 +12,7 @@ MolSim - Group A
   ```bash
   git clone https://github.com/jkr11/MolSim.git
   ```
-- Build the project using the provided build script by using source, add `-t` to also build and run tests, add `-b` to run the benchmark
+- Build the project using the provided build script by using source, add `-t` to also build and run tests, add `-b` to enable the BENCHMARK cmake macro
   ```bash
   cd MolSim/scripts
   source build <CMAKE_BUILD_TYPE= Release (default) | Debug | asan | asan-quiet>  [-t|--test] [-b|--benchmark]
@@ -54,6 +54,35 @@ MolSim - Group A
 - old inputs have been migrated to xml and support this pipeline
 
 ## LinkedCells vs DirectSum performance
+
+### Running benchmark.py
+
+For optimal performance run scripts/build with -b for benchmarking
+The python script uses the generated executable in buildDir/Release/src for execution.
+Ensure you have python 3.6 or later installed 
+```bash
+cd benchmark
+python -m vevn <name>
+source <name>/bin/activate
+pip3 install argparse matplotlib
+
+python3 benchmark.py <options> 
+options:
+  -h, --help            show this help message and exit
+  -a A_VALUES [A_VALUES ...], --a-values A_VALUES [A_VALUES ...]
+                        List of 'a' values (multipliers of 1000 particles) to
+                        simulate. Default: [1, 2, 4, 8].
+  -o OUTPUT, --output OUTPUT
+                        Path to save the output plot. Name it graph.png to
+                        push it to git.
+  -d, --cached-ds       Use default cached execution times for DirectSum
+                        instead of running it.
+  -s SAMPLES, --samples SAMPLES
+                        Number of runs for each a value. Default = 1
+  -c, --cubes           Compare three d files to two d files
+  -n, --no-ds           Removes direct sum benchmarks from the plot
+```
+
 The LinkedCell implementation is more performant than the old DirectSum implementation.
 
 ![Benchmark Graph](benchmark/graph.png)
