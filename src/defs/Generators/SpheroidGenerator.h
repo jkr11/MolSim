@@ -20,10 +20,10 @@ class SpheroidGenerator final : public ParticleGenerator {
   double h{};
   double m{};
   const dvec3 initialVelocity;
-  double mv{};
   double epsilon{};
   double sigma{};
   const int type{};
+  double mv{};
   /**
    * only if this is passed with true, spheres will be two Dimensional
    */

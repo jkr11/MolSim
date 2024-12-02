@@ -263,7 +263,7 @@ TEST(LinkedCellsContainer, pairIterator) {
       createParticle(9, 6, 4), createParticle(2, 1, 1), createParticle(3, 0, 0),
       createParticle(0, 6, 1)};
 
-  for (int i = 0; i < particles.size(); i++) {
+  for (std::size_t i = 0; i < particles.size(); i++) {
     container.addParticle(particles[i]);
   }
 
@@ -272,8 +272,8 @@ TEST(LinkedCellsContainer, pairIterator) {
 
   // compute pairs using the slow method
   std::vector<std::array<Particle*, 2>> pairs = {};
-  for (int i = 0; i < particles.size(); i++) {
-    for (int j = i + 1; j < particles.size(); j++) {
+  for (std::size_t i = 0; i < particles.size(); i++) {
+    for (std::size_t j = i + 1; j < particles.size(); j++) {
       auto posp = (particles[i]).getX();
       auto posq = (particles[j]).getX();
       dvec3 d = {posp[0] - posq[0], posp[1] - posq[1], posp[2] - posq[2]};
