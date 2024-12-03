@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_compile_options(-O3 -ffast-math -march=native -std=c++17)
+add_compile_options(-O3 -ffast-math -march=native -std=c++17 -Wno-deprecated-declarations)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
 include(googletest)
@@ -21,7 +21,7 @@ include(xsd)
 # doesnt work apparently someone find better solutions
 target_compile_options(spdlog
         PRIVATE
-        $<$<CXX_COMPILER_ID:GNU>: -w>
+        $<$<CXX_COMPILER_ID:GNU>: -w >
         $<$<CXX_COMPILER_ID:Clang>: -w>
 )
 
