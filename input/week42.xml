@@ -12,10 +12,10 @@
                 <r_cutoff>2.5</r_cutoff>
                 <boundary>
                     <x_high>
-                        <Outflow/>
+                        <Reflective/>
                     </x_high>
                     <x_low>
-                        <Outflow/>
+                        <Reflective/>
                     </x_low>
                     <y_high>
                         <Reflective/>

@@ -12,6 +12,7 @@
 #include "debug/debug_print.h"
 #include "defs/Particle.h"
 #include "forces/LennardJones.h"
+#include "utils/ArrayUtils.h"
 #include "utils/SpdWrapper.h"
 
 const double LinkedCellsContainer::sigma_factor = std::pow(2.0, 1.0 / 6.0);
