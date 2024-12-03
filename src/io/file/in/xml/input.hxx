@@ -602,15 +602,29 @@ class spheroidType : public ::xml_schema::type {
 
   void sigma(const sigma_type& x);
 
+  // mv
+  //
+  typedef ::xml_schema::decimal mv_type;
+  typedef ::xsd::cxx::tree::traits<mv_type, char,
+                                   ::xsd::cxx::tree::schema_type::decimal>
+      mv_traits;
+
+  const mv_type& mv() const;
+
+  mv_type& mv();
+
+  void mv(const mv_type& x);
+
   // Constructors.
   //
   spheroidType(const velocity_type&, const origin_type&, const radius_type&,
                const type_type&, const h_type&, const mass_type&,
-               const epsilon_type&, const sigma_type&);
+               const epsilon_type&, const sigma_type&, const mv_type&);
 
   spheroidType(::std::auto_ptr<velocity_type>, ::std::auto_ptr<origin_type>,
                const radius_type&, const type_type&, const h_type&,
-               const mass_type&, const epsilon_type&, const sigma_type&);
+               const mass_type&, const epsilon_type&, const sigma_type&,
+               const mv_type&);
 
   spheroidType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
                ::xml_schema::container* c = 0);
@@ -639,6 +653,7 @@ class spheroidType : public ::xml_schema::type {
   ::xsd::cxx::tree::one<mass_type> mass_;
   ::xsd::cxx::tree::one<epsilon_type> epsilon_;
   ::xsd::cxx::tree::one<sigma_type> sigma_;
+  ::xsd::cxx::tree::one<mv_type> mv_;
 };
 
 class Dvec3Type : public ::xml_schema::type {
@@ -1011,92 +1026,92 @@ class BoundaryType : public ::xml_schema::type {
 
 class BoundaryConfigType : public ::xml_schema::type {
  public:
-  // north
+  // x_high
   //
-  typedef ::BoundaryType north_type;
-  typedef ::xsd::cxx::tree::traits<north_type, char> north_traits;
+  typedef ::BoundaryType x_high_type;
+  typedef ::xsd::cxx::tree::traits<x_high_type, char> x_high_traits;
 
-  const north_type& north() const;
+  const x_high_type& x_high() const;
 
-  north_type& north();
+  x_high_type& x_high();
 
-  void north(const north_type& x);
+  void x_high(const x_high_type& x);
 
-  void north(::std::auto_ptr<north_type> p);
+  void x_high(::std::auto_ptr<x_high_type> p);
 
-  // south
+  // x_low
   //
-  typedef ::BoundaryType south_type;
-  typedef ::xsd::cxx::tree::traits<south_type, char> south_traits;
+  typedef ::BoundaryType x_low_type;
+  typedef ::xsd::cxx::tree::traits<x_low_type, char> x_low_traits;
 
-  const south_type& south() const;
+  const x_low_type& x_low() const;
 
-  south_type& south();
+  x_low_type& x_low();
 
-  void south(const south_type& x);
+  void x_low(const x_low_type& x);
 
-  void south(::std::auto_ptr<south_type> p);
+  void x_low(::std::auto_ptr<x_low_type> p);
 
-  // east
+  // y_high
   //
-  typedef ::BoundaryType east_type;
-  typedef ::xsd::cxx::tree::traits<east_type, char> east_traits;
+  typedef ::BoundaryType y_high_type;
+  typedef ::xsd::cxx::tree::traits<y_high_type, char> y_high_traits;
 
-  const east_type& east() const;
+  const y_high_type& y_high() const;
 
-  east_type& east();
+  y_high_type& y_high();
 
-  void east(const east_type& x);
+  void y_high(const y_high_type& x);
 
-  void east(::std::auto_ptr<east_type> p);
+  void y_high(::std::auto_ptr<y_high_type> p);
 
-  // west
+  // y_low
   //
-  typedef ::BoundaryType west_type;
-  typedef ::xsd::cxx::tree::traits<west_type, char> west_traits;
+  typedef ::BoundaryType y_low_type;
+  typedef ::xsd::cxx::tree::traits<y_low_type, char> y_low_traits;
 
-  const west_type& west() const;
+  const y_low_type& y_low() const;
 
-  west_type& west();
+  y_low_type& y_low();
 
-  void west(const west_type& x);
+  void y_low(const y_low_type& x);
 
-  void west(::std::auto_ptr<west_type> p);
+  void y_low(::std::auto_ptr<y_low_type> p);
 
-  // up
+  // z_high
   //
-  typedef ::BoundaryType up_type;
-  typedef ::xsd::cxx::tree::traits<up_type, char> up_traits;
+  typedef ::BoundaryType z_high_type;
+  typedef ::xsd::cxx::tree::traits<z_high_type, char> z_high_traits;
 
-  const up_type& up() const;
+  const z_high_type& z_high() const;
 
-  up_type& up();
+  z_high_type& z_high();
 
-  void up(const up_type& x);
+  void z_high(const z_high_type& x);
 
-  void up(::std::auto_ptr<up_type> p);
+  void z_high(::std::auto_ptr<z_high_type> p);
 
-  // down
+  // z_low
   //
-  typedef ::BoundaryType down_type;
-  typedef ::xsd::cxx::tree::traits<down_type, char> down_traits;
+  typedef ::BoundaryType z_low_type;
+  typedef ::xsd::cxx::tree::traits<z_low_type, char> z_low_traits;
 
-  const down_type& down() const;
+  const z_low_type& z_low() const;
 
-  down_type& down();
+  z_low_type& z_low();
 
-  void down(const down_type& x);
+  void z_low(const z_low_type& x);
 
-  void down(::std::auto_ptr<down_type> p);
+  void z_low(::std::auto_ptr<z_low_type> p);
 
   // Constructors.
   //
-  BoundaryConfigType(const north_type&, const south_type&, const east_type&,
-                     const west_type&, const up_type&, const down_type&);
+  BoundaryConfigType(const x_high_type&, const x_low_type&, const y_high_type&,
+                     const y_low_type&, const z_high_type&, const z_low_type&);
 
-  BoundaryConfigType(::std::auto_ptr<north_type>, ::std::auto_ptr<south_type>,
-                     ::std::auto_ptr<east_type>, ::std::auto_ptr<west_type>,
-                     ::std::auto_ptr<up_type>, ::std::auto_ptr<down_type>);
+  BoundaryConfigType(::std::auto_ptr<x_high_type>, ::std::auto_ptr<x_low_type>,
+                     ::std::auto_ptr<y_high_type>, ::std::auto_ptr<y_low_type>,
+                     ::std::auto_ptr<z_high_type>, ::std::auto_ptr<z_low_type>);
 
   BoundaryConfigType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
                      ::xml_schema::container* c = 0);
@@ -1117,12 +1132,12 @@ class BoundaryConfigType : public ::xml_schema::type {
   void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
 
  protected:
-  ::xsd::cxx::tree::one<north_type> north_;
-  ::xsd::cxx::tree::one<south_type> south_;
-  ::xsd::cxx::tree::one<east_type> east_;
-  ::xsd::cxx::tree::one<west_type> west_;
-  ::xsd::cxx::tree::one<up_type> up_;
-  ::xsd::cxx::tree::one<down_type> down_;
+  ::xsd::cxx::tree::one<x_high_type> x_high_;
+  ::xsd::cxx::tree::one<x_low_type> x_low_;
+  ::xsd::cxx::tree::one<y_high_type> y_high_;
+  ::xsd::cxx::tree::one<y_low_type> y_low_;
+  ::xsd::cxx::tree::one<z_high_type> z_high_;
+  ::xsd::cxx::tree::one<z_low_type> z_low_;
 };
 
 class ForceType : public ::xml_schema::type {

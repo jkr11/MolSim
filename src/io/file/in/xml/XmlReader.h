@@ -5,8 +5,8 @@
 #ifndef XMLREADER_H
 #define XMLREADER_H
 #pragma once
+#include "defs/Particle.h"
 #include "io/CLArgumentParser.h"
-#include "io/file/in/FileReader.h"
 
 /**
  * @brief class for reading xml files specified by input.xsd in /input/
@@ -14,14 +14,7 @@
  * Currently supports reading cuboids and spheroids simultaneously, metadata is
  * optional as it is currently handled by CLArgumentParser
  */
-class XmlReader : public FileReader {
- private:
-  // Arguments simulation_parameters;
-  // double delta_t{};
-  // double t_end{};
-  // double cutoff_radius{};
-  // ivec3 domain{};
-
+class XmlReader {
  public:
   XmlReader() = default;
 
@@ -34,24 +27,10 @@ class XmlReader : public FileReader {
   static void read(std::vector<Particle>& particles,
                    const std::string& filepath,
                    Arguments& simulation_parameters);
-
-  // TODO: discuss if the tuple return is better or not
-  /**
-   * @brief passes the struct to other classes
-   * @return the contents of the struct modified in this class alone, i decided
-   * to do this because the Arguments Struct depends on the filename that is
-   * read later.
-   */
-  /*
-  [[nodiscard]] std::tuple<double, double, double, ivec3, Arguments::ForceType,
-                           Arguments::ContainerType>
-  pass() const;
-  */
-  // TODO: move this to a helper class
 };
 
 /**
- * @brief converst the xsd type
+ * @brief converts the xsd type to a ::Arguments:: type
  * @param boundary_type is the choice type passed from the xsd schema
  * specification
  * @return the enum type for arguments

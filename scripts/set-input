@@ -1,0 +1,79 @@
+#!/bin/bash
+# shellcheck disable=SC2207
+
+
+file_names=()
+descriptions=()
+paths=()
+
+
+help() {
+  echo "searches for files in ../input, select a file by typing the according number"
+  echo "Note: requires in place execution in the scripts directory, no options needed"
+  echo "Usage: source set-input [-h|--help]"
+  return
+}
+
+
+if [[ "$1" == "-h" || "$1" == "--help" ]]
+then
+  help
+  return
+fi
+
+#get name of all input files
+for file in ../input/*
+do
+  if [[ -f "$file" ]]
+  then
+    file_names+=("$(basename "$file")")
+
+    paths+=($(realpath "$file"))
+
+    descriptions+=("$(head -n 1 "$file")") # the first line may contain a description, however for now it is not standard
+  fi
+done
+
+# create a selection screen
+echo "\033[38;5;214mselect input file:\033[0m"
+printf "\tnumber | file name                           | description\n"
+printf "\t-------|-------------------------------------|----------------------------------------\n"
+length=${#file_names[@]}
+for (( i=1; i<=length; i++ ))
+do
+  printf "\t%-6s   %-35s   %s\n" "$i:" "${file_names[$i]}" "${descriptions[$i]}"
+done
+
+
+
+
+echo "\033[38;5;214mselect input file by number and press enter:\033[0m"
+read -r number
+
+# check for validity
+if [[ ! "$number" =~ ^[0-9]+$ ]]
+then
+  echo "this is not an integer in range!"
+  return
+elif [[ $number -lt 1 ]]
+then
+  echo "this is not an integer in range!"
+  return
+elif [[ $number -gt $length ]]
+then
+  echo "this is not an integer in range!"
+  return
+fi
+
+# export variable
+(return 0 2>/dev/null) && sourced=1 || sourced=0
+
+if [ "$sourced" -eq 0 ]
+then
+  echo "no \$INPUT variable created since script was not sourced!"
+  return
+fi
+
+
+export INPUT="${paths[$number]}"
+printf "%s is set as \$INPUT\n" "$INPUT"

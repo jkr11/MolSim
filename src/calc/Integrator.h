@@ -1,6 +1,6 @@
 #pragma once
-#include "../defs/containers/ParticleContainer.h"
-#include "../forces/BidirectionalForce.h"
+#include "defs/containers/ParticleContainer.h"
+#include "forces/BidirectionalForce.h"
 #include "forces/SingularForce.h"
 
 /**

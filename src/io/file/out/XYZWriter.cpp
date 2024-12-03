@@ -10,13 +10,15 @@
 #include <iomanip>
 #include <sstream>
 
+#include "debug/debug_print.h"
+
 namespace outputWriter {
 
 XYZWriter::XYZWriter() = default;
 
 XYZWriter::~XYZWriter() = default;
 
-void XYZWriter::plotParticles(std::list<Particle> particles,
+void XYZWriter::plotParticles(const std::list<Particle> &particles,
                               const std::string &filename, int iteration) {
   std::ofstream file;
   std::stringstream strstr;

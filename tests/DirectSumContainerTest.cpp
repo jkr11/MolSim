@@ -65,12 +65,12 @@ TEST(DirectSumContainer, pair_iterator) {
 
   ASSERT_EQ(pairs.size(), 3);
 
-  ASSERT_TRUE(*pairs[0].first == container.getParticles()[0]);
-  ASSERT_TRUE(*pairs[0].second == container.getParticles()[1]);
+  ASSERT_TRUE(*pairs[0].first == *container.getParticles()[0]);
+  ASSERT_TRUE(*pairs[0].second == *container.getParticles()[1]);
 
-  ASSERT_TRUE(*pairs[1].first == container.getParticles()[0]);
-  ASSERT_TRUE(*pairs[1].second == container.getParticles()[2]);
+  ASSERT_TRUE(*pairs[1].first == *container.getParticles()[0]);
+  ASSERT_TRUE(*pairs[1].second == *container.getParticles()[2]);
 
-  ASSERT_TRUE(*pairs[2].first == container.getParticles()[1]);
-  ASSERT_TRUE(*pairs[2].second == container.getParticles()[2]);
+  ASSERT_TRUE(*pairs[2].first == *container.getParticles()[1]);
+  ASSERT_TRUE(*pairs[2].second == *container.getParticles()[2]);
 }

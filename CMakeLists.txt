@@ -50,6 +50,13 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     message("Debug mode is enabled")
 endif ()
 
+option(ENABLE_BENCHMARK "Enable benchmark mode" ON)
+
+if (ENABLE_BENCHMARK)
+    message("Benchmark mode is enabled")
+    add_compile_definitions(BENCHMARK)
+endif ()
+
 # set Release as the default build type if it is not yet set.
 if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING

@@ -8,62 +8,50 @@
 #include "forces/LennardJones.h"
 #include "forces/SingularGravity.h"
 #include "io/CLArgumentParser.h"
-#include "io/file/in/CuboidReader.h"
 #include "io/file/in/xml/XmlReader.h"
 #include "io/file/out/OutputHelper.h"
 #include "io/file/out/VTKWriter.h"
 #include "spdlog/fmt/bundled/chrono.h"
+#include "spdlog/stopwatch.h"
 #include "utils/ArrayUtils.h"
 #include "utils/SpdWrapper.h"
-
-int main(int argc, char* argv[]) {
+int main(const int argc, char* argv[]) {
+#ifndef BENCHMARK
   SpdWrapper::get()->info("Application started");
-
+#endif
   Arguments arguments = {
-      //.input_file = "",
       .t_end = 5,
       .delta_t = 0.0002,
-      //.output_time_step_size = 1,
-      .log_level = "info",
       .force_type = Arguments::LennardJones,
       .singular_force_type = Arguments::SingularGravity,
-      .container_type = Arguments::LinkedCells,
       .singular_force_data = SingularGravityConfig{.g = 11.4},
       .container_data =
           LinkedCellsConfig{.domain = {100, 100, 100},
                             .cutoff_radius = 3.0,
                             .boundary_config =
                                 {
-                                    .north = LinkedCellsConfig::Outflow,
-                                    .south = LinkedCellsConfig::Outflow,
-                                    .east = LinkedCellsConfig::Outflow,
-                                    .west = LinkedCellsConfig::Outflow,
-                                    .up = LinkedCellsConfig::Outflow,
-                                    .down = LinkedCellsConfig::Outflow,
+                                    .x_high = LinkedCellsConfig::Outflow,
+                                    .x_low = LinkedCellsConfig::Outflow,
+                                    .y_high = LinkedCellsConfig::Outflow,
+                                    .y_low = LinkedCellsConfig::Outflow,
+                                    .z_high = LinkedCellsConfig::Outflow,
+                                    .z_low = LinkedCellsConfig::Outflow,
                                 }},
   };
   auto [input_file, step_size] = CLArgumentParser::parse(argc, argv);
-  SpdWrapper::get()->info("Step size: {}", step_size);
-  //  TODO: Should we change this so it doesnt get read here but the reader
-  //  instantiates the container and then writes the shapes to the container?
+
   std::vector<Particle> particles;
 
   XmlReader::read(particles, input_file, arguments);
 
-  arguments.printConfiguration();
+  printConfiguration(arguments);
+  SpdWrapper::get()->info("Step size: {}", step_size);
 
   std::unique_ptr<ParticleContainer> container;
-  // So this exists pretty cool we can save another field in the struct
-  // this is also much safer I guess
-  // TODO: i really hope lrz is c++ 17 and not 14 else we can revert all of this
-  // yikes
   if (std::holds_alternative<LinkedCellsConfig>(arguments.container_data)) {
     const auto& linked_cells_data =
         std::get<LinkedCellsConfig>(arguments.container_data);
-    // TODO: make it possible to just pass the entire struct into this or
-    // write a translation unit
-    container = std::make_unique<LinkedCellsContainer>(
-        linked_cells_data.domain, linked_cells_data.cutoff_radius);
+    container = std::make_unique<LinkedCellsContainer>(linked_cells_data);
     container->addParticles(particles);
     container->imposeInvariant();
   } else if (std::holds_alternative<DirectSumConfig>(
@@ -74,7 +62,7 @@ int main(int argc, char* argv[]) {
     SpdWrapper::get()->error("Unrecognized container type");
     throw std::runtime_error("Unrecognized container type");
   }
-
+  std::cout << particles.size() << " particles" << std::endl;
   std::unique_ptr<BidirectionalForce> force;
   if (arguments.force_type == Arguments::Gravity) {
     force = std::make_unique<Gravity>();
@@ -104,10 +92,11 @@ int main(int argc, char* argv[]) {
   int writes = 0;
   int percentage = 0;
   double next_output_time = 0;
-
+  spdlog::stopwatch stopwatch;
+  const auto start_time = std::chrono::high_resolution_clock::now();
   while (current_time <= arguments.t_end) {
     verlet_integrator.step(*container);
-
+#ifndef BENCHMARK
     if (current_time >= next_output_time) {
       plotParticles(outputDirectory, iteration, writer, *container);
       writes++;
@@ -115,17 +104,35 @@ int main(int argc, char* argv[]) {
       // check if next percentage complete
       if (const double t = 100 * current_time / arguments.t_end;
           t >= percentage) {
+        auto elapsed = stopwatch.elapsed();
+        auto eta = (elapsed / percentage) * 100 - elapsed;
+        auto h = std::chrono::duration_cast<std::chrono::hours>(eta).count();
+        eta -= std::chrono::hours(h);
+        auto m = std::chrono::duration_cast<std::chrono::minutes>(eta).count();
+        eta -= std::chrono::minutes(m);
+        auto s = std::chrono::duration_cast<std::chrono::seconds>(eta).count();
+
+        if (percentage == 0) {
+          h = 0;
+          m = 0;
+          s = 0;
+        }
+        SpdWrapper::get()->info(
+            "[{:.0f} %]: Iteration {:<12} | [ETA: {}:{:02}:{:02}]",
+            100 * current_time / arguments.t_end, iteration, h, m, s);
         percentage++;
-        SpdWrapper::get()->info("[{:.0f} %]: Iteration {}",
-                                100 * current_time / arguments.t_end,
-                                iteration);
       }
     }
-
+#endif
     iteration++;
-    current_time = arguments.delta_t * iteration;  // + start_time
+    current_time = arguments.delta_t * iteration;
   }
-  std::cout << std::endl;
+  const auto end_time = std::chrono::high_resolution_clock::now();
+  const std::chrono::duration<double> elapsed_time = end_time - start_time;
+#ifdef BENCHMARK
+  std::cout << "Simulation Time: " << elapsed_time.count() << " seconds"
+            << std::endl;
+#endif
   SpdWrapper::get()->info("Output written. Terminating...");
 
   return 0;

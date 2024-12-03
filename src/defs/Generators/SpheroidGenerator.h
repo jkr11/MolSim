@@ -14,16 +14,16 @@ class SpheroidGenerator final : public ParticleGenerator {
   dvec3 origin{};
   /**
    * @brief this is an integer as it's the number of particles possible along
-   * the radius of the spheroid
+   * the radius of the spheroid, so we move along the radii in increments of h
    */
   const int radius;
   double h{};
   double m{};
   const dvec3 initialVelocity;
-  double mv{};
   double epsilon{};
   double sigma{};
   const int type{};
+  double mv{};
   /**
    * only if this is passed with true, spheres will be two Dimensional
    */
@@ -32,12 +32,12 @@ class SpheroidGenerator final : public ParticleGenerator {
  public:
   SpheroidGenerator(const dvec3 &origin, int radius, double h, double m,
                     const dvec3 &initialVelocity, double epsilon, double sigma,
-                    int type, bool twoD);
+                    int type, double mv, bool twoD);
 
   /**
    * @brief generates a 1 or 2 sphere of particles, vector size is approximated
    * by volume of 2-sphere as disk is contained.
-   * @param particles particles into which the spheroid is place
+   * @param particles particles into which the spheroid is placed
    */
   void generate(std::vector<Particle> &particles) override;
 };

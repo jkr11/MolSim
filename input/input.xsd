@@ -47,7 +47,6 @@
             <xs:element name="epsilon" type="xs:decimal"/>
             <xs:element name="sigma" type="xs:decimal"/>
             <xs:element name="mv" type="xs:decimal"/>
-            <!--<xs:element name="twoD" type="xs:boolean" default="true"/>-->
         </xs:sequence>
     </xs:complexType>
 
@@ -62,7 +61,7 @@
             <xs:element name="mass" type="xs:decimal"/>
             <xs:element name="epsilon" type="xs:decimal"/>
             <xs:element name="sigma" type="xs:decimal"/>
-            <!--<xs:element name="twoD" type="xs:boolean" default="true"/>-->
+            <xs:element name="mv" type="xs:decimal"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -111,12 +110,12 @@
 
     <xs:complexType name="BoundaryConfigType">
         <xs:sequence>
-            <xs:element name="north" type="BoundaryType"/>
-            <xs:element name="south" type="BoundaryType"/>
-            <xs:element name="east" type="BoundaryType"/>
-            <xs:element name="west" type="BoundaryType"/>
-            <xs:element name="up" type="BoundaryType"/>
-            <xs:element name="down" type="BoundaryType"/>
+            <xs:element name="x_high" type="BoundaryType"/>
+            <xs:element name="x_low" type="BoundaryType"/>
+            <xs:element name="y_high" type="BoundaryType"/>
+            <xs:element name="y_low" type="BoundaryType"/>
+            <xs:element name="z_high" type="BoundaryType"/>
+            <xs:element name="z_low" type="BoundaryType"/>
         </xs:sequence>
     </xs:complexType>
 

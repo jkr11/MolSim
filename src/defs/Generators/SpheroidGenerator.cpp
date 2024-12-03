@@ -13,20 +13,23 @@ SpheroidGenerator::SpheroidGenerator(const dvec3& origin, const int radius,
                                      const double h, const double m,
                                      const dvec3& initialVelocity,
                                      const double epsilon, const double sigma,
-                                     const int type, const bool twoD)
+                                     const int type, const double mv,
+                                     const bool twoD)
     : origin(origin),
-      radius(radius),
+      radius(radius -
+             1),  // needs to be minus one because we consider the origin as one
       h(h),
       m(m),
       initialVelocity(initialVelocity),
       epsilon(epsilon),
       sigma(sigma),
       type(type),
+      mv(mv),
       twoD(twoD) {
   DEBUG_PRINT_FMT("SpheroidGenerator of dim {} created with parameters:",
                   twoD ? 2 : 3);
   DEBUG_PRINT_FMT("origin: ({}, {}, {})", origin[0], origin[1], origin[2]);
-  DEBUG_PRINT_FMT("radius: {}", radius);
+  DEBUG_PRINT_FMT("radius: {}", radius + 1);
   DEBUG_PRINT_FMT("h: {}", h);
   DEBUG_PRINT_FMT("m: {}", m);
   DEBUG_PRINT_FMT("initialVelocity: ({}, {}, {})", initialVelocity[0],
@@ -54,7 +57,7 @@ void SpheroidGenerator::generate(std::vector<Particle>& particles) {
         }
         const double spaceRadius = radius * h;
         dvec3 point = {i * h, j * h, k * h};
-        if (const double dist = ArrayUtils::L2Norm((1 / spaceRadius) * point);
+        if (const double dist = ArrayUtils::L2Norm(1 / spaceRadius * point);
             dist <= 1.0) {
           dvec3 position = origin + point;
           dvec3 V = initialVelocity +
