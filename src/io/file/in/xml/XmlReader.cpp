@@ -71,10 +71,11 @@ void XmlReader::read(std::vector<Particle>& particles,
       ThermostatConfig thermostat_config = {
           .T_init = thermostat->T_init(),
           .T_target = thermostat->T_target(),
-          .n_thermostat = thermostat->n_thermostat(),
           .deltaT = thermostat->deltaT().present()
                         ? thermostat->deltaT().get()
                         : std::numeric_limits<double>::infinity(),
+          .n_thermostat = thermostat->n_thermostat(),
+
       };
       simulation_parameters.thermostat_config = thermostat_config;
     }
@@ -96,9 +97,10 @@ void XmlReader::read(std::vector<Particle>& particles,
             unwrapVec<const Dvec3Type&, dvec3>(_velocity, "velocity");
         double mv;
         if (config->thermostat().present()) {
-          mv = std::sqrt(simulation_parameters.thermostat_config.T_init / cubes.mass());
+          mv = std::sqrt(simulation_parameters.thermostat_config.T_init /
+                         cubes.mass());
         } else {
-         mv = cubes.mv();
+          mv = cubes.mv();
         }
 
         CuboidGenerator cg(corner, dimensions, cubes.h(), cubes.mass(),
@@ -117,7 +119,8 @@ void XmlReader::read(std::vector<Particle>& particles,
         dvec3 velocity = {_velocity.x(), _velocity.y(), _velocity.z()};
         double mv;
         if (config->thermostat().present()) {
-          mv = std::sqrt(simulation_parameters.thermostat_config.T_init / spheres.mass());
+          mv = std::sqrt(simulation_parameters.thermostat_config.T_init /
+                         spheres.mass());
         } else {
           mv = spheres.mv();
         }
