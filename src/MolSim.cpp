@@ -23,7 +23,6 @@ int main(const int argc, char* argv[]) {
       .t_end = 5,
       .delta_t = 0.0002,
       .force_type = Arguments::LennardJones,
-      .singular_force_type = Arguments::SingularGravity,
       .singular_force_data = SingularGravityConfig{.g = 11.4},
       .container_data =
           LinkedCellsConfig{.domain = {100, 100, 100},
