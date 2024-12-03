@@ -66,7 +66,20 @@ void XmlReader::read(std::vector<Particle>& particles,
     } else {
       SpdWrapper::get()->warn("No force provided, using default LennardJones");
     }
-    // TODO: singular forces here , but its a good start 
+    auto thermostat = config->thermostat();
+    if (thermostat.present()) {
+      ThermostatConfig thermostat_config = {
+          .T_init = thermostat->T_init(),
+          .T_target = thermostat->T_target(),
+          .n_thermostat = thermostat->n_thermostat(),
+          .deltaT = thermostat->deltaT().present()
+                        ? thermostat->deltaT().get()
+                        : std::numeric_limits<double>::infinity(),
+      };
+      simulation_parameters.thermostat_config = thermostat_config;
+    }
+
+    // TODO: singular forces here , but its a good start
     simulation_parameters.delta_t = metadata.delta_t();
     simulation_parameters.t_end = metadata.t_end();
     const auto& twoD = metadata.twoD();
@@ -81,9 +94,15 @@ void XmlReader::read(std::vector<Particle>& particles,
             unwrapVec<const Ivec3Type&, ivec3>(_dimensions, "dimensions");
         dvec3 velocity =
             unwrapVec<const Dvec3Type&, dvec3>(_velocity, "velocity");
+        double mv;
+        if (config->thermostat().present()) {
+          mv = std::sqrt(simulation_parameters.thermostat_config.T_init / cubes.mass());
+        } else {
+         mv = cubes.mv();
+        }
 
         CuboidGenerator cg(corner, dimensions, cubes.h(), cubes.mass(),
-                           velocity, cubes.mv(), cubes.epsilon(), cubes.sigma(),
+                           velocity, mv, cubes.epsilon(), cubes.sigma(),
                            cubes.type(), twoD);
 
         cg.generate(particles);
@@ -96,10 +115,15 @@ void XmlReader::read(std::vector<Particle>& particles,
         const auto& _velocity = spheres.velocity();
         dvec3 origin = {_origin.x(), _origin.y(), _origin.z()};
         dvec3 velocity = {_velocity.x(), _velocity.y(), _velocity.z()};
-
+        double mv;
+        if (config->thermostat().present()) {
+          mv = std::sqrt(simulation_parameters.thermostat_config.T_init / spheres.mass());
+        } else {
+          mv = spheres.mv();
+        }
         SpheroidGenerator sg(origin, spheres.radius(), spheres.h(),
                              spheres.mass(), velocity, spheres.epsilon(),
-                             spheres.sigma(), spheres.type(), spheres.mv(),
+                             spheres.sigma(), spheres.type(), std::sqrt(mv),
                              twoD);
 
         sg.generate(particles);
@@ -126,4 +150,12 @@ LBoundaryType toBoundaryType(const BT& boundary_type) {
     return LBoundaryType::Reflective;
   }
   throw std::runtime_error("Unknown boundary type");
+}
+
+template <typename T>
+double unpackOpt(const T& opt) {
+  if (opt.present()) {
+    return opt.value();
+  }
+  return std::numeric_limits<double>::infinity();
 }

@@ -624,6 +624,55 @@ void SingularGravityType::g(const g_type& x) { this->g_.set(x); }
 
 void SingularGravityType::g(const g_optional& x) { this->g_ = x; }
 
+// ThermostatType
+//
+
+const ThermostatType::T_init_type& ThermostatType::T_init() const {
+  return this->T_init_.get();
+}
+
+ThermostatType::T_init_type& ThermostatType::T_init() {
+  return this->T_init_.get();
+}
+
+void ThermostatType::T_init(const T_init_type& x) { this->T_init_.set(x); }
+
+const ThermostatType::n_thermostat_type& ThermostatType::n_thermostat() const {
+  return this->n_thermostat_.get();
+}
+
+ThermostatType::n_thermostat_type& ThermostatType::n_thermostat() {
+  return this->n_thermostat_.get();
+}
+
+void ThermostatType::n_thermostat(const n_thermostat_type& x) {
+  this->n_thermostat_.set(x);
+}
+
+const ThermostatType::T_target_type& ThermostatType::T_target() const {
+  return this->T_target_.get();
+}
+
+ThermostatType::T_target_type& ThermostatType::T_target() {
+  return this->T_target_.get();
+}
+
+void ThermostatType::T_target(const T_target_type& x) {
+  this->T_target_.set(x);
+}
+
+const ThermostatType::deltaT_optional& ThermostatType::deltaT() const {
+  return this->deltaT_;
+}
+
+ThermostatType::deltaT_optional& ThermostatType::deltaT() {
+  return this->deltaT_;
+}
+
+void ThermostatType::deltaT(const deltaT_type& x) { this->deltaT_.set(x); }
+
+void ThermostatType::deltaT(const deltaT_optional& x) { this->deltaT_ = x; }
+
 // simulation
 //
 
@@ -671,6 +720,26 @@ void simulation::spheroids(const spheroids_optional& x) {
 
 void simulation::spheroids(::std::auto_ptr<spheroids_type> x) {
   this->spheroids_.set(x);
+}
+
+const simulation::thermostat_optional& simulation::thermostat() const {
+  return this->thermostat_;
+}
+
+simulation::thermostat_optional& simulation::thermostat() {
+  return this->thermostat_;
+}
+
+void simulation::thermostat(const thermostat_type& x) {
+  this->thermostat_.set(x);
+}
+
+void simulation::thermostat(const thermostat_optional& x) {
+  this->thermostat_ = x;
+}
+
+void simulation::thermostat(::std::auto_ptr<thermostat_type> x) {
+  this->thermostat_.set(x);
 }
 
 // cuboids
@@ -2167,6 +2236,118 @@ SingularGravityType& SingularGravityType::operator=(
 
 SingularGravityType::~SingularGravityType() {}
 
+// ThermostatType
+//
+
+ThermostatType::ThermostatType(const T_init_type& T_init,
+                               const n_thermostat_type& n_thermostat,
+                               const T_target_type& T_target)
+    : ::xml_schema::type(),
+      T_init_(T_init, this),
+      n_thermostat_(n_thermostat, this),
+      T_target_(T_target, this),
+      deltaT_(this) {}
+
+ThermostatType::ThermostatType(const ThermostatType& x, ::xml_schema::flags f,
+                               ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c),
+      T_init_(x.T_init_, f, this),
+      n_thermostat_(x.n_thermostat_, f, this),
+      T_target_(x.T_target_, f, this),
+      deltaT_(x.deltaT_, f, this) {}
+
+ThermostatType::ThermostatType(const ::xercesc::DOMElement& e,
+                               ::xml_schema::flags f,
+                               ::xml_schema::container* c)
+    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c),
+      T_init_(this),
+      n_thermostat_(this),
+      T_target_(this),
+      deltaT_(this) {
+  if ((f & ::xml_schema::flags::base) == 0) {
+    ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
+    this->parse(p, f);
+  }
+}
+
+void ThermostatType::parse(::xsd::cxx::xml::dom::parser<char>& p,
+                           ::xml_schema::flags f) {
+  for (; p.more_content(); p.next_content(false)) {
+    const ::xercesc::DOMElement& i(p.cur_element());
+    const ::xsd::cxx::xml::qualified_name<char> n(
+        ::xsd::cxx::xml::dom::name<char>(i));
+
+    // T_init
+    //
+    if (n.name() == "T_init" && n.namespace_().empty()) {
+      if (!T_init_.present()) {
+        this->T_init_.set(T_init_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    // n_thermostat
+    //
+    if (n.name() == "n_thermostat" && n.namespace_().empty()) {
+      if (!n_thermostat_.present()) {
+        this->n_thermostat_.set(n_thermostat_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    // T_target
+    //
+    if (n.name() == "T_target" && n.namespace_().empty()) {
+      if (!T_target_.present()) {
+        this->T_target_.set(T_target_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    // deltaT
+    //
+    if (n.name() == "deltaT" && n.namespace_().empty()) {
+      if (!this->deltaT_) {
+        this->deltaT_.set(deltaT_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    break;
+  }
+
+  if (!T_init_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("T_init", "");
+  }
+
+  if (!n_thermostat_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("n_thermostat", "");
+  }
+
+  if (!T_target_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("T_target", "");
+  }
+}
+
+ThermostatType* ThermostatType::_clone(::xml_schema::flags f,
+                                       ::xml_schema::container* c) const {
+  return new class ThermostatType(*this, f, c);
+}
+
+ThermostatType& ThermostatType::operator=(const ThermostatType& x) {
+  if (this != &x) {
+    static_cast< ::xml_schema::type&>(*this) = x;
+    this->T_init_ = x.T_init_;
+    this->n_thermostat_ = x.n_thermostat_;
+    this->T_target_ = x.T_target_;
+    this->deltaT_ = x.deltaT_;
+  }
+
+  return *this;
+}
+
+ThermostatType::~ThermostatType() {}
+
 // simulation
 //
 
@@ -2174,27 +2355,31 @@ simulation::simulation(const metadata_type& metadata)
     : ::xml_schema::type(),
       metadata_(metadata, this),
       cuboids_(this),
-      spheroids_(this) {}
+      spheroids_(this),
+      thermostat_(this) {}
 
 simulation::simulation(::std::auto_ptr<metadata_type> metadata)
     : ::xml_schema::type(),
       metadata_(metadata, this),
       cuboids_(this),
-      spheroids_(this) {}
+      spheroids_(this),
+      thermostat_(this) {}
 
 simulation::simulation(const simulation& x, ::xml_schema::flags f,
                        ::xml_schema::container* c)
     : ::xml_schema::type(x, f, c),
       metadata_(x.metadata_, f, this),
       cuboids_(x.cuboids_, f, this),
-      spheroids_(x.spheroids_, f, this) {}
+      spheroids_(x.spheroids_, f, this),
+      thermostat_(x.thermostat_, f, this) {}
 
 simulation::simulation(const ::xercesc::DOMElement& e, ::xml_schema::flags f,
                        ::xml_schema::container* c)
     : ::xml_schema::type(e, f | ::xml_schema::flags::base, c),
       metadata_(this),
       cuboids_(this),
-      spheroids_(this) {
+      spheroids_(this),
+      thermostat_(this) {
   if ((f & ::xml_schema::flags::base) == 0) {
     ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
     this->parse(p, f);
@@ -2241,6 +2426,17 @@ void simulation::parse(::xsd::cxx::xml::dom::parser<char>& p,
       }
     }
 
+    // thermostat
+    //
+    if (n.name() == "thermostat" && n.namespace_().empty()) {
+      ::std::auto_ptr<thermostat_type> r(thermostat_traits::create(i, f, this));
+
+      if (!this->thermostat_) {
+        this->thermostat_.set(r);
+        continue;
+      }
+    }
+
     break;
   }
 
@@ -2260,6 +2456,7 @@ simulation& simulation::operator=(const simulation& x) {
     this->metadata_ = x.metadata_;
     this->cuboids_ = x.cuboids_;
     this->spheroids_ = x.spheroids_;
+    this->thermostat_ = x.thermostat_;
   }
 
   return *this;

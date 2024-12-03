@@ -471,3 +471,11 @@ std::size_t LinkedCellsContainer::dvec3ToCellIndex_testing(
     const dvec3 &position) const {
   return dvec3ToCellIndex(position);
 }
+
+double LinkedCellsContainer::getKineticEnergy() {
+  double E_kin = 0.0;
+  singleIterator([&E_kin](const Particle &p) {
+    E_kin += 0.5 * p.getM() * ArrayUtils::L2InnerProduct(p.getV());
+  });
+  return E_kin;
+}

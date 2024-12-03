@@ -11,6 +11,7 @@
 
 #include "debug/debug_print.h"
 #include "defs/Particle.h"
+#include "utils/ArrayUtils.h"
 
 DirectSumContainer::DirectSumContainer() : ParticleContainer() {
   DEBUG_PRINT("DirectSumContainer::DirectSumContainer()");
@@ -76,3 +77,11 @@ void DirectSumContainer::pairIterator(
 }
 
 void DirectSumContainer::imposeInvariant() {}
+
+double DirectSumContainer::getKineticEnergy() {
+  double E_kin = 0.0;
+  singleIterator([&E_kin](const Particle &p) {
+    E_kin += 0.5 * p.getM() * ArrayUtils::L2InnerProduct(p.getV());
+  });
+  return E_kin;
+}

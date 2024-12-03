@@ -292,4 +292,6 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @return Reference to the cell vector
    */
   std::vector<std::vector<Particle>>& getCells() { return cells; }
+
+  double getKineticEnergy() override;
 };

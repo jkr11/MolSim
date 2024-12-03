@@ -22,6 +22,7 @@
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
+                <xs:element name="thermostat" type="ThermostatType" minOccurs="0"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -135,5 +136,14 @@
 
     <xs:complexType name="SingularGravityType">
         <xs:attribute name="g" type="xs:decimal"/>
+    </xs:complexType>
+
+    <xs:complexType name="ThermostatType">
+        <xs:sequence>
+            <xs:element name="T_init" type="xs:decimal"/>
+            <xs:element name="n_thermostat" type="xs:int"/>
+            <xs:element name="T_target" type="xs:decimal"/>
+            <xs:element name="deltaT" type="xs:decimal" minOccurs="0"/>
+        </xs:sequence>
     </xs:complexType>
 </xs:schema>

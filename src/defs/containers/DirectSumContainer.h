@@ -77,4 +77,6 @@ class DirectSumContainer final : public ParticleContainer {
    */
   void pairIterator(
       const std::function<void(Particle&, Particle&)>& f) override;
+
+  double getKineticEnergy() override;
 };

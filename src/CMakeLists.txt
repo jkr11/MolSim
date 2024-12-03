@@ -39,6 +39,7 @@ add_executable(MolSim MolSim.cpp
         defs/Generators/SpheroidGenerator.h
         defs/Generators/SpheroidGenerator.cpp
         forces/SingularGravity.h
+        defs/Thermostat.cpp
 )
 
 set(FILES_TO_DISABLE_WARNINGS

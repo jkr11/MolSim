@@ -49,9 +49,9 @@
 
 #include <xsd/cxx/config.hxx>
 
-// #if (XSD_INT_VERSION != 4000000L)
-// #error XSD runtime version mismatch
-// #endif
+//#if (XSD_INT_VERSION != 4000000L)
+//#error XSD runtime version mismatch
+//#endif
 
 #include <xsd/cxx/pre.hxx>
 #include <xsd/cxx/tree/elements.hxx>
@@ -229,6 +229,7 @@ class ForceType;
 class GravityType;
 class LennardJonesForce;
 class SingularGravityType;
+class ThermostatType;
 class simulation;
 class cuboids;
 class spheroids;
@@ -1312,6 +1313,91 @@ class SingularGravityType : public ::xml_schema::type {
   g_optional g_;
 };
 
+class ThermostatType : public ::xml_schema::type {
+ public:
+  // T_init
+  //
+  typedef ::xml_schema::decimal T_init_type;
+  typedef ::xsd::cxx::tree::traits<T_init_type, char,
+                                   ::xsd::cxx::tree::schema_type::decimal>
+      T_init_traits;
+
+  const T_init_type& T_init() const;
+
+  T_init_type& T_init();
+
+  void T_init(const T_init_type& x);
+
+  // n_thermostat
+  //
+  typedef ::xml_schema::int_ n_thermostat_type;
+  typedef ::xsd::cxx::tree::traits<n_thermostat_type, char> n_thermostat_traits;
+
+  const n_thermostat_type& n_thermostat() const;
+
+  n_thermostat_type& n_thermostat();
+
+  void n_thermostat(const n_thermostat_type& x);
+
+  // T_target
+  //
+  typedef ::xml_schema::decimal T_target_type;
+  typedef ::xsd::cxx::tree::traits<T_target_type, char,
+                                   ::xsd::cxx::tree::schema_type::decimal>
+      T_target_traits;
+
+  const T_target_type& T_target() const;
+
+  T_target_type& T_target();
+
+  void T_target(const T_target_type& x);
+
+  // deltaT
+  //
+  typedef ::xml_schema::decimal deltaT_type;
+  typedef ::xsd::cxx::tree::optional<deltaT_type> deltaT_optional;
+  typedef ::xsd::cxx::tree::traits<deltaT_type, char,
+                                   ::xsd::cxx::tree::schema_type::decimal>
+      deltaT_traits;
+
+  const deltaT_optional& deltaT() const;
+
+  deltaT_optional& deltaT();
+
+  void deltaT(const deltaT_type& x);
+
+  void deltaT(const deltaT_optional& x);
+
+  // Constructors.
+  //
+  ThermostatType(const T_init_type&, const n_thermostat_type&,
+                 const T_target_type&);
+
+  ThermostatType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
+                 ::xml_schema::container* c = 0);
+
+  ThermostatType(const ThermostatType& x, ::xml_schema::flags f = 0,
+                 ::xml_schema::container* c = 0);
+
+  virtual ThermostatType* _clone(::xml_schema::flags f = 0,
+                                 ::xml_schema::container* c = 0) const;
+
+  ThermostatType& operator=(const ThermostatType& x);
+
+  virtual ~ThermostatType();
+
+  // Implementation.
+  //
+ protected:
+  void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
+
+ protected:
+  ::xsd::cxx::tree::one<T_init_type> T_init_;
+  ::xsd::cxx::tree::one<n_thermostat_type> n_thermostat_;
+  ::xsd::cxx::tree::one<T_target_type> T_target_;
+  deltaT_optional deltaT_;
+};
+
 class simulation : public ::xml_schema::type {
  public:
   // metadata
@@ -1359,6 +1445,22 @@ class simulation : public ::xml_schema::type {
 
   void spheroids(::std::auto_ptr<spheroids_type> p);
 
+  // thermostat
+  //
+  typedef ::ThermostatType thermostat_type;
+  typedef ::xsd::cxx::tree::optional<thermostat_type> thermostat_optional;
+  typedef ::xsd::cxx::tree::traits<thermostat_type, char> thermostat_traits;
+
+  const thermostat_optional& thermostat() const;
+
+  thermostat_optional& thermostat();
+
+  void thermostat(const thermostat_type& x);
+
+  void thermostat(const thermostat_optional& x);
+
+  void thermostat(::std::auto_ptr<thermostat_type> p);
+
   // Constructors.
   //
   simulation(const metadata_type&);
@@ -1387,6 +1489,7 @@ class simulation : public ::xml_schema::type {
   ::xsd::cxx::tree::one<metadata_type> metadata_;
   cuboids_optional cuboids_;
   spheroids_optional spheroids_;
+  thermostat_optional thermostat_;
 };
 
 class cuboids : public ::xml_schema::type {

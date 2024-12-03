@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "calc/VerletIntegrator.h"
+#include "defs/Thermostat.h"
 #include "defs/containers/DirectSumContainer.h"
 #include "defs/containers/LinkedCellsContainer.h"
 #include "forces/Gravity.h"
@@ -15,6 +16,7 @@
 #include "spdlog/stopwatch.h"
 #include "utils/ArrayUtils.h"
 #include "utils/SpdWrapper.h"
+
 int main(const int argc, char* argv[]) {
 #ifndef BENCHMARK
   SpdWrapper::get()->info("Application started");
@@ -85,7 +87,8 @@ int main(const int argc, char* argv[]) {
 
   const std::string outputDirectory =
       createOutputDirectory("./output/", argc, argv);
-
+  Thermostat thermostat(arguments.thermostat_config);
+  std::cout << "Reached" << std::endl;
   double current_time = 0;
   int iteration = 0;
   int writes = 0;
@@ -95,6 +98,10 @@ int main(const int argc, char* argv[]) {
   const auto start_time = std::chrono::high_resolution_clock::now();
   while (current_time <= arguments.t_end) {
     verlet_integrator.step(*container);
+    //std::cout << "Iteration: " << iteration << std::endl;
+    //if (iteration % thermostat.n_thermostat == 0 && iteration > 0) {
+    //  thermostat.setTemperature(*container);
+    //}
 #ifndef BENCHMARK
     if (current_time >= next_output_time) {
       plotParticles(outputDirectory, iteration, writer, *container);

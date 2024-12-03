@@ -38,6 +38,13 @@ struct DirectSumConfig {};
 struct SingularGravityConfig {
   double g{};
 };
+
+struct ThermostatConfig {
+  double T_init{};
+  double T_target{};
+  double deltaT{};
+  int n_thermostat{};
+};
 // TODO: apparently we cant nest these for access in XMLReader
 /**
  * @brief struct to hold command line arguments
@@ -47,6 +54,7 @@ struct Arguments {
   double delta_t;
   enum ForceType { LennardJones, Gravity } force_type;
   enum SingularForceType { SingularGravity } singular_force_type;
+  ThermostatConfig thermostat_config;
   // TODO: remove this vvvvv
   std::variant<SingularGravityConfig> singular_force_data;
   std::variant<LinkedCellsConfig, DirectSumConfig> container_data;
