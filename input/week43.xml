@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns:xi="http://www.w3.org/2001/XInclude"
             xsi:noNamespaceSchemaLocation="input.xsd">
     <metadata>
         <container>
@@ -65,6 +66,9 @@
             <mv>0.0</mv>
         </cuboid>
     </cuboids>
+    <checkpoint>
+        <xi:include href="particles.xml"/>
+    </checkpoint>
     <thermostat>
         <T_init>0.5</T_init>
         <n_thermostat>1000</n_thermostat>

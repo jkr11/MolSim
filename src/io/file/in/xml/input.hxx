@@ -49,9 +49,9 @@
 
 #include <xsd/cxx/config.hxx>
 
-//#if (XSD_INT_VERSION != 4000000L)
-//#error XSD runtime version mismatch
-//#endif
+#if (XSD_INT_VERSION != 4000000L)
+// #error XSD runtime version mismatch
+#endif
 
 #include <xsd/cxx/pre.hxx>
 #include <xsd/cxx/tree/elements.hxx>
@@ -218,6 +218,8 @@ const XMLCh* const tree_node_key = ::xsd::cxx::tree::user_data_keys::node;
 class MetadataType;
 class cuboidType;
 class spheroidType;
+class ParticleSetType;
+class ParticleType;
 class Dvec3Type;
 class Ivec3Type;
 class ContainerType;
@@ -655,6 +657,193 @@ class spheroidType : public ::xml_schema::type {
   ::xsd::cxx::tree::one<epsilon_type> epsilon_;
   ::xsd::cxx::tree::one<sigma_type> sigma_;
   ::xsd::cxx::tree::one<mv_type> mv_;
+};
+
+class ParticleSetType : public ::xml_schema::type {
+ public:
+  // particle
+  //
+  typedef ::ParticleType particle_type;
+  typedef ::xsd::cxx::tree::traits<particle_type, char> particle_traits;
+
+  const particle_type& particle() const;
+
+  particle_type& particle();
+
+  void particle(const particle_type& x);
+
+  void particle(::std::auto_ptr<particle_type> p);
+
+  // Constructors.
+  //
+  ParticleSetType(const particle_type&);
+
+  ParticleSetType(::std::auto_ptr<particle_type>);
+
+  ParticleSetType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
+                  ::xml_schema::container* c = 0);
+
+  ParticleSetType(const ParticleSetType& x, ::xml_schema::flags f = 0,
+                  ::xml_schema::container* c = 0);
+
+  virtual ParticleSetType* _clone(::xml_schema::flags f = 0,
+                                  ::xml_schema::container* c = 0) const;
+
+  ParticleSetType& operator=(const ParticleSetType& x);
+
+  virtual ~ParticleSetType();
+
+  // Implementation.
+  //
+ protected:
+  void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
+
+ protected:
+  ::xsd::cxx::tree::one<particle_type> particle_;
+};
+
+class ParticleType : public ::xml_schema::type {
+ public:
+  // Position
+  //
+  typedef ::Dvec3Type Position_type;
+  typedef ::xsd::cxx::tree::traits<Position_type, char> Position_traits;
+
+  const Position_type& Position() const;
+
+  Position_type& Position();
+
+  void Position(const Position_type& x);
+
+  void Position(::std::auto_ptr<Position_type> p);
+
+  // Velocity
+  //
+  typedef ::Dvec3Type Velocity_type;
+  typedef ::xsd::cxx::tree::traits<Velocity_type, char> Velocity_traits;
+
+  const Velocity_type& Velocity() const;
+
+  Velocity_type& Velocity();
+
+  void Velocity(const Velocity_type& x);
+
+  void Velocity(::std::auto_ptr<Velocity_type> p);
+
+  // Force
+  //
+  typedef ::Dvec3Type Force_type;
+  typedef ::xsd::cxx::tree::traits<Force_type, char> Force_traits;
+
+  const Force_type& Force() const;
+
+  Force_type& Force();
+
+  void Force(const Force_type& x);
+
+  void Force(::std::auto_ptr<Force_type> p);
+
+  // OldForce
+  //
+  typedef ::Dvec3Type OldForce_type;
+  typedef ::xsd::cxx::tree::traits<OldForce_type, char> OldForce_traits;
+
+  const OldForce_type& OldForce() const;
+
+  OldForce_type& OldForce();
+
+  void OldForce(const OldForce_type& x);
+
+  void OldForce(::std::auto_ptr<OldForce_type> p);
+
+  // mass
+  //
+  typedef ::xml_schema::decimal mass_type;
+  typedef ::xsd::cxx::tree::traits<mass_type, char,
+                                   ::xsd::cxx::tree::schema_type::decimal>
+      mass_traits;
+
+  const mass_type& mass() const;
+
+  mass_type& mass();
+
+  void mass(const mass_type& x);
+
+  // epsilon
+  //
+  typedef ::xml_schema::decimal epsilon_type;
+  typedef ::xsd::cxx::tree::traits<epsilon_type, char,
+                                   ::xsd::cxx::tree::schema_type::decimal>
+      epsilon_traits;
+
+  const epsilon_type& epsilon() const;
+
+  epsilon_type& epsilon();
+
+  void epsilon(const epsilon_type& x);
+
+  // sigma
+  //
+  typedef ::xml_schema::decimal sigma_type;
+  typedef ::xsd::cxx::tree::traits<sigma_type, char,
+                                   ::xsd::cxx::tree::schema_type::decimal>
+      sigma_traits;
+
+  const sigma_type& sigma() const;
+
+  sigma_type& sigma();
+
+  void sigma(const sigma_type& x);
+
+  // type
+  //
+  typedef ::xml_schema::int_ type_type;
+  typedef ::xsd::cxx::tree::traits<type_type, char> type_traits;
+
+  const type_type& type() const;
+
+  type_type& type();
+
+  void type(const type_type& x);
+
+  // Constructors.
+  //
+  ParticleType(const Position_type&, const Velocity_type&, const Force_type&,
+               const OldForce_type&, const mass_type&, const epsilon_type&,
+               const sigma_type&, const type_type&);
+
+  ParticleType(::std::auto_ptr<Position_type>, ::std::auto_ptr<Velocity_type>,
+               ::std::auto_ptr<Force_type>, ::std::auto_ptr<OldForce_type>,
+               const mass_type&, const epsilon_type&, const sigma_type&,
+               const type_type&);
+
+  ParticleType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
+               ::xml_schema::container* c = 0);
+
+  ParticleType(const ParticleType& x, ::xml_schema::flags f = 0,
+               ::xml_schema::container* c = 0);
+
+  virtual ParticleType* _clone(::xml_schema::flags f = 0,
+                               ::xml_schema::container* c = 0) const;
+
+  ParticleType& operator=(const ParticleType& x);
+
+  virtual ~ParticleType();
+
+  // Implementation.
+  //
+ protected:
+  void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
+
+ protected:
+  ::xsd::cxx::tree::one<Position_type> Position_;
+  ::xsd::cxx::tree::one<Velocity_type> Velocity_;
+  ::xsd::cxx::tree::one<Force_type> Force_;
+  ::xsd::cxx::tree::one<OldForce_type> OldForce_;
+  ::xsd::cxx::tree::one<mass_type> mass_;
+  ::xsd::cxx::tree::one<epsilon_type> epsilon_;
+  ::xsd::cxx::tree::one<sigma_type> sigma_;
+  ::xsd::cxx::tree::one<type_type> type_;
 };
 
 class Dvec3Type : public ::xml_schema::type {
@@ -1445,6 +1634,22 @@ class simulation : public ::xml_schema::type {
 
   void spheroids(::std::auto_ptr<spheroids_type> p);
 
+  // particles
+  //
+  typedef ::ParticleSetType particles_type;
+  typedef ::xsd::cxx::tree::optional<particles_type> particles_optional;
+  typedef ::xsd::cxx::tree::traits<particles_type, char> particles_traits;
+
+  const particles_optional& particles() const;
+
+  particles_optional& particles();
+
+  void particles(const particles_type& x);
+
+  void particles(const particles_optional& x);
+
+  void particles(::std::auto_ptr<particles_type> p);
+
   // thermostat
   //
   typedef ::ThermostatType thermostat_type;
@@ -1489,6 +1694,7 @@ class simulation : public ::xml_schema::type {
   ::xsd::cxx::tree::one<metadata_type> metadata_;
   cuboids_optional cuboids_;
   spheroids_optional spheroids_;
+  particles_optional particles_;
   thermostat_optional thermostat_;
 };
 

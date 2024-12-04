@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:include schemaLocation="../in/xml/input.xsd"/> <!-- This should give us accessto the metadata? -->
+    <xs:element name="Checkpoint">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Particle" type="ParticleType" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+
+    <xs:complexType name="ParticleType">
+        <xs:sequence>
+            <xs:element name="Position" type="Dvec3Type"/>
+            <xs:element name="Velocity" type="Dvec3Type"/>
+            <xs:element name="Force" type="Dvec3Type"/>
+            <xs:element name="OldForce" type="Dvec3Type"/>
+            <xs:element name="mass" type="xs:decimal"/>
+            <xs:element name="epsilon" type="xs:decimal"/>
+            <xs:element name="sigma" type="xs:decimal"/>
+            <xs:element name="type" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

@@ -273,6 +273,114 @@ spheroidType::mv_type& spheroidType::mv() { return this->mv_.get(); }
 
 void spheroidType::mv(const mv_type& x) { this->mv_.set(x); }
 
+// ParticleSetType
+//
+
+const ParticleSetType::particle_type& ParticleSetType::particle() const {
+  return this->particle_.get();
+}
+
+ParticleSetType::particle_type& ParticleSetType::particle() {
+  return this->particle_.get();
+}
+
+void ParticleSetType::particle(const particle_type& x) {
+  this->particle_.set(x);
+}
+
+void ParticleSetType::particle(::std::auto_ptr<particle_type> x) {
+  this->particle_.set(x);
+}
+
+// ParticleType
+//
+
+const ParticleType::Position_type& ParticleType::Position() const {
+  return this->Position_.get();
+}
+
+ParticleType::Position_type& ParticleType::Position() {
+  return this->Position_.get();
+}
+
+void ParticleType::Position(const Position_type& x) { this->Position_.set(x); }
+
+void ParticleType::Position(::std::auto_ptr<Position_type> x) {
+  this->Position_.set(x);
+}
+
+const ParticleType::Velocity_type& ParticleType::Velocity() const {
+  return this->Velocity_.get();
+}
+
+ParticleType::Velocity_type& ParticleType::Velocity() {
+  return this->Velocity_.get();
+}
+
+void ParticleType::Velocity(const Velocity_type& x) { this->Velocity_.set(x); }
+
+void ParticleType::Velocity(::std::auto_ptr<Velocity_type> x) {
+  this->Velocity_.set(x);
+}
+
+const ParticleType::Force_type& ParticleType::Force() const {
+  return this->Force_.get();
+}
+
+ParticleType::Force_type& ParticleType::Force() { return this->Force_.get(); }
+
+void ParticleType::Force(const Force_type& x) { this->Force_.set(x); }
+
+void ParticleType::Force(::std::auto_ptr<Force_type> x) { this->Force_.set(x); }
+
+const ParticleType::OldForce_type& ParticleType::OldForce() const {
+  return this->OldForce_.get();
+}
+
+ParticleType::OldForce_type& ParticleType::OldForce() {
+  return this->OldForce_.get();
+}
+
+void ParticleType::OldForce(const OldForce_type& x) { this->OldForce_.set(x); }
+
+void ParticleType::OldForce(::std::auto_ptr<OldForce_type> x) {
+  this->OldForce_.set(x);
+}
+
+const ParticleType::mass_type& ParticleType::mass() const {
+  return this->mass_.get();
+}
+
+ParticleType::mass_type& ParticleType::mass() { return this->mass_.get(); }
+
+void ParticleType::mass(const mass_type& x) { this->mass_.set(x); }
+
+const ParticleType::epsilon_type& ParticleType::epsilon() const {
+  return this->epsilon_.get();
+}
+
+ParticleType::epsilon_type& ParticleType::epsilon() {
+  return this->epsilon_.get();
+}
+
+void ParticleType::epsilon(const epsilon_type& x) { this->epsilon_.set(x); }
+
+const ParticleType::sigma_type& ParticleType::sigma() const {
+  return this->sigma_.get();
+}
+
+ParticleType::sigma_type& ParticleType::sigma() { return this->sigma_.get(); }
+
+void ParticleType::sigma(const sigma_type& x) { this->sigma_.set(x); }
+
+const ParticleType::type_type& ParticleType::type() const {
+  return this->type_.get();
+}
+
+ParticleType::type_type& ParticleType::type() { return this->type_.get(); }
+
+void ParticleType::type(const type_type& x) { this->type_.set(x); }
+
 // Dvec3Type
 //
 
@@ -720,6 +828,24 @@ void simulation::spheroids(const spheroids_optional& x) {
 
 void simulation::spheroids(::std::auto_ptr<spheroids_type> x) {
   this->spheroids_.set(x);
+}
+
+const simulation::particles_optional& simulation::particles() const {
+  return this->particles_;
+}
+
+simulation::particles_optional& simulation::particles() {
+  return this->particles_;
+}
+
+void simulation::particles(const particles_type& x) { this->particles_.set(x); }
+
+void simulation::particles(const particles_optional& x) {
+  this->particles_ = x;
+}
+
+void simulation::particles(::std::auto_ptr<particles_type> x) {
+  this->particles_.set(x);
 }
 
 const simulation::thermostat_optional& simulation::thermostat() const {
@@ -1360,6 +1486,282 @@ spheroidType& spheroidType::operator=(const spheroidType& x) {
 }
 
 spheroidType::~spheroidType() {}
+
+// ParticleSetType
+//
+
+ParticleSetType::ParticleSetType(const particle_type& particle)
+    : ::xml_schema::type(), particle_(particle, this) {}
+
+ParticleSetType::ParticleSetType(::std::auto_ptr<particle_type> particle)
+    : ::xml_schema::type(), particle_(particle, this) {}
+
+ParticleSetType::ParticleSetType(const ParticleSetType& x,
+                                 ::xml_schema::flags f,
+                                 ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c), particle_(x.particle_, f, this) {}
+
+ParticleSetType::ParticleSetType(const ::xercesc::DOMElement& e,
+                                 ::xml_schema::flags f,
+                                 ::xml_schema::container* c)
+    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c), particle_(this) {
+  if ((f & ::xml_schema::flags::base) == 0) {
+    ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
+    this->parse(p, f);
+  }
+}
+
+void ParticleSetType::parse(::xsd::cxx::xml::dom::parser<char>& p,
+                            ::xml_schema::flags f) {
+  for (; p.more_content(); p.next_content(false)) {
+    const ::xercesc::DOMElement& i(p.cur_element());
+    const ::xsd::cxx::xml::qualified_name<char> n(
+        ::xsd::cxx::xml::dom::name<char>(i));
+
+    // particle
+    //
+    if (n.name() == "particle" && n.namespace_().empty()) {
+      ::std::auto_ptr<particle_type> r(particle_traits::create(i, f, this));
+
+      if (!particle_.present()) {
+        this->particle_.set(r);
+        continue;
+      }
+    }
+
+    break;
+  }
+
+  if (!particle_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("particle", "");
+  }
+}
+
+ParticleSetType* ParticleSetType::_clone(::xml_schema::flags f,
+                                         ::xml_schema::container* c) const {
+  return new class ParticleSetType(*this, f, c);
+}
+
+ParticleSetType& ParticleSetType::operator=(const ParticleSetType& x) {
+  if (this != &x) {
+    static_cast< ::xml_schema::type&>(*this) = x;
+    this->particle_ = x.particle_;
+  }
+
+  return *this;
+}
+
+ParticleSetType::~ParticleSetType() {}
+
+// ParticleType
+//
+
+ParticleType::ParticleType(const Position_type& Position,
+                           const Velocity_type& Velocity,
+                           const Force_type& Force,
+                           const OldForce_type& OldForce, const mass_type& mass,
+                           const epsilon_type& epsilon, const sigma_type& sigma,
+                           const type_type& type)
+    : ::xml_schema::type(),
+      Position_(Position, this),
+      Velocity_(Velocity, this),
+      Force_(Force, this),
+      OldForce_(OldForce, this),
+      mass_(mass, this),
+      epsilon_(epsilon, this),
+      sigma_(sigma, this),
+      type_(type, this) {}
+
+ParticleType::ParticleType(::std::auto_ptr<Position_type> Position,
+                           ::std::auto_ptr<Velocity_type> Velocity,
+                           ::std::auto_ptr<Force_type> Force,
+                           ::std::auto_ptr<OldForce_type> OldForce,
+                           const mass_type& mass, const epsilon_type& epsilon,
+                           const sigma_type& sigma, const type_type& type)
+    : ::xml_schema::type(),
+      Position_(Position, this),
+      Velocity_(Velocity, this),
+      Force_(Force, this),
+      OldForce_(OldForce, this),
+      mass_(mass, this),
+      epsilon_(epsilon, this),
+      sigma_(sigma, this),
+      type_(type, this) {}
+
+ParticleType::ParticleType(const ParticleType& x, ::xml_schema::flags f,
+                           ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c),
+      Position_(x.Position_, f, this),
+      Velocity_(x.Velocity_, f, this),
+      Force_(x.Force_, f, this),
+      OldForce_(x.OldForce_, f, this),
+      mass_(x.mass_, f, this),
+      epsilon_(x.epsilon_, f, this),
+      sigma_(x.sigma_, f, this),
+      type_(x.type_, f, this) {}
+
+ParticleType::ParticleType(const ::xercesc::DOMElement& e,
+                           ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c),
+      Position_(this),
+      Velocity_(this),
+      Force_(this),
+      OldForce_(this),
+      mass_(this),
+      epsilon_(this),
+      sigma_(this),
+      type_(this) {
+  if ((f & ::xml_schema::flags::base) == 0) {
+    ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
+    this->parse(p, f);
+  }
+}
+
+void ParticleType::parse(::xsd::cxx::xml::dom::parser<char>& p,
+                         ::xml_schema::flags f) {
+  for (; p.more_content(); p.next_content(false)) {
+    const ::xercesc::DOMElement& i(p.cur_element());
+    const ::xsd::cxx::xml::qualified_name<char> n(
+        ::xsd::cxx::xml::dom::name<char>(i));
+
+    // Position
+    //
+    if (n.name() == "Position" && n.namespace_().empty()) {
+      ::std::auto_ptr<Position_type> r(Position_traits::create(i, f, this));
+
+      if (!Position_.present()) {
+        this->Position_.set(r);
+        continue;
+      }
+    }
+
+    // Velocity
+    //
+    if (n.name() == "Velocity" && n.namespace_().empty()) {
+      ::std::auto_ptr<Velocity_type> r(Velocity_traits::create(i, f, this));
+
+      if (!Velocity_.present()) {
+        this->Velocity_.set(r);
+        continue;
+      }
+    }
+
+    // Force
+    //
+    if (n.name() == "Force" && n.namespace_().empty()) {
+      ::std::auto_ptr<Force_type> r(Force_traits::create(i, f, this));
+
+      if (!Force_.present()) {
+        this->Force_.set(r);
+        continue;
+      }
+    }
+
+    // OldForce
+    //
+    if (n.name() == "OldForce" && n.namespace_().empty()) {
+      ::std::auto_ptr<OldForce_type> r(OldForce_traits::create(i, f, this));
+
+      if (!OldForce_.present()) {
+        this->OldForce_.set(r);
+        continue;
+      }
+    }
+
+    // mass
+    //
+    if (n.name() == "mass" && n.namespace_().empty()) {
+      if (!mass_.present()) {
+        this->mass_.set(mass_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    // epsilon
+    //
+    if (n.name() == "epsilon" && n.namespace_().empty()) {
+      if (!epsilon_.present()) {
+        this->epsilon_.set(epsilon_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    // sigma
+    //
+    if (n.name() == "sigma" && n.namespace_().empty()) {
+      if (!sigma_.present()) {
+        this->sigma_.set(sigma_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    // type
+    //
+    if (n.name() == "type" && n.namespace_().empty()) {
+      if (!type_.present()) {
+        this->type_.set(type_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    break;
+  }
+
+  if (!Position_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("Position", "");
+  }
+
+  if (!Velocity_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("Velocity", "");
+  }
+
+  if (!Force_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("Force", "");
+  }
+
+  if (!OldForce_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("OldForce", "");
+  }
+
+  if (!mass_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("mass", "");
+  }
+
+  if (!epsilon_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("epsilon", "");
+  }
+
+  if (!sigma_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("sigma", "");
+  }
+
+  if (!type_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("type", "");
+  }
+}
+
+ParticleType* ParticleType::_clone(::xml_schema::flags f,
+                                   ::xml_schema::container* c) const {
+  return new class ParticleType(*this, f, c);
+}
+
+ParticleType& ParticleType::operator=(const ParticleType& x) {
+  if (this != &x) {
+    static_cast< ::xml_schema::type&>(*this) = x;
+    this->Position_ = x.Position_;
+    this->Velocity_ = x.Velocity_;
+    this->Force_ = x.Force_;
+    this->OldForce_ = x.OldForce_;
+    this->mass_ = x.mass_;
+    this->epsilon_ = x.epsilon_;
+    this->sigma_ = x.sigma_;
+    this->type_ = x.type_;
+  }
+
+  return *this;
+}
+
+ParticleType::~ParticleType() {}
 
 // Dvec3Type
 //
@@ -2356,6 +2758,7 @@ simulation::simulation(const metadata_type& metadata)
       metadata_(metadata, this),
       cuboids_(this),
       spheroids_(this),
+      particles_(this),
       thermostat_(this) {}
 
 simulation::simulation(::std::auto_ptr<metadata_type> metadata)
@@ -2363,6 +2766,7 @@ simulation::simulation(::std::auto_ptr<metadata_type> metadata)
       metadata_(metadata, this),
       cuboids_(this),
       spheroids_(this),
+      particles_(this),
       thermostat_(this) {}
 
 simulation::simulation(const simulation& x, ::xml_schema::flags f,
@@ -2371,6 +2775,7 @@ simulation::simulation(const simulation& x, ::xml_schema::flags f,
       metadata_(x.metadata_, f, this),
       cuboids_(x.cuboids_, f, this),
       spheroids_(x.spheroids_, f, this),
+      particles_(x.particles_, f, this),
       thermostat_(x.thermostat_, f, this) {}
 
 simulation::simulation(const ::xercesc::DOMElement& e, ::xml_schema::flags f,
@@ -2379,6 +2784,7 @@ simulation::simulation(const ::xercesc::DOMElement& e, ::xml_schema::flags f,
       metadata_(this),
       cuboids_(this),
       spheroids_(this),
+      particles_(this),
       thermostat_(this) {
   if ((f & ::xml_schema::flags::base) == 0) {
     ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
@@ -2426,6 +2832,17 @@ void simulation::parse(::xsd::cxx::xml::dom::parser<char>& p,
       }
     }
 
+    // particles
+    //
+    if (n.name() == "particles" && n.namespace_().empty()) {
+      ::std::auto_ptr<particles_type> r(particles_traits::create(i, f, this));
+
+      if (!this->particles_) {
+        this->particles_.set(r);
+        continue;
+      }
+    }
+
     // thermostat
     //
     if (n.name() == "thermostat" && n.namespace_().empty()) {
@@ -2456,6 +2873,7 @@ simulation& simulation::operator=(const simulation& x) {
     this->metadata_ = x.metadata_;
     this->cuboids_ = x.cuboids_;
     this->spheroids_ = x.spheroids_;
+    this->particles_ = x.particles_;
     this->thermostat_ = x.thermostat_;
   }
 

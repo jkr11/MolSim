@@ -132,6 +132,10 @@ void XmlReader::read(std::vector<Particle>& particles,
         sg.generate(particles);
       }
     }
+    if (config->particles() != nullptr) {
+      for (const auto& particles : config->particles()->particle()) {}
+    }
+
   } catch (const std::exception& e) {
     SpdWrapper::get()->error("Error reading XML file: {}", e.what());
     exit(EXIT_FAILURE);

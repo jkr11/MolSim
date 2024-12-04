@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-
+    <!--<xs:schema  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">-->
     <xs:element name="simulation">
         <xs:complexType>
             <xs:sequence>
@@ -22,11 +22,20 @@
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
+                <xs:element name="checkpoint" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="particles" type="xs:string" minOccurs="1"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
                 <xs:element name="thermostat" type="ThermostatType" minOccurs="0"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
-
+    <xs:complexType name="CheckpointType">
+        <xs:attribute name="filename" type="xs:anyType"/>
+    </xs:complexType>
     <xs:complexType name="MetadataType">
         <xs:sequence>
             <xs:element name="container" type="ContainerType"/>
