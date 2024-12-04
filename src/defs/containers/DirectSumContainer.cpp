@@ -55,6 +55,15 @@ std::vector<Particle*> DirectSumContainer::getParticles() {
   return refs;
 }
 
+std::vector<Particle> DirectSumContainer::getParticlesObjects() {
+  std::vector<Particle> refs;
+  refs.reserve(particles.size());
+  for (auto& p : particles) {
+    refs.push_back(p);
+  }
+  return refs;
+}
+
 [[nodiscard]] std::size_t DirectSumContainer::size() const {
   return particles.size();
 }
@@ -80,7 +89,7 @@ void DirectSumContainer::imposeInvariant() {}
 
 double DirectSumContainer::getKineticEnergy() {
   double E_kin = 0.0;
-  singleIterator([&E_kin](const Particle &p) {
+  singleIterator([&E_kin](const Particle& p) {
     E_kin += 0.5 * p.getM() * ArrayUtils::L2InnerProduct(p.getV());
   });
   return E_kin;

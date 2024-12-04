@@ -66,9 +66,7 @@
             <mv>0.0</mv>
         </cuboid>
     </cuboids>
-    <checkpoint>
-        <xi:include href="particles.xml"/>
-    </checkpoint>
+    <checkpoint path="week43.checkpoint"/>
     <thermostat>
         <T_init>0.5</T_init>
         <n_thermostat>1000</n_thermostat>
