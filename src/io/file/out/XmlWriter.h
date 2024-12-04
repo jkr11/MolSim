@@ -5,11 +5,8 @@
 #ifndef XMLWRITER_H
 #define XMLWRITER_H
 #pragma once
-#include "checkpoint-schema.hxx"
-#include "defs/Particle.h"
-#include "defs/Simulation.h"
 #include "defs/containers/ParticleContainer.h"
-#include "io/file/in/xml/input.hxx"
+
 class XmlWriter {
  public:
   XmlWriter();

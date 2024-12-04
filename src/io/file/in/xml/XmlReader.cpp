@@ -67,8 +67,7 @@ void XmlReader::read(std::vector<Particle>& particles,
     } else {
       SpdWrapper::get()->warn("No force provided, using default LennardJones");
     }
-    auto thermostat = config->thermostat();
-    if (thermostat.present()) {
+    if (auto thermostat = config->thermostat(); thermostat.present()) {
       ThermostatConfig thermostat_config = {
           .T_init = thermostat->T_init(),
           .T_target = thermostat->T_target(),
