@@ -36,324 +36,194 @@
 //
 // End prologue.
 
-#include <xsd/cxx/pre.hxx>
-
 #include "checkpoint-schema.hxx"
 
-// ParticleSetType
-// 
+#include <xsd/cxx/pre.hxx>
 
-const ParticleSetType::particle_type& ParticleSetType::
-particle () const
-{
-  return this->particle_.get ();
+// CheckpointType
+//
+
+const CheckpointType::Particles_type& CheckpointType::Particles() const {
+  return this->Particles_.get();
 }
 
-ParticleSetType::particle_type& ParticleSetType::
-particle ()
-{
-  return this->particle_.get ();
+CheckpointType::Particles_type& CheckpointType::Particles() {
+  return this->Particles_.get();
 }
 
-void ParticleSetType::
-particle (const particle_type& x)
-{
-  this->particle_.set (x);
+void CheckpointType::Particles(const Particles_type& x) {
+  this->Particles_.set(x);
 }
 
-void ParticleSetType::
-particle (::std::auto_ptr< particle_type > x)
-{
-  this->particle_.set (x);
+void CheckpointType::Particles(::std::auto_ptr<Particles_type> x) {
+  this->Particles_.set(x);
 }
 
+// ParticlesType
+//
+
+const ParticlesType::Particle_sequence& ParticlesType::Particle() const {
+  return this->Particle_;
+}
+
+ParticlesType::Particle_sequence& ParticlesType::Particle() {
+  return this->Particle_;
+}
+
+void ParticlesType::Particle(const Particle_sequence& s) {
+  this->Particle_ = s;
+}
 
 // ParticleType
-// 
+//
 
-const ParticleType::Position_type& ParticleType::
-Position () const
-{
-  return this->Position_.get ();
+const ParticleType::Position_type& ParticleType::Position() const {
+  return this->Position_.get();
 }
 
-ParticleType::Position_type& ParticleType::
-Position ()
-{
-  return this->Position_.get ();
+ParticleType::Position_type& ParticleType::Position() {
+  return this->Position_.get();
 }
 
-void ParticleType::
-Position (const Position_type& x)
-{
-  this->Position_.set (x);
+void ParticleType::Position(const Position_type& x) { this->Position_.set(x); }
+
+void ParticleType::Position(::std::auto_ptr<Position_type> x) {
+  this->Position_.set(x);
 }
 
-void ParticleType::
-Position (::std::auto_ptr< Position_type > x)
-{
-  this->Position_.set (x);
+const ParticleType::Velocity_type& ParticleType::Velocity() const {
+  return this->Velocity_.get();
 }
 
-const ParticleType::Velocity_type& ParticleType::
-Velocity () const
-{
-  return this->Velocity_.get ();
+ParticleType::Velocity_type& ParticleType::Velocity() {
+  return this->Velocity_.get();
 }
 
-ParticleType::Velocity_type& ParticleType::
-Velocity ()
-{
-  return this->Velocity_.get ();
+void ParticleType::Velocity(const Velocity_type& x) { this->Velocity_.set(x); }
+
+void ParticleType::Velocity(::std::auto_ptr<Velocity_type> x) {
+  this->Velocity_.set(x);
 }
 
-void ParticleType::
-Velocity (const Velocity_type& x)
-{
-  this->Velocity_.set (x);
+const ParticleType::Force_type& ParticleType::Force() const {
+  return this->Force_.get();
 }
 
-void ParticleType::
-Velocity (::std::auto_ptr< Velocity_type > x)
-{
-  this->Velocity_.set (x);
+ParticleType::Force_type& ParticleType::Force() { return this->Force_.get(); }
+
+void ParticleType::Force(const Force_type& x) { this->Force_.set(x); }
+
+void ParticleType::Force(::std::auto_ptr<Force_type> x) { this->Force_.set(x); }
+
+const ParticleType::OldForce_type& ParticleType::OldForce() const {
+  return this->OldForce_.get();
 }
 
-const ParticleType::Force_type& ParticleType::
-Force () const
-{
-  return this->Force_.get ();
+ParticleType::OldForce_type& ParticleType::OldForce() {
+  return this->OldForce_.get();
 }
 
-ParticleType::Force_type& ParticleType::
-Force ()
-{
-  return this->Force_.get ();
+void ParticleType::OldForce(const OldForce_type& x) { this->OldForce_.set(x); }
+
+void ParticleType::OldForce(::std::auto_ptr<OldForce_type> x) {
+  this->OldForce_.set(x);
 }
 
-void ParticleType::
-Force (const Force_type& x)
-{
-  this->Force_.set (x);
+const ParticleType::mass_type& ParticleType::mass() const {
+  return this->mass_.get();
 }
 
-void ParticleType::
-Force (::std::auto_ptr< Force_type > x)
-{
-  this->Force_.set (x);
+ParticleType::mass_type& ParticleType::mass() { return this->mass_.get(); }
+
+void ParticleType::mass(const mass_type& x) { this->mass_.set(x); }
+
+const ParticleType::epsilon_type& ParticleType::epsilon() const {
+  return this->epsilon_.get();
 }
 
-const ParticleType::OldForce_type& ParticleType::
-OldForce () const
-{
-  return this->OldForce_.get ();
+ParticleType::epsilon_type& ParticleType::epsilon() {
+  return this->epsilon_.get();
 }
 
-ParticleType::OldForce_type& ParticleType::
-OldForce ()
-{
-  return this->OldForce_.get ();
+void ParticleType::epsilon(const epsilon_type& x) { this->epsilon_.set(x); }
+
+const ParticleType::sigma_type& ParticleType::sigma() const {
+  return this->sigma_.get();
 }
 
-void ParticleType::
-OldForce (const OldForce_type& x)
-{
-  this->OldForce_.set (x);
+ParticleType::sigma_type& ParticleType::sigma() { return this->sigma_.get(); }
+
+void ParticleType::sigma(const sigma_type& x) { this->sigma_.set(x); }
+
+const ParticleType::type_type& ParticleType::type() const {
+  return this->type_.get();
 }
 
-void ParticleType::
-OldForce (::std::auto_ptr< OldForce_type > x)
-{
-  this->OldForce_.set (x);
-}
+ParticleType::type_type& ParticleType::type() { return this->type_.get(); }
 
-const ParticleType::mass_type& ParticleType::
-mass () const
-{
-  return this->mass_.get ();
-}
+void ParticleType::type(const type_type& x) { this->type_.set(x); }
 
-ParticleType::mass_type& ParticleType::
-mass ()
-{
-  return this->mass_.get ();
-}
+// CDvec3Type
+//
 
-void ParticleType::
-mass (const mass_type& x)
-{
-  this->mass_.set (x);
-}
+const CDvec3Type::x_type& CDvec3Type::x() const { return this->x_.get(); }
 
-const ParticleType::epsilon_type& ParticleType::
-epsilon () const
-{
-  return this->epsilon_.get ();
-}
+CDvec3Type::x_type& CDvec3Type::x() { return this->x_.get(); }
 
-ParticleType::epsilon_type& ParticleType::
-epsilon ()
-{
-  return this->epsilon_.get ();
-}
+void CDvec3Type::x(const x_type& x) { this->x_.set(x); }
 
-void ParticleType::
-epsilon (const epsilon_type& x)
-{
-  this->epsilon_.set (x);
-}
+const CDvec3Type::y_type& CDvec3Type::y() const { return this->y_.get(); }
 
-const ParticleType::sigma_type& ParticleType::
-sigma () const
-{
-  return this->sigma_.get ();
-}
+CDvec3Type::y_type& CDvec3Type::y() { return this->y_.get(); }
 
-ParticleType::sigma_type& ParticleType::
-sigma ()
-{
-  return this->sigma_.get ();
-}
+void CDvec3Type::y(const y_type& x) { this->y_.set(x); }
 
-void ParticleType::
-sigma (const sigma_type& x)
-{
-  this->sigma_.set (x);
-}
+const CDvec3Type::z_type& CDvec3Type::z() const { return this->z_.get(); }
 
-const ParticleType::type_type& ParticleType::
-type () const
-{
-  return this->type_.get ();
-}
+CDvec3Type::z_type& CDvec3Type::z() { return this->z_.get(); }
 
-ParticleType::type_type& ParticleType::
-type ()
-{
-  return this->type_.get ();
-}
-
-void ParticleType::
-type (const type_type& x)
-{
-  this->type_.set (x);
-}
-
-
-// Checkpoint
-// 
-
-const Checkpoint::metadata_type& Checkpoint::
-metadata () const
-{
-  return this->metadata_.get ();
-}
-
-Checkpoint::metadata_type& Checkpoint::
-metadata ()
-{
-  return this->metadata_.get ();
-}
-
-void Checkpoint::
-metadata (const metadata_type& x)
-{
-  this->metadata_.set (x);
-}
-
-void Checkpoint::
-metadata (::std::auto_ptr< metadata_type > x)
-{
-  this->metadata_.set (x);
-}
-
-const Checkpoint::Particles_type& Checkpoint::
-Particles () const
-{
-  return this->Particles_.get ();
-}
-
-Checkpoint::Particles_type& Checkpoint::
-Particles ()
-{
-  return this->Particles_.get ();
-}
-
-void Checkpoint::
-Particles (const Particles_type& x)
-{
-  this->Particles_.set (x);
-}
-
-void Checkpoint::
-Particles (::std::auto_ptr< Particles_type > x)
-{
-  this->Particles_.set (x);
-}
-
+void CDvec3Type::z(const z_type& x) { this->z_.set(x); }
 
 #include <xsd/cxx/xml/dom/parsing-source.hxx>
 
-// ParticleSetType
+// CheckpointType
 //
 
-ParticleSetType::
-ParticleSetType (const particle_type& particle)
-: ::xml_schema::type (),
-  particle_ (particle, this)
-{
-}
+CheckpointType::CheckpointType(const Particles_type& Particles)
+    : ::xml_schema::type(), Particles_(Particles, this) {}
 
-ParticleSetType::
-ParticleSetType (::std::auto_ptr< particle_type > particle)
-: ::xml_schema::type (),
-  particle_ (particle, this)
-{
-}
+CheckpointType::CheckpointType(::std::auto_ptr<Particles_type> Particles)
+    : ::xml_schema::type(), Particles_(Particles, this) {}
 
-ParticleSetType::
-ParticleSetType (const ParticleSetType& x,
-                 ::xml_schema::flags f,
-                 ::xml_schema::container* c)
-: ::xml_schema::type (x, f, c),
-  particle_ (x.particle_, f, this)
-{
-}
+CheckpointType::CheckpointType(const CheckpointType& x, ::xml_schema::flags f,
+                               ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c), Particles_(x.Particles_, f, this) {}
 
-ParticleSetType::
-ParticleSetType (const ::xercesc::DOMElement& e,
-                 ::xml_schema::flags f,
-                 ::xml_schema::container* c)
-: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
-  particle_ (this)
-{
-  if ((f & ::xml_schema::flags::base) == 0)
-  {
-    ::xsd::cxx::xml::dom::parser< char > p (e, true, false, false);
-    this->parse (p, f);
+CheckpointType::CheckpointType(const ::xercesc::DOMElement& e,
+                               ::xml_schema::flags f,
+                               ::xml_schema::container* c)
+    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c),
+      Particles_(this) {
+  if ((f & ::xml_schema::flags::base) == 0) {
+    ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
+    this->parse(p, f);
   }
 }
 
-void ParticleSetType::
-parse (::xsd::cxx::xml::dom::parser< char >& p,
-       ::xml_schema::flags f)
-{
-  for (; p.more_content (); p.next_content (false))
-  {
-    const ::xercesc::DOMElement& i (p.cur_element ());
-    const ::xsd::cxx::xml::qualified_name< char > n (
-      ::xsd::cxx::xml::dom::name< char > (i));
+void CheckpointType::parse(::xsd::cxx::xml::dom::parser<char>& p,
+                           ::xml_schema::flags f) {
+  for (; p.more_content(); p.next_content(false)) {
+    const ::xercesc::DOMElement& i(p.cur_element());
+    const ::xsd::cxx::xml::qualified_name<char> n(
+        ::xsd::cxx::xml::dom::name<char>(i));
 
-    // particle
+    // Particles
     //
-    if (n.name () == "particle" && n.namespace_ ().empty ())
-    {
-      ::std::auto_ptr< particle_type > r (
-        particle_traits::create (i, f, this));
+    if (n.name() == "Particles" && n.namespace_().empty()) {
+      ::std::auto_ptr<Particles_type> r(Particles_traits::create(i, f, this));
 
-      if (!particle_.present ())
-      {
-        this->particle_.set (r);
+      if (!Particles_.present()) {
+        this->Particles_.set(r);
         continue;
       }
     }
@@ -361,226 +231,228 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     break;
   }
 
-  if (!particle_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "particle",
-      "");
+  if (!Particles_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("Particles", "");
   }
 }
 
-ParticleSetType* ParticleSetType::
-_clone (::xml_schema::flags f,
-        ::xml_schema::container* c) const
-{
-  return new class ParticleSetType (*this, f, c);
+CheckpointType* CheckpointType::_clone(::xml_schema::flags f,
+                                       ::xml_schema::container* c) const {
+  return new class CheckpointType(*this, f, c);
 }
 
-ParticleSetType& ParticleSetType::
-operator= (const ParticleSetType& x)
-{
-  if (this != &x)
-  {
-    static_cast< ::xml_schema::type& > (*this) = x;
-    this->particle_ = x.particle_;
+CheckpointType& CheckpointType::operator=(const CheckpointType& x) {
+  if (this != &x) {
+    static_cast< ::xml_schema::type&>(*this) = x;
+    this->Particles_ = x.Particles_;
   }
 
   return *this;
 }
 
-ParticleSetType::
-~ParticleSetType ()
-{
+CheckpointType::~CheckpointType() {}
+
+// ParticlesType
+//
+
+ParticlesType::ParticlesType() : ::xml_schema::type(), Particle_(this) {}
+
+ParticlesType::ParticlesType(const ParticlesType& x, ::xml_schema::flags f,
+                             ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c), Particle_(x.Particle_, f, this) {}
+
+ParticlesType::ParticlesType(const ::xercesc::DOMElement& e,
+                             ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c), Particle_(this) {
+  if ((f & ::xml_schema::flags::base) == 0) {
+    ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
+    this->parse(p, f);
+  }
 }
+
+void ParticlesType::parse(::xsd::cxx::xml::dom::parser<char>& p,
+                          ::xml_schema::flags f) {
+  for (; p.more_content(); p.next_content(false)) {
+    const ::xercesc::DOMElement& i(p.cur_element());
+    const ::xsd::cxx::xml::qualified_name<char> n(
+        ::xsd::cxx::xml::dom::name<char>(i));
+
+    // Particle
+    //
+    if (n.name() == "Particle" && n.namespace_().empty()) {
+      ::std::auto_ptr<Particle_type> r(Particle_traits::create(i, f, this));
+
+      this->Particle_.push_back(r);
+      continue;
+    }
+
+    break;
+  }
+}
+
+ParticlesType* ParticlesType::_clone(::xml_schema::flags f,
+                                     ::xml_schema::container* c) const {
+  return new class ParticlesType(*this, f, c);
+}
+
+ParticlesType& ParticlesType::operator=(const ParticlesType& x) {
+  if (this != &x) {
+    static_cast< ::xml_schema::type&>(*this) = x;
+    this->Particle_ = x.Particle_;
+  }
+
+  return *this;
+}
+
+ParticlesType::~ParticlesType() {}
 
 // ParticleType
 //
 
-ParticleType::
-ParticleType (const Position_type& Position,
-              const Velocity_type& Velocity,
-              const Force_type& Force,
-              const OldForce_type& OldForce,
-              const mass_type& mass,
-              const epsilon_type& epsilon,
-              const sigma_type& sigma,
-              const type_type& type)
-: ::xml_schema::type (),
-  Position_ (Position, this),
-  Velocity_ (Velocity, this),
-  Force_ (Force, this),
-  OldForce_ (OldForce, this),
-  mass_ (mass, this),
-  epsilon_ (epsilon, this),
-  sigma_ (sigma, this),
-  type_ (type, this)
-{
-}
+ParticleType::ParticleType(const Position_type& Position,
+                           const Velocity_type& Velocity,
+                           const Force_type& Force,
+                           const OldForce_type& OldForce, const mass_type& mass,
+                           const epsilon_type& epsilon, const sigma_type& sigma,
+                           const type_type& type)
+    : ::xml_schema::type(),
+      Position_(Position, this),
+      Velocity_(Velocity, this),
+      Force_(Force, this),
+      OldForce_(OldForce, this),
+      mass_(mass, this),
+      epsilon_(epsilon, this),
+      sigma_(sigma, this),
+      type_(type, this) {}
 
-ParticleType::
-ParticleType (::std::auto_ptr< Position_type > Position,
-              ::std::auto_ptr< Velocity_type > Velocity,
-              ::std::auto_ptr< Force_type > Force,
-              ::std::auto_ptr< OldForce_type > OldForce,
-              const mass_type& mass,
-              const epsilon_type& epsilon,
-              const sigma_type& sigma,
-              const type_type& type)
-: ::xml_schema::type (),
-  Position_ (Position, this),
-  Velocity_ (Velocity, this),
-  Force_ (Force, this),
-  OldForce_ (OldForce, this),
-  mass_ (mass, this),
-  epsilon_ (epsilon, this),
-  sigma_ (sigma, this),
-  type_ (type, this)
-{
-}
+ParticleType::ParticleType(::std::auto_ptr<Position_type> Position,
+                           ::std::auto_ptr<Velocity_type> Velocity,
+                           ::std::auto_ptr<Force_type> Force,
+                           ::std::auto_ptr<OldForce_type> OldForce,
+                           const mass_type& mass, const epsilon_type& epsilon,
+                           const sigma_type& sigma, const type_type& type)
+    : ::xml_schema::type(),
+      Position_(Position, this),
+      Velocity_(Velocity, this),
+      Force_(Force, this),
+      OldForce_(OldForce, this),
+      mass_(mass, this),
+      epsilon_(epsilon, this),
+      sigma_(sigma, this),
+      type_(type, this) {}
 
-ParticleType::
-ParticleType (const ParticleType& x,
-              ::xml_schema::flags f,
-              ::xml_schema::container* c)
-: ::xml_schema::type (x, f, c),
-  Position_ (x.Position_, f, this),
-  Velocity_ (x.Velocity_, f, this),
-  Force_ (x.Force_, f, this),
-  OldForce_ (x.OldForce_, f, this),
-  mass_ (x.mass_, f, this),
-  epsilon_ (x.epsilon_, f, this),
-  sigma_ (x.sigma_, f, this),
-  type_ (x.type_, f, this)
-{
-}
+ParticleType::ParticleType(const ParticleType& x, ::xml_schema::flags f,
+                           ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c),
+      Position_(x.Position_, f, this),
+      Velocity_(x.Velocity_, f, this),
+      Force_(x.Force_, f, this),
+      OldForce_(x.OldForce_, f, this),
+      mass_(x.mass_, f, this),
+      epsilon_(x.epsilon_, f, this),
+      sigma_(x.sigma_, f, this),
+      type_(x.type_, f, this) {}
 
-ParticleType::
-ParticleType (const ::xercesc::DOMElement& e,
-              ::xml_schema::flags f,
-              ::xml_schema::container* c)
-: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
-  Position_ (this),
-  Velocity_ (this),
-  Force_ (this),
-  OldForce_ (this),
-  mass_ (this),
-  epsilon_ (this),
-  sigma_ (this),
-  type_ (this)
-{
-  if ((f & ::xml_schema::flags::base) == 0)
-  {
-    ::xsd::cxx::xml::dom::parser< char > p (e, true, false, false);
-    this->parse (p, f);
+ParticleType::ParticleType(const ::xercesc::DOMElement& e,
+                           ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c),
+      Position_(this),
+      Velocity_(this),
+      Force_(this),
+      OldForce_(this),
+      mass_(this),
+      epsilon_(this),
+      sigma_(this),
+      type_(this) {
+  if ((f & ::xml_schema::flags::base) == 0) {
+    ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
+    this->parse(p, f);
   }
 }
 
-void ParticleType::
-parse (::xsd::cxx::xml::dom::parser< char >& p,
-       ::xml_schema::flags f)
-{
-  for (; p.more_content (); p.next_content (false))
-  {
-    const ::xercesc::DOMElement& i (p.cur_element ());
-    const ::xsd::cxx::xml::qualified_name< char > n (
-      ::xsd::cxx::xml::dom::name< char > (i));
+void ParticleType::parse(::xsd::cxx::xml::dom::parser<char>& p,
+                         ::xml_schema::flags f) {
+  for (; p.more_content(); p.next_content(false)) {
+    const ::xercesc::DOMElement& i(p.cur_element());
+    const ::xsd::cxx::xml::qualified_name<char> n(
+        ::xsd::cxx::xml::dom::name<char>(i));
 
     // Position
     //
-    if (n.name () == "Position" && n.namespace_ ().empty ())
-    {
-      ::std::auto_ptr< Position_type > r (
-        Position_traits::create (i, f, this));
+    if (n.name() == "Position" && n.namespace_().empty()) {
+      ::std::auto_ptr<Position_type> r(Position_traits::create(i, f, this));
 
-      if (!Position_.present ())
-      {
-        this->Position_.set (r);
+      if (!Position_.present()) {
+        this->Position_.set(r);
         continue;
       }
     }
 
     // Velocity
     //
-    if (n.name () == "Velocity" && n.namespace_ ().empty ())
-    {
-      ::std::auto_ptr< Velocity_type > r (
-        Velocity_traits::create (i, f, this));
+    if (n.name() == "Velocity" && n.namespace_().empty()) {
+      ::std::auto_ptr<Velocity_type> r(Velocity_traits::create(i, f, this));
 
-      if (!Velocity_.present ())
-      {
-        this->Velocity_.set (r);
+      if (!Velocity_.present()) {
+        this->Velocity_.set(r);
         continue;
       }
     }
 
     // Force
     //
-    if (n.name () == "Force" && n.namespace_ ().empty ())
-    {
-      ::std::auto_ptr< Force_type > r (
-        Force_traits::create (i, f, this));
+    if (n.name() == "Force" && n.namespace_().empty()) {
+      ::std::auto_ptr<Force_type> r(Force_traits::create(i, f, this));
 
-      if (!Force_.present ())
-      {
-        this->Force_.set (r);
+      if (!Force_.present()) {
+        this->Force_.set(r);
         continue;
       }
     }
 
     // OldForce
     //
-    if (n.name () == "OldForce" && n.namespace_ ().empty ())
-    {
-      ::std::auto_ptr< OldForce_type > r (
-        OldForce_traits::create (i, f, this));
+    if (n.name() == "OldForce" && n.namespace_().empty()) {
+      ::std::auto_ptr<OldForce_type> r(OldForce_traits::create(i, f, this));
 
-      if (!OldForce_.present ())
-      {
-        this->OldForce_.set (r);
+      if (!OldForce_.present()) {
+        this->OldForce_.set(r);
         continue;
       }
     }
 
     // mass
     //
-    if (n.name () == "mass" && n.namespace_ ().empty ())
-    {
-      if (!mass_.present ())
-      {
-        this->mass_.set (mass_traits::create (i, f, this));
+    if (n.name() == "mass" && n.namespace_().empty()) {
+      if (!mass_.present()) {
+        this->mass_.set(mass_traits::create(i, f, this));
         continue;
       }
     }
 
     // epsilon
     //
-    if (n.name () == "epsilon" && n.namespace_ ().empty ())
-    {
-      if (!epsilon_.present ())
-      {
-        this->epsilon_.set (epsilon_traits::create (i, f, this));
+    if (n.name() == "epsilon" && n.namespace_().empty()) {
+      if (!epsilon_.present()) {
+        this->epsilon_.set(epsilon_traits::create(i, f, this));
         continue;
       }
     }
 
     // sigma
     //
-    if (n.name () == "sigma" && n.namespace_ ().empty ())
-    {
-      if (!sigma_.present ())
-      {
-        this->sigma_.set (sigma_traits::create (i, f, this));
+    if (n.name() == "sigma" && n.namespace_().empty()) {
+      if (!sigma_.present()) {
+        this->sigma_.set(sigma_traits::create(i, f, this));
         continue;
       }
     }
 
     // type
     //
-    if (n.name () == "type" && n.namespace_ ().empty ())
-    {
-      if (!type_.present ())
-      {
-        this->type_.set (type_traits::create (i, f, this));
+    if (n.name() == "type" && n.namespace_().empty()) {
+      if (!type_.present()) {
+        this->type_.set(type_traits::create(i, f, this));
         continue;
       }
     }
@@ -588,76 +460,47 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     break;
   }
 
-  if (!Position_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "Position",
-      "");
+  if (!Position_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("Position", "");
   }
 
-  if (!Velocity_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "Velocity",
-      "");
+  if (!Velocity_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("Velocity", "");
   }
 
-  if (!Force_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "Force",
-      "");
+  if (!Force_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("Force", "");
   }
 
-  if (!OldForce_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "OldForce",
-      "");
+  if (!OldForce_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("OldForce", "");
   }
 
-  if (!mass_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "mass",
-      "");
+  if (!mass_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("mass", "");
   }
 
-  if (!epsilon_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "epsilon",
-      "");
+  if (!epsilon_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("epsilon", "");
   }
 
-  if (!sigma_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "sigma",
-      "");
+  if (!sigma_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("sigma", "");
   }
 
-  if (!type_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "type",
-      "");
+  if (!type_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("type", "");
   }
 }
 
-ParticleType* ParticleType::
-_clone (::xml_schema::flags f,
-        ::xml_schema::container* c) const
-{
-  return new class ParticleType (*this, f, c);
+ParticleType* ParticleType::_clone(::xml_schema::flags f,
+                                   ::xml_schema::container* c) const {
+  return new class ParticleType(*this, f, c);
 }
 
-ParticleType& ParticleType::
-operator= (const ParticleType& x)
-{
-  if (this != &x)
-  {
-    static_cast< ::xml_schema::type& > (*this) = x;
+ParticleType& ParticleType::operator=(const ParticleType& x) {
+  if (this != &x) {
+    static_cast< ::xml_schema::type&>(*this) = x;
     this->Position_ = x.Position_;
     this->Velocity_ = x.Velocity_;
     this->Force_ = x.Force_;
@@ -671,91 +514,63 @@ operator= (const ParticleType& x)
   return *this;
 }
 
-ParticleType::
-~ParticleType ()
-{
-}
+ParticleType::~ParticleType() {}
 
-// Checkpoint
+// CDvec3Type
 //
 
-Checkpoint::
-Checkpoint (const metadata_type& metadata,
-            const Particles_type& Particles)
-: ::xml_schema::type (),
-  metadata_ (metadata, this),
-  Particles_ (Particles, this)
-{
-}
+CDvec3Type::CDvec3Type(const x_type& x, const y_type& y, const z_type& z)
+    : ::xml_schema::type(), x_(x, this), y_(y, this), z_(z, this) {}
 
-Checkpoint::
-Checkpoint (::std::auto_ptr< metadata_type > metadata,
-            ::std::auto_ptr< Particles_type > Particles)
-: ::xml_schema::type (),
-  metadata_ (metadata, this),
-  Particles_ (Particles, this)
-{
-}
+CDvec3Type::CDvec3Type(const CDvec3Type& x, ::xml_schema::flags f,
+                       ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c),
+      x_(x.x_, f, this),
+      y_(x.y_, f, this),
+      z_(x.z_, f, this) {}
 
-Checkpoint::
-Checkpoint (const Checkpoint& x,
-            ::xml_schema::flags f,
-            ::xml_schema::container* c)
-: ::xml_schema::type (x, f, c),
-  metadata_ (x.metadata_, f, this),
-  Particles_ (x.Particles_, f, this)
-{
-}
-
-Checkpoint::
-Checkpoint (const ::xercesc::DOMElement& e,
-            ::xml_schema::flags f,
-            ::xml_schema::container* c)
-: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
-  metadata_ (this),
-  Particles_ (this)
-{
-  if ((f & ::xml_schema::flags::base) == 0)
-  {
-    ::xsd::cxx::xml::dom::parser< char > p (e, true, false, false);
-    this->parse (p, f);
+CDvec3Type::CDvec3Type(const ::xercesc::DOMElement& e, ::xml_schema::flags f,
+                       ::xml_schema::container* c)
+    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c),
+      x_(this),
+      y_(this),
+      z_(this) {
+  if ((f & ::xml_schema::flags::base) == 0) {
+    ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
+    this->parse(p, f);
   }
 }
 
-void Checkpoint::
-parse (::xsd::cxx::xml::dom::parser< char >& p,
-       ::xml_schema::flags f)
-{
-  for (; p.more_content (); p.next_content (false))
-  {
-    const ::xercesc::DOMElement& i (p.cur_element ());
-    const ::xsd::cxx::xml::qualified_name< char > n (
-      ::xsd::cxx::xml::dom::name< char > (i));
+void CDvec3Type::parse(::xsd::cxx::xml::dom::parser<char>& p,
+                       ::xml_schema::flags f) {
+  for (; p.more_content(); p.next_content(false)) {
+    const ::xercesc::DOMElement& i(p.cur_element());
+    const ::xsd::cxx::xml::qualified_name<char> n(
+        ::xsd::cxx::xml::dom::name<char>(i));
 
-    // metadata
+    // x
     //
-    if (n.name () == "metadata" && n.namespace_ ().empty ())
-    {
-      ::std::auto_ptr< metadata_type > r (
-        metadata_traits::create (i, f, this));
-
-      if (!metadata_.present ())
-      {
-        this->metadata_.set (r);
+    if (n.name() == "x" && n.namespace_().empty()) {
+      if (!x_.present()) {
+        this->x_.set(x_traits::create(i, f, this));
         continue;
       }
     }
 
-    // Particles
+    // y
     //
-    if (n.name () == "Particles" && n.namespace_ ().empty ())
-    {
-      ::std::auto_ptr< Particles_type > r (
-        Particles_traits::create (i, f, this));
+    if (n.name() == "y" && n.namespace_().empty()) {
+      if (!y_.present()) {
+        this->y_.set(y_traits::create(i, f, this));
+        continue;
+      }
+    }
 
-      if (!Particles_.present ())
-      {
-        this->Particles_.set (r);
+    // z
+    //
+    if (n.name() == "z" && n.namespace_().empty()) {
+      if (!z_.present()) {
+        this->z_.set(z_traits::create(i, f, this));
         continue;
       }
     }
@@ -763,314 +578,464 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     break;
   }
 
-  if (!metadata_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "metadata",
-      "");
+  if (!x_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("x", "");
   }
 
-  if (!Particles_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "Particles",
-      "");
+  if (!y_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("y", "");
+  }
+
+  if (!z_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("z", "");
   }
 }
 
-Checkpoint* Checkpoint::
-_clone (::xml_schema::flags f,
-        ::xml_schema::container* c) const
-{
-  return new class Checkpoint (*this, f, c);
+CDvec3Type* CDvec3Type::_clone(::xml_schema::flags f,
+                               ::xml_schema::container* c) const {
+  return new class CDvec3Type(*this, f, c);
 }
 
-Checkpoint& Checkpoint::
-operator= (const Checkpoint& x)
-{
-  if (this != &x)
-  {
-    static_cast< ::xml_schema::type& > (*this) = x;
-    this->metadata_ = x.metadata_;
-    this->Particles_ = x.Particles_;
+CDvec3Type& CDvec3Type::operator=(const CDvec3Type& x) {
+  if (this != &x) {
+    static_cast< ::xml_schema::type&>(*this) = x;
+    this->x_ = x.x_;
+    this->y_ = x.y_;
+    this->z_ = x.z_;
   }
 
   return *this;
 }
 
-Checkpoint::
-~Checkpoint ()
-{
-}
+CDvec3Type::~CDvec3Type() {}
 
 #include <istream>
-#include <xsd/cxx/xml/sax/std-input-source.hxx>
 #include <xsd/cxx/tree/error-handler.hxx>
+#include <xsd/cxx/xml/sax/std-input-source.hxx>
 
-::std::auto_ptr< ::Checkpoint >
-Checkpoint_ (const ::std::string& u,
-             ::xml_schema::flags f,
-             const ::xml_schema::properties& p)
-{
-  ::xsd::cxx::xml::auto_initializer i (
-    (f & ::xml_schema::flags::dont_initialize) == 0,
-    (f & ::xml_schema::flags::keep_dom) == 0);
+::std::auto_ptr< ::CheckpointType> Checkpoint(
+    const ::std::string& u, ::xml_schema::flags f,
+    const ::xml_schema::properties& p) {
+  ::xsd::cxx::xml::auto_initializer i(
+      (f & ::xml_schema::flags::dont_initialize) == 0,
+      (f & ::xml_schema::flags::keep_dom) == 0);
 
-  ::xsd::cxx::tree::error_handler< char > h;
+  ::xsd::cxx::tree::error_handler<char> h;
 
-  ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument > d (
-    ::xsd::cxx::xml::dom::parse< char > (
-      u, h, p, f));
+  ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument> d(
+      ::xsd::cxx::xml::dom::parse<char>(u, h, p, f));
 
-  h.throw_if_failed< ::xsd::cxx::tree::parsing< char > > ();
+  h.throw_if_failed< ::xsd::cxx::tree::parsing<char> >();
 
-  return ::std::auto_ptr< ::Checkpoint > (
-    ::Checkpoint_ (
-      d, f | ::xml_schema::flags::own_dom, p));
+  return ::std::auto_ptr< ::CheckpointType>(
+      ::Checkpoint(d, f | ::xml_schema::flags::own_dom, p));
 }
 
-::std::auto_ptr< ::Checkpoint >
-Checkpoint_ (const ::std::string& u,
-             ::xml_schema::error_handler& h,
-             ::xml_schema::flags f,
-             const ::xml_schema::properties& p)
-{
-  ::xsd::cxx::xml::auto_initializer i (
-    (f & ::xml_schema::flags::dont_initialize) == 0,
-    (f & ::xml_schema::flags::keep_dom) == 0);
+::std::auto_ptr< ::CheckpointType> Checkpoint(
+    const ::std::string& u, ::xml_schema::error_handler& h,
+    ::xml_schema::flags f, const ::xml_schema::properties& p) {
+  ::xsd::cxx::xml::auto_initializer i(
+      (f & ::xml_schema::flags::dont_initialize) == 0,
+      (f & ::xml_schema::flags::keep_dom) == 0);
 
-  ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument > d (
-    ::xsd::cxx::xml::dom::parse< char > (
-      u, h, p, f));
+  ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument> d(
+      ::xsd::cxx::xml::dom::parse<char>(u, h, p, f));
 
-  if (!d.get ())
-    throw ::xsd::cxx::tree::parsing< char > ();
+  if (!d.get()) throw ::xsd::cxx::tree::parsing<char>();
 
-  return ::std::auto_ptr< ::Checkpoint > (
-    ::Checkpoint_ (
-      d, f | ::xml_schema::flags::own_dom, p));
+  return ::std::auto_ptr< ::CheckpointType>(
+      ::Checkpoint(d, f | ::xml_schema::flags::own_dom, p));
 }
 
-::std::auto_ptr< ::Checkpoint >
-Checkpoint_ (const ::std::string& u,
-             ::xercesc::DOMErrorHandler& h,
-             ::xml_schema::flags f,
-             const ::xml_schema::properties& p)
-{
-  ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument > d (
-    ::xsd::cxx::xml::dom::parse< char > (
-      u, h, p, f));
+::std::auto_ptr< ::CheckpointType> Checkpoint(
+    const ::std::string& u, ::xercesc::DOMErrorHandler& h,
+    ::xml_schema::flags f, const ::xml_schema::properties& p) {
+  ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument> d(
+      ::xsd::cxx::xml::dom::parse<char>(u, h, p, f));
 
-  if (!d.get ())
-    throw ::xsd::cxx::tree::parsing< char > ();
+  if (!d.get()) throw ::xsd::cxx::tree::parsing<char>();
 
-  return ::std::auto_ptr< ::Checkpoint > (
-    ::Checkpoint_ (
-      d, f | ::xml_schema::flags::own_dom, p));
+  return ::std::auto_ptr< ::CheckpointType>(
+      ::Checkpoint(d, f | ::xml_schema::flags::own_dom, p));
 }
 
-::std::auto_ptr< ::Checkpoint >
-Checkpoint_ (::std::istream& is,
-             ::xml_schema::flags f,
-             const ::xml_schema::properties& p)
-{
-  ::xsd::cxx::xml::auto_initializer i (
-    (f & ::xml_schema::flags::dont_initialize) == 0,
-    (f & ::xml_schema::flags::keep_dom) == 0);
+::std::auto_ptr< ::CheckpointType> Checkpoint(
+    ::std::istream& is, ::xml_schema::flags f,
+    const ::xml_schema::properties& p) {
+  ::xsd::cxx::xml::auto_initializer i(
+      (f & ::xml_schema::flags::dont_initialize) == 0,
+      (f & ::xml_schema::flags::keep_dom) == 0);
 
-  ::xsd::cxx::xml::sax::std_input_source isrc (is);
-  return ::Checkpoint_ (isrc, f, p);
+  ::xsd::cxx::xml::sax::std_input_source isrc(is);
+  return ::Checkpoint(isrc, f, p);
 }
 
-::std::auto_ptr< ::Checkpoint >
-Checkpoint_ (::std::istream& is,
-             ::xml_schema::error_handler& h,
-             ::xml_schema::flags f,
-             const ::xml_schema::properties& p)
-{
-  ::xsd::cxx::xml::auto_initializer i (
-    (f & ::xml_schema::flags::dont_initialize) == 0,
-    (f & ::xml_schema::flags::keep_dom) == 0);
+::std::auto_ptr< ::CheckpointType> Checkpoint(
+    ::std::istream& is, ::xml_schema::error_handler& h, ::xml_schema::flags f,
+    const ::xml_schema::properties& p) {
+  ::xsd::cxx::xml::auto_initializer i(
+      (f & ::xml_schema::flags::dont_initialize) == 0,
+      (f & ::xml_schema::flags::keep_dom) == 0);
 
-  ::xsd::cxx::xml::sax::std_input_source isrc (is);
-  return ::Checkpoint_ (isrc, h, f, p);
+  ::xsd::cxx::xml::sax::std_input_source isrc(is);
+  return ::Checkpoint(isrc, h, f, p);
 }
 
-::std::auto_ptr< ::Checkpoint >
-Checkpoint_ (::std::istream& is,
-             ::xercesc::DOMErrorHandler& h,
-             ::xml_schema::flags f,
-             const ::xml_schema::properties& p)
-{
-  ::xsd::cxx::xml::sax::std_input_source isrc (is);
-  return ::Checkpoint_ (isrc, h, f, p);
+::std::auto_ptr< ::CheckpointType> Checkpoint(
+    ::std::istream& is, ::xercesc::DOMErrorHandler& h, ::xml_schema::flags f,
+    const ::xml_schema::properties& p) {
+  ::xsd::cxx::xml::sax::std_input_source isrc(is);
+  return ::Checkpoint(isrc, h, f, p);
 }
 
-::std::auto_ptr< ::Checkpoint >
-Checkpoint_ (::std::istream& is,
-             const ::std::string& sid,
-             ::xml_schema::flags f,
-             const ::xml_schema::properties& p)
-{
-  ::xsd::cxx::xml::auto_initializer i (
-    (f & ::xml_schema::flags::dont_initialize) == 0,
-    (f & ::xml_schema::flags::keep_dom) == 0);
+::std::auto_ptr< ::CheckpointType> Checkpoint(
+    ::std::istream& is, const ::std::string& sid, ::xml_schema::flags f,
+    const ::xml_schema::properties& p) {
+  ::xsd::cxx::xml::auto_initializer i(
+      (f & ::xml_schema::flags::dont_initialize) == 0,
+      (f & ::xml_schema::flags::keep_dom) == 0);
 
-  ::xsd::cxx::xml::sax::std_input_source isrc (is, sid);
-  return ::Checkpoint_ (isrc, f, p);
+  ::xsd::cxx::xml::sax::std_input_source isrc(is, sid);
+  return ::Checkpoint(isrc, f, p);
 }
 
-::std::auto_ptr< ::Checkpoint >
-Checkpoint_ (::std::istream& is,
-             const ::std::string& sid,
-             ::xml_schema::error_handler& h,
-             ::xml_schema::flags f,
-             const ::xml_schema::properties& p)
-{
-  ::xsd::cxx::xml::auto_initializer i (
-    (f & ::xml_schema::flags::dont_initialize) == 0,
-    (f & ::xml_schema::flags::keep_dom) == 0);
+::std::auto_ptr< ::CheckpointType> Checkpoint(
+    ::std::istream& is, const ::std::string& sid,
+    ::xml_schema::error_handler& h, ::xml_schema::flags f,
+    const ::xml_schema::properties& p) {
+  ::xsd::cxx::xml::auto_initializer i(
+      (f & ::xml_schema::flags::dont_initialize) == 0,
+      (f & ::xml_schema::flags::keep_dom) == 0);
 
-  ::xsd::cxx::xml::sax::std_input_source isrc (is, sid);
-  return ::Checkpoint_ (isrc, h, f, p);
+  ::xsd::cxx::xml::sax::std_input_source isrc(is, sid);
+  return ::Checkpoint(isrc, h, f, p);
 }
 
-::std::auto_ptr< ::Checkpoint >
-Checkpoint_ (::std::istream& is,
-             const ::std::string& sid,
-             ::xercesc::DOMErrorHandler& h,
-             ::xml_schema::flags f,
-             const ::xml_schema::properties& p)
-{
-  ::xsd::cxx::xml::sax::std_input_source isrc (is, sid);
-  return ::Checkpoint_ (isrc, h, f, p);
+::std::auto_ptr< ::CheckpointType> Checkpoint(
+    ::std::istream& is, const ::std::string& sid, ::xercesc::DOMErrorHandler& h,
+    ::xml_schema::flags f, const ::xml_schema::properties& p) {
+  ::xsd::cxx::xml::sax::std_input_source isrc(is, sid);
+  return ::Checkpoint(isrc, h, f, p);
 }
 
-::std::auto_ptr< ::Checkpoint >
-Checkpoint_ (::xercesc::InputSource& i,
-             ::xml_schema::flags f,
-             const ::xml_schema::properties& p)
-{
-  ::xsd::cxx::tree::error_handler< char > h;
+::std::auto_ptr< ::CheckpointType> Checkpoint(
+    ::xercesc::InputSource& i, ::xml_schema::flags f,
+    const ::xml_schema::properties& p) {
+  ::xsd::cxx::tree::error_handler<char> h;
 
-  ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument > d (
-    ::xsd::cxx::xml::dom::parse< char > (
-      i, h, p, f));
+  ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument> d(
+      ::xsd::cxx::xml::dom::parse<char>(i, h, p, f));
 
-  h.throw_if_failed< ::xsd::cxx::tree::parsing< char > > ();
+  h.throw_if_failed< ::xsd::cxx::tree::parsing<char> >();
 
-  return ::std::auto_ptr< ::Checkpoint > (
-    ::Checkpoint_ (
-      d, f | ::xml_schema::flags::own_dom, p));
+  return ::std::auto_ptr< ::CheckpointType>(
+      ::Checkpoint(d, f | ::xml_schema::flags::own_dom, p));
 }
 
-::std::auto_ptr< ::Checkpoint >
-Checkpoint_ (::xercesc::InputSource& i,
-             ::xml_schema::error_handler& h,
-             ::xml_schema::flags f,
-             const ::xml_schema::properties& p)
-{
-  ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument > d (
-    ::xsd::cxx::xml::dom::parse< char > (
-      i, h, p, f));
+::std::auto_ptr< ::CheckpointType> Checkpoint(
+    ::xercesc::InputSource& i, ::xml_schema::error_handler& h,
+    ::xml_schema::flags f, const ::xml_schema::properties& p) {
+  ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument> d(
+      ::xsd::cxx::xml::dom::parse<char>(i, h, p, f));
 
-  if (!d.get ())
-    throw ::xsd::cxx::tree::parsing< char > ();
+  if (!d.get()) throw ::xsd::cxx::tree::parsing<char>();
 
-  return ::std::auto_ptr< ::Checkpoint > (
-    ::Checkpoint_ (
-      d, f | ::xml_schema::flags::own_dom, p));
+  return ::std::auto_ptr< ::CheckpointType>(
+      ::Checkpoint(d, f | ::xml_schema::flags::own_dom, p));
 }
 
-::std::auto_ptr< ::Checkpoint >
-Checkpoint_ (::xercesc::InputSource& i,
-             ::xercesc::DOMErrorHandler& h,
-             ::xml_schema::flags f,
-             const ::xml_schema::properties& p)
-{
-  ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument > d (
-    ::xsd::cxx::xml::dom::parse< char > (
-      i, h, p, f));
+::std::auto_ptr< ::CheckpointType> Checkpoint(
+    ::xercesc::InputSource& i, ::xercesc::DOMErrorHandler& h,
+    ::xml_schema::flags f, const ::xml_schema::properties& p) {
+  ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument> d(
+      ::xsd::cxx::xml::dom::parse<char>(i, h, p, f));
 
-  if (!d.get ())
-    throw ::xsd::cxx::tree::parsing< char > ();
+  if (!d.get()) throw ::xsd::cxx::tree::parsing<char>();
 
-  return ::std::auto_ptr< ::Checkpoint > (
-    ::Checkpoint_ (
-      d, f | ::xml_schema::flags::own_dom, p));
+  return ::std::auto_ptr< ::CheckpointType>(
+      ::Checkpoint(d, f | ::xml_schema::flags::own_dom, p));
 }
 
-::std::auto_ptr< ::Checkpoint >
-Checkpoint_ (const ::xercesc::DOMDocument& doc,
-             ::xml_schema::flags f,
-             const ::xml_schema::properties& p)
-{
-  if (f & ::xml_schema::flags::keep_dom)
-  {
-    ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument > d (
-      static_cast< ::xercesc::DOMDocument* > (doc.cloneNode (true)));
+::std::auto_ptr< ::CheckpointType> Checkpoint(
+    const ::xercesc::DOMDocument& doc, ::xml_schema::flags f,
+    const ::xml_schema::properties& p) {
+  if (f & ::xml_schema::flags::keep_dom) {
+    ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument> d(
+        static_cast< ::xercesc::DOMDocument*>(doc.cloneNode(true)));
 
-    return ::std::auto_ptr< ::Checkpoint > (
-      ::Checkpoint_ (
-        d, f | ::xml_schema::flags::own_dom, p));
+    return ::std::auto_ptr< ::CheckpointType>(
+        ::Checkpoint(d, f | ::xml_schema::flags::own_dom, p));
   }
 
-  const ::xercesc::DOMElement& e (*doc.getDocumentElement ());
-  const ::xsd::cxx::xml::qualified_name< char > n (
-    ::xsd::cxx::xml::dom::name< char > (e));
+  const ::xercesc::DOMElement& e(*doc.getDocumentElement());
+  const ::xsd::cxx::xml::qualified_name<char> n(
+      ::xsd::cxx::xml::dom::name<char>(e));
 
-  if (n.name () == "Checkpoint" &&
-      n.namespace_ () == "")
-  {
-    ::std::auto_ptr< ::Checkpoint > r (
-      ::xsd::cxx::tree::traits< ::Checkpoint, char >::create (
-        e, f, 0));
+  if (n.name() == "Checkpoint" && n.namespace_() == "") {
+    ::std::auto_ptr< ::CheckpointType> r(
+        ::xsd::cxx::tree::traits< ::CheckpointType, char>::create(e, f, 0));
     return r;
   }
 
-  throw ::xsd::cxx::tree::unexpected_element < char > (
-    n.name (),
-    n.namespace_ (),
-    "Checkpoint",
-    "");
+  throw ::xsd::cxx::tree::unexpected_element<char>(n.name(), n.namespace_(),
+                                                   "Checkpoint", "");
 }
 
-::std::auto_ptr< ::Checkpoint >
-Checkpoint_ (::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument > d,
-             ::xml_schema::flags f,
-             const ::xml_schema::properties&)
-{
-  ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument > c (
-    ((f & ::xml_schema::flags::keep_dom) &&
-     !(f & ::xml_schema::flags::own_dom))
-    ? static_cast< ::xercesc::DOMDocument* > (d->cloneNode (true))
-    : 0);
+::std::auto_ptr< ::CheckpointType> Checkpoint(
+    ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument> d,
+    ::xml_schema::flags f, const ::xml_schema::properties&) {
+  ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument> c(
+      ((f & ::xml_schema::flags::keep_dom) &&
+       !(f & ::xml_schema::flags::own_dom))
+          ? static_cast< ::xercesc::DOMDocument*>(d->cloneNode(true))
+          : 0);
 
-  ::xercesc::DOMDocument& doc (c.get () ? *c : *d);
-  const ::xercesc::DOMElement& e (*doc.getDocumentElement ());
+  ::xercesc::DOMDocument& doc(c.get() ? *c : *d);
+  const ::xercesc::DOMElement& e(*doc.getDocumentElement());
 
-  const ::xsd::cxx::xml::qualified_name< char > n (
-    ::xsd::cxx::xml::dom::name< char > (e));
+  const ::xsd::cxx::xml::qualified_name<char> n(
+      ::xsd::cxx::xml::dom::name<char>(e));
 
   if (f & ::xml_schema::flags::keep_dom)
-    doc.setUserData (::xml_schema::dom::tree_node_key,
-                     (c.get () ? &c : &d),
-                     0);
+    doc.setUserData(::xml_schema::dom::tree_node_key, (c.get() ? &c : &d), 0);
 
-  if (n.name () == "Checkpoint" &&
-      n.namespace_ () == "")
-  {
-    ::std::auto_ptr< ::Checkpoint > r (
-      ::xsd::cxx::tree::traits< ::Checkpoint, char >::create (
-        e, f, 0));
+  if (n.name() == "Checkpoint" && n.namespace_() == "") {
+    ::std::auto_ptr< ::CheckpointType> r(
+        ::xsd::cxx::tree::traits< ::CheckpointType, char>::create(e, f, 0));
     return r;
   }
 
-  throw ::xsd::cxx::tree::unexpected_element < char > (
-    n.name (),
-    n.namespace_ (),
-    "Checkpoint",
-    "");
+  throw ::xsd::cxx::tree::unexpected_element<char>(n.name(), n.namespace_(),
+                                                   "Checkpoint", "");
+}
+
+#include <ostream>
+#include <xsd/cxx/tree/error-handler.hxx>
+#include <xsd/cxx/xml/dom/serialization-source.hxx>
+
+void Checkpoint(::std::ostream& o, const ::CheckpointType& s,
+                const ::xml_schema::namespace_infomap& m,
+                const ::std::string& e, ::xml_schema::flags f) {
+  ::xsd::cxx::xml::auto_initializer i(
+      (f & ::xml_schema::flags::dont_initialize) == 0);
+
+  ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument> d(::Checkpoint(s, m, f));
+
+  ::xsd::cxx::tree::error_handler<char> h;
+
+  ::xsd::cxx::xml::dom::ostream_format_target t(o);
+  if (!::xsd::cxx::xml::dom::serialize(t, *d, e, h, f)) {
+    h.throw_if_failed< ::xsd::cxx::tree::serialization<char> >();
+  }
+}
+
+void Checkpoint(::std::ostream& o, const ::CheckpointType& s,
+                ::xml_schema::error_handler& h,
+                const ::xml_schema::namespace_infomap& m,
+                const ::std::string& e, ::xml_schema::flags f) {
+  ::xsd::cxx::xml::auto_initializer i(
+      (f & ::xml_schema::flags::dont_initialize) == 0);
+
+  ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument> d(::Checkpoint(s, m, f));
+  ::xsd::cxx::xml::dom::ostream_format_target t(o);
+  if (!::xsd::cxx::xml::dom::serialize(t, *d, e, h, f)) {
+    throw ::xsd::cxx::tree::serialization<char>();
+  }
+}
+
+void Checkpoint(::std::ostream& o, const ::CheckpointType& s,
+                ::xercesc::DOMErrorHandler& h,
+                const ::xml_schema::namespace_infomap& m,
+                const ::std::string& e, ::xml_schema::flags f) {
+  ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument> d(::Checkpoint(s, m, f));
+  ::xsd::cxx::xml::dom::ostream_format_target t(o);
+  if (!::xsd::cxx::xml::dom::serialize(t, *d, e, h, f)) {
+    throw ::xsd::cxx::tree::serialization<char>();
+  }
+}
+
+void Checkpoint(::xercesc::XMLFormatTarget& t, const ::CheckpointType& s,
+                const ::xml_schema::namespace_infomap& m,
+                const ::std::string& e, ::xml_schema::flags f) {
+  ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument> d(::Checkpoint(s, m, f));
+
+  ::xsd::cxx::tree::error_handler<char> h;
+
+  if (!::xsd::cxx::xml::dom::serialize(t, *d, e, h, f)) {
+    h.throw_if_failed< ::xsd::cxx::tree::serialization<char> >();
+  }
+}
+
+void Checkpoint(::xercesc::XMLFormatTarget& t, const ::CheckpointType& s,
+                ::xml_schema::error_handler& h,
+                const ::xml_schema::namespace_infomap& m,
+                const ::std::string& e, ::xml_schema::flags f) {
+  ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument> d(::Checkpoint(s, m, f));
+  if (!::xsd::cxx::xml::dom::serialize(t, *d, e, h, f)) {
+    throw ::xsd::cxx::tree::serialization<char>();
+  }
+}
+
+void Checkpoint(::xercesc::XMLFormatTarget& t, const ::CheckpointType& s,
+                ::xercesc::DOMErrorHandler& h,
+                const ::xml_schema::namespace_infomap& m,
+                const ::std::string& e, ::xml_schema::flags f) {
+  ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument> d(::Checkpoint(s, m, f));
+  if (!::xsd::cxx::xml::dom::serialize(t, *d, e, h, f)) {
+    throw ::xsd::cxx::tree::serialization<char>();
+  }
+}
+
+void Checkpoint(::xercesc::DOMDocument& d, const ::CheckpointType& s,
+                ::xml_schema::flags) {
+  ::xercesc::DOMElement& e(*d.getDocumentElement());
+  const ::xsd::cxx::xml::qualified_name<char> n(
+      ::xsd::cxx::xml::dom::name<char>(e));
+
+  if (n.name() == "Checkpoint" && n.namespace_() == "") {
+    e << s;
+  } else {
+    throw ::xsd::cxx::tree::unexpected_element<char>(n.name(), n.namespace_(),
+                                                     "Checkpoint", "");
+  }
+}
+
+::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument> Checkpoint(
+    const ::CheckpointType& s, const ::xml_schema::namespace_infomap& m,
+    ::xml_schema::flags f) {
+  ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument> d(
+      ::xsd::cxx::xml::dom::serialize<char>("Checkpoint", "", m, f));
+
+  ::Checkpoint(*d, s, f);
+  return d;
+}
+
+void operator<<(::xercesc::DOMElement& e, const CheckpointType& i) {
+  e << static_cast<const ::xml_schema::type&>(i);
+
+  // Particles
+  //
+  {
+    ::xercesc::DOMElement& s(
+        ::xsd::cxx::xml::dom::create_element("Particles", e));
+
+    s << i.Particles();
+  }
+}
+
+void operator<<(::xercesc::DOMElement& e, const ParticlesType& i) {
+  e << static_cast<const ::xml_schema::type&>(i);
+
+  // Particle
+  //
+  for (ParticlesType::Particle_const_iterator b(i.Particle().begin()),
+       n(i.Particle().end());
+       b != n; ++b) {
+    ::xercesc::DOMElement& s(
+        ::xsd::cxx::xml::dom::create_element("Particle", e));
+
+    s << *b;
+  }
+}
+
+void operator<<(::xercesc::DOMElement& e, const ParticleType& i) {
+  e << static_cast<const ::xml_schema::type&>(i);
+
+  // Position
+  //
+  {
+    ::xercesc::DOMElement& s(
+        ::xsd::cxx::xml::dom::create_element("Position", e));
+
+    s << i.Position();
+  }
+
+  // Velocity
+  //
+  {
+    ::xercesc::DOMElement& s(
+        ::xsd::cxx::xml::dom::create_element("Velocity", e));
+
+    s << i.Velocity();
+  }
+
+  // Force
+  //
+  {
+    ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("Force", e));
+
+    s << i.Force();
+  }
+
+  // OldForce
+  //
+  {
+    ::xercesc::DOMElement& s(
+        ::xsd::cxx::xml::dom::create_element("OldForce", e));
+
+    s << i.OldForce();
+  }
+
+  // mass
+  //
+  {
+    ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("mass", e));
+
+    s << ::xml_schema::as_decimal(i.mass());
+  }
+
+  // epsilon
+  //
+  {
+    ::xercesc::DOMElement& s(
+        ::xsd::cxx::xml::dom::create_element("epsilon", e));
+
+    s << ::xml_schema::as_decimal(i.epsilon());
+  }
+
+  // sigma
+  //
+  {
+    ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("sigma", e));
+
+    s << ::xml_schema::as_decimal(i.sigma());
+  }
+
+  // type
+  //
+  {
+    ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("type", e));
+
+    s << i.type();
+  }
+}
+
+void operator<<(::xercesc::DOMElement& e, const CDvec3Type& i) {
+  e << static_cast<const ::xml_schema::type&>(i);
+
+  // x
+  //
+  {
+    ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("x", e));
+
+    s << ::xml_schema::as_decimal(i.x());
+  }
+
+  // y
+  //
+  {
+    ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("y", e));
+
+    s << ::xml_schema::as_decimal(i.y());
+  }
+
+  // z
+  //
+  {
+    ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("z", e));
+
+    s << ::xml_schema::as_decimal(i.z());
+  }
 }
 
 #include <xsd/cxx/post.hxx>
@@ -1079,4 +1044,3 @@ Checkpoint_ (::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument > d,
 //
 //
 // End epilogue.
-

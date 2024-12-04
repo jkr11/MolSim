@@ -31,8 +31,8 @@
 // in the accompanying FLOSSE file.
 //
 
-#ifndef CHECKPOINT_SCHEMA_HXX
-#define CHECKPOINT_SCHEMA_HXX
+#ifndef CXX___SRC_IO_FILE_OUT_CHECKPOINT_SCHEMA_HXX
+#define CXX___SRC_IO_FILE_OUT_CHECKPOINT_SCHEMA_HXX
 
 #ifndef XSD_USE_CHAR
 #define XSD_USE_CHAR
@@ -49,609 +49,660 @@
 
 #include <xsd/cxx/config.hxx>
 
-//#if (XSD_INT_VERSION != 4000000L)
-//#error XSD runtime version mismatch
-//#endif
+#if (XSD_INT_VERSION != 4000000L)
+// #error XSD runtime version mismatch
+#endif
 
 #include <xsd/cxx/pre.hxx>
-
-#include <xsd/cxx/xml/char-utf8.hxx>
-
-#include <xsd/cxx/tree/exceptions.hxx>
 #include <xsd/cxx/tree/elements.hxx>
+#include <xsd/cxx/tree/exceptions.hxx>
+#include <xsd/cxx/tree/parsing.hxx>
+#include <xsd/cxx/tree/parsing/boolean.hxx>
+#include <xsd/cxx/tree/parsing/byte.hxx>
+#include <xsd/cxx/tree/parsing/decimal.hxx>
+#include <xsd/cxx/tree/parsing/double.hxx>
+#include <xsd/cxx/tree/parsing/float.hxx>
+#include <xsd/cxx/tree/parsing/int.hxx>
+#include <xsd/cxx/tree/parsing/long.hxx>
+#include <xsd/cxx/tree/parsing/short.hxx>
+#include <xsd/cxx/tree/parsing/unsigned-byte.hxx>
+#include <xsd/cxx/tree/parsing/unsigned-int.hxx>
+#include <xsd/cxx/tree/parsing/unsigned-long.hxx>
+#include <xsd/cxx/tree/parsing/unsigned-short.hxx>
+#include <xsd/cxx/tree/serialization.hxx>
+#include <xsd/cxx/tree/serialization/boolean.hxx>
+#include <xsd/cxx/tree/serialization/byte.hxx>
+#include <xsd/cxx/tree/serialization/decimal.hxx>
+#include <xsd/cxx/tree/serialization/double.hxx>
+#include <xsd/cxx/tree/serialization/float.hxx>
+#include <xsd/cxx/tree/serialization/int.hxx>
+#include <xsd/cxx/tree/serialization/long.hxx>
+#include <xsd/cxx/tree/serialization/short.hxx>
+#include <xsd/cxx/tree/serialization/unsigned-byte.hxx>
+#include <xsd/cxx/tree/serialization/unsigned-int.hxx>
+#include <xsd/cxx/tree/serialization/unsigned-long.hxx>
+#include <xsd/cxx/tree/serialization/unsigned-short.hxx>
 #include <xsd/cxx/tree/types.hxx>
-
+#include <xsd/cxx/xml/char-utf8.hxx>
+#include <xsd/cxx/xml/dom/auto-ptr.hxx>
+#include <xsd/cxx/xml/dom/serialization-header.hxx>
 #include <xsd/cxx/xml/error-handler.hxx>
 
-#include <xsd/cxx/xml/dom/auto-ptr.hxx>
+namespace xml_schema {
+// anyType and anySimpleType.
+//
+typedef ::xsd::cxx::tree::type type;
+typedef ::xsd::cxx::tree::simple_type<char, type> simple_type;
+typedef ::xsd::cxx::tree::type container;
 
-#include <xsd/cxx/tree/parsing.hxx>
-#include <xsd/cxx/tree/parsing/byte.hxx>
-#include <xsd/cxx/tree/parsing/unsigned-byte.hxx>
-#include <xsd/cxx/tree/parsing/short.hxx>
-#include <xsd/cxx/tree/parsing/unsigned-short.hxx>
-#include <xsd/cxx/tree/parsing/int.hxx>
-#include <xsd/cxx/tree/parsing/unsigned-int.hxx>
-#include <xsd/cxx/tree/parsing/long.hxx>
-#include <xsd/cxx/tree/parsing/unsigned-long.hxx>
-#include <xsd/cxx/tree/parsing/boolean.hxx>
-#include <xsd/cxx/tree/parsing/float.hxx>
-#include <xsd/cxx/tree/parsing/double.hxx>
-#include <xsd/cxx/tree/parsing/decimal.hxx>
+// 8-bit
+//
+typedef signed char byte;
+typedef unsigned char unsigned_byte;
 
-namespace xml_schema
-{
-  // anyType and anySimpleType.
-  //
-  typedef ::xsd::cxx::tree::type type;
-  typedef ::xsd::cxx::tree::simple_type< char, type > simple_type;
-  typedef ::xsd::cxx::tree::type container;
+// 16-bit
+//
+typedef short short_;
+typedef unsigned short unsigned_short;
 
-  // 8-bit
-  //
-  typedef signed char byte;
-  typedef unsigned char unsigned_byte;
+// 32-bit
+//
+typedef int int_;
+typedef unsigned int unsigned_int;
 
-  // 16-bit
-  //
-  typedef short short_;
-  typedef unsigned short unsigned_short;
+// 64-bit
+//
+typedef long long long_;
+typedef unsigned long long unsigned_long;
 
-  // 32-bit
-  //
-  typedef int int_;
-  typedef unsigned int unsigned_int;
+// Supposed to be arbitrary-length integral types.
+//
+typedef long long integer;
+typedef long long non_positive_integer;
+typedef unsigned long long non_negative_integer;
+typedef unsigned long long positive_integer;
+typedef long long negative_integer;
 
-  // 64-bit
-  //
-  typedef long long long_;
-  typedef unsigned long long unsigned_long;
+// Boolean.
+//
+typedef bool boolean;
 
-  // Supposed to be arbitrary-length integral types.
-  //
-  typedef long long integer;
-  typedef long long non_positive_integer;
-  typedef unsigned long long non_negative_integer;
-  typedef unsigned long long positive_integer;
-  typedef long long negative_integer;
+// Floating-point types.
+//
+typedef float float_;
+typedef double double_;
+typedef double decimal;
 
-  // Boolean.
-  //
-  typedef bool boolean;
+// String types.
+//
+typedef ::xsd::cxx::tree::string<char, simple_type> string;
+typedef ::xsd::cxx::tree::normalized_string<char, string> normalized_string;
+typedef ::xsd::cxx::tree::token<char, normalized_string> token;
+typedef ::xsd::cxx::tree::name<char, token> name;
+typedef ::xsd::cxx::tree::nmtoken<char, token> nmtoken;
+typedef ::xsd::cxx::tree::nmtokens<char, simple_type, nmtoken> nmtokens;
+typedef ::xsd::cxx::tree::ncname<char, name> ncname;
+typedef ::xsd::cxx::tree::language<char, token> language;
 
-  // Floating-point types.
-  //
-  typedef float float_;
-  typedef double double_;
-  typedef double decimal;
+// ID/IDREF.
+//
+typedef ::xsd::cxx::tree::id<char, ncname> id;
+typedef ::xsd::cxx::tree::idref<char, ncname, type> idref;
+typedef ::xsd::cxx::tree::idrefs<char, simple_type, idref> idrefs;
 
-  // String types.
-  //
-  typedef ::xsd::cxx::tree::string< char, simple_type > string;
-  typedef ::xsd::cxx::tree::normalized_string< char, string > normalized_string;
-  typedef ::xsd::cxx::tree::token< char, normalized_string > token;
-  typedef ::xsd::cxx::tree::name< char, token > name;
-  typedef ::xsd::cxx::tree::nmtoken< char, token > nmtoken;
-  typedef ::xsd::cxx::tree::nmtokens< char, simple_type, nmtoken > nmtokens;
-  typedef ::xsd::cxx::tree::ncname< char, name > ncname;
-  typedef ::xsd::cxx::tree::language< char, token > language;
+// URI.
+//
+typedef ::xsd::cxx::tree::uri<char, simple_type> uri;
 
-  // ID/IDREF.
-  //
-  typedef ::xsd::cxx::tree::id< char, ncname > id;
-  typedef ::xsd::cxx::tree::idref< char, ncname, type > idref;
-  typedef ::xsd::cxx::tree::idrefs< char, simple_type, idref > idrefs;
+// Qualified name.
+//
+typedef ::xsd::cxx::tree::qname<char, simple_type, uri, ncname> qname;
 
-  // URI.
-  //
-  typedef ::xsd::cxx::tree::uri< char, simple_type > uri;
+// Binary.
+//
+typedef ::xsd::cxx::tree::buffer<char> buffer;
+typedef ::xsd::cxx::tree::base64_binary<char, simple_type> base64_binary;
+typedef ::xsd::cxx::tree::hex_binary<char, simple_type> hex_binary;
 
-  // Qualified name.
-  //
-  typedef ::xsd::cxx::tree::qname< char, simple_type, uri, ncname > qname;
+// Date/time.
+//
+typedef ::xsd::cxx::tree::time_zone time_zone;
+typedef ::xsd::cxx::tree::date<char, simple_type> date;
+typedef ::xsd::cxx::tree::date_time<char, simple_type> date_time;
+typedef ::xsd::cxx::tree::duration<char, simple_type> duration;
+typedef ::xsd::cxx::tree::gday<char, simple_type> gday;
+typedef ::xsd::cxx::tree::gmonth<char, simple_type> gmonth;
+typedef ::xsd::cxx::tree::gmonth_day<char, simple_type> gmonth_day;
+typedef ::xsd::cxx::tree::gyear<char, simple_type> gyear;
+typedef ::xsd::cxx::tree::gyear_month<char, simple_type> gyear_month;
+typedef ::xsd::cxx::tree::time<char, simple_type> time;
 
-  // Binary.
-  //
-  typedef ::xsd::cxx::tree::buffer< char > buffer;
-  typedef ::xsd::cxx::tree::base64_binary< char, simple_type > base64_binary;
-  typedef ::xsd::cxx::tree::hex_binary< char, simple_type > hex_binary;
+// Entity.
+//
+typedef ::xsd::cxx::tree::entity<char, ncname> entity;
+typedef ::xsd::cxx::tree::entities<char, simple_type, entity> entities;
 
-  // Date/time.
-  //
-  typedef ::xsd::cxx::tree::time_zone time_zone;
-  typedef ::xsd::cxx::tree::date< char, simple_type > date;
-  typedef ::xsd::cxx::tree::date_time< char, simple_type > date_time;
-  typedef ::xsd::cxx::tree::duration< char, simple_type > duration;
-  typedef ::xsd::cxx::tree::gday< char, simple_type > gday;
-  typedef ::xsd::cxx::tree::gmonth< char, simple_type > gmonth;
-  typedef ::xsd::cxx::tree::gmonth_day< char, simple_type > gmonth_day;
-  typedef ::xsd::cxx::tree::gyear< char, simple_type > gyear;
-  typedef ::xsd::cxx::tree::gyear_month< char, simple_type > gyear_month;
-  typedef ::xsd::cxx::tree::time< char, simple_type > time;
+typedef ::xsd::cxx::tree::content_order content_order;
+// Namespace information and list stream. Used in
+// serialization functions.
+//
+typedef ::xsd::cxx::xml::dom::namespace_info<char> namespace_info;
+typedef ::xsd::cxx::xml::dom::namespace_infomap<char> namespace_infomap;
+typedef ::xsd::cxx::tree::list_stream<char> list_stream;
+typedef ::xsd::cxx::tree::as_double<double_> as_double;
+typedef ::xsd::cxx::tree::as_decimal<decimal> as_decimal;
+typedef ::xsd::cxx::tree::facet facet;
 
-  // Entity.
-  //
-  typedef ::xsd::cxx::tree::entity< char, ncname > entity;
-  typedef ::xsd::cxx::tree::entities< char, simple_type, entity > entities;
+// Flags and properties.
+//
+typedef ::xsd::cxx::tree::flags flags;
+typedef ::xsd::cxx::tree::properties<char> properties;
 
-  typedef ::xsd::cxx::tree::content_order content_order;
-  // Flags and properties.
-  //
-  typedef ::xsd::cxx::tree::flags flags;
-  typedef ::xsd::cxx::tree::properties< char > properties;
+// Parsing/serialization diagnostics.
+//
+typedef ::xsd::cxx::tree::severity severity;
+typedef ::xsd::cxx::tree::error<char> error;
+typedef ::xsd::cxx::tree::diagnostics<char> diagnostics;
 
-  // Parsing/serialization diagnostics.
-  //
-  typedef ::xsd::cxx::tree::severity severity;
-  typedef ::xsd::cxx::tree::error< char > error;
-  typedef ::xsd::cxx::tree::diagnostics< char > diagnostics;
+// Exceptions.
+//
+typedef ::xsd::cxx::tree::exception<char> exception;
+typedef ::xsd::cxx::tree::bounds<char> bounds;
+typedef ::xsd::cxx::tree::duplicate_id<char> duplicate_id;
+typedef ::xsd::cxx::tree::parsing<char> parsing;
+typedef ::xsd::cxx::tree::expected_element<char> expected_element;
+typedef ::xsd::cxx::tree::unexpected_element<char> unexpected_element;
+typedef ::xsd::cxx::tree::expected_attribute<char> expected_attribute;
+typedef ::xsd::cxx::tree::unexpected_enumerator<char> unexpected_enumerator;
+typedef ::xsd::cxx::tree::expected_text_content<char> expected_text_content;
+typedef ::xsd::cxx::tree::no_prefix_mapping<char> no_prefix_mapping;
+typedef ::xsd::cxx::tree::serialization<char> serialization;
 
-  // Exceptions.
-  //
-  typedef ::xsd::cxx::tree::exception< char > exception;
-  typedef ::xsd::cxx::tree::bounds< char > bounds;
-  typedef ::xsd::cxx::tree::duplicate_id< char > duplicate_id;
-  typedef ::xsd::cxx::tree::parsing< char > parsing;
-  typedef ::xsd::cxx::tree::expected_element< char > expected_element;
-  typedef ::xsd::cxx::tree::unexpected_element< char > unexpected_element;
-  typedef ::xsd::cxx::tree::expected_attribute< char > expected_attribute;
-  typedef ::xsd::cxx::tree::unexpected_enumerator< char > unexpected_enumerator;
-  typedef ::xsd::cxx::tree::expected_text_content< char > expected_text_content;
-  typedef ::xsd::cxx::tree::no_prefix_mapping< char > no_prefix_mapping;
+// Error handler callback interface.
+//
+typedef ::xsd::cxx::xml::error_handler<char> error_handler;
 
-  // Error handler callback interface.
-  //
-  typedef ::xsd::cxx::xml::error_handler< char > error_handler;
-
-  // DOM interaction.
-  //
-  namespace dom
-  {
-    // Automatic pointer for DOMDocument.
-    //
-    using ::xsd::cxx::xml::dom::auto_ptr;
+// DOM interaction.
+//
+namespace dom {
+// Automatic pointer for DOMDocument.
+//
+using ::xsd::cxx::xml::dom::auto_ptr;
 
 #ifndef XSD_CXX_TREE_TREE_NODE_KEY__XML_SCHEMA
 #define XSD_CXX_TREE_TREE_NODE_KEY__XML_SCHEMA
-    // DOM user data key for back pointers to tree nodes.
-    //
-    const XMLCh* const tree_node_key = ::xsd::cxx::tree::user_data_keys::node;
+// DOM user data key for back pointers to tree nodes.
+//
+const XMLCh* const tree_node_key = ::xsd::cxx::tree::user_data_keys::node;
 #endif
-  }
-}
+}  // namespace dom
+}  // namespace xml_schema
 
 // Forward declarations.
 //
-class ParticleSetType;
+class CheckpointType;
+class ParticlesType;
 class ParticleType;
-class Checkpoint;
+class CDvec3Type;
 
-#include <memory>    // ::std::auto_ptr
-#include <limits>    // std::numeric_limits
-#include <algorithm> // std::binary_search
-
-#include <xsd/cxx/xml/char-utf8.hxx>
-
-#include <xsd/cxx/tree/exceptions.hxx>
-#include <xsd/cxx/tree/elements.hxx>
+#include <algorithm>  // std::binary_search
+#include <limits>     // std::numeric_limits
+#include <memory>     // ::std::auto_ptr
 #include <xsd/cxx/tree/containers.hxx>
+#include <xsd/cxx/tree/elements.hxx>
+#include <xsd/cxx/tree/exceptions.hxx>
 #include <xsd/cxx/tree/list.hxx>
-
+#include <xsd/cxx/xml/char-utf8.hxx>
 #include <xsd/cxx/xml/dom/parsing-header.hxx>
 
-#include "../in/xml/input.hxx"
-
-class ParticleSetType: public ::xml_schema::type
-{
-  public:
-  // particle
+class CheckpointType : public ::xml_schema::type {
+ public:
+  // Particles
   //
-  typedef ::ParticleType particle_type;
-  typedef ::xsd::cxx::tree::traits< particle_type, char > particle_traits;
+  typedef ::ParticlesType Particles_type;
+  typedef ::xsd::cxx::tree::traits<Particles_type, char> Particles_traits;
 
-  const particle_type&
-  particle () const;
+  const Particles_type& Particles() const;
 
-  particle_type&
-  particle ();
+  Particles_type& Particles();
 
-  void
-  particle (const particle_type& x);
+  void Particles(const Particles_type& x);
 
-  void
-  particle (::std::auto_ptr< particle_type > p);
+  void Particles(::std::auto_ptr<Particles_type> p);
 
   // Constructors.
   //
-  ParticleSetType (const particle_type&);
+  CheckpointType(const Particles_type&);
 
-  ParticleSetType (::std::auto_ptr< particle_type >);
+  CheckpointType(::std::auto_ptr<Particles_type>);
 
-  ParticleSetType (const ::xercesc::DOMElement& e,
-                   ::xml_schema::flags f = 0,
-                   ::xml_schema::container* c = 0);
+  CheckpointType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
+                 ::xml_schema::container* c = 0);
 
-  ParticleSetType (const ParticleSetType& x,
-                   ::xml_schema::flags f = 0,
-                   ::xml_schema::container* c = 0);
+  CheckpointType(const CheckpointType& x, ::xml_schema::flags f = 0,
+                 ::xml_schema::container* c = 0);
 
-  virtual ParticleSetType*
-  _clone (::xml_schema::flags f = 0,
-          ::xml_schema::container* c = 0) const;
+  virtual CheckpointType* _clone(::xml_schema::flags f = 0,
+                                 ::xml_schema::container* c = 0) const;
 
-  ParticleSetType&
-  operator= (const ParticleSetType& x);
+  CheckpointType& operator=(const CheckpointType& x);
 
-  virtual 
-  ~ParticleSetType ();
+  virtual ~CheckpointType();
 
   // Implementation.
   //
-  protected:
-  void
-  parse (::xsd::cxx::xml::dom::parser< char >&,
-         ::xml_schema::flags);
+ protected:
+  void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
 
-  protected:
-  ::xsd::cxx::tree::one< particle_type > particle_;
+ protected:
+  ::xsd::cxx::tree::one<Particles_type> Particles_;
 };
 
-class ParticleType: public ::xml_schema::type
-{
-  public:
+class ParticlesType : public ::xml_schema::type {
+ public:
+  // Particle
+  //
+  typedef ::ParticleType Particle_type;
+  typedef ::xsd::cxx::tree::sequence<Particle_type> Particle_sequence;
+  typedef Particle_sequence::iterator Particle_iterator;
+  typedef Particle_sequence::const_iterator Particle_const_iterator;
+  typedef ::xsd::cxx::tree::traits<Particle_type, char> Particle_traits;
+
+  const Particle_sequence& Particle() const;
+
+  Particle_sequence& Particle();
+
+  void Particle(const Particle_sequence& s);
+
+  // Constructors.
+  //
+  ParticlesType();
+
+  ParticlesType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
+                ::xml_schema::container* c = 0);
+
+  ParticlesType(const ParticlesType& x, ::xml_schema::flags f = 0,
+                ::xml_schema::container* c = 0);
+
+  virtual ParticlesType* _clone(::xml_schema::flags f = 0,
+                                ::xml_schema::container* c = 0) const;
+
+  ParticlesType& operator=(const ParticlesType& x);
+
+  virtual ~ParticlesType();
+
+  // Implementation.
+  //
+ protected:
+  void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
+
+ protected:
+  Particle_sequence Particle_;
+};
+
+class ParticleType : public ::xml_schema::type {
+ public:
   // Position
   //
-  typedef ::Dvec3Type Position_type;
-  typedef ::xsd::cxx::tree::traits< Position_type, char > Position_traits;
+  typedef ::CDvec3Type Position_type;
+  typedef ::xsd::cxx::tree::traits<Position_type, char> Position_traits;
 
-  const Position_type&
-  Position () const;
+  const Position_type& Position() const;
 
-  Position_type&
-  Position ();
+  Position_type& Position();
 
-  void
-  Position (const Position_type& x);
+  void Position(const Position_type& x);
 
-  void
-  Position (::std::auto_ptr< Position_type > p);
+  void Position(::std::auto_ptr<Position_type> p);
 
   // Velocity
   //
-  typedef ::Dvec3Type Velocity_type;
-  typedef ::xsd::cxx::tree::traits< Velocity_type, char > Velocity_traits;
+  typedef ::CDvec3Type Velocity_type;
+  typedef ::xsd::cxx::tree::traits<Velocity_type, char> Velocity_traits;
 
-  const Velocity_type&
-  Velocity () const;
+  const Velocity_type& Velocity() const;
 
-  Velocity_type&
-  Velocity ();
+  Velocity_type& Velocity();
 
-  void
-  Velocity (const Velocity_type& x);
+  void Velocity(const Velocity_type& x);
 
-  void
-  Velocity (::std::auto_ptr< Velocity_type > p);
+  void Velocity(::std::auto_ptr<Velocity_type> p);
 
   // Force
   //
-  typedef ::Dvec3Type Force_type;
-  typedef ::xsd::cxx::tree::traits< Force_type, char > Force_traits;
+  typedef ::CDvec3Type Force_type;
+  typedef ::xsd::cxx::tree::traits<Force_type, char> Force_traits;
 
-  const Force_type&
-  Force () const;
+  const Force_type& Force() const;
 
-  Force_type&
-  Force ();
+  Force_type& Force();
 
-  void
-  Force (const Force_type& x);
+  void Force(const Force_type& x);
 
-  void
-  Force (::std::auto_ptr< Force_type > p);
+  void Force(::std::auto_ptr<Force_type> p);
 
   // OldForce
   //
-  typedef ::Dvec3Type OldForce_type;
-  typedef ::xsd::cxx::tree::traits< OldForce_type, char > OldForce_traits;
+  typedef ::CDvec3Type OldForce_type;
+  typedef ::xsd::cxx::tree::traits<OldForce_type, char> OldForce_traits;
 
-  const OldForce_type&
-  OldForce () const;
+  const OldForce_type& OldForce() const;
 
-  OldForce_type&
-  OldForce ();
+  OldForce_type& OldForce();
 
-  void
-  OldForce (const OldForce_type& x);
+  void OldForce(const OldForce_type& x);
 
-  void
-  OldForce (::std::auto_ptr< OldForce_type > p);
+  void OldForce(::std::auto_ptr<OldForce_type> p);
 
   // mass
   //
   typedef ::xml_schema::decimal mass_type;
-  typedef ::xsd::cxx::tree::traits< mass_type, char, ::xsd::cxx::tree::schema_type::decimal > mass_traits;
+  typedef ::xsd::cxx::tree::traits<mass_type, char,
+                                   ::xsd::cxx::tree::schema_type::decimal>
+      mass_traits;
 
-  const mass_type&
-  mass () const;
+  const mass_type& mass() const;
 
-  mass_type&
-  mass ();
+  mass_type& mass();
 
-  void
-  mass (const mass_type& x);
+  void mass(const mass_type& x);
 
   // epsilon
   //
   typedef ::xml_schema::decimal epsilon_type;
-  typedef ::xsd::cxx::tree::traits< epsilon_type, char, ::xsd::cxx::tree::schema_type::decimal > epsilon_traits;
+  typedef ::xsd::cxx::tree::traits<epsilon_type, char,
+                                   ::xsd::cxx::tree::schema_type::decimal>
+      epsilon_traits;
 
-  const epsilon_type&
-  epsilon () const;
+  const epsilon_type& epsilon() const;
 
-  epsilon_type&
-  epsilon ();
+  epsilon_type& epsilon();
 
-  void
-  epsilon (const epsilon_type& x);
+  void epsilon(const epsilon_type& x);
 
   // sigma
   //
   typedef ::xml_schema::decimal sigma_type;
-  typedef ::xsd::cxx::tree::traits< sigma_type, char, ::xsd::cxx::tree::schema_type::decimal > sigma_traits;
+  typedef ::xsd::cxx::tree::traits<sigma_type, char,
+                                   ::xsd::cxx::tree::schema_type::decimal>
+      sigma_traits;
 
-  const sigma_type&
-  sigma () const;
+  const sigma_type& sigma() const;
 
-  sigma_type&
-  sigma ();
+  sigma_type& sigma();
 
-  void
-  sigma (const sigma_type& x);
+  void sigma(const sigma_type& x);
 
   // type
   //
   typedef ::xml_schema::int_ type_type;
-  typedef ::xsd::cxx::tree::traits< type_type, char > type_traits;
+  typedef ::xsd::cxx::tree::traits<type_type, char> type_traits;
 
-  const type_type&
-  type () const;
+  const type_type& type() const;
 
-  type_type&
-  type ();
+  type_type& type();
 
-  void
-  type (const type_type& x);
+  void type(const type_type& x);
 
   // Constructors.
   //
-  ParticleType (const Position_type&,
-                const Velocity_type&,
-                const Force_type&,
-                const OldForce_type&,
-                const mass_type&,
-                const epsilon_type&,
-                const sigma_type&,
-                const type_type&);
+  ParticleType(const Position_type&, const Velocity_type&, const Force_type&,
+               const OldForce_type&, const mass_type&, const epsilon_type&,
+               const sigma_type&, const type_type&);
 
-  ParticleType (::std::auto_ptr< Position_type >,
-                ::std::auto_ptr< Velocity_type >,
-                ::std::auto_ptr< Force_type >,
-                ::std::auto_ptr< OldForce_type >,
-                const mass_type&,
-                const epsilon_type&,
-                const sigma_type&,
-                const type_type&);
+  ParticleType(::std::auto_ptr<Position_type>, ::std::auto_ptr<Velocity_type>,
+               ::std::auto_ptr<Force_type>, ::std::auto_ptr<OldForce_type>,
+               const mass_type&, const epsilon_type&, const sigma_type&,
+               const type_type&);
 
-  ParticleType (const ::xercesc::DOMElement& e,
-                ::xml_schema::flags f = 0,
-                ::xml_schema::container* c = 0);
+  ParticleType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
+               ::xml_schema::container* c = 0);
 
-  ParticleType (const ParticleType& x,
-                ::xml_schema::flags f = 0,
-                ::xml_schema::container* c = 0);
+  ParticleType(const ParticleType& x, ::xml_schema::flags f = 0,
+               ::xml_schema::container* c = 0);
 
-  virtual ParticleType*
-  _clone (::xml_schema::flags f = 0,
-          ::xml_schema::container* c = 0) const;
+  virtual ParticleType* _clone(::xml_schema::flags f = 0,
+                               ::xml_schema::container* c = 0) const;
 
-  ParticleType&
-  operator= (const ParticleType& x);
+  ParticleType& operator=(const ParticleType& x);
 
-  virtual 
-  ~ParticleType ();
+  virtual ~ParticleType();
 
   // Implementation.
   //
-  protected:
-  void
-  parse (::xsd::cxx::xml::dom::parser< char >&,
-         ::xml_schema::flags);
+ protected:
+  void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
 
-  protected:
-  ::xsd::cxx::tree::one< Position_type > Position_;
-  ::xsd::cxx::tree::one< Velocity_type > Velocity_;
-  ::xsd::cxx::tree::one< Force_type > Force_;
-  ::xsd::cxx::tree::one< OldForce_type > OldForce_;
-  ::xsd::cxx::tree::one< mass_type > mass_;
-  ::xsd::cxx::tree::one< epsilon_type > epsilon_;
-  ::xsd::cxx::tree::one< sigma_type > sigma_;
-  ::xsd::cxx::tree::one< type_type > type_;
+ protected:
+  ::xsd::cxx::tree::one<Position_type> Position_;
+  ::xsd::cxx::tree::one<Velocity_type> Velocity_;
+  ::xsd::cxx::tree::one<Force_type> Force_;
+  ::xsd::cxx::tree::one<OldForce_type> OldForce_;
+  ::xsd::cxx::tree::one<mass_type> mass_;
+  ::xsd::cxx::tree::one<epsilon_type> epsilon_;
+  ::xsd::cxx::tree::one<sigma_type> sigma_;
+  ::xsd::cxx::tree::one<type_type> type_;
 };
 
-class Checkpoint: public ::xml_schema::type
-{
-  public:
-  // metadata
+class CDvec3Type : public ::xml_schema::type {
+ public:
+  // x
   //
-  typedef ::MetadataType metadata_type;
-  typedef ::xsd::cxx::tree::traits< metadata_type, char > metadata_traits;
+  typedef ::xml_schema::decimal x_type;
+  typedef ::xsd::cxx::tree::traits<x_type, char,
+                                   ::xsd::cxx::tree::schema_type::decimal>
+      x_traits;
 
-  const metadata_type&
-  metadata () const;
+  const x_type& x() const;
 
-  metadata_type&
-  metadata ();
+  x_type& x();
 
-  void
-  metadata (const metadata_type& x);
+  void x(const x_type& x);
 
-  void
-  metadata (::std::auto_ptr< metadata_type > p);
-
-  // Particles
+  // y
   //
-  typedef ::ParticleSetType Particles_type;
-  typedef ::xsd::cxx::tree::traits< Particles_type, char > Particles_traits;
+  typedef ::xml_schema::decimal y_type;
+  typedef ::xsd::cxx::tree::traits<y_type, char,
+                                   ::xsd::cxx::tree::schema_type::decimal>
+      y_traits;
 
-  const Particles_type&
-  Particles () const;
+  const y_type& y() const;
 
-  Particles_type&
-  Particles ();
+  y_type& y();
 
-  void
-  Particles (const Particles_type& x);
+  void y(const y_type& x);
 
-  void
-  Particles (::std::auto_ptr< Particles_type > p);
+  // z
+  //
+  typedef ::xml_schema::decimal z_type;
+  typedef ::xsd::cxx::tree::traits<z_type, char,
+                                   ::xsd::cxx::tree::schema_type::decimal>
+      z_traits;
+
+  const z_type& z() const;
+
+  z_type& z();
+
+  void z(const z_type& x);
 
   // Constructors.
   //
-  Checkpoint (const metadata_type&,
-              const Particles_type&);
+  CDvec3Type(const x_type&, const y_type&, const z_type&);
 
-  Checkpoint (::std::auto_ptr< metadata_type >,
-              ::std::auto_ptr< Particles_type >);
+  CDvec3Type(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
+             ::xml_schema::container* c = 0);
 
-  Checkpoint (const ::xercesc::DOMElement& e,
-              ::xml_schema::flags f = 0,
-              ::xml_schema::container* c = 0);
+  CDvec3Type(const CDvec3Type& x, ::xml_schema::flags f = 0,
+             ::xml_schema::container* c = 0);
 
-  Checkpoint (const Checkpoint& x,
-              ::xml_schema::flags f = 0,
-              ::xml_schema::container* c = 0);
+  virtual CDvec3Type* _clone(::xml_schema::flags f = 0,
+                             ::xml_schema::container* c = 0) const;
 
-  virtual Checkpoint*
-  _clone (::xml_schema::flags f = 0,
-          ::xml_schema::container* c = 0) const;
+  CDvec3Type& operator=(const CDvec3Type& x);
 
-  Checkpoint&
-  operator= (const Checkpoint& x);
-
-  virtual 
-  ~Checkpoint ();
+  virtual ~CDvec3Type();
 
   // Implementation.
   //
-  protected:
-  void
-  parse (::xsd::cxx::xml::dom::parser< char >&,
-         ::xml_schema::flags);
+ protected:
+  void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
 
-  protected:
-  ::xsd::cxx::tree::one< metadata_type > metadata_;
-  ::xsd::cxx::tree::one< Particles_type > Particles_;
+ protected:
+  ::xsd::cxx::tree::one<x_type> x_;
+  ::xsd::cxx::tree::one<y_type> y_;
+  ::xsd::cxx::tree::one<z_type> z_;
 };
 
 #include <iosfwd>
-
-#include <xercesc/sax/InputSource.hpp>
 #include <xercesc/dom/DOMDocument.hpp>
 #include <xercesc/dom/DOMErrorHandler.hpp>
+#include <xercesc/sax/InputSource.hpp>
 
 // Parse a URI or a local file.
 //
 
-::std::auto_ptr< ::Checkpoint >
-Checkpoint_ (const ::std::string& uri,
-             ::xml_schema::flags f = 0,
-             const ::xml_schema::properties& p = ::xml_schema::properties ());
+::std::auto_ptr< ::CheckpointType> Checkpoint(
+    const ::std::string& uri, ::xml_schema::flags f = 0,
+    const ::xml_schema::properties& p = ::xml_schema::properties());
 
-::std::auto_ptr< ::Checkpoint >
-Checkpoint_ (const ::std::string& uri,
-             ::xml_schema::error_handler& eh,
-             ::xml_schema::flags f = 0,
-             const ::xml_schema::properties& p = ::xml_schema::properties ());
+::std::auto_ptr< ::CheckpointType> Checkpoint(
+    const ::std::string& uri, ::xml_schema::error_handler& eh,
+    ::xml_schema::flags f = 0,
+    const ::xml_schema::properties& p = ::xml_schema::properties());
 
-::std::auto_ptr< ::Checkpoint >
-Checkpoint_ (const ::std::string& uri,
-             ::xercesc::DOMErrorHandler& eh,
-             ::xml_schema::flags f = 0,
-             const ::xml_schema::properties& p = ::xml_schema::properties ());
+::std::auto_ptr< ::CheckpointType> Checkpoint(
+    const ::std::string& uri, ::xercesc::DOMErrorHandler& eh,
+    ::xml_schema::flags f = 0,
+    const ::xml_schema::properties& p = ::xml_schema::properties());
 
 // Parse std::istream.
 //
 
-::std::auto_ptr< ::Checkpoint >
-Checkpoint_ (::std::istream& is,
-             ::xml_schema::flags f = 0,
-             const ::xml_schema::properties& p = ::xml_schema::properties ());
+::std::auto_ptr< ::CheckpointType> Checkpoint(
+    ::std::istream& is, ::xml_schema::flags f = 0,
+    const ::xml_schema::properties& p = ::xml_schema::properties());
 
-::std::auto_ptr< ::Checkpoint >
-Checkpoint_ (::std::istream& is,
-             ::xml_schema::error_handler& eh,
-             ::xml_schema::flags f = 0,
-             const ::xml_schema::properties& p = ::xml_schema::properties ());
+::std::auto_ptr< ::CheckpointType> Checkpoint(
+    ::std::istream& is, ::xml_schema::error_handler& eh,
+    ::xml_schema::flags f = 0,
+    const ::xml_schema::properties& p = ::xml_schema::properties());
 
-::std::auto_ptr< ::Checkpoint >
-Checkpoint_ (::std::istream& is,
-             ::xercesc::DOMErrorHandler& eh,
-             ::xml_schema::flags f = 0,
-             const ::xml_schema::properties& p = ::xml_schema::properties ());
+::std::auto_ptr< ::CheckpointType> Checkpoint(
+    ::std::istream& is, ::xercesc::DOMErrorHandler& eh,
+    ::xml_schema::flags f = 0,
+    const ::xml_schema::properties& p = ::xml_schema::properties());
 
-::std::auto_ptr< ::Checkpoint >
-Checkpoint_ (::std::istream& is,
-             const ::std::string& id,
-             ::xml_schema::flags f = 0,
-             const ::xml_schema::properties& p = ::xml_schema::properties ());
+::std::auto_ptr< ::CheckpointType> Checkpoint(
+    ::std::istream& is, const ::std::string& id, ::xml_schema::flags f = 0,
+    const ::xml_schema::properties& p = ::xml_schema::properties());
 
-::std::auto_ptr< ::Checkpoint >
-Checkpoint_ (::std::istream& is,
-             const ::std::string& id,
-             ::xml_schema::error_handler& eh,
-             ::xml_schema::flags f = 0,
-             const ::xml_schema::properties& p = ::xml_schema::properties ());
+::std::auto_ptr< ::CheckpointType> Checkpoint(
+    ::std::istream& is, const ::std::string& id,
+    ::xml_schema::error_handler& eh, ::xml_schema::flags f = 0,
+    const ::xml_schema::properties& p = ::xml_schema::properties());
 
-::std::auto_ptr< ::Checkpoint >
-Checkpoint_ (::std::istream& is,
-             const ::std::string& id,
-             ::xercesc::DOMErrorHandler& eh,
-             ::xml_schema::flags f = 0,
-             const ::xml_schema::properties& p = ::xml_schema::properties ());
+::std::auto_ptr< ::CheckpointType> Checkpoint(
+    ::std::istream& is, const ::std::string& id, ::xercesc::DOMErrorHandler& eh,
+    ::xml_schema::flags f = 0,
+    const ::xml_schema::properties& p = ::xml_schema::properties());
 
 // Parse xercesc::InputSource.
 //
 
-::std::auto_ptr< ::Checkpoint >
-Checkpoint_ (::xercesc::InputSource& is,
-             ::xml_schema::flags f = 0,
-             const ::xml_schema::properties& p = ::xml_schema::properties ());
+::std::auto_ptr< ::CheckpointType> Checkpoint(
+    ::xercesc::InputSource& is, ::xml_schema::flags f = 0,
+    const ::xml_schema::properties& p = ::xml_schema::properties());
 
-::std::auto_ptr< ::Checkpoint >
-Checkpoint_ (::xercesc::InputSource& is,
-             ::xml_schema::error_handler& eh,
-             ::xml_schema::flags f = 0,
-             const ::xml_schema::properties& p = ::xml_schema::properties ());
+::std::auto_ptr< ::CheckpointType> Checkpoint(
+    ::xercesc::InputSource& is, ::xml_schema::error_handler& eh,
+    ::xml_schema::flags f = 0,
+    const ::xml_schema::properties& p = ::xml_schema::properties());
 
-::std::auto_ptr< ::Checkpoint >
-Checkpoint_ (::xercesc::InputSource& is,
-             ::xercesc::DOMErrorHandler& eh,
-             ::xml_schema::flags f = 0,
-             const ::xml_schema::properties& p = ::xml_schema::properties ());
+::std::auto_ptr< ::CheckpointType> Checkpoint(
+    ::xercesc::InputSource& is, ::xercesc::DOMErrorHandler& eh,
+    ::xml_schema::flags f = 0,
+    const ::xml_schema::properties& p = ::xml_schema::properties());
 
 // Parse xercesc::DOMDocument.
 //
 
-::std::auto_ptr< ::Checkpoint >
-Checkpoint_ (const ::xercesc::DOMDocument& d,
-             ::xml_schema::flags f = 0,
-             const ::xml_schema::properties& p = ::xml_schema::properties ());
+::std::auto_ptr< ::CheckpointType> Checkpoint(
+    const ::xercesc::DOMDocument& d, ::xml_schema::flags f = 0,
+    const ::xml_schema::properties& p = ::xml_schema::properties());
 
-::std::auto_ptr< ::Checkpoint >
-Checkpoint_ (::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument > d,
-             ::xml_schema::flags f = 0,
-             const ::xml_schema::properties& p = ::xml_schema::properties ());
+::std::auto_ptr< ::CheckpointType> Checkpoint(
+    ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument> d,
+    ::xml_schema::flags f = 0,
+    const ::xml_schema::properties& p = ::xml_schema::properties());
+
+#include <iosfwd>
+#include <xercesc/dom/DOMDocument.hpp>
+#include <xercesc/dom/DOMErrorHandler.hpp>
+#include <xercesc/framework/XMLFormatter.hpp>
+#include <xsd/cxx/xml/dom/auto-ptr.hxx>
+
+// Serialize to std::ostream.
+//
+
+void Checkpoint(::std::ostream& os, const ::CheckpointType& x,
+                const ::xml_schema::namespace_infomap& m =
+                    ::xml_schema::namespace_infomap(),
+                const ::std::string& e = "UTF-8", ::xml_schema::flags f = 0);
+
+void Checkpoint(::std::ostream& os, const ::CheckpointType& x,
+                ::xml_schema::error_handler& eh,
+                const ::xml_schema::namespace_infomap& m =
+                    ::xml_schema::namespace_infomap(),
+                const ::std::string& e = "UTF-8", ::xml_schema::flags f = 0);
+
+void Checkpoint(::std::ostream& os, const ::CheckpointType& x,
+                ::xercesc::DOMErrorHandler& eh,
+                const ::xml_schema::namespace_infomap& m =
+                    ::xml_schema::namespace_infomap(),
+                const ::std::string& e = "UTF-8", ::xml_schema::flags f = 0);
+
+// Serialize to xercesc::XMLFormatTarget.
+//
+
+void Checkpoint(::xercesc::XMLFormatTarget& ft, const ::CheckpointType& x,
+                const ::xml_schema::namespace_infomap& m =
+                    ::xml_schema::namespace_infomap(),
+                const ::std::string& e = "UTF-8", ::xml_schema::flags f = 0);
+
+void Checkpoint(::xercesc::XMLFormatTarget& ft, const ::CheckpointType& x,
+                ::xml_schema::error_handler& eh,
+                const ::xml_schema::namespace_infomap& m =
+                    ::xml_schema::namespace_infomap(),
+                const ::std::string& e = "UTF-8", ::xml_schema::flags f = 0);
+
+void Checkpoint(::xercesc::XMLFormatTarget& ft, const ::CheckpointType& x,
+                ::xercesc::DOMErrorHandler& eh,
+                const ::xml_schema::namespace_infomap& m =
+                    ::xml_schema::namespace_infomap(),
+                const ::std::string& e = "UTF-8", ::xml_schema::flags f = 0);
+
+// Serialize to an existing xercesc::DOMDocument.
+//
+
+void Checkpoint(::xercesc::DOMDocument& d, const ::CheckpointType& x,
+                ::xml_schema::flags f = 0);
+
+// Serialize to a new xercesc::DOMDocument.
+//
+
+::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument> Checkpoint(
+    const ::CheckpointType& x,
+    const ::xml_schema::namespace_infomap& m =
+        ::xml_schema::namespace_infomap(),
+    ::xml_schema::flags f = 0);
+
+void operator<<(::xercesc::DOMElement&, const CheckpointType&);
+
+void operator<<(::xercesc::DOMElement&, const ParticlesType&);
+
+void operator<<(::xercesc::DOMElement&, const ParticleType&);
+
+void operator<<(::xercesc::DOMElement&, const CDvec3Type&);
 
 #include <xsd/cxx/post.hxx>
 
@@ -660,4 +711,4 @@ Checkpoint_ (::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument > d,
 //
 // End epilogue.
 
-#endif // CHECKPOINT_SCHEMA_HXX
+#endif  // CXX___SRC_IO_FILE_OUT_CHECKPOINT_SCHEMA_HXX
