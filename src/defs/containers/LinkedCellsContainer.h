@@ -45,7 +45,7 @@ class LinkedCellsContainer final : public ParticleContainer {
 
   /**
    * @brief
-   * number of cells for domain + 2 (halo)
+   * number of cells per direction for domain + 2 halo cells
    */
   ivec3 cell_count{};
 
