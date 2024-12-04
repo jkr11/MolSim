@@ -11,6 +11,7 @@
 #include "defs/Generators/SpheroidGenerator.h"
 #include "defs/types.h"
 #include "input.hxx"
+#include "io/file/out/checkpoint-schema.hxx"
 #include "spdlog/fmt/bundled/args.h"
 #include "utils/SpdWrapper.h"
 
@@ -132,13 +133,35 @@ void XmlReader::read(std::vector<Particle>& particles,
         sg.generate(particles);
       }
     }
-    if (config->particles() != nullptr) {
-      for (const auto& particles : config->particles()->particle()) {}
-    }
+    if (config->checkpoint().path().present()) {
+      auto checkpoint_path = checkpoint().path().get();
+      loadCheckpoint(checkpoint_path, particles);
+    };
 
   } catch (const std::exception& e) {
     SpdWrapper::get()->error("Error reading XML file: {}", e.what());
     exit(EXIT_FAILURE);
+  }
+}
+
+void XmlReader::loadCheckpoint(const std::string& filepath,
+                               std::vector<Particle>& particles) {
+  const std::unique_ptr<CheckpointType> checkpoint = Checkpoint(filepath);
+  for (const auto& p : checkpoint->Particles().Particle()) {
+    auto position =
+        unwrapVec<const CDvec3Type, dvec3>(p.Position(), "position");
+    auto velocity =
+        unwrapVec<const CDvec3Type, dvec3>(p.Velocity(), "position");
+    auto force = unwrapVec<const CDvec3Type, dvec3>(p.Force(), "force");
+    auto old_force =
+        unwrapVec<const CDvec3Type, dvec3>(p.OldForce(), "old_force");
+    double mass = p.mass();
+    double epsilon = p.epsilon();
+    double sigma = p.sigma();
+    int type = p.type();
+
+    particles.emplace_back(position, velocity, force, old_force, mass, epsilon,
+                           sigma, type);
   }
 }
 

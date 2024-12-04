@@ -7,8 +7,6 @@
 
 #include "Particle.h"
 
-#include "debug/debug_print.h"
-#include "spdlog/spdlog.h"
 #include "utils/ArrayUtils.h"
 #include "utils/SpdWrapper.h"
 
@@ -44,6 +42,21 @@ Particle::Particle(const std::array<double, 3> &x_arg,
   epsilon = _epsilon;
   // DEBUG_PRINT("Particle generated!");
 }
+
+Particle::Particle(const std::array<double, 3> &x_arg,
+                   const std::array<double, 3> &v_arg,
+                   const std::array<double, 3> &f_arg,
+                   const std::array<double, 3> &old_f_arg, const double m_arg,
+                   const int type_arg, const double epsilon_arg,
+                   const double sigma_arg)
+    : x(x_arg),
+      v(v_arg),
+      f(f_arg),
+      old_f(old_f_arg),
+      m(m_arg),
+      type(type_arg),
+      epsilon(epsilon_arg),
+      sigma(sigma_arg) {}
 
 Particle::~Particle() { /*DEBUG_PRINT("Particle destructed!");*/ }
 

@@ -124,6 +124,12 @@ class LinkedCellsContainer final : public ParticleContainer {
   [[nodiscard]] std::vector<Particle*> getParticles() override;
 
   /**
+   * @brief Get a vector of all particles in the container
+   * @return Vector of all particles
+   */
+  [[nodiscard]] std::vector<Particle> getParticlesObjects() override;
+
+  /**
    * @brief Get the count of particles in the container
    * @return Count of particles in the container
    */

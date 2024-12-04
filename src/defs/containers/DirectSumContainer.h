@@ -50,6 +50,7 @@ class DirectSumContainer final : public ParticleContainer {
    * @return Vector of references to particles in the container
    */
   [[nodiscard]] std::vector<Particle*> getParticles() override;
+  
 
   /**
    * @brief Get the count of particles in the container

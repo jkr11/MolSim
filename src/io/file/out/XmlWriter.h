@@ -6,15 +6,16 @@
 #define XMLWRITER_H
 #pragma once
 #include "checkpoint-schema.hxx"
-#include "io/file/in/xml/input.hxx"
 #include "defs/Particle.h"
 #include "defs/Simulation.h"
+#include "defs/containers/ParticleContainer.h"
+#include "io/file/in/xml/input.hxx"
 class XmlWriter {
  public:
   XmlWriter();
   ~XmlWriter();
 
-  void writeFile(const std::vector<Particle>& particles, const Arguments& args,
-                 std::size_t iteration);
+  static void writeFile(ParticleContainer& particle_container,
+                 const std::string& filepath);
 };
 #endif  // XMLWRITER_H

@@ -12,6 +12,7 @@
 #include "io/file/in/xml/XmlReader.h"
 #include "io/file/out/OutputHelper.h"
 #include "io/file/out/VTKWriter.h"
+#include "io/file/out/XmlWriter.h"
 #include "spdlog/fmt/bundled/chrono.h"
 #include "spdlog/stopwatch.h"
 #include "utils/ArrayUtils.h"
@@ -133,6 +134,7 @@ int main(const int argc, char* argv[]) {
     iteration++;
     current_time = arguments.delta_t * iteration;
   }
+  XmlWriter::writeFile(*container, "./output/test.checkpoint");
   const auto end_time = std::chrono::high_resolution_clock::now();
   const std::chrono::duration<double> elapsed_time = end_time - start_time;
 #ifdef BENCHMARK

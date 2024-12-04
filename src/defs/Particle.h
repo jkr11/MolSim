@@ -68,6 +68,11 @@ class Particle final {
       const std::array<double, 3> &x_arg, const std::array<double, 3> &v_arg,
       double m_arg, double _epsilon, double _sigma, int type = 0);
 
+  explicit Particle(
+      const std::array<double, 3> &x_arg, const std::array<double, 3> &v_arg,
+      const std::array<double, 3> &f_arg, const std::array<double, 3> &old_f_arg,
+      double m_arg, int type_arg, double epsilon_arg, double sigma_arg);
+
   ~Particle();
 
   [[nodiscard]] const std::array<double, 3> &getX() const;

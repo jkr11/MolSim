@@ -3,6 +3,10 @@
 //
 #include "XmlWriter.h"
 
+#include <fstream>
+#include <iostream>
+#include <sstream>
+
 #include "defs/Thermostat.h"
 #include "io/file/out/checkpoint-schema.hxx"
 
@@ -11,15 +15,44 @@ XmlWriter::XmlWriter() = default;
 XmlWriter::~XmlWriter() = default;
 
 template <typename VecType, typename XmlType>
-inline XmlType wrapVec(const VecType& vec, const std::string& name) {
-  XmlType xmlVec;
-  xmlVec.x() = vec[0];
-  xmlVec.y() = vec[1];
-  xmlVec.z() = vec[2];
+inline XmlType wrapVec(const VecType& vec) {
+  XmlType xmlVec{vec[0], vec[1], vec[2]};
   return xmlVec;
 }
 
-void XmlWriter::writeFile(const std::vector<Particle>& particles,
-                          const Arguments& args, std::size_t iteration) {
+ParticleType wrapParticle(const Particle& particle) {
+  const auto position = wrapVec<dvec3, CDvec3Type>(particle.getX());
+  const auto velocity = wrapVec<dvec3, CDvec3Type>(particle.getV());
+  const auto force =
+      wrapVec<std::array<double, 3>, CDvec3Type>(particle.getF());
+  const auto old_force =
+      wrapVec<std::array<double, 3>, CDvec3Type>(particle.getOldF());
+  const auto mass = particle.getM();
+  const auto epsilon = particle.getEpsilon();
+  const auto sigma = particle.getSigma();
+  const auto type = particle.getType();
+  return ParticleType{position, velocity, force, old_force,
+                      mass,     epsilon,  sigma, type};
+}
 
+void XmlWriter::writeFile(ParticleContainer& particle_container,
+                          const std::string& filepath) {
+  try {
+    ParticlesType xml_particles;
+
+    particle_container.singleIterator(
+        [&xml_particles](const Particle& particle) {
+          const ParticleType xml_particle = wrapParticle(particle);
+          xml_particles.Particle().push_back(xml_particle);
+        });
+
+    std::ostringstream fileName;
+    CheckpointType checkpoint{xml_particles};
+
+    std::ofstream checkpoint_file(filepath);
+    Checkpoint(checkpoint_file, checkpoint);
+
+  } catch (const std::exception& e) {
+    std::cerr << "Error writing XML file: " << e.what() << "\n";
+  }
 }

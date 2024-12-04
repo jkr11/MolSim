@@ -27,6 +27,8 @@ class XmlReader {
   static void read(std::vector<Particle>& particles,
                    const std::string& filepath,
                    Arguments& simulation_parameters);
+
+  static void loadCheckpoint(const std::string& filepath, std::vector<Particle>& particles);
 };
 
 /**
