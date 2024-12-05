@@ -22,11 +22,6 @@
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
-                <xs:element name="checkpoint" maxOccurs="1">
-                    <xs:complexType>
-                        <xs:attribute name="path" type="xs:string"/>
-                    </xs:complexType>
-                </xs:element>
                 <xs:element name="thermostat" type="ThermostatType" minOccurs="0"/>
             </xs:sequence>
         </xs:complexType>
@@ -39,6 +34,7 @@
             <xs:element name="delta_t" type="xs:decimal"/>
             <xs:element name="t_end" type="xs:double"/>
             <xs:element name="twoD" type="xs:boolean"/>
+            <xs:element name="checkpoint" type="xs:string" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 

@@ -5,7 +5,7 @@ CHECKPOINT_XSD="../src/io/file/out/checkpoint-schema.xsd"
 INPUT_DIR=$(dirname "$INPUT_XSD")
 CHECKPOINT_DIR=$(dirname "$CHECKPOINT_XSD")
 echo "Running xsdcxx tree compiler on $INPUT_XSD"
-xsdcxx cxx-tree --output-dir "$INPUT_DIR" "$INPUT_XSD"
+xsdcxx cxx-tree --generate-serialization --output-dir "$INPUT_DIR" "$INPUT_XSD"
 
 if [ $? -ne 0 ]; then
   echo "Error: xsdcxx failed to compile the input XSD file."

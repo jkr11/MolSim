@@ -27,7 +27,7 @@ void XmlReader::read(std::vector<Particle>& particles,
                                 path.string());
   }
   try {
-    const std::unique_ptr<simulation> config = simulation_(filepath);
+    const std::unique_ptr<::simulation> config = simulation_(filepath);
     SpdWrapper::get()->info("Reading XML file {}", filepath);
     auto& metadata = config->metadata();
     if (auto& container = metadata.container();
@@ -67,7 +67,18 @@ void XmlReader::read(std::vector<Particle>& particles,
     } else {
       SpdWrapper::get()->warn("No force provided, using default LennardJones");
     }
-    if (auto thermostat = config->thermostat(); thermostat.present()) {
+    if (auto& singular_force = metadata.force();
+        singular_force.SingularGravity().present()) {
+      simulation_parameters.singular_force_type = Arguments::SingularGravity;
+      SingularGravityConfig singular_gravity_config;
+      singular_gravity_config.g = singular_force.SingularGravity()->g().get();
+      simulation_parameters.singular_force_data = singular_gravity_config;
+    }
+    if (metadata.checkpoint().present()) {
+      loadCheckpoint(metadata.checkpoint().get(), particles);
+    }
+    if (config->thermostat().present()) {
+      auto thermostat = config->thermostat();
       ThermostatConfig thermostat_config = {
           .T_init = thermostat->T_init(),
           .T_target = thermostat->T_target(),
@@ -79,7 +90,6 @@ void XmlReader::read(std::vector<Particle>& particles,
       };
       simulation_parameters.thermostat_config = thermostat_config;
     }
-
     // TODO: singular forces here , but its a good start
     simulation_parameters.delta_t = metadata.delta_t();
     simulation_parameters.t_end = metadata.t_end();
@@ -96,7 +106,7 @@ void XmlReader::read(std::vector<Particle>& particles,
         dvec3 velocity =
             unwrapVec<const Dvec3Type&, dvec3>(_velocity, "velocity");
         double mv;
-        if (config->thermostat().present()) {
+        if (config->thermostat().present() && cubes.mv() == 0.0) {
           mv = std::sqrt(simulation_parameters.thermostat_config.T_init /
                          cubes.mass());
         } else {
@@ -118,7 +128,7 @@ void XmlReader::read(std::vector<Particle>& particles,
         dvec3 origin = {_origin.x(), _origin.y(), _origin.z()};
         dvec3 velocity = {_velocity.x(), _velocity.y(), _velocity.z()};
         double mv;
-        if (config->thermostat().present()) {
+        if (config->thermostat().present() && spheres.mv() == 0.0) {
           mv = std::sqrt(simulation_parameters.thermostat_config.T_init /
                          spheres.mass());
         } else {
@@ -126,16 +136,11 @@ void XmlReader::read(std::vector<Particle>& particles,
         }
         SpheroidGenerator sg(origin, spheres.radius(), spheres.h(),
                              spheres.mass(), velocity, spheres.epsilon(),
-                             spheres.sigma(), spheres.type(), std::sqrt(mv),
-                             twoD);
+                             spheres.sigma(), spheres.type(), mv, twoD);
 
         sg.generate(particles);
       }
     }
-    if (config->checkpoint().path().present()) {
-      auto checkpoint_path = checkpoint().path().get();
-      loadCheckpoint(checkpoint_path, particles);
-    };
 
   } catch (const std::exception& e) {
     SpdWrapper::get()->error("Error reading XML file: {}", e.what());
@@ -143,24 +148,45 @@ void XmlReader::read(std::vector<Particle>& particles,
   }
 }
 
-void XmlReader::loadCheckpoint(const std::string& filepath,
+void XmlReader::loadCheckpoint(const std::string& _filepath,
                                std::vector<Particle>& particles) {
-  const std::unique_ptr<CheckpointType> checkpoint = Checkpoint(filepath);
-  for (const auto& p : checkpoint->Particles().Particle()) {
-    auto position =
-        unwrapVec<const CDvec3Type, dvec3>(p.Position(), "position");
-    auto velocity =
-        unwrapVec<const CDvec3Type, dvec3>(p.Velocity(), "position");
-    auto force = unwrapVec<const CDvec3Type, dvec3>(p.Force(), "force");
-    auto old_force =
-        unwrapVec<const CDvec3Type, dvec3>(p.OldForce(), "old_force");
-    double mass = p.mass();
-    double epsilon = p.epsilon();
-    double sigma = p.sigma();
-    int type = p.type();
+  SpdWrapper::get()->info("Reading checkpoint particles");
+  const std::filesystem::path filepath(_filepath);
+  if (!std::filesystem::exists(filepath)) {
+    throw std::runtime_error("File not found: " + filepath.string());
+  }
+  if (filepath.extension() != ".checkpoint" && filepath.extension() != ".xml") {
+    throw std::invalid_argument("File extension is not supported: " +
+                                filepath.string());
+  }
+  try {
+    SpdWrapper::get()->info("Try");
+    const std::unique_ptr<::CheckpointType> checkpoint = Checkpoint(filepath);
+    SpdWrapper::get()->info("Checkpoint obj instanace");
+    std::vector<Particle> temp_particles;
+    for (const auto& p : checkpoint->Particles().Particle()) {
+      auto position =
+          unwrapVec<const CDvec3Type, dvec3>(p.Position(), "position");
+      auto velocity =
+          unwrapVec<const CDvec3Type, dvec3>(p.Velocity(), "position");
+      auto force = unwrapVec<const CDvec3Type, dvec3>(p.Force(), "force");
+      auto old_force =
+          unwrapVec<const CDvec3Type, dvec3>(p.OldForce(), "old_force");
+      double mass = p.mass();
+      double epsilon = p.epsilon();
+      double sigma = p.sigma();
+      int type = p.type();
 
-    particles.emplace_back(position, velocity, force, old_force, mass, epsilon,
-                           sigma, type);
+      temp_particles.emplace_back(position, velocity, force, old_force, mass,
+                                  epsilon, sigma, type);
+    }
+    SpdWrapper::get()->info("Checkpoint particles size: {}",
+                            temp_particles.size());
+    particles.reserve(particles.size() + temp_particles.size());
+    particles.insert(particles.end(), temp_particles.begin(),
+                     temp_particles.end());
+  } catch (const std::exception& e) {
+    SpdWrapper::get()->error("Error reading checkpoint file: {}", e.what());
   }
 }
 

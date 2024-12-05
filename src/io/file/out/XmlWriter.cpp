@@ -49,8 +49,12 @@ void XmlWriter::writeFile(ParticleContainer& particle_container,
     std::ostringstream fileName;
     CheckpointType checkpoint{xml_particles};
 
+    //checkpoint.xmlns("http://example.com/your-namespace");
+
     std::ofstream checkpoint_file(filepath);
+    SpdWrapper::get()->info("Written checkpoint to {}", filepath);
     Checkpoint(checkpoint_file, checkpoint);
+    checkpoint_file.close();
 
   } catch (const std::exception& e) {
     std::cerr << "Error writing XML file: " << e.what() << "\n";

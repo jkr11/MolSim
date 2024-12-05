@@ -12,13 +12,13 @@
                 <r_cutoff>3.0</r_cutoff>
                 <boundary>
                     <x_high>
-                        <Outflow/>
+                        <Reflective/>
                     </x_high>
                     <x_low>
                         <Reflective/>
                     </x_low>
                     <y_high>
-                        <Reflective/>
+                        <Outflow/>
                     </y_high>
                     <y_low>
                         <Reflective/>
@@ -39,27 +39,35 @@
         <delta_t>0.0005</delta_t>
         <t_end>15</t_end>
         <twoD>true</twoD>
-        <checkpoint>/home/jkr/uni/sem5/molsim/MolSim/input/test_small.xml</checkpoint>
     </metadata>
-    <spheroids>
-        <spheroid>
+    <cuboids>
+        <cuboid>
             <velocity>
-                <x>0.0</x>
-                <y>0.0</y>
-                <z>0.0</z>
-            </velocity>
-            <origin>
-                <x>150</x>
-                <y>150</y>
+                <x>0</x>
+                <y>0</y>
                 <z>0</z>
-            </origin>
-            <radius>20</radius>
-            <type>2</type>
+            </velocity>
+            <corner>
+                <x>1.5</x>
+                <y>2</y>
+                <z>0</z>
+            </corner>
+            <dimensions>
+                <x>250</x>
+                <y>50</y>
+                <z>1</z>
+            </dimensions>
+            <type>1</type>
             <h>1.2</h>
             <mass>1.0</mass>
             <epsilon>1.0</epsilon>
-            <sigma>1.0</sigma>
-            <mv>0.1</mv>
-        </spheroid>
-    </spheroids>
+            <sigma>1.2</sigma>
+            <mv>0.0</mv>
+        </cuboid>
+    </cuboids>
+    <thermostat>
+        <T_init>0.5</T_init>
+        <n_thermostat>1000</n_thermostat>
+        <T_target>0.5</T_target>
+    </thermostat>
 </simulation>

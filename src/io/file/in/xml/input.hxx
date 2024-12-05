@@ -233,7 +233,6 @@ class ThermostatType;
 class simulation;
 class cuboids;
 class spheroids;
-class checkpoint;
 
 #include <algorithm>  // std::binary_search
 #include <limits>     // std::numeric_limits
@@ -310,6 +309,22 @@ class MetadataType : public ::xml_schema::type {
 
   void twoD(const twoD_type& x);
 
+  // checkpoint
+  //
+  typedef ::xml_schema::string checkpoint_type;
+  typedef ::xsd::cxx::tree::optional<checkpoint_type> checkpoint_optional;
+  typedef ::xsd::cxx::tree::traits<checkpoint_type, char> checkpoint_traits;
+
+  const checkpoint_optional& checkpoint() const;
+
+  checkpoint_optional& checkpoint();
+
+  void checkpoint(const checkpoint_type& x);
+
+  void checkpoint(const checkpoint_optional& x);
+
+  void checkpoint(::std::auto_ptr<checkpoint_type> p);
+
   // Constructors.
   //
   MetadataType(const container_type&, const force_type&, const delta_t_type&,
@@ -342,6 +357,7 @@ class MetadataType : public ::xml_schema::type {
   ::xsd::cxx::tree::one<delta_t_type> delta_t_;
   ::xsd::cxx::tree::one<t_end_type> t_end_;
   ::xsd::cxx::tree::one<twoD_type> twoD_;
+  checkpoint_optional checkpoint_;
 };
 
 class cuboidType : public ::xml_schema::type {
@@ -1446,19 +1462,6 @@ class simulation : public ::xml_schema::type {
 
   void spheroids(::std::auto_ptr<spheroids_type> p);
 
-  // checkpoint
-  //
-  typedef ::checkpoint checkpoint_type;
-  typedef ::xsd::cxx::tree::traits<checkpoint_type, char> checkpoint_traits;
-
-  const checkpoint_type& checkpoint() const;
-
-  checkpoint_type& checkpoint();
-
-  void checkpoint(const checkpoint_type& x);
-
-  void checkpoint(::std::auto_ptr<checkpoint_type> p);
-
   // thermostat
   //
   typedef ::ThermostatType thermostat_type;
@@ -1477,9 +1480,9 @@ class simulation : public ::xml_schema::type {
 
   // Constructors.
   //
-  simulation(const metadata_type&, const checkpoint_type&);
+  simulation(const metadata_type&);
 
-  simulation(::std::auto_ptr<metadata_type>, ::std::auto_ptr<checkpoint_type>);
+  simulation(::std::auto_ptr<metadata_type>);
 
   simulation(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
              ::xml_schema::container* c = 0);
@@ -1503,7 +1506,6 @@ class simulation : public ::xml_schema::type {
   ::xsd::cxx::tree::one<metadata_type> metadata_;
   cuboids_optional cuboids_;
   spheroids_optional spheroids_;
-  ::xsd::cxx::tree::one<checkpoint_type> checkpoint_;
   thermostat_optional thermostat_;
 };
 
@@ -1589,50 +1591,6 @@ class spheroids : public ::xml_schema::type {
 
  protected:
   spheroid_sequence spheroid_;
-};
-
-class checkpoint : public ::xml_schema::type {
- public:
-  // path
-  //
-  typedef ::xml_schema::string path_type;
-  typedef ::xsd::cxx::tree::optional<path_type> path_optional;
-  typedef ::xsd::cxx::tree::traits<path_type, char> path_traits;
-
-  const path_optional& path() const;
-
-  path_optional& path();
-
-  void path(const path_type& x);
-
-  void path(const path_optional& x);
-
-  void path(::std::auto_ptr<path_type> p);
-
-  // Constructors.
-  //
-  checkpoint();
-
-  checkpoint(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
-             ::xml_schema::container* c = 0);
-
-  checkpoint(const checkpoint& x, ::xml_schema::flags f = 0,
-             ::xml_schema::container* c = 0);
-
-  virtual checkpoint* _clone(::xml_schema::flags f = 0,
-                             ::xml_schema::container* c = 0) const;
-
-  checkpoint& operator=(const checkpoint& x);
-
-  virtual ~checkpoint();
-
-  // Implementation.
-  //
- protected:
-  void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
-
- protected:
-  path_optional path_;
 };
 
 #include <iosfwd>

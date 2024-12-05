@@ -95,6 +95,26 @@ MetadataType::twoD_type& MetadataType::twoD() { return this->twoD_.get(); }
 
 void MetadataType::twoD(const twoD_type& x) { this->twoD_.set(x); }
 
+const MetadataType::checkpoint_optional& MetadataType::checkpoint() const {
+  return this->checkpoint_;
+}
+
+MetadataType::checkpoint_optional& MetadataType::checkpoint() {
+  return this->checkpoint_;
+}
+
+void MetadataType::checkpoint(const checkpoint_type& x) {
+  this->checkpoint_.set(x);
+}
+
+void MetadataType::checkpoint(const checkpoint_optional& x) {
+  this->checkpoint_ = x;
+}
+
+void MetadataType::checkpoint(::std::auto_ptr<checkpoint_type> x) {
+  this->checkpoint_.set(x);
+}
+
 // cuboidType
 //
 
@@ -722,22 +742,6 @@ void simulation::spheroids(::std::auto_ptr<spheroids_type> x) {
   this->spheroids_.set(x);
 }
 
-const simulation::checkpoint_type& simulation::checkpoint() const {
-  return this->checkpoint_.get();
-}
-
-simulation::checkpoint_type& simulation::checkpoint() {
-  return this->checkpoint_.get();
-}
-
-void simulation::checkpoint(const checkpoint_type& x) {
-  this->checkpoint_.set(x);
-}
-
-void simulation::checkpoint(::std::auto_ptr<checkpoint_type> x) {
-  this->checkpoint_.set(x);
-}
-
 const simulation::thermostat_optional& simulation::thermostat() const {
   return this->thermostat_;
 }
@@ -780,21 +784,6 @@ spheroids::spheroid_sequence& spheroids::spheroid() { return this->spheroid_; }
 
 void spheroids::spheroid(const spheroid_sequence& s) { this->spheroid_ = s; }
 
-// checkpoint
-//
-
-const checkpoint::path_optional& checkpoint::path() const {
-  return this->path_;
-}
-
-checkpoint::path_optional& checkpoint::path() { return this->path_; }
-
-void checkpoint::path(const path_type& x) { this->path_.set(x); }
-
-void checkpoint::path(const path_optional& x) { this->path_ = x; }
-
-void checkpoint::path(::std::auto_ptr<path_type> x) { this->path_.set(x); }
-
 #include <xsd/cxx/xml/dom/parsing-source.hxx>
 
 // MetadataType
@@ -808,7 +797,8 @@ MetadataType::MetadataType(const container_type& container,
       force_(force, this),
       delta_t_(delta_t, this),
       t_end_(t_end, this),
-      twoD_(twoD, this) {}
+      twoD_(twoD, this),
+      checkpoint_(this) {}
 
 MetadataType::MetadataType(::std::auto_ptr<container_type> container,
                            ::std::auto_ptr<force_type> force,
@@ -819,7 +809,8 @@ MetadataType::MetadataType(::std::auto_ptr<container_type> container,
       force_(force, this),
       delta_t_(delta_t, this),
       t_end_(t_end, this),
-      twoD_(twoD, this) {}
+      twoD_(twoD, this),
+      checkpoint_(this) {}
 
 MetadataType::MetadataType(const MetadataType& x, ::xml_schema::flags f,
                            ::xml_schema::container* c)
@@ -828,7 +819,8 @@ MetadataType::MetadataType(const MetadataType& x, ::xml_schema::flags f,
       force_(x.force_, f, this),
       delta_t_(x.delta_t_, f, this),
       t_end_(x.t_end_, f, this),
-      twoD_(x.twoD_, f, this) {}
+      twoD_(x.twoD_, f, this),
+      checkpoint_(x.checkpoint_, f, this) {}
 
 MetadataType::MetadataType(const ::xercesc::DOMElement& e,
                            ::xml_schema::flags f, ::xml_schema::container* c)
@@ -837,7 +829,8 @@ MetadataType::MetadataType(const ::xercesc::DOMElement& e,
       force_(this),
       delta_t_(this),
       t_end_(this),
-      twoD_(this) {
+      twoD_(this),
+      checkpoint_(this) {
   if ((f & ::xml_schema::flags::base) == 0) {
     ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
     this->parse(p, f);
@@ -900,6 +893,17 @@ void MetadataType::parse(::xsd::cxx::xml::dom::parser<char>& p,
       }
     }
 
+    // checkpoint
+    //
+    if (n.name() == "checkpoint" && n.namespace_().empty()) {
+      ::std::auto_ptr<checkpoint_type> r(checkpoint_traits::create(i, f, this));
+
+      if (!this->checkpoint_) {
+        this->checkpoint_.set(r);
+        continue;
+      }
+    }
+
     break;
   }
 
@@ -937,6 +941,7 @@ MetadataType& MetadataType::operator=(const MetadataType& x) {
     this->delta_t_ = x.delta_t_;
     this->t_end_ = x.t_end_;
     this->twoD_ = x.twoD_;
+    this->checkpoint_ = x.checkpoint_;
   }
 
   return *this;
@@ -2382,22 +2387,18 @@ ThermostatType::~ThermostatType() {}
 // simulation
 //
 
-simulation::simulation(const metadata_type& metadata,
-                       const checkpoint_type& checkpoint)
+simulation::simulation(const metadata_type& metadata)
     : ::xml_schema::type(),
       metadata_(metadata, this),
       cuboids_(this),
       spheroids_(this),
-      checkpoint_(checkpoint, this),
       thermostat_(this) {}
 
-simulation::simulation(::std::auto_ptr<metadata_type> metadata,
-                       ::std::auto_ptr<checkpoint_type> checkpoint)
+simulation::simulation(::std::auto_ptr<metadata_type> metadata)
     : ::xml_schema::type(),
       metadata_(metadata, this),
       cuboids_(this),
       spheroids_(this),
-      checkpoint_(checkpoint, this),
       thermostat_(this) {}
 
 simulation::simulation(const simulation& x, ::xml_schema::flags f,
@@ -2406,7 +2407,6 @@ simulation::simulation(const simulation& x, ::xml_schema::flags f,
       metadata_(x.metadata_, f, this),
       cuboids_(x.cuboids_, f, this),
       spheroids_(x.spheroids_, f, this),
-      checkpoint_(x.checkpoint_, f, this),
       thermostat_(x.thermostat_, f, this) {}
 
 simulation::simulation(const ::xercesc::DOMElement& e, ::xml_schema::flags f,
@@ -2415,7 +2415,6 @@ simulation::simulation(const ::xercesc::DOMElement& e, ::xml_schema::flags f,
       metadata_(this),
       cuboids_(this),
       spheroids_(this),
-      checkpoint_(this),
       thermostat_(this) {
   if ((f & ::xml_schema::flags::base) == 0) {
     ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
@@ -2463,17 +2462,6 @@ void simulation::parse(::xsd::cxx::xml::dom::parser<char>& p,
       }
     }
 
-    // checkpoint
-    //
-    if (n.name() == "checkpoint" && n.namespace_().empty()) {
-      ::std::auto_ptr<checkpoint_type> r(checkpoint_traits::create(i, f, this));
-
-      if (!checkpoint_.present()) {
-        this->checkpoint_.set(r);
-        continue;
-      }
-    }
-
     // thermostat
     //
     if (n.name() == "thermostat" && n.namespace_().empty()) {
@@ -2491,10 +2479,6 @@ void simulation::parse(::xsd::cxx::xml::dom::parser<char>& p,
   if (!metadata_.present()) {
     throw ::xsd::cxx::tree::expected_element<char>("metadata", "");
   }
-
-  if (!checkpoint_.present()) {
-    throw ::xsd::cxx::tree::expected_element<char>("checkpoint", "");
-  }
 }
 
 simulation* simulation::_clone(::xml_schema::flags f,
@@ -2508,7 +2492,6 @@ simulation& simulation::operator=(const simulation& x) {
     this->metadata_ = x.metadata_;
     this->cuboids_ = x.cuboids_;
     this->spheroids_ = x.spheroids_;
-    this->checkpoint_ = x.checkpoint_;
     this->thermostat_ = x.thermostat_;
   }
 
@@ -2624,54 +2607,6 @@ spheroids& spheroids::operator=(const spheroids& x) {
 }
 
 spheroids::~spheroids() {}
-
-// checkpoint
-//
-
-checkpoint::checkpoint() : ::xml_schema::type(), path_(this) {}
-
-checkpoint::checkpoint(const checkpoint& x, ::xml_schema::flags f,
-                       ::xml_schema::container* c)
-    : ::xml_schema::type(x, f, c), path_(x.path_, f, this) {}
-
-checkpoint::checkpoint(const ::xercesc::DOMElement& e, ::xml_schema::flags f,
-                       ::xml_schema::container* c)
-    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c), path_(this) {
-  if ((f & ::xml_schema::flags::base) == 0) {
-    ::xsd::cxx::xml::dom::parser<char> p(e, false, false, true);
-    this->parse(p, f);
-  }
-}
-
-void checkpoint::parse(::xsd::cxx::xml::dom::parser<char>& p,
-                       ::xml_schema::flags f) {
-  while (p.more_attributes()) {
-    const ::xercesc::DOMAttr& i(p.next_attribute());
-    const ::xsd::cxx::xml::qualified_name<char> n(
-        ::xsd::cxx::xml::dom::name<char>(i));
-
-    if (n.name() == "path" && n.namespace_().empty()) {
-      this->path_.set(path_traits::create(i, f, this));
-      continue;
-    }
-  }
-}
-
-checkpoint* checkpoint::_clone(::xml_schema::flags f,
-                               ::xml_schema::container* c) const {
-  return new class checkpoint(*this, f, c);
-}
-
-checkpoint& checkpoint::operator=(const checkpoint& x) {
-  if (this != &x) {
-    static_cast< ::xml_schema::type&>(*this) = x;
-    this->path_ = x.path_;
-  }
-
-  return *this;
-}
-
-checkpoint::~checkpoint() {}
 
 #include <istream>
 #include <xsd/cxx/tree/error-handler.hxx>

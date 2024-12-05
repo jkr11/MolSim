@@ -39,6 +39,9 @@ struct SingularGravityConfig {
   double g{};
 };
 
+/**
+ * @brief holds instance data for Thermostat
+ */
 struct ThermostatConfig {
   double T_init{};
   double T_target{};
@@ -102,6 +105,8 @@ inline void printConfiguration(const Arguments& args) {
   logger->info("Force Type: {}", args.force_type == Arguments::LennardJones
                                      ? "Lennard-Jones"
                                      : "Gravity");
+  logger->info("Thermostat: T_init {}, T_target: {}",
+               args.thermostat_config.T_init, args.thermostat_config.T_target);
 
   if (std::holds_alternative<LinkedCellsConfig>(args.container_data)) {
     logger->info("Container Type: Linked Cells");
