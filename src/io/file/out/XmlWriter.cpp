@@ -45,6 +45,10 @@ void XmlWriter::writeFile(ParticleContainer& particle_container,
           const ParticleType xml_particle = wrapParticle(particle);
           xml_particles.Particle().push_back(xml_particle);
         });
+    xml_schema::namespace_infomap map;
+
+    map[""].name = "";
+    map[""].schema = "../../src/io/file/out/checkpoint-schema.xsd";
 
     std::ostringstream fileName;
     CheckpointType checkpoint{xml_particles};
@@ -53,7 +57,7 @@ void XmlWriter::writeFile(ParticleContainer& particle_container,
 
     std::ofstream checkpoint_file(filepath);
     SpdWrapper::get()->info("Written checkpoint to {}", filepath);
-    Checkpoint(checkpoint_file, checkpoint);
+    Checkpoint(checkpoint_file, checkpoint, map);
     checkpoint_file.close();
 
   } catch (const std::exception& e) {
