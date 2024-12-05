@@ -59,6 +59,7 @@ struct Arguments {
   enum SingularForceType { SingularGravity } singular_force_type;
   ThermostatConfig thermostat_config;
   // TODO: remove this vvvvv
+  bool use_thermostat;
   std::variant<SingularGravityConfig> singular_force_data;
   std::variant<LinkedCellsConfig, DirectSumConfig> container_data;
 };
@@ -105,8 +106,9 @@ inline void printConfiguration(const Arguments& args) {
   logger->info("Force Type: {}", args.force_type == Arguments::LennardJones
                                      ? "Lennard-Jones"
                                      : "Gravity");
-  logger->info("Thermostat: T_init {}, T_target: {}",
-               args.thermostat_config.T_init, args.thermostat_config.T_target);
+  logger->info("Thermostat: T_init {}", args.thermostat_config.T_init);
+  logger->info("--- T_target: {}", args.thermostat_config.T_target);
+  logger->info("--- deltaT: {}", args.thermostat_config.deltaT);
 
   if (std::holds_alternative<LinkedCellsConfig>(args.container_data)) {
     logger->info("Container Type: Linked Cells");

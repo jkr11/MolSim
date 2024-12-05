@@ -49,14 +49,13 @@ void XmlWriter::writeFile(ParticleContainer& particle_container,
 
     map[""].name = "";
     map[""].schema = "../../src/io/file/out/checkpoint-schema.xsd";
+    // I think this can either stay hardcoded or we provide a symlink
 
     std::ostringstream fileName;
     CheckpointType checkpoint{xml_particles};
 
-    //checkpoint.xmlns("http://example.com/your-namespace");
-
     std::ofstream checkpoint_file(filepath);
-    SpdWrapper::get()->info("Written checkpoint to {}", filepath);
+    SpdWrapper::get()->info("--- Written checkpoint to {}", filepath);
     Checkpoint(checkpoint_file, checkpoint, map);
     checkpoint_file.close();
 

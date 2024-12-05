@@ -82,13 +82,23 @@ void XmlReader::read(std::vector<Particle>& particles,
       ThermostatConfig thermostat_config = {
           .T_init = thermostat->T_init(),
           .T_target = thermostat->T_target(),
-          .deltaT = thermostat->deltaT().present()
-                        ? thermostat->deltaT().get()
-                        : std::numeric_limits<double>::infinity(),
+          .deltaT =
+              std::numeric_limits<double>::max(),  // Default to infinity, dont
+                                                   // use infinity() limit
+                                                   // because of -ffast-math
           .n_thermostat = thermostat->n_thermostat(),
-
       };
+
+      if (thermostat->deltaT().present()) {
+        thermostat_config.deltaT = thermostat->deltaT().get();
+      }
+
+      SpdWrapper::get()->info("Checkpoint thermostat deltaT {}",
+                              thermostat_config.deltaT);
       simulation_parameters.thermostat_config = thermostat_config;
+      simulation_parameters.use_thermostat = true;
+    } else {
+      simulation_parameters.use_thermostat = false;
     }
     // TODO: singular forces here , but its a good start
     simulation_parameters.delta_t = metadata.delta_t();
@@ -150,19 +160,19 @@ void XmlReader::read(std::vector<Particle>& particles,
 
 void XmlReader::loadCheckpoint(const std::string& _filepath,
                                std::vector<Particle>& particles) {
-  SpdWrapper::get()->info("Reading checkpoint particles");
+  SpdWrapper::get()->info("Looking and for checkpoint file");
   const std::filesystem::path filepath(_filepath);
   if (!std::filesystem::exists(filepath)) {
-    throw std::runtime_error("File not found: " + filepath.string());
+    throw std::runtime_error("Checkpoint File not found: " + filepath.string());
   }
   if (filepath.extension() != ".checkpoint" && filepath.extension() != ".xml") {
     throw std::invalid_argument("File extension is not supported: " +
                                 filepath.string());
   }
   try {
-    SpdWrapper::get()->info("Try");
+    DEBUG_PRINT("Found checkpoint file");
     const std::unique_ptr<::CheckpointType> checkpoint = Checkpoint(filepath);
-    SpdWrapper::get()->info("Checkpoint obj instanace");
+    SpdWrapper::get()->info("Reading checkpoint particles");
     std::vector<Particle> temp_particles;
     for (const auto& p : checkpoint->Particles().Particle()) {
       auto position =
@@ -176,11 +186,11 @@ void XmlReader::loadCheckpoint(const std::string& _filepath,
       double epsilon = p.epsilon();
       double sigma = p.sigma();
       int type = p.type();
-
+      // TODO: this is also bad
       temp_particles.emplace_back(position, velocity, force, old_force, mass,
                                   epsilon, sigma, type);
     }
-    SpdWrapper::get()->info("Checkpoint particles size: {}",
+    SpdWrapper::get()->info("Read {} particles from checkpoint",
                             temp_particles.size());
     particles.reserve(particles.size() + temp_particles.size());
     particles.insert(particles.end(), temp_particles.begin(),
