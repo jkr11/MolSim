@@ -18,7 +18,7 @@
                         <Reflective/>
                     </x_low>
                     <y_high>
-                        <Outflow/>
+                        <Reflective/>
                     </y_high>
                     <y_low>
                         <Reflective/>
