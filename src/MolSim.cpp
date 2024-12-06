@@ -39,6 +39,14 @@ int main(const int argc, char* argv[]) {
                                     .z_high = LinkedCellsConfig::Outflow,
                                     .z_low = LinkedCellsConfig::Outflow,
                                 }},
+      .thermostat_config =
+          {
+              .T_init = 0.5,
+              .T_target = 0.5,
+              .deltaT = 0.5,
+              .use_relative = true,
+              .n_thermostat = 1000,
+          },
   };
   auto [input_file, step_size, write_checkpoint] =
       CLArgumentParser::parse(argc, argv);

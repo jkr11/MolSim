@@ -47,6 +47,7 @@ struct ThermostatConfig {
   double T_target{};
   double deltaT{};
   int n_thermostat{};
+  bool use_relative{};
 };
 // TODO: apparently we cant nest these for access in XMLReader
 /**
