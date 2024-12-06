@@ -40,7 +40,8 @@ int main(const int argc, char* argv[]) {
                                     .z_low = LinkedCellsConfig::Outflow,
                                 }},
   };
-  auto [input_file, step_size] = CLArgumentParser::parse(argc, argv);
+  auto [input_file, step_size, write_checkpoint] =
+      CLArgumentParser::parse(argc, argv);
 
   std::vector<Particle> particles;
 
@@ -106,6 +107,11 @@ int main(const int argc, char* argv[]) {
         thermostat.setTemperature(*container);
       }
     }
+    if (iteration == 1000) {
+      const auto first_1k = std::chrono::high_resolution_clock::now();
+      const std::chrono::duration<double> elapsed = first_1k - start_time;
+      std::cout << elapsed.count() << " seconds" << std::endl;
+    }
 
 #ifndef BENCHMARK
     if (current_time >= next_output_time) {
@@ -138,10 +144,15 @@ int main(const int argc, char* argv[]) {
     iteration++;
     current_time = arguments.delta_t * iteration;
   }
-  XmlWriter::writeFile(*container, "./output/test.xml");
+
+  // Writes the finished simulations particle state into a checkpoint file
+  if (write_checkpoint) {
+    XmlWriter::writeFile(*container, "./output/test.xml");
+  }
+
+#ifdef BENCHMARK
   const auto end_time = std::chrono::high_resolution_clock::now();
   const std::chrono::duration<double> elapsed_time = end_time - start_time;
-#ifdef BENCHMARK
   std::cout << "Simulation Time: " << elapsed_time.count() << " seconds"
             << std::endl;
 #endif
