@@ -4,11 +4,11 @@
 #pragma once
 #ifndef LENNARDJONES_H
 #define LENNARDJONES_H
-#include "BidirectionalForce.h"
+#include "InteractiveForce.h"
 /**
  * @brief class exposing calculation of the lennard jones force
  */
-class LennardJones final : public BidirectionalForce {
+class LennardJones final : public InteractiveForce {
  public:
   LennardJones() = default;
   /**

@@ -28,8 +28,30 @@ class XmlReader {
                    const std::string& filepath,
                    Arguments& simulation_parameters);
 
-  static void loadCheckpoint(const std::string& filepath, std::vector<Particle>& particles);
+  static void loadCheckpoint(const std::string& filepath,
+                             std::vector<Particle>& particles);
 };
+
+/**
+ * @brief ensures the input files are valid (not empty, extension, path)
+ * @param path the path pointing to the file
+ * @param extension the desired file extension
+ * @param type the type of file you are checking (Input, checkpoint, etc)
+ */
+inline void validate_path(const std::filesystem::path& path,
+                          const std::string& extension,
+                          const std::string& type) {
+  if (!exists(path)) {
+    throw std::runtime_error(type + " file not found: " + path.string());
+  }
+  if (path.extension() != extension) {
+    throw std::invalid_argument(
+        type + " file extension is not supported: " + path.string());
+  }
+  if (std::filesystem::is_empty(path)) {
+    throw std::runtime_error(type + "file is empty " + path.string());
+  }
+}
 
 /**
  * @brief converts the xsd type to a ::Arguments:: type

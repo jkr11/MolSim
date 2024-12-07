@@ -14,11 +14,13 @@ class VerletIntegrator final : public Integrator {
  public:
   /**
    * @brief Create VerletIntegrator object
-   * @param force Reference to the type of force applied each iteration
+   * @param interactive_force Reference to the type of force applied each
+   * @param singular_force Global force acting on each particle as is
    * @param delta_t Delta time
    */
-  VerletIntegrator(BidirectionalForce& bidirectional_force, SingularForce& singular_force, const double delta_t)
-      : Integrator(bidirectional_force, singular_force, delta_t) {}
+  VerletIntegrator(InteractiveForce& interactive_force,
+                   SingularForce& singular_force, const double delta_t)
+      : Integrator(interactive_force, singular_force, delta_t) {}
 
   /**
    * @brief Destructor

@@ -19,13 +19,7 @@ void XmlReader::read(std::vector<Particle>& particles,
                      const std::string& filepath,
                      Arguments& simulation_parameters) {
   const std::filesystem::path path(filepath);
-  if (!exists(path)) {
-    throw std::runtime_error("File not found: " + path.string());
-  }
-  if (path.extension() != ".xml") {
-    throw std::invalid_argument("File extension is not supported: " +
-                                path.string());
-  }
+  validate_path(path, ".xml", "Simulation input");
   try {
     const std::unique_ptr<::simulation> config = simulation_(filepath);
     SpdWrapper::get()->info("Reading XML file {}", filepath);
@@ -81,7 +75,7 @@ void XmlReader::read(std::vector<Particle>& particles,
       auto thermostat = config->thermostat();
       ThermostatConfig thermostat_config = {
           .T_init = thermostat->T_init(),
-          .T_target = thermostat->T_target(),
+          .T_target = thermostat->T_target(),  // TODO: make this optional
           .deltaT =
               std::numeric_limits<double>::max(),  // Default to infinity, dont
                                                    // use infinity() limit
@@ -162,13 +156,7 @@ void XmlReader::loadCheckpoint(const std::string& _filepath,
                                std::vector<Particle>& particles) {
   SpdWrapper::get()->info("Looking and for checkpoint file");
   const std::filesystem::path filepath(_filepath);
-  if (!std::filesystem::exists(filepath)) {
-    throw std::runtime_error("Checkpoint File not found: " + filepath.string());
-  }
-  if (filepath.extension() != ".checkpoint" && filepath.extension() != ".xml") {
-    throw std::invalid_argument("File extension is not supported: " +
-                                filepath.string());
-  }
+  validate_path(filepath, ".xml", "checkpoint");
   try {
     DEBUG_PRINT("Found checkpoint file");
     const std::unique_ptr<::CheckpointType> checkpoint = Checkpoint(filepath);
@@ -201,8 +189,8 @@ void XmlReader::loadCheckpoint(const std::string& _filepath,
 }
 
 using LBoundaryType =
-    LinkedCellsConfig::BoundaryType;  // BoundaryType is double used by the xsd
-                                      // config files so be careful
+    LinkedCellsConfig::BoundaryType;  // BoundaryType is double used by the
+                                      // xsd config files so be careful
 template <typename BT>
 LBoundaryType toBoundaryType(const BT& boundary_type) {
   if (boundary_type.Outflow().present()) {

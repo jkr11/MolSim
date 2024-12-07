@@ -2,14 +2,14 @@
 // Created by jkr on 10/18/24.
 //
 #pragma once
-#include "BidirectionalForce.h"
+#include "InteractiveForce.h"
 #include "defs/Particle.h"
 #include "utils/ArrayUtils.h"
 
 /**
  * @brief Gravitational force F_{1,2}
  */
-class Gravity final : public BidirectionalForce {
+class Gravity final : public InteractiveForce {
  public:
   Gravity() = default;
 

@@ -20,7 +20,7 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
       [this](Particle& p) { p.setF(p.getF() + singularForce.applyForce(p)); });
 
   particle_container.pairIterator([this](Particle& p1, Particle& p2) {
-    const dvec3 g12 = bidirectional_force.directionalForce(p1, p2);
+    const dvec3 g12 = interactive_force.directionalForce(p1, p2);
     p1.setF(p1.getF() + g12);  // F_i = \sum_j F_ij
     p2.setF(p2.getF() - g12);  // g12 = -g21
   });

@@ -26,6 +26,14 @@ int main(const int argc, char* argv[]) {
       .t_end = 5,
       .delta_t = 0.0002,
       .force_type = Arguments::LennardJones,
+      .thermostat_config =
+          {
+              .T_init = 0.5,
+              .T_target = 0.5,
+              .deltaT = 0.5,
+              .n_thermostat = 1000,
+              .use_relative = true,
+          },
       .singular_force_data = SingularGravityConfig{.g = -12.44},
       .container_data =
           LinkedCellsConfig{.domain = {100, 100, 100},
@@ -39,14 +47,7 @@ int main(const int argc, char* argv[]) {
                                     .z_high = LinkedCellsConfig::Outflow,
                                     .z_low = LinkedCellsConfig::Outflow,
                                 }},
-      .thermostat_config =
-          {
-              .T_init = 0.5,
-              .T_target = 0.5,
-              .deltaT = 0.5,
-              .use_relative = true,
-              .n_thermostat = 1000,
-          },
+
   };
   auto [input_file, step_size, write_checkpoint] =
       CLArgumentParser::parse(argc, argv);
@@ -74,7 +75,7 @@ int main(const int argc, char* argv[]) {
     throw std::runtime_error("Unrecognized container type");
   }
   std::cout << particles.size() << " particles" << std::endl;
-  std::unique_ptr<BidirectionalForce> force;
+  std::unique_ptr<InteractiveForce> force;
   if (arguments.force_type == Arguments::Gravity) {
     force = std::make_unique<Gravity>();
   } else if (arguments.force_type == Arguments::LennardJones) {

@@ -1,6 +1,6 @@
 #pragma once
 #include "defs/containers/ParticleContainer.h"
-#include "forces/BidirectionalForce.h"
+#include "forces/InteractiveForce.h"
 #include "forces/SingularForce.h"
 
 /**
@@ -8,22 +8,22 @@
  */
 class Integrator {
  protected:
-  BidirectionalForce &bidirectional_force;
+  InteractiveForce &interactive_force;
   SingularForce &singularForce;
   double delta_t;
 
  public:
   /**
    * @brief Create Integrator object
-   * @param bidirectional_force Reference to the type of force applied each
+   * @param interactive_force Reference to the type of force applied each
    * iteration
    * @param singular_force singular force acting on single particles globally
    * @param delta_t Delta time
    * @note Since this is an interface, it's invalid
    */
-  Integrator(BidirectionalForce &bidirectional_force,
-             SingularForce &singular_force, const double delta_t)
-      : bidirectional_force(bidirectional_force),
+  Integrator(InteractiveForce &interactive_force, SingularForce &singular_force,
+             const double delta_t)
+      : interactive_force(interactive_force),
         singularForce(singular_force),
         delta_t(delta_t) {};
 
