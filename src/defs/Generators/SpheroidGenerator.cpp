@@ -42,10 +42,14 @@ SpheroidGenerator::SpheroidGenerator(const dvec3& origin, const int radius,
 
 void SpheroidGenerator::generate(std::vector<Particle>& particles) {
   int size{};
+  // Approximate the size by area of disk and volume of sphere
+  // There are between (r-h)/h, (r+h)/h particles on one bisector, so we
+  // overestimate with (r+h)
+  // TODO: maybe change this in pattern for exact alloc
   if (twoD) {
-    size = static_cast<int>(M_PI * std::pow(radius, 2));
+    size = static_cast<int>(M_PI * std::pow((radius + h) / h, 2));
   } else {
-    size = static_cast<int>(0.75 * M_PI * std::pow(radius, 3));
+    size = static_cast<int>((4.0 / 3.0) * M_PI * std::pow((radius + h) / h, 3));
   }
   particles.reserve(size);
   DEBUG_PRINT("Reserved " + std::to_string(size));

@@ -75,4 +75,7 @@ void DirectSumContainer::pairIterator(
   }
 }
 
-void DirectSumContainer::imposeInvariant() {}
+void DirectSumContainer::imposeInvariant() {
+  // TODO: this better? DEBUG_PRINT("DirectSumContainer::imposeInvariant()");
+  SPDLOG_TRACE("DirectSumContainer::imposeInvariant()");
+}
