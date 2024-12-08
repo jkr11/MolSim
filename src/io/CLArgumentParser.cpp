@@ -29,7 +29,7 @@ std::tuple<std::filesystem::path, double, bool> CLArgumentParser::parse(
   double step_size = 0.5;
   bool write_checkpoint = false;
 
-  while ((opt = getopt_long(argc, argv, "hf:s:l:R:", long_options,
+  while ((opt = getopt_long(argc, argv, "hf:s:l:c", long_options,
                             &option_index)) != -1) {
     try {
       if ((opt == 'f' || opt == 't' || opt == 'd' || opt == 's') &&
