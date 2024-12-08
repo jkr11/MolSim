@@ -56,27 +56,22 @@ void XmlReader::read(std::vector<Particle>& particles,
           "No container provided, using default LinkedCells");
     }
     if (auto& force = metadata.force(); force.LennardJones().present()) {
-      simulation_parameters.force_type = Arguments::LennardJones;
-      simulation_parameters.interactive_forces.push_back(
-          std::make_unique<LennardJones>());
+      auto _force = std::make_unique<LennardJones>();
+      simulation_parameters.interactive_forces.push_back(std::move(_force));
       DEBUG_PRINT("Using LennardJones");
     } else if (force.Gravity().present()) {
-      simulation_parameters.force_type = Arguments::Gravity;
-      simulation_parameters.interactive_forces.push_back(
-          std::make_unique<Gravity>());
+      auto _force = std::make_unique<Gravity>();
+      simulation_parameters.interactive_forces.push_back(std::move(_force));
       DEBUG_PRINT("Using Gravity");
     } else {
       SpdWrapper::get()->warn("No force provided, using default LennardJones");
     }
     if (auto& singular_force = metadata.force();
         singular_force.SingularGravity().present()) {
-      simulation_parameters.singular_force_type = Arguments::SingularGravity;
-      SingularGravityConfig singular_gravity_config;
-      singular_gravity_config.g = singular_force.SingularGravity()->g().get();
-      simulation_parameters.singular_force_data = singular_gravity_config;
+      auto _force = std::make_unique<SingularGravity>(
+          singular_force.SingularGravity()->g().get());
       simulation_parameters.singular_forces.push_back(
-          std::make_unique<SingularGravity>(
-              singular_force.SingularGravity()->g().get()));
+          std::move(_force));
     }
     if (metadata.checkpoint().present()) {
       loadCheckpoint(metadata.checkpoint().get(), particles);

@@ -11,9 +11,6 @@
  */
 class Integrator {
  protected:
-  InteractiveForce &interactive_force;
-  SingularForce &singularForce;
-
   std::vector<std::unique_ptr<InteractiveForce>> interactive_forces;
   std::vector<std::unique_ptr<SingularForce>> singular_forces;
   double delta_t;
@@ -21,19 +18,16 @@ class Integrator {
  public:
   /**
    * @brief Create Integrator object
-   * @param interactive_force Reference to the type of force applied each
+   * @param interactive_forces References to the type of force applied each
    * iteration
-   * @param singular_force singular force acting on single particles globally
+   * @param singular_forces singular forces acting on single particles globally
    * @param delta_t Delta time
    * @note Since this is an interface, it's invalid
    */
-  Integrator(InteractiveForce &interactive_force, SingularForce &singular_force,
-             const double delta_t,
-             std::vector<std::unique_ptr<InteractiveForce>> interactive_forces,
-             std::vector<std::unique_ptr<SingularForce>> singular_forces)
-      : interactive_force(interactive_force),
-        singularForce(singular_force),
-        interactive_forces(std::move(interactive_forces)),
+  Integrator(std::vector<std::unique_ptr<InteractiveForce>> interactive_forces,
+             std::vector<std::unique_ptr<SingularForce>> singular_forces,
+             const double delta_t)
+      : interactive_forces(std::move(interactive_forces)),
         singular_forces(std::move(singular_forces)),
         delta_t(delta_t) {};
 

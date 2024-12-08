@@ -92,9 +92,9 @@ int main(const int argc, char* argv[]) {
     SpdWrapper::get()->error("Unrecognized singular force");
   }
 
-  VerletIntegrator verlet_integrator(*force, *singular_force, arguments.delta_t,
-                                     std::move(arguments.interactive_forces),
-                                     std::move(arguments.singular_forces));
+  VerletIntegrator verlet_integrator(std::move(arguments.interactive_forces),
+                                     std::move(arguments.singular_forces),
+                                     arguments.delta_t);
   outputWriter::VTKWriter writer;
 
   const std::string outputDirectory =
