@@ -34,7 +34,6 @@ int main(const int argc, char* argv[]) {
               .n_thermostat = 1000,
               .use_relative = true,
           },
-      .singular_force_data = SingularGravityConfig{.g = -12.44},
       .container_data =
           LinkedCellsConfig{.domain = {100, 100, 100},
                             .cutoff_radius = 3.0,

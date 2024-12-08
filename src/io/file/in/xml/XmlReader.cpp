@@ -11,8 +11,6 @@
 #include "defs/Generators/SpheroidGenerator.h"
 #include "defs/types.h"
 #include "forces/Gravity.h"
-#include "forces/LennardJones.h"
-#include "forces/SingularGravity.h"
 #include "input.hxx"
 #include "io/file/out/checkpoint-schema.hxx"
 #include "spdlog/fmt/bundled/args.h"

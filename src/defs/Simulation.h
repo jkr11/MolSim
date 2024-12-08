@@ -73,10 +73,7 @@ struct Arguments {
   ThermostatConfig thermostat_config;
   // TODO: remove this vvvvv
   bool use_thermostat;
-  std::variant<SingularGravityConfig> singular_force_data;
   std::variant<LinkedCellsConfig, DirectSumConfig> container_data;
-  std::vector<std::unique_ptr<SingularForce>> singular_forces;
-  std::vector<std::unique_ptr<InteractiveForce>> interactive_forces;
   std::vector<SingularForceTypes> singular_force_types;
   std::vector<InteractiveForceTypes> interactive_force_types;
 };
@@ -120,13 +117,14 @@ inline void printConfiguration(const Arguments& args) {
   logger->info("t_end: {}", args.t_end);
   logger->info("delta_t: {}", args.delta_t);
   logger->info("Singular Forces:");
-  for (auto& force : args.singular_forces) {
-    logger->info("-- SingularGravityConfig");
-  }
-  for (auto& force : args.interactive_forces) {
-    logger->info(
-        "-- LennardJones");  // TODO: add printing to forces or write a map
-  }
+  // TODO: fix this
+  // for (auto& force : args.singular_forces) {
+  //  logger->info("-- SingularGravityConfig");
+  // }
+  // for (auto& force : args.interactive_forces) {
+  // logger->info(
+  //    "-- LennardJones");  // TODO: add printing to forces or write a map
+  //}
   logger->info("Thermostat: T_init {}", args.thermostat_config.T_init);
   logger->info("--- T_target: {}", args.thermostat_config.T_target);
   logger->info("--- deltaT: {}", args.thermostat_config.deltaT);
