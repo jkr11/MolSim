@@ -3,7 +3,7 @@
 #include <fstream>
 
 #include "../src/io/file/in/xml/XmlReader.h"
-#if 0
+#if 1
 #include "../src/io/file/in/xml/input.cxx"  // It wants this idk why
 //#include "../src/io/file/in/xml/input.hxx"
 #include "spdlog/fmt/bundled/os.h"

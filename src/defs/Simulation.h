@@ -45,6 +45,8 @@ struct HarmonicForceConfig {};
 
 struct LennardJonesConfig {};
 
+struct GravityConfig {};
+
 /**
  * @brief holds instance data for Thermostat
  */
@@ -61,6 +63,9 @@ struct ThermostatConfig {
  */
 // TODO: remove unecessary force configs, keep them for now
 struct Arguments {
+  using SingularForceTypes =
+      std::variant<SingularGravityConfig, HarmonicForceConfig>;
+  using InteractiveForceTypes = std::variant<LennardJonesConfig, GravityConfig>;
   double t_end;
   double delta_t;
   enum ForceType { LennardJones, Gravity } force_type;
@@ -72,6 +77,8 @@ struct Arguments {
   std::variant<LinkedCellsConfig, DirectSumConfig> container_data;
   std::vector<std::unique_ptr<SingularForce>> singular_forces;
   std::vector<std::unique_ptr<InteractiveForce>> interactive_forces;
+  std::vector<SingularForceTypes> singular_force_types;
+  std::vector<InteractiveForceTypes> interactive_force_types;
 };
 
 /**

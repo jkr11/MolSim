@@ -75,25 +75,30 @@ int main(const int argc, char* argv[]) {
     throw std::runtime_error("Unrecognized container type");
   }
   std::cout << particles.size() << " particles" << std::endl;
-  std::unique_ptr<InteractiveForce> force;
-  if (arguments.force_type == Arguments::Gravity) {
-    force = std::make_unique<Gravity>();
-  } else if (arguments.force_type == Arguments::LennardJones) {
-    force = std::make_unique<LennardJones>();
+  std::vector<std::unique_ptr<InteractiveForce>> interactive_forces;
+  for (auto& config : arguments.interactive_force_types) {
+    if (std::holds_alternative<LennardJonesConfig>(config)) {
+      interactive_forces.push_back(std::make_unique<LennardJones>());
+    } else if (std::holds_alternative<GravityConfig>(config)) {
+      interactive_forces.push_back(std::make_unique<Gravity>());
+    } else {
+      SpdWrapper::get()->error("Unrecognized interactive_force_type");
+    }
   }
 
-  std::unique_ptr<SingularForce> singular_force;
-  if (std::holds_alternative<SingularGravityConfig>(
-          arguments.singular_force_data)) {
-    const auto& [g] =
-        std::get<SingularGravityConfig>(arguments.singular_force_data);
-    singular_force = std::make_unique<SingularGravity>(g);
-  } else {
-    SpdWrapper::get()->error("Unrecognized singular force");
+  std::vector<std::unique_ptr<SingularForce>> singular_forces;
+  for (auto config : arguments.singular_force_types) {
+    if (std::holds_alternative<SingularGravityConfig>(config)) {
+      const auto& [g] = std::get<SingularGravityConfig>(config);
+      singular_forces.push_back(
+          std::move(std::make_unique<SingularGravity>(g)));
+    } else {
+      SpdWrapper::get()->error("Unrecognized singular force");
+    }
   }
 
-  VerletIntegrator verlet_integrator(std::move(arguments.interactive_forces),
-                                     std::move(arguments.singular_forces),
+  VerletIntegrator verlet_integrator(std::move(interactive_forces),
+                                     std::move(singular_forces),
                                      arguments.delta_t);
   outputWriter::VTKWriter writer;
 
