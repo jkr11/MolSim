@@ -14,7 +14,9 @@ TEST(VerletIntegrator, step1) {
   DirectSumContainer container;
   Particle p({1, 0, 0}, {1, 0, 0}, 1, 5, 1);
   LennardJones lj;
-  VerletIntegrator integrator(lj, 0.01f);
+  std::vector<std::unique_ptr<InteractiveForce>> forces;
+  forces.push_back(std::make_unique<LennardJones>(lj));
+  VerletIntegrator integrator();
 
   p.setF({0, 1, 0});
   container.addParticle(p);

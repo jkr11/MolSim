@@ -10,6 +10,9 @@
 #include "defs/Generators/CuboidGenerator.h"
 #include "defs/Generators/SpheroidGenerator.h"
 #include "defs/types.h"
+#include "forces/Gravity.h"
+#include "forces/LennardJones.h"
+#include "forces/SingularGravity.h"
 #include "input.hxx"
 #include "io/file/out/checkpoint-schema.hxx"
 #include "spdlog/fmt/bundled/args.h"
@@ -54,9 +57,13 @@ void XmlReader::read(std::vector<Particle>& particles,
     }
     if (auto& force = metadata.force(); force.LennardJones().present()) {
       simulation_parameters.force_type = Arguments::LennardJones;
+      simulation_parameters.interactive_forces.push_back(
+          std::make_unique<LennardJones>());
       DEBUG_PRINT("Using LennardJones");
     } else if (force.Gravity().present()) {
       simulation_parameters.force_type = Arguments::Gravity;
+      simulation_parameters.interactive_forces.push_back(
+          std::make_unique<Gravity>());
       DEBUG_PRINT("Using Gravity");
     } else {
       SpdWrapper::get()->warn("No force provided, using default LennardJones");
@@ -67,6 +74,9 @@ void XmlReader::read(std::vector<Particle>& particles,
       SingularGravityConfig singular_gravity_config;
       singular_gravity_config.g = singular_force.SingularGravity()->g().get();
       simulation_parameters.singular_force_data = singular_gravity_config;
+      simulation_parameters.singular_forces.push_back(
+          std::make_unique<SingularGravity>(
+              singular_force.SingularGravity()->g().get()));
     }
     if (metadata.checkpoint().present()) {
       loadCheckpoint(metadata.checkpoint().get(), particles);

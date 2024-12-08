@@ -9,6 +9,8 @@
 #include <variant>
 
 #include "defs/types.h"
+#include "forces/InteractiveForce.h"
+#include "forces/SingularForce.h"
 #include "utils/SpdWrapper.h"
 
 /**
@@ -39,6 +41,10 @@ struct SingularGravityConfig {
   double g{};
 };
 
+struct HarmonicForceConfig {};
+
+struct LennardJonesConfig {};
+
 /**
  * @brief holds instance data for Thermostat
  */
@@ -63,6 +69,8 @@ struct Arguments {
   bool use_thermostat;
   std::variant<SingularGravityConfig> singular_force_data;
   std::variant<LinkedCellsConfig, DirectSumConfig> container_data;
+  std::vector<std::unique_ptr<SingularForce>> singular_forces;
+  std::vector<std::unique_ptr<InteractiveForce>> interactive_forces;
 };
 
 /**
