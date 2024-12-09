@@ -257,21 +257,6 @@ class LinkedCellsContainer final : public ParticleContainer {
   [[nodiscard]] bool isBoundary_testing(std::size_t cellIndex) const;
 
   /**
-   * @brief calculates all directions of the halo cell
-   *  empty: no halo cell
-   *  0: west | low x
-   *  1: east | high x
-   *  2: down | low y
-   *  3: up | high y
-   *  4: south | low z
-   *  5: north | high z
-   * @param cellIndex cell index to be checked
-   * @return the direction of the halo cell
-   */
-  [[nodiscard]] std::vector<std::size_t> halo_direction(
-      std::size_t cellIndex) const;
-
-  /**
    * @brief calculates all directions of the boundary cell
    *
    *  empty: no boundary cell
@@ -282,10 +267,13 @@ class LinkedCellsContainer final : public ParticleContainer {
    *  4: south
    *  5: north
    * @param cellIndex cell index to be checked
+   * @param f function to check if it is a special cell
+   * @param lowerMagicNumber lower bound index
+   * @param upperMagicNumber upper bound index
    * @return the directions of the boundary cell
    */
-  [[nodiscard]] std::vector<std::size_t> boundary_direction(
-      std::size_t cellIndex) const;
+  [[nodiscard]] std::vector<std::size_t> special_cell_direction(
+      std::size_t cellIndex, const std::function<bool(std::size_t)>& f, size_t lowerMagicNumber, size_t upperMagicNumber) const;
 
   /**
    * @brief Debug method to get direct access to the cells vector
@@ -293,3 +281,8 @@ class LinkedCellsContainer final : public ParticleContainer {
    */
   std::vector<std::vector<Particle>>& getCells() { return cells; }
 };
+
+/**
+ * @brief directions for better readability; implicitly cast
+ */
+enum Directions { xlow, xhigh, ylow, yhigh, zlow, zhigh };

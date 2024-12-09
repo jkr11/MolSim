@@ -48,8 +48,12 @@ LinkedCellsContainer::LinkedCellsContainer(
   boundary_direction_cells = {};
   // precalculate special cells
   for (std::size_t cell_index = 0; cell_index < cells.size(); ++cell_index) {
-    auto halo_directions = halo_direction(cell_index);
-    auto boundary_directions = boundary_direction(cell_index);
+    auto halo_directions = special_cell_direction(
+        cell_index, [this](const std::size_t index) { return isHalo(index); },
+        -1, 2);
+    auto boundary_directions = special_cell_direction(
+        cell_index,
+        [this](const std::size_t index) { return isBoundary(index); }, 0, 3);
 
     if (!halo_directions.empty()) {
       for (const unsigned long halo_direction : halo_directions) {
@@ -204,6 +208,11 @@ void LinkedCellsContainer::imposeInvariant() {
             }
           }
         }
+        break;
+      }
+      case LinkedCellsConfig::Periodic: {
+        dimension++;  // other end of the dimension should also be set to
+                      // periodic, don't calculate forces twice
         break;
       }
       default: {
@@ -399,59 +408,31 @@ inline bool LinkedCellsContainer::isBoundary(
   return isBoundary(cellCoord);
 }
 
-std::vector<std::size_t> LinkedCellsContainer::halo_direction(
-    const std::size_t cellIndex) const {
-  if (!isHalo(cellIndex)) return {};
+std::vector<std::size_t> LinkedCellsContainer::special_cell_direction(
+    const std::size_t cellIndex, const std::function<bool(std::size_t)> &f,
+    const size_t lowerMagicNumber, const size_t upperMagicNumber) const {
+  if (!f(cellIndex)) return {};
 
   std::vector<std::size_t> directions = {};
   const ivec3 cellCoord = cellIndexToCoord(cellIndex);
 
-  if (cellCoord[0] == -1) {
-    directions.push_back(0);  // west
+  if (cellCoord[0] == lowerMagicNumber) {
+    directions.push_back(xlow);  // west
   }
-  if (cellCoord[0] == (cell_count[0] - 2)) {
-    directions.push_back(1);  // east
+  if (cellCoord[0] == (cell_count[0] - upperMagicNumber)) {
+    directions.push_back(xhigh);  // east
   }
-  if (cellCoord[1] == -1) {
-    directions.push_back(2);  // down
+  if (cellCoord[1] == lowerMagicNumber) {
+    directions.push_back(ylow);  // down
   }
-  if (cellCoord[1] == (cell_count[1] - 2)) {
-    directions.push_back(3);  // up
+  if (cellCoord[1] == (cell_count[1] - upperMagicNumber)) {
+    directions.push_back(yhigh);  // up
   }
-  if (cellCoord[2] == -1) {
-    directions.push_back(4);  // south
+  if (cellCoord[2] == lowerMagicNumber) {
+    directions.push_back(zlow);  // south
   }
-  if (cellCoord[2] == (cell_count[2] - 2)) {
-    directions.push_back(5);  // north
-  }
-
-  return directions;
-}
-
-std::vector<std::size_t> LinkedCellsContainer::boundary_direction(
-    const std::size_t cellIndex) const {
-  if (!isBoundary(cellIndex)) return {};
-
-  std::vector<std::size_t> directions = {};
-  const ivec3 cellCoord = cellIndexToCoord(cellIndex);
-
-  if (cellCoord[0] == 0) {
-    directions.push_back(0);  // west
-  }
-  if (cellCoord[0] == (cell_count[0] - 3)) {
-    directions.push_back(1);  // east
-  }
-  if (cellCoord[1] == 0) {
-    directions.push_back(2);  // down
-  }
-  if (cellCoord[1] == (cell_count[1] - 3)) {
-    directions.push_back(3);  // up
-  }
-  if (cellCoord[2] == 0) {
-    directions.push_back(4);  // south
-  }
-  if (cellCoord[2] == (cell_count[2] - 3)) {
-    directions.push_back(5);  // north
+  if (cellCoord[2] == (cell_count[2] - upperMagicNumber)) {
+    directions.push_back(zhigh);  // north
   }
 
   return directions;
