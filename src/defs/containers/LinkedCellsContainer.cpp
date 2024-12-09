@@ -12,6 +12,7 @@
 #include "debug/debug_print.h"
 #include "defs/Particle.h"
 #include "forces/LennardJones.h"
+#include "utils/ArrayUtils.h"
 #include "utils/SpdWrapper.h"
 
 const double LinkedCellsContainer::sigma_factor = std::pow(2.0, 1.0 / 6.0);
@@ -113,6 +114,12 @@ std::vector<Particle *> LinkedCellsContainer::getParticles() {
   std::vector<Particle *> res;
   singleIterator([&res](Particle &p) { res.push_back(&p); });
 
+  return res;
+}
+
+std::vector<Particle> LinkedCellsContainer::getParticlesObjects() {
+  std::vector<Particle> res;
+  singleIterator([&res](const Particle &p) { res.push_back(p); });
   return res;
 }
 
@@ -469,4 +476,12 @@ bool LinkedCellsContainer::isHalo_testing(const std::size_t cellIndex) const {
 std::size_t LinkedCellsContainer::dvec3ToCellIndex_testing(
     const dvec3 &position) const {
   return dvec3ToCellIndex(position);
+}
+
+double LinkedCellsContainer::getKineticEnergy() {
+  double E_kin = 0.0;
+  singleIterator([&E_kin](const Particle &p) {
+    E_kin += 0.5 * p.getM() * ArrayUtils::L2InnerProduct(p.getV());
+  });
+  return E_kin;
 }

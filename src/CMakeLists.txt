@@ -38,6 +38,12 @@ add_executable(MolSim MolSim.cpp
         defs/Generators/ParticleGenerator.h
         defs/Generators/SpheroidGenerator.h
         defs/Generators/SpheroidGenerator.cpp
+        forces/SingularGravity.h
+        defs/Thermostat.cpp
+        io/file/out/XmlWriter.h
+        io/file/out/checkpoint-schema.hxx
+        io/file/out/checkpoint-schema.cxx
+        io/file/out/XmlWriter.cpp
 )
 
 set(FILES_TO_DISABLE_WARNINGS

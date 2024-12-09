@@ -95,6 +95,26 @@ MetadataType::twoD_type& MetadataType::twoD() { return this->twoD_.get(); }
 
 void MetadataType::twoD(const twoD_type& x) { this->twoD_.set(x); }
 
+const MetadataType::checkpoint_optional& MetadataType::checkpoint() const {
+  return this->checkpoint_;
+}
+
+MetadataType::checkpoint_optional& MetadataType::checkpoint() {
+  return this->checkpoint_;
+}
+
+void MetadataType::checkpoint(const checkpoint_type& x) {
+  this->checkpoint_.set(x);
+}
+
+void MetadataType::checkpoint(const checkpoint_optional& x) {
+  this->checkpoint_ = x;
+}
+
+void MetadataType::checkpoint(::std::auto_ptr<checkpoint_type> x) {
+  this->checkpoint_.set(x);
+}
+
 // cuboidType
 //
 
@@ -585,6 +605,94 @@ void ForceType::LennardJones(::std::auto_ptr<LennardJones_type> x) {
   this->LennardJones_.set(x);
 }
 
+const ForceType::SingularGravity_optional& ForceType::SingularGravity() const {
+  return this->SingularGravity_;
+}
+
+ForceType::SingularGravity_optional& ForceType::SingularGravity() {
+  return this->SingularGravity_;
+}
+
+void ForceType::SingularGravity(const SingularGravity_type& x) {
+  this->SingularGravity_.set(x);
+}
+
+void ForceType::SingularGravity(const SingularGravity_optional& x) {
+  this->SingularGravity_ = x;
+}
+
+void ForceType::SingularGravity(::std::auto_ptr<SingularGravity_type> x) {
+  this->SingularGravity_.set(x);
+}
+
+// GravityType
+//
+
+// LennardJonesForce
+//
+
+// SingularGravityType
+//
+
+const SingularGravityType::g_optional& SingularGravityType::g() const {
+  return this->g_;
+}
+
+SingularGravityType::g_optional& SingularGravityType::g() { return this->g_; }
+
+void SingularGravityType::g(const g_type& x) { this->g_.set(x); }
+
+void SingularGravityType::g(const g_optional& x) { this->g_ = x; }
+
+// ThermostatType
+//
+
+const ThermostatType::T_init_type& ThermostatType::T_init() const {
+  return this->T_init_.get();
+}
+
+ThermostatType::T_init_type& ThermostatType::T_init() {
+  return this->T_init_.get();
+}
+
+void ThermostatType::T_init(const T_init_type& x) { this->T_init_.set(x); }
+
+const ThermostatType::n_thermostat_type& ThermostatType::n_thermostat() const {
+  return this->n_thermostat_.get();
+}
+
+ThermostatType::n_thermostat_type& ThermostatType::n_thermostat() {
+  return this->n_thermostat_.get();
+}
+
+void ThermostatType::n_thermostat(const n_thermostat_type& x) {
+  this->n_thermostat_.set(x);
+}
+
+const ThermostatType::T_target_type& ThermostatType::T_target() const {
+  return this->T_target_.get();
+}
+
+ThermostatType::T_target_type& ThermostatType::T_target() {
+  return this->T_target_.get();
+}
+
+void ThermostatType::T_target(const T_target_type& x) {
+  this->T_target_.set(x);
+}
+
+const ThermostatType::deltaT_optional& ThermostatType::deltaT() const {
+  return this->deltaT_;
+}
+
+ThermostatType::deltaT_optional& ThermostatType::deltaT() {
+  return this->deltaT_;
+}
+
+void ThermostatType::deltaT(const deltaT_type& x) { this->deltaT_.set(x); }
+
+void ThermostatType::deltaT(const deltaT_optional& x) { this->deltaT_ = x; }
+
 // simulation
 //
 
@@ -634,6 +742,26 @@ void simulation::spheroids(::std::auto_ptr<spheroids_type> x) {
   this->spheroids_.set(x);
 }
 
+const simulation::thermostat_optional& simulation::thermostat() const {
+  return this->thermostat_;
+}
+
+simulation::thermostat_optional& simulation::thermostat() {
+  return this->thermostat_;
+}
+
+void simulation::thermostat(const thermostat_type& x) {
+  this->thermostat_.set(x);
+}
+
+void simulation::thermostat(const thermostat_optional& x) {
+  this->thermostat_ = x;
+}
+
+void simulation::thermostat(::std::auto_ptr<thermostat_type> x) {
+  this->thermostat_.set(x);
+}
+
 // cuboids
 //
 
@@ -669,7 +797,8 @@ MetadataType::MetadataType(const container_type& container,
       force_(force, this),
       delta_t_(delta_t, this),
       t_end_(t_end, this),
-      twoD_(twoD, this) {}
+      twoD_(twoD, this),
+      checkpoint_(this) {}
 
 MetadataType::MetadataType(::std::auto_ptr<container_type> container,
                            ::std::auto_ptr<force_type> force,
@@ -680,7 +809,8 @@ MetadataType::MetadataType(::std::auto_ptr<container_type> container,
       force_(force, this),
       delta_t_(delta_t, this),
       t_end_(t_end, this),
-      twoD_(twoD, this) {}
+      twoD_(twoD, this),
+      checkpoint_(this) {}
 
 MetadataType::MetadataType(const MetadataType& x, ::xml_schema::flags f,
                            ::xml_schema::container* c)
@@ -689,7 +819,8 @@ MetadataType::MetadataType(const MetadataType& x, ::xml_schema::flags f,
       force_(x.force_, f, this),
       delta_t_(x.delta_t_, f, this),
       t_end_(x.t_end_, f, this),
-      twoD_(x.twoD_, f, this) {}
+      twoD_(x.twoD_, f, this),
+      checkpoint_(x.checkpoint_, f, this) {}
 
 MetadataType::MetadataType(const ::xercesc::DOMElement& e,
                            ::xml_schema::flags f, ::xml_schema::container* c)
@@ -698,7 +829,8 @@ MetadataType::MetadataType(const ::xercesc::DOMElement& e,
       force_(this),
       delta_t_(this),
       t_end_(this),
-      twoD_(this) {
+      twoD_(this),
+      checkpoint_(this) {
   if ((f & ::xml_schema::flags::base) == 0) {
     ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
     this->parse(p, f);
@@ -761,6 +893,17 @@ void MetadataType::parse(::xsd::cxx::xml::dom::parser<char>& p,
       }
     }
 
+    // checkpoint
+    //
+    if (n.name() == "checkpoint" && n.namespace_().empty()) {
+      ::std::auto_ptr<checkpoint_type> r(checkpoint_traits::create(i, f, this));
+
+      if (!this->checkpoint_) {
+        this->checkpoint_.set(r);
+        continue;
+      }
+    }
+
     break;
   }
 
@@ -798,6 +941,7 @@ MetadataType& MetadataType::operator=(const MetadataType& x) {
     this->delta_t_ = x.delta_t_;
     this->t_end_ = x.t_end_;
     this->twoD_ = x.twoD_;
+    this->checkpoint_ = x.checkpoint_;
   }
 
   return *this;
@@ -1928,19 +2072,24 @@ BoundaryConfigType::~BoundaryConfigType() {}
 //
 
 ForceType::ForceType()
-    : ::xml_schema::type(), Gravity_(this), LennardJones_(this) {}
+    : ::xml_schema::type(),
+      Gravity_(this),
+      LennardJones_(this),
+      SingularGravity_(this) {}
 
 ForceType::ForceType(const ForceType& x, ::xml_schema::flags f,
                      ::xml_schema::container* c)
     : ::xml_schema::type(x, f, c),
       Gravity_(x.Gravity_, f, this),
-      LennardJones_(x.LennardJones_, f, this) {}
+      LennardJones_(x.LennardJones_, f, this),
+      SingularGravity_(x.SingularGravity_, f, this) {}
 
 ForceType::ForceType(const ::xercesc::DOMElement& e, ::xml_schema::flags f,
                      ::xml_schema::container* c)
     : ::xml_schema::type(e, f | ::xml_schema::flags::base, c),
       Gravity_(this),
-      LennardJones_(this) {
+      LennardJones_(this),
+      SingularGravity_(this) {
   if ((f & ::xml_schema::flags::base) == 0) {
     ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
     this->parse(p, f);
@@ -1977,6 +2126,18 @@ void ForceType::parse(::xsd::cxx::xml::dom::parser<char>& p,
       }
     }
 
+    // SingularGravity
+    //
+    if (n.name() == "SingularGravity" && n.namespace_().empty()) {
+      ::std::auto_ptr<SingularGravity_type> r(
+          SingularGravity_traits::create(i, f, this));
+
+      if (!this->SingularGravity_) {
+        this->SingularGravity_.set(r);
+        continue;
+      }
+    }
+
     break;
   }
 }
@@ -1991,12 +2152,237 @@ ForceType& ForceType::operator=(const ForceType& x) {
     static_cast< ::xml_schema::type&>(*this) = x;
     this->Gravity_ = x.Gravity_;
     this->LennardJones_ = x.LennardJones_;
+    this->SingularGravity_ = x.SingularGravity_;
   }
 
   return *this;
 }
 
 ForceType::~ForceType() {}
+
+// GravityType
+//
+
+GravityType::GravityType() : ::xml_schema::type() {}
+
+GravityType::GravityType(const GravityType& x, ::xml_schema::flags f,
+                         ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c) {}
+
+GravityType::GravityType(const ::xercesc::DOMElement& e, ::xml_schema::flags f,
+                         ::xml_schema::container* c)
+    : ::xml_schema::type(e, f, c) {}
+
+GravityType::GravityType(const ::xercesc::DOMAttr& a, ::xml_schema::flags f,
+                         ::xml_schema::container* c)
+    : ::xml_schema::type(a, f, c) {}
+
+GravityType::GravityType(const ::std::string& s, const ::xercesc::DOMElement* e,
+                         ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::type(s, e, f, c) {}
+
+GravityType* GravityType::_clone(::xml_schema::flags f,
+                                 ::xml_schema::container* c) const {
+  return new class GravityType(*this, f, c);
+}
+
+GravityType::~GravityType() {}
+
+// LennardJonesForce
+//
+
+LennardJonesForce::LennardJonesForce() : ::xml_schema::type() {}
+
+LennardJonesForce::LennardJonesForce(const LennardJonesForce& x,
+                                     ::xml_schema::flags f,
+                                     ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c) {}
+
+LennardJonesForce::LennardJonesForce(const ::xercesc::DOMElement& e,
+                                     ::xml_schema::flags f,
+                                     ::xml_schema::container* c)
+    : ::xml_schema::type(e, f, c) {}
+
+LennardJonesForce::LennardJonesForce(const ::xercesc::DOMAttr& a,
+                                     ::xml_schema::flags f,
+                                     ::xml_schema::container* c)
+    : ::xml_schema::type(a, f, c) {}
+
+LennardJonesForce::LennardJonesForce(const ::std::string& s,
+                                     const ::xercesc::DOMElement* e,
+                                     ::xml_schema::flags f,
+                                     ::xml_schema::container* c)
+    : ::xml_schema::type(s, e, f, c) {}
+
+LennardJonesForce* LennardJonesForce::_clone(::xml_schema::flags f,
+                                             ::xml_schema::container* c) const {
+  return new class LennardJonesForce(*this, f, c);
+}
+
+LennardJonesForce::~LennardJonesForce() {}
+
+// SingularGravityType
+//
+
+SingularGravityType::SingularGravityType() : ::xml_schema::type(), g_(this) {}
+
+SingularGravityType::SingularGravityType(const SingularGravityType& x,
+                                         ::xml_schema::flags f,
+                                         ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c), g_(x.g_, f, this) {}
+
+SingularGravityType::SingularGravityType(const ::xercesc::DOMElement& e,
+                                         ::xml_schema::flags f,
+                                         ::xml_schema::container* c)
+    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c), g_(this) {
+  if ((f & ::xml_schema::flags::base) == 0) {
+    ::xsd::cxx::xml::dom::parser<char> p(e, false, false, true);
+    this->parse(p, f);
+  }
+}
+
+void SingularGravityType::parse(::xsd::cxx::xml::dom::parser<char>& p,
+                                ::xml_schema::flags f) {
+  while (p.more_attributes()) {
+    const ::xercesc::DOMAttr& i(p.next_attribute());
+    const ::xsd::cxx::xml::qualified_name<char> n(
+        ::xsd::cxx::xml::dom::name<char>(i));
+
+    if (n.name() == "g" && n.namespace_().empty()) {
+      this->g_.set(g_traits::create(i, f, this));
+      continue;
+    }
+  }
+}
+
+SingularGravityType* SingularGravityType::_clone(
+    ::xml_schema::flags f, ::xml_schema::container* c) const {
+  return new class SingularGravityType(*this, f, c);
+}
+
+SingularGravityType& SingularGravityType::operator=(
+    const SingularGravityType& x) {
+  if (this != &x) {
+    static_cast< ::xml_schema::type&>(*this) = x;
+    this->g_ = x.g_;
+  }
+
+  return *this;
+}
+
+SingularGravityType::~SingularGravityType() {}
+
+// ThermostatType
+//
+
+ThermostatType::ThermostatType(const T_init_type& T_init,
+                               const n_thermostat_type& n_thermostat,
+                               const T_target_type& T_target)
+    : ::xml_schema::type(),
+      T_init_(T_init, this),
+      n_thermostat_(n_thermostat, this),
+      T_target_(T_target, this),
+      deltaT_(this) {}
+
+ThermostatType::ThermostatType(const ThermostatType& x, ::xml_schema::flags f,
+                               ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c),
+      T_init_(x.T_init_, f, this),
+      n_thermostat_(x.n_thermostat_, f, this),
+      T_target_(x.T_target_, f, this),
+      deltaT_(x.deltaT_, f, this) {}
+
+ThermostatType::ThermostatType(const ::xercesc::DOMElement& e,
+                               ::xml_schema::flags f,
+                               ::xml_schema::container* c)
+    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c),
+      T_init_(this),
+      n_thermostat_(this),
+      T_target_(this),
+      deltaT_(this) {
+  if ((f & ::xml_schema::flags::base) == 0) {
+    ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
+    this->parse(p, f);
+  }
+}
+
+void ThermostatType::parse(::xsd::cxx::xml::dom::parser<char>& p,
+                           ::xml_schema::flags f) {
+  for (; p.more_content(); p.next_content(false)) {
+    const ::xercesc::DOMElement& i(p.cur_element());
+    const ::xsd::cxx::xml::qualified_name<char> n(
+        ::xsd::cxx::xml::dom::name<char>(i));
+
+    // T_init
+    //
+    if (n.name() == "T_init" && n.namespace_().empty()) {
+      if (!T_init_.present()) {
+        this->T_init_.set(T_init_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    // n_thermostat
+    //
+    if (n.name() == "n_thermostat" && n.namespace_().empty()) {
+      if (!n_thermostat_.present()) {
+        this->n_thermostat_.set(n_thermostat_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    // T_target
+    //
+    if (n.name() == "T_target" && n.namespace_().empty()) {
+      if (!T_target_.present()) {
+        this->T_target_.set(T_target_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    // deltaT
+    //
+    if (n.name() == "deltaT" && n.namespace_().empty()) {
+      if (!this->deltaT_) {
+        this->deltaT_.set(deltaT_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    break;
+  }
+
+  if (!T_init_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("T_init", "");
+  }
+
+  if (!n_thermostat_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("n_thermostat", "");
+  }
+
+  if (!T_target_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("T_target", "");
+  }
+}
+
+ThermostatType* ThermostatType::_clone(::xml_schema::flags f,
+                                       ::xml_schema::container* c) const {
+  return new class ThermostatType(*this, f, c);
+}
+
+ThermostatType& ThermostatType::operator=(const ThermostatType& x) {
+  if (this != &x) {
+    static_cast< ::xml_schema::type&>(*this) = x;
+    this->T_init_ = x.T_init_;
+    this->n_thermostat_ = x.n_thermostat_;
+    this->T_target_ = x.T_target_;
+    this->deltaT_ = x.deltaT_;
+  }
+
+  return *this;
+}
+
+ThermostatType::~ThermostatType() {}
 
 // simulation
 //
@@ -2005,27 +2391,31 @@ simulation::simulation(const metadata_type& metadata)
     : ::xml_schema::type(),
       metadata_(metadata, this),
       cuboids_(this),
-      spheroids_(this) {}
+      spheroids_(this),
+      thermostat_(this) {}
 
 simulation::simulation(::std::auto_ptr<metadata_type> metadata)
     : ::xml_schema::type(),
       metadata_(metadata, this),
       cuboids_(this),
-      spheroids_(this) {}
+      spheroids_(this),
+      thermostat_(this) {}
 
 simulation::simulation(const simulation& x, ::xml_schema::flags f,
                        ::xml_schema::container* c)
     : ::xml_schema::type(x, f, c),
       metadata_(x.metadata_, f, this),
       cuboids_(x.cuboids_, f, this),
-      spheroids_(x.spheroids_, f, this) {}
+      spheroids_(x.spheroids_, f, this),
+      thermostat_(x.thermostat_, f, this) {}
 
 simulation::simulation(const ::xercesc::DOMElement& e, ::xml_schema::flags f,
                        ::xml_schema::container* c)
     : ::xml_schema::type(e, f | ::xml_schema::flags::base, c),
       metadata_(this),
       cuboids_(this),
-      spheroids_(this) {
+      spheroids_(this),
+      thermostat_(this) {
   if ((f & ::xml_schema::flags::base) == 0) {
     ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
     this->parse(p, f);
@@ -2072,6 +2462,17 @@ void simulation::parse(::xsd::cxx::xml::dom::parser<char>& p,
       }
     }
 
+    // thermostat
+    //
+    if (n.name() == "thermostat" && n.namespace_().empty()) {
+      ::std::auto_ptr<thermostat_type> r(thermostat_traits::create(i, f, this));
+
+      if (!this->thermostat_) {
+        this->thermostat_.set(r);
+        continue;
+      }
+    }
+
     break;
   }
 
@@ -2091,6 +2492,7 @@ simulation& simulation::operator=(const simulation& x) {
     this->metadata_ = x.metadata_;
     this->cuboids_ = x.cuboids_;
     this->spheroids_ = x.spheroids_;
+    this->thermostat_ = x.thermostat_;
   }
 
   return *this;

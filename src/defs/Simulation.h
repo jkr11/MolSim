@@ -9,6 +9,8 @@
 #include <variant>
 
 #include "defs/types.h"
+#include "forces/InteractiveForce.h"
+#include "forces/SingularForce.h"
 #include "utils/SpdWrapper.h"
 
 /**
@@ -35,14 +37,45 @@ struct LinkedCellsConfig {
  */
 struct DirectSumConfig {};
 
+struct SingularGravityConfig {
+  double g{};
+};
+
+struct HarmonicForceConfig {};
+
+struct LennardJonesConfig {};
+
+struct GravityConfig {};
+
+/**
+ * @brief holds instance data for Thermostat
+ */
+struct ThermostatConfig {
+  double T_init{};
+  double T_target{};
+  double deltaT{};
+  int n_thermostat{};
+  bool use_relative{};
+};
+// TODO: apparently we cant nest these for access in XMLReader
 /**
  * @brief struct to hold command line arguments
  */
+// TODO: remove unecessary force configs, keep them for now
 struct Arguments {
+  using SingularForceTypes =
+      std::variant<SingularGravityConfig, HarmonicForceConfig>;
+  using InteractiveForceTypes = std::variant<LennardJonesConfig, GravityConfig>;
   double t_end;
   double delta_t;
   enum ForceType { LennardJones, Gravity } force_type;
+  enum SingularForceType { SingularGravity } singular_force_type;
+  ThermostatConfig thermostat_config;
+  // TODO: remove this vvvvv
+  bool use_thermostat;
   std::variant<LinkedCellsConfig, DirectSumConfig> container_data;
+  std::vector<SingularForceTypes> singular_force_types;
+  std::vector<InteractiveForceTypes> interactive_force_types;
 };
 
 /**
@@ -83,10 +116,18 @@ inline void printConfiguration(const Arguments& args) {
   logger->info("============================");
   logger->info("t_end: {}", args.t_end);
   logger->info("delta_t: {}", args.delta_t);
-
-  logger->info("Force Type: {}", args.force_type == Arguments::LennardJones
-                                     ? "Lennard-Jones"
-                                     : "Gravity");
+  logger->info("Singular Forces:");
+  // TODO: fix this
+  // for (auto& force : args.singular_forces) {
+  //  logger->info("-- SingularGravityConfig");
+  // }
+  // for (auto& force : args.interactive_forces) {
+  // logger->info(
+  //    "-- LennardJones");  // TODO: add printing to forces or write a map
+  //}
+  logger->info("Thermostat: T_init {}", args.thermostat_config.T_init);
+  logger->info("--- T_target: {}", args.thermostat_config.T_target);
+  logger->info("--- deltaT: {}", args.thermostat_config.deltaT);
 
   if (std::holds_alternative<LinkedCellsConfig>(args.container_data)) {
     logger->info("Container Type: Linked Cells");
