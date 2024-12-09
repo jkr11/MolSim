@@ -54,6 +54,7 @@ MolSim - Group A
   ```
 
 - Output is located in `./output/<current_time>`
+- Checkpoint is currently fixed to `checkpoint.xml` also in `./output/`
 - `--step_size` is relative to the passed simulation time and not the number of iterations
 - `--loglevel debug` is only available if compiled with CMAKE_BUILD_TYPE=Debug
 - all other options are specified in the .xml input file
