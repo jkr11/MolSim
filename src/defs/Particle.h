@@ -112,6 +112,10 @@ class Particle final {
 
   void mulV(const double &scalar);
 
+  void addF(const dvec3 &F);
+
+  void subF(const dvec3 &F);
+
   bool operator==(const Particle &other) const;
 
   [[nodiscard]] std::string toString() const;

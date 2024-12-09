@@ -106,10 +106,12 @@ int main(const int argc, char* argv[]) {
 
   double current_time = 0;
   int iteration = 0;
+#ifndef BENCHMARK
   int writes = 0;
   int percentage = 0;
   double next_output_time = 0;
   spdlog::stopwatch stopwatch;
+#endif
   const auto start_time = std::chrono::high_resolution_clock::now();
   while (current_time <= arguments.t_end) {
     verlet_integrator.step(*container);

@@ -94,6 +94,10 @@ void Particle::subV(const dvec3 &V) { v = v - V; }
 
 void Particle::mulV(const double &scalar) { v = scalar * v; }
 
+void Particle::addF(const dvec3 &F) { f = f + F; }
+
+void Particle::subF(const dvec3 &F) { f = f - F; }
+
 void Particle::updateForceInTime() {
   old_f = f;
   f = {0., 0., 0.};
