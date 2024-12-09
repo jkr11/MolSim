@@ -73,6 +73,52 @@ class LinkedCellsContainer final : public ParticleContainer {
    */
   LinkedCellsConfig::BoundaryConfig boundary_config{};
 
+  /**
+   * @brief apply reflective boundary condition to a dimension
+   * @param dimension the problematic dimension
+   */
+  void apply_reflective_boundary(size_t dimension);
+
+  /**
+   *@brief index offsets orthogonal to a cell for each dimension, optimized for
+   *2D simulations
+   *
+   */
+  std::array<std::array<ivec3, 9>, 3> index_offsets = {{
+      // x
+      {{{0, 1, 0},
+        {0, 0, 0},
+        {0, -1, 0},
+        // optional for 3D
+        {0, 1, 1},
+        {0, 0, 1},
+        {0, -1, 1},
+        {0, 1, -1},
+        {0, 0, -1},
+        {0, -1, -1}}},
+      // y
+      {{{1, 0, 0},
+        {0, 0, 0},
+        {-1, 0, 0},
+        // optional for 3D
+        {1, 0, 1},
+        {0, 0, 1},
+        {-1, 0, 1},
+        {1, 0, -1},
+        {0, 0, -1},
+        {-1, 0, -1}}},
+      // z, order irrelevant for 2D
+      {{{1, 1, 0},
+        {1, 0, 0},
+        {1, -1, 0},
+        {0, 1, 0},
+        {0, 0, 0},
+        {0, -1, 0},
+        {-1, 1, 0},
+        {-1, 0, 0},
+        {-1, -1, 0}}},
+  }};
+
  public:
   /**
    * 6th root of 2
@@ -273,7 +319,8 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @return the directions of the boundary cell
    */
   [[nodiscard]] std::vector<std::size_t> special_cell_direction(
-      std::size_t cellIndex, const std::function<bool(std::size_t)>& f, size_t lowerMagicNumber, size_t upperMagicNumber) const;
+      std::size_t cellIndex, const std::function<bool(std::size_t)>& f,
+      int lowerMagicNumber, int upperMagicNumber) const;
 
   /**
    * @brief Debug method to get direct access to the cells vector

@@ -12,6 +12,7 @@
 #include "debug/debug_print.h"
 #include "defs/Particle.h"
 #include "forces/LennardJones.h"
+#include "utils/ArrayUtils.h"
 #include "utils/SpdWrapper.h"
 
 const double LinkedCellsContainer::sigma_factor = std::pow(2.0, 1.0 / 6.0);
@@ -149,70 +150,69 @@ void LinkedCellsContainer::imposeInvariant() {
   // TODO: this is heavily inefficient in 2D if 6 is used, make dimension
   // accessible, 4 instead of 6
 
-  // clear halo, 4 hardcoded due to 2D simulation
-  // should not be needed to perform on Reflective Boundaries, but in case of an
-  // error prevents the simulation from crashing
-  for (size_t dimension = 0; dimension < 4; ++dimension) {
-    for (const size_t cell_index : halo_direction_cells[dimension]) {
-      cells[cell_index].clear();
-    }
-  }
-
   for (size_t dimension = 0; dimension < 4; ++dimension) {
     switch (boundaries[dimension]) {
       case LinkedCellsConfig::BoundaryType::Outflow: {
-        break;
-      }
-      case LinkedCellsConfig::BoundaryType::Reflective: {
-        // the slides do not state what to do if it is an edge, so we place a
-        // particle for every dimension it is too close to
-
-        // ensure that GhostParticle only interacts with specific particle
-        // assumed: epsilon and sigma are the same as of the problematic
-        // Particle, the cutoff is larger than half of sigma_factor * sigma
-        const std::size_t problematic_dimension = dimension / 2;
-        const std::size_t problematic_dimension_direction = dimension % 2;
-
-        for (const std::size_t cell_index :
-             boundary_direction_cells[dimension]) {
-          for (Particle &p : cells[cell_index]) {
-            // check if it is too close
-            double pos = p.getX()[problematic_dimension];
-            const double boundary_position = domain[problematic_dimension];
-            const double double_dist_to_boundary =
-                2 *
-                std::min(pos, boundary_position -
-                                  pos);  // if both of them are so small that
-                                         // they would trigger the boundary, the
-                                         // simulation itself is already broken
-
-            if (double_dist_to_boundary < sigma_factor * p.getSigma()) {
-              const double force =
-                  LennardJones::simpleForce(p, double_dist_to_boundary);
-              dvec3 p_force = p.getF();
-              p_force[problematic_dimension] +=
-                  force *
-                  std::pow(
-                      -1.0,
-                      1 - problematic_dimension_direction);  // invert the
-                                                             // direction for
-                                                             // boundary in
-                                                             // ascending
-                                                             // coordinate
-                                                             // direction
-              p.setF(p_force);
-              DEBUG_PRINT_FMT(
-                  "Applied Force=[{}, {}, {}] to Particle at [{}, {}, {}]",
-                  p.getF()[0], p.getF()[1], p.getF()[2], p.getX()[0],
-                  p.getX()[1], p.getX()[2]);
-            }
-          }
+        // clear halo
+        for (const size_t cell_index : halo_direction_cells[dimension]) {
+          cells[cell_index].clear();
+          cells[cell_index].shrink_to_fit();
         }
         break;
       }
+      case LinkedCellsConfig::BoundaryType::Reflective: {
+        apply_reflective_boundary(dimension);
+        break;
+      }
       case LinkedCellsConfig::Periodic: {
-        dimension++;  // other end of the dimension should also be set to
-                      // periodic, don't calculate forces twice
+        // move particles in halo to the other side
+        // calculate forces only for ?_high, so all particles are until then in
+        // the right place
+        const std::size_t problematic_dimension = dimension / 2;
+        const std::size_t problematic_dimension_direction = dimension % 2;
+
+        for (const std::size_t cell_index : halo_direction_cells[dimension]) {
+          for (Particle &p : cells[cell_index]) {
+            dvec3 new_pos = p.getX();
+            new_pos[problematic_dimension] +=
+                domain[problematic_dimension] *
+                (problematic_dimension_direction % 2 == 0 ? 1 : -1);
+            const std::size_t shouldBeIndex = dvec3ToCellIndex(new_pos);
+
+            p.setX(new_pos);
+            cells[shouldBeIndex].push_back(p);
+          }
+
+          cells[cell_index].clear();
+          cells[cell_index].shrink_to_fit();
+        }
+
+        // skip force calculation for lower side of the axis
+        if (problematic_dimension_direction == 0) {
+          break;
+        }
+
+        // iterate over all 9 cells on the other end
+        // for edges there are more unnecessary operations, but these cells
+        // should be empty that it is no real overhead for strict 2D simulation
+        // the magic numbers have to be changed
+        for (const std::size_t cell_index :
+             boundary_direction_cells[dimension]) {
+          ivec3 cell_coordinates = cellIndexToCoord(cell_index);
+          cell_coordinates[problematic_dimension] = 0;
+
+          for (ivec3 offset : index_offsets[problematic_dimension]) {
+            const ivec3 cell_to_check = cell_coordinates + offset;
+            const std::size_t cell_to_check_index =
+                cellCoordToIndex(cell_to_check);
+
+            for (Particle &p : cells[cell_index]) {
+              for (Particle &q : cells[cell_to_check_index]) {
+                // iterate over all pairs and calculate force
+              }
+            }
+          }
+        }
         break;
       }
       default: {
@@ -410,7 +410,7 @@ inline bool LinkedCellsContainer::isBoundary(
 
 std::vector<std::size_t> LinkedCellsContainer::special_cell_direction(
     const std::size_t cellIndex, const std::function<bool(std::size_t)> &f,
-    const size_t lowerMagicNumber, const size_t upperMagicNumber) const {
+    const int lowerMagicNumber, const int upperMagicNumber) const {
   if (!f(cellIndex)) return {};
 
   std::vector<std::size_t> directions = {};
@@ -450,4 +450,44 @@ bool LinkedCellsContainer::isHalo_testing(const std::size_t cellIndex) const {
 std::size_t LinkedCellsContainer::dvec3ToCellIndex_testing(
     const dvec3 &position) const {
   return dvec3ToCellIndex(position);
+}
+
+void LinkedCellsContainer::apply_reflective_boundary(const size_t dimension) {
+  const std::size_t problematic_dimension = dimension / 2;
+  const std::size_t problematic_dimension_direction = dimension % 2;
+  // ensure that GhostParticle only interacts with specific particle
+  // assumed: epsilon and sigma are the same as of the problematic
+  // Particle, the cutoff is larger than half of sigma_factor * sigma
+  for (const std::size_t cell_index : boundary_direction_cells[dimension]) {
+    for (Particle &p : cells[cell_index]) {
+      // check if it is too close
+      double pos = p.getX()[problematic_dimension];
+      const double boundary_position = domain[problematic_dimension];
+      const double double_dist_to_boundary =
+          2 * std::min(pos, boundary_position -
+                                pos);  // if both of them are so small that
+      // they would trigger the boundary, the
+      // simulation itself is already broken
+
+      if (double_dist_to_boundary < sigma_factor * p.getSigma()) {
+        const double force =
+            LennardJones::simpleForce(p, double_dist_to_boundary);
+        dvec3 p_force = p.getF();
+        p_force[problematic_dimension] +=
+            force *
+            std::pow(-1.0,
+                     1 - problematic_dimension_direction);  // invert the
+        // direction for
+        // boundary in
+        // ascending
+        // coordinate
+        // direction
+        p.setF(p_force);
+        DEBUG_PRINT_FMT(
+            "Applied Force=[{}, {}, {}] to Particle at [{}, {}, {}]",
+            p.getF()[0], p.getF()[1], p.getF()[2], p.getX()[0], p.getX()[1],
+            p.getX()[2]);
+      }
+    }
+  }
 }
