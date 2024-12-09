@@ -7,7 +7,7 @@
 #include "../src/forces/LennardJones.h"
 #include "forces/SingularGravity.h"
 #include "testUtil.h"
-#if 0
+#if 1
 /*
  * Positions correct after one step, arbitrary example 1
  */
@@ -16,7 +16,7 @@ TEST(VerletIntegrator, step1) {
   Particle p({1, 0, 0}, {1, 0, 0}, 1, 5, 1);
   LennardJones lj;
   std::vector<std::unique_ptr<InteractiveForce>> interactive_forces;
-  interactive_forces.push_back(std::make_unique<LennardJones>(lj));
+  interactive_forces.push_back(std::make_unique<LennardJones>());
   // SingularGravity sg(-12.44);
   std::vector<std::unique_ptr<SingularForce>> singular_forces;
   // singular_forces.push_back(std::make_unique<SingularGravity>(sg));
@@ -44,7 +44,7 @@ TEST(VerletIntegrator, step2) {
   Particle q({0, 1, 0}, {0, 0, 0}, 1, 5, 1);
   LennardJones lj;
   std::vector<std::unique_ptr<InteractiveForce>> interactive_forces;
-  interactive_forces.push_back(std::make_unique<LennardJones>(lj));
+  interactive_forces.push_back(std::make_unique<LennardJones>());
   // SingularGravity sg(-12.44);
   std::vector<std::unique_ptr<SingularForce>> singular_forces;
   // singular_forces.push_back(std::make_unique<SingularGravity>(sg));

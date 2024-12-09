@@ -22,11 +22,10 @@ class VerletIntegrator final : public Integrator {
    * @param delta_t Delta time
    */
   VerletIntegrator(
-      std::vector<std::unique_ptr<InteractiveForce>> interactive_forces,
-      std::vector<std::unique_ptr<SingularForce>> singular_forces,
+      std::vector<std::unique_ptr<InteractiveForce>>& interactive_forces,
+      std::vector<std::unique_ptr<SingularForce>>& singular_forces,
       const double delta_t)
-      : Integrator(std::move(interactive_forces), std::move(singular_forces),
-                   delta_t) {}
+      : Integrator(interactive_forces, singular_forces, delta_t) {}
 
   /**
    * @brief Destructor

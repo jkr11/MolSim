@@ -24,8 +24,8 @@ class Integrator {
    * @param delta_t Delta time
    * @note Since this is an interface, it's invalid
    */
-  Integrator(std::vector<std::unique_ptr<InteractiveForce>> interactive_forces,
-             std::vector<std::unique_ptr<SingularForce>> singular_forces,
+  Integrator(std::vector<std::unique_ptr<InteractiveForce>>& interactive_forces,
+             std::vector<std::unique_ptr<SingularForce>>& singular_forces,
              const double delta_t)
       : interactive_forces(std::move(interactive_forces)),
         singular_forces(std::move(singular_forces)),
@@ -40,5 +40,5 @@ class Integrator {
    * @brief Virtual method to advance time by one step
    * @param particle_container
    */
-  virtual void step(ParticleContainer &particle_container) = 0;
+  virtual void step(ParticleContainer& particle_container) = 0;
 };

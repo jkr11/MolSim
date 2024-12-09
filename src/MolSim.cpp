@@ -96,8 +96,7 @@ int main(const int argc, char* argv[]) {
     }
   }
 
-  VerletIntegrator verlet_integrator(std::move(interactive_forces),
-                                     std::move(singular_forces),
+  VerletIntegrator verlet_integrator(interactive_forces, singular_forces,
                                      arguments.delta_t);
   outputWriter::VTKWriter writer;
 
@@ -121,11 +120,13 @@ int main(const int argc, char* argv[]) {
         thermostat.setTemperature(*container);
       }
     }
+#ifdef BENCHMARK  // these are the first 1000 iterations for the contest
     if (iteration == 1000) {
       const auto first_1k = std::chrono::high_resolution_clock::now();
       const std::chrono::duration<double> elapsed = first_1k - start_time;
       std::cout << elapsed.count() << " seconds" << std::endl;
     }
+#endif
 
 #ifndef BENCHMARK
     if (current_time >= next_output_time) {
