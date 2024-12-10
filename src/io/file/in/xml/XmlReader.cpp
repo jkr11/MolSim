@@ -50,6 +50,8 @@ void XmlReader::read(std::vector<Particle>& particles,
           .z_high = toBoundaryType(boundaries.z_high()),
           .z_low = toBoundaryType(boundaries.z_low()),
       };
+      validateBoundaries(boundary_config);
+
       linked_cells_config.boundary_config = boundary_config;
       simulation_parameters.container_data = linked_cells_config;
       DEBUG_PRINT("Using LinkedCells container");

@@ -36,6 +36,15 @@ LinkedCellsContainer::LinkedCellsContainer(
               static_cast<double>(domain[1]) / cell_count[1],
               static_cast<double>(domain[2]) / cell_count[2]};
 
+  // safety check that minimum cell count is satisfied so the boundaries work as
+  // expected:
+  for (std::size_t i = 0; i < 2; i++) {
+    if (cell_count[i] < 3) {
+      throw std::runtime_error("Minimum cell count for dimension " +
+                               std::to_string(i) + " not satisfied");
+    }
+  }
+
   // add 2 for halo
   cell_count = {cell_count[0] + 2, cell_count[1] + 2, cell_count[2] + 2};
 
@@ -216,19 +225,24 @@ void LinkedCellsContainer::imposeInvariant() {
             }
 
             // account for the dimension that is checked
-            particle_distance_offset[problematic_dimension] = domain[problematic_dimension];
+            particle_distance_offset[problematic_dimension] =
+                domain[problematic_dimension];
 
             // iterate over all pairs and calculate force
             for (Particle &p : cells[cell_index]) {
               for (Particle &q : cells[cell_to_check_index]) {
                 // distance check
-                const dvec3 accounted_particle_distance = q.getX() - p.getX() + particle_distance_offset;
+                const dvec3 accounted_particle_distance =
+                    q.getX() - p.getX() + particle_distance_offset;
 
-                if (ArrayUtils::squaredL2Norm(accounted_particle_distance) >= cutoff * cutoff) {
+                if (ArrayUtils::squaredL2Norm(accounted_particle_distance) >=
+                    cutoff * cutoff) {
                   continue;
                 }
 
-                const dvec3 applied_force = LennardJones::directionalForceWithOffset(p, q, particle_distance_offset);
+                const dvec3 applied_force =
+                    LennardJones::directionalForceWithOffset(
+                        p, q, particle_distance_offset);
                 p.setF(p.getF() + applied_force);
                 q.setF(q.getF() - applied_force);
               }
