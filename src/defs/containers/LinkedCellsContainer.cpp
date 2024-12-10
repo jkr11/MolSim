@@ -203,10 +203,34 @@ void LinkedCellsContainer::imposeInvariant() {
             const ivec3 cell_to_check = cell_coordinates + offset;
             const std::size_t cell_to_check_index =
                 cellCoordToIndex(cell_to_check);
+            bool is_adjacent_cell;
+            ivec3 adjacent_cell_coordinates;
+            dvec3 particle_distance_offset;
 
+            std::tie(is_adjacent_cell, adjacent_cell_coordinates,
+                     particle_distance_offset) =
+                reflective_warp_around(cell_to_check);
+
+            if (!is_adjacent_cell) {
+              continue;
+            }
+
+            // account for the dimension that is checked
+            particle_distance_offset[problematic_dimension] = domain[problematic_dimension];
+
+            // iterate over all pairs and calculate force
             for (Particle &p : cells[cell_index]) {
               for (Particle &q : cells[cell_to_check_index]) {
-                // iterate over all pairs and calculate force
+                // distance check
+                const dvec3 accounted_particle_distance = q.getX() - p.getX() + particle_distance_offset;
+
+                if (ArrayUtils::squaredL2Norm(accounted_particle_distance) >= cutoff * cutoff) {
+                  continue;
+                }
+
+                const dvec3 applied_force = LennardJones::directionalForceWithOffset(p, q, particle_distance_offset);
+                p.setF(p.getF() + applied_force);
+                q.setF(q.getF() - applied_force);
               }
             }
           }
@@ -490,29 +514,42 @@ void LinkedCellsContainer::apply_reflective_boundary(const size_t dimension) {
   }
 }
 
-std::tuple<bool, ivec3> LinkedCellsContainer::reflective_warp_around(
+std::tuple<bool, ivec3, dvec3> LinkedCellsContainer::reflective_warp_around(
     const ivec3 cell_coordinate) const {
   // TODO: this is really bad code
+  dvec3 offset = {0, 0, 0};
+
   if (boundaries[0] == LinkedCellsConfig::Periodic &&
       boundaries[2] == LinkedCellsConfig::Periodic &&
       (cell_coordinate[1] == -1 || cell_coordinate[1] == cell_count[1])) {
-    // both dimensions are periodic -> make sure that corner cells are valid only once!
-    // skip this for the y dimension, since it was already calculated in the x
-    // dimension
+    // both dimensions are periodic -> make sure that corner cells are valid
+    // only once! skip this for the y dimension, since it was already calculated
+    // in the x dimension
 
-    return std::make_tuple(false, cell_coordinate);
+    return std::make_tuple(false, cell_coordinate, offset);
   }
 
   ivec3 new_cell_coordinate = cell_coordinate;
   for (std::size_t dimension = 0; dimension < 2; dimension++) {
-    if (cell_coordinate[dimension] == -1 &&
-        boundaries[2 * dimension] == LinkedCellsConfig::Periodic) {
+    if (cell_coordinate[dimension] == -1) {
+      // low wrap around to high cell
       new_cell_coordinate[dimension] = cell_count[dimension] - 3;  // top cell
-    } else if (cell_coordinate[dimension] == cell_count[dimension] &&
-               boundaries[2 * dimension] == LinkedCellsConfig::Periodic) {
+      offset[dimension] = -domain[dimension];
+    } else if (cell_coordinate[dimension] == cell_count[dimension] - 2) {
+      // high warp around to low cell
       new_cell_coordinate[dimension] = 0;  // bottom cell
+      offset[dimension] = domain[dimension];
+    } else {
+      // no warp around, nothing can go wrong
+      continue;
+    }
+
+    // if it is wrapped around but dimension is not periodic, this cell is not
+    // adjacent
+    if (boundaries[2 * dimension] != LinkedCellsConfig::Periodic) {
+      return std::make_tuple(false, cell_coordinate, offset);
     }
   }
 
-  return std::make_tuple(true, new_cell_coordinate);
+  return std::make_tuple(true, new_cell_coordinate, offset);
 }

@@ -85,9 +85,9 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @brief warp negative cell index to maximum cell coordinate to enable
    * multiple periodic boundaries in corners. For now this does only work in 2D
    * @param cell_coordinate the cell to be checked
-   * @return bool: whether it is a valid cell to be checked, ivec3: real cell
+   * @return bool: whether it is a valid cell to be checked, ivec3: real cell, dvec3: offset to be applied
    */
-  [[nodiscard]] inline std::tuple<bool, ivec3> reflective_warp_around(
+  [[nodiscard]] inline std::tuple<bool, ivec3, dvec3> reflective_warp_around(
       ivec3 cell_coordinate) const;
 
   /**
