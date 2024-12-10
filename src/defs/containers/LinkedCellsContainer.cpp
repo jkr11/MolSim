@@ -192,10 +192,8 @@ void LinkedCellsContainer::imposeInvariant() {
           break;
         }
 
-        // iterate over all 9 cells on the other end
-        // for edges there are more unnecessary operations, but these cells
-        // should be empty that it is no real overhead for strict 2D simulation
-        // the magic numbers have to be changed
+        // iterate over all 9 / 3 cells on the other end
+        // for now strict 2D implementation for performance
         for (const std::size_t cell_index :
              boundary_direction_cells[dimension]) {
           ivec3 cell_coordinates = cellIndexToCoord(cell_index);
@@ -490,4 +488,31 @@ void LinkedCellsContainer::apply_reflective_boundary(const size_t dimension) {
       }
     }
   }
+}
+
+std::tuple<bool, ivec3> LinkedCellsContainer::reflective_warp_around(
+    const ivec3 cell_coordinate) const {
+  // TODO: this is really bad code
+  if (boundaries[0] == LinkedCellsConfig::Periodic &&
+      boundaries[2] == LinkedCellsConfig::Periodic &&
+      (cell_coordinate[1] == -1 || cell_coordinate[1] == cell_count[1])) {
+    // both dimensions are periodic -> make sure that corner cells are valid only once!
+    // skip this for the y dimension, since it was already calculated in the x
+    // dimension
+
+    return std::make_tuple(false, cell_coordinate);
+  }
+
+  ivec3 new_cell_coordinate = cell_coordinate;
+  for (std::size_t dimension = 0; dimension < 2; dimension++) {
+    if (cell_coordinate[dimension] == -1 &&
+        boundaries[2 * dimension] == LinkedCellsConfig::Periodic) {
+      new_cell_coordinate[dimension] = cell_count[dimension] - 3;  // top cell
+    } else if (cell_coordinate[dimension] == cell_count[dimension] &&
+               boundaries[2 * dimension] == LinkedCellsConfig::Periodic) {
+      new_cell_coordinate[dimension] = 0;  // bottom cell
+    }
+  }
+
+  return std::make_tuple(true, new_cell_coordinate);
 }

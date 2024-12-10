@@ -77,7 +77,18 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @brief apply reflective boundary condition to a dimension
    * @param dimension the problematic dimension
    */
-  void apply_reflective_boundary(size_t dimension);
+  inline void apply_reflective_boundary(size_t dimension);
+
+  // TODO: this is a bit costly for every cell, either only apply it to edges or
+  // preprocess all results
+  /**
+   * @brief warp negative cell index to maximum cell coordinate to enable
+   * multiple periodic boundaries in corners. For now this does only work in 2D
+   * @param cell_coordinate the cell to be checked
+   * @return bool: whether it is a valid cell to be checked, ivec3: real cell
+   */
+  [[nodiscard]] inline std::tuple<bool, ivec3> reflective_warp_around(
+      ivec3 cell_coordinate) const;
 
   /**
    *@brief index offsets orthogonal to a cell for each dimension, optimized for
