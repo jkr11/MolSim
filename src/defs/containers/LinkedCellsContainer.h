@@ -79,17 +79,6 @@ class LinkedCellsContainer final : public ParticleContainer {
    */
   inline void apply_reflective_boundary(size_t dimension);
 
-  // TODO: this is a bit costly for every cell, either only apply it to edges or
-  // preprocess all results
-  /**
-   * @brief warp negative cell index to maximum cell coordinate to enable
-   * multiple periodic boundaries in corners. For now this does only work in 2D
-   * @param cell_coordinate the cell to be checked
-   * @return bool: whether it is a valid cell to be checked, ivec3: real cell, dvec3: offset to be applied
-   */
-  [[nodiscard]] inline std::tuple<bool, ivec3, dvec3> reflective_warp_around(
-      ivec3 cell_coordinate) const;
-
   /**
    *@brief index offsets orthogonal to a cell for each dimension, optimized for
    *2D simulations
@@ -338,6 +327,28 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @return Reference to the cell vector
    */
   std::vector<std::vector<Particle>>& getCells() { return cells; }
+
+  // TODO: this is a bit costly for every cell, either only apply it to edges or
+  // preprocess all results
+  /**
+   * @brief warp negative cell index to maximum cell coordinate to enable
+   * multiple periodic boundaries in corners. For now this does only work in 2D
+   * @param cell_coordinate the cell to be checked
+   * @param raw_dimension the dimension axis looked at
+   * @return bool: whether it is a valid cell to be checked, ivec3: real cell, dvec3: offset to be applied
+   */
+  [[nodiscard]] inline std::tuple<bool, ivec3, dvec3> reflective_warp_around(
+      ivec3 cell_coordinate, std::size_t raw_dimension) const;
+
+  /**
+   * API for testing
+   * @param cell_coordinate the cell to be checked
+   * @param raw_dimension the dimension axis looked at
+   * @return bool: whether it is a valid cell to be checked, ivec3: real cell,
+   * dvec3: offset to be applied
+   */
+  [[nodiscard]] std::tuple<bool, ivec3, dvec3> reflective_warp_around_testing(
+      ivec3 cell_coordinate, std::size_t raw_dimension) const;
 };
 
 /**

@@ -38,10 +38,12 @@ LinkedCellsContainer::LinkedCellsContainer(
 
   // safety check that minimum cell count is satisfied so the boundaries work as
   // expected:
+  // could be ok, but then reflective calculation has to be disabled, since all
+  // possible pairs are already iterated over
   for (std::size_t i = 0; i < 2; i++) {
     if (cell_count[i] < 3) {
-      throw std::runtime_error("Minimum cell count for dimension " +
-                               std::to_string(i) + " not satisfied");
+      SpdWrapper::get()->info(
+          "cell count is too small if reflective boundaries are used");
     }
   }
 
@@ -218,15 +220,15 @@ void LinkedCellsContainer::imposeInvariant() {
 
             std::tie(is_adjacent_cell, adjacent_cell_coordinates,
                      particle_distance_offset) =
-                reflective_warp_around(cell_to_check);
+                reflective_warp_around(cell_to_check, dimension);
 
             if (!is_adjacent_cell) {
               continue;
             }
 
-            // account for the dimension that is checked
-            particle_distance_offset[problematic_dimension] =
-                domain[problematic_dimension];
+            // // account for the dimension that is checked
+            // particle_distance_offset[problematic_dimension] =
+            //     domain[problematic_dimension];
 
             // iterate over all pairs and calculate force
             for (Particle &p : cells[cell_index]) {
@@ -529,17 +531,19 @@ void LinkedCellsContainer::apply_reflective_boundary(const size_t dimension) {
 }
 
 std::tuple<bool, ivec3, dvec3> LinkedCellsContainer::reflective_warp_around(
-    const ivec3 cell_coordinate) const {
+    const ivec3 cell_coordinate, const std::size_t raw_dimension) const {
   // TODO: this is really bad code
   dvec3 offset = {0, 0, 0};
 
-  if (boundaries[0] == LinkedCellsConfig::Periodic &&
-      boundaries[2] == LinkedCellsConfig::Periodic &&
-      (cell_coordinate[1] == -1 || cell_coordinate[1] == cell_count[1])) {
+  if (raw_dimension == yhigh &&
+      boundaries[xlow] == LinkedCellsConfig::Periodic &&
+      boundaries[ylow] == LinkedCellsConfig::Periodic &&
+      (cell_coordinate[0] == -1 || cell_coordinate[0] == cell_count[1] - 2)) {
     // both dimensions are periodic -> make sure that corner cells are valid
     // only once! skip this for the y dimension, since it was already calculated
     // in the x dimension
 
+    SpdWrapper::get()->info("cell should not be warped");
     return std::make_tuple(false, cell_coordinate, offset);
   }
 
@@ -549,21 +553,35 @@ std::tuple<bool, ivec3, dvec3> LinkedCellsContainer::reflective_warp_around(
       // low wrap around to high cell
       new_cell_coordinate[dimension] = cell_count[dimension] - 3;  // top cell
       offset[dimension] = -domain[dimension];
+      SpdWrapper::get()->info("low warp to high in dim = {}", dimension);
     } else if (cell_coordinate[dimension] == cell_count[dimension] - 2) {
       // high warp around to low cell
       new_cell_coordinate[dimension] = 0;  // bottom cell
       offset[dimension] = domain[dimension];
+      SpdWrapper::get()->info("high warp to low in dim = {}", dimension);
     } else {
       // no warp around, nothing can go wrong
+      SpdWrapper::get()->info("no warp in dim = {}", dimension);
       continue;
     }
 
     // if it is wrapped around but dimension is not periodic, this cell is not
     // adjacent
     if (boundaries[2 * dimension] != LinkedCellsConfig::Periodic) {
+      SpdWrapper::get()->info("exited due to warp for not periodic border: {}", 2* dimension);
       return std::make_tuple(false, cell_coordinate, offset);
     }
   }
 
+  SpdWrapper::get()->info("[{}, {}, {}] -> [{}, {}, {}] | [{}, {}, {}]",
+                  cell_coordinate[0], cell_coordinate[1], cell_coordinate[2],
+                  new_cell_coordinate[0], new_cell_coordinate[1],
+                  new_cell_coordinate[2], offset[0], offset[1], offset[2]);
   return std::make_tuple(true, new_cell_coordinate, offset);
+}
+
+std::tuple<bool, ivec3, dvec3>
+LinkedCellsContainer::reflective_warp_around_testing(
+    const ivec3 cell_coordinate, const std::size_t raw_dimension) const {
+  return reflective_warp_around(cell_coordinate, raw_dimension);
 }
