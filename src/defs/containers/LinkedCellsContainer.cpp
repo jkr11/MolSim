@@ -274,13 +274,14 @@ void LinkedCellsContainer::pairIterator(
       for (std::size_t j = i + 1; j < cellParticles.size(); ++j) {
         const dvec3 p = cellParticles[i].getX();
         const dvec3 q = cellParticles[j].getX();
-        const double d = ArrayUtils::L2InnerProduct(p - q);
+        const dvec3 rv = q - p;
+        const double d = ArrayUtils::L2InnerProduct(rv);
         if (d > cutoff * cutoff) continue;
         dvec3 f12 = {0.0, 0.0, 0.0};
         // TODO: this might either be wrong or inefficient for week5
         for (const auto &force : interactive_forces) {
-          f12 = f12 +
-                force->directionalForce(cellParticles[i], cellParticles[j], d);
+          f12 = f12 + force->directionalForce(cellParticles[i],
+                                              cellParticles[j], d, rv);
         }
         force_accumulator = force_accumulator + f12;
         cellParticles[j].subF(f12);
@@ -321,14 +322,14 @@ void LinkedCellsContainer::pairIterator(
         for (auto &neighbourParticle : neighbourParticles) {
           auto p = cellParticle.getX();
           auto q = neighbourParticle.getX();
-
-          const double d = ArrayUtils::L2InnerProduct(p - q);
+          const dvec3 rv = q - p;
+          const double d = ArrayUtils::L2InnerProduct(rv);
           if (d > cutoff * cutoff) continue;
 
           dvec3 f12 = {0.0, 0.0, 0.0};
           for (const auto &force : interactive_forces) {
-            f12 = f12 +
-                  force->directionalForce(cellParticle, neighbourParticle, d);
+            f12 = f12 + force->directionalForce(cellParticle, neighbourParticle,
+                                                d, rv);
           }
           force_accumulator = force_accumulator + f12;
           neighbourParticle.subF(f12);

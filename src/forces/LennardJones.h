@@ -16,20 +16,11 @@ class LennardJones final : public InteractiveForce {
    * @brief Calculates the lennard-jones force between two particles.
    * @param p1 particle 1
    * @param p2 particle 2
+   * @param rv
    * @return the singed vector force between particles p1 and p2
    */
-  dvec3 inline directionalForce(Particle& p1, Particle& p2,
-                                const double r_sq) const override {
-    const dvec3 rv = p2.getX() - p1.getX();
-    // const double r = ArrayUtils::L2Norm(rv);
-    const double sigma_sq = std::pow((p1.getSigma() + p2.getSigma()) / 2, 2);
-    const double epsilon = std::sqrt(p1.getEpsilon() * p2.getEpsilon());
-    const double sr_sq = sigma_sq / r_sq;
-    const double sr6 = std::pow(sr_sq, 3);
-    const double sr12 = std::pow(sr6, 2);
-    const double force_magnitude = 24 * epsilon * (sr6 - 2 * sr12) / r_sq;
-    return force_magnitude * rv;
-  }
+  dvec3 directionalForce(Particle& p1, Particle& p2, const double& r_sq,
+                         const dvec3& rv) const override;
 
   /**
    * @brief calculates the force of the ghost particle

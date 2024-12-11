@@ -86,7 +86,8 @@ void DirectSumContainer::pairIterator(
       for (auto& f : interactive_forces) {
         f->directionalForce(
             particles[i], particles[j],
-            ArrayUtils::L2Norm(particles[i].getX() - particles[j].getX()));
+            ArrayUtils::L2Norm(particles[i].getX() - particles[j].getX()),
+            particles[i].getX() - particles[j].getX());
       }
     }
   }
