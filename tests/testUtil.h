@@ -1,5 +1,5 @@
-
-#include "defs/Particle.h"
+#pragma once
+#include "../src/defs/Particle.h"
 #include "gtest/gtest.h"
 
 /**
@@ -30,5 +30,17 @@ void EXPECT_VECTOR_EQ(const std::vector<T>& list1,
   for (size_t i = 0; i < list1.size(); ++i) {
     EXPECT_EQ(list1[i], list2[i])
         << "Elements at index " << i << " are not equal";
+  }
+}
+
+/**
+ * @brief compares two ivec3's
+ * @param a ivec3 source
+ * @param b ivec3 target
+ */
+inline void EXPECT_IVEC3_EQ(const ivec3& a, const ivec3& b) {
+  EXPECT_EQ(a.size(), b.size()) << "Lists are of different sizes";
+  for (size_t i = 0; i < a.size(); ++i) {
+    EXPECT_EQ(a[i], b[i]) << "Elements at index " << i << " are not equal";
   }
 }

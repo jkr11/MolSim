@@ -2,7 +2,7 @@
 // Created by jkr on 10/18/24.
 //
 #pragma once
-#include "../defs/Particle.h"
+#include "defs/Particle.h"
 
 /**
  * @brief Interface for different types of forces
@@ -30,4 +30,12 @@ class Force {
    * @return Force-vector
    */
   virtual dvec3 directionalForce(Particle& p1, Particle& p2) const = 0;
+
+  /**
+   * @brief calculates the force of the ghost particle
+   * @param p Particle to calculate Force for
+   * @param distance the distance to the boundary
+   * @return the force in just one dimension
+   */
+  static double simpleForce(Particle& p, double distance);
 };

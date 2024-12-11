@@ -10,7 +10,7 @@
  * @brief Integrator using the Verlet-integration method on a particle
  * container.
  */
-class VerletIntegrator : public Integrator {
+class VerletIntegrator final : public Integrator {
  public:
   /**
    * @brief Create VerletIntegrator object
@@ -28,7 +28,7 @@ class VerletIntegrator : public Integrator {
   /**
    * @brief Advance particle-system by one time-step.
    * @note Update order: \n
-   *   1) Particle positions \n
+   *   1) Particle positions and boundary conditions \n
    *   2) Intra particular forces \n
    *   3) Particle velocities \n
    *

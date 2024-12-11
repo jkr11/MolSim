@@ -6,12 +6,16 @@
 #ifndef DEBUG_H
 #define DEBUG_H
 
-#include <iostream>
+#include <iostream>  // Also careful here, when clion is not in debug mode it tells you to remove this
+
+#include "utils/SpdWrapper.h"
 
 #ifdef DEBUG
 #define DEBUG_PRINT(msg) SpdWrapper::get()->debug(msg);
+#define DEBUG_PRINT_FMT(msg, ...) SpdWrapper::get()->debug(msg, __VA_ARGS__);
 #else
 #define DEBUG_PRINT(msg)
+#define DEBUG_PRINT_FMT(msg, ...)
 #endif
 
 #endif  // DEBUG_H

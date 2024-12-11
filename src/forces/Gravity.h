@@ -2,18 +2,15 @@
 // Created by jkr on 10/18/24.
 //
 #pragma once
-#include "../defs/Particle.h"
-#include "../utils/ArrayUtils.h"
 #include "Force.h"
+#include "defs/Particle.h"
+#include "utils/ArrayUtils.h"
 
 /**
  * @brief Gravitational force F_{1,2}
  */
 class Gravity final : public Force {
  public:
-  /**
-   *
-   */
   Gravity() = default;
 
   /**
@@ -23,4 +20,13 @@ class Gravity final : public Force {
    * @return Force-vector
    */
   dvec3 directionalForce(Particle& p1, Particle& p2) const override;
+
+  /**
+   * @brief calculates the force of the ghost particle, not implemented for this
+   * Force
+   * @param p Particle to calculate Force for
+   * @param distance the distance to the boundary
+   * @return the force in just one dimension
+   */
+  static double simpleForce(Particle& p, double distance);
 };

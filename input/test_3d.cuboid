@@ -1,7 +1,0 @@
-# This works just like a normal txt
-# We should make filereader check for the extension based on type of reader
-# right now this looks like [position, initial_velocity, dimensions, mass, type, h, average_velocity, epsilon, sigma]
-
-2
-0.0 0.0 0.0     0.0 0.0 0.0     40 8 8      1     2     1.1225    0.1   5   1
-15 15 0         0 -10 0         8  8 8      1     3     1.1225    0.1   5   1
