@@ -447,17 +447,16 @@ TEST(PeriodicBoundaryForce, offsetXY2) {
  * tests that particles can move through the x periodic boundary
  */
 TEST(PeriodicBoundaryMoving, moveXLeft) {
-  LinkedCellsContainer container(
-      {.domain = {9, 9, 3},
-       .cutoff_radius = 3,
-       .boundary_config = {
-           LinkedCellsConfig::BoundaryType::Periodic,
-           LinkedCellsConfig::BoundaryType::Periodic,
-           LinkedCellsConfig::BoundaryType::Outflow,
-           LinkedCellsConfig::BoundaryType::Outflow,
-           LinkedCellsConfig::BoundaryType::Outflow,
-           LinkedCellsConfig::BoundaryType::Outflow,
-       }});
+  LinkedCellsContainer container({.domain = {9, 9, 3},
+                                  .cutoff_radius = 3,
+                                  .boundary_config = {
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                  }});
 
   const LennardJones f{};
 
@@ -490,8 +489,10 @@ TEST(PeriodicBoundaryMoving, moveXLeft) {
   });
 
   // test that particle is registered in its true cell
-  const auto old_cell = container.getCells()[container.cellCoordToIndex_testing({0, 0, 0})];
-  const auto new_cell = container.getCells()[container.cellCoordToIndex_testing({2, 0, 0})];
+  const auto old_cell =
+      container.getCells()[container.cellCoordToIndex_testing({0, 0, 0})];
+  const auto new_cell =
+      container.getCells()[container.cellCoordToIndex_testing({2, 0, 0})];
 
   EXPECT_EQ(old_cell.size(), 0);
   EXPECT_EQ(new_cell.size(), 1);
@@ -501,17 +502,16 @@ TEST(PeriodicBoundaryMoving, moveXLeft) {
  * tests that particles can move through the x periodic boundary
  */
 TEST(PeriodicBoundaryMoving, moveXRight) {
-  LinkedCellsContainer container(
-      {.domain = {9, 9, 3},
-       .cutoff_radius = 3,
-       .boundary_config = {
-           LinkedCellsConfig::BoundaryType::Periodic,
-           LinkedCellsConfig::BoundaryType::Periodic,
-           LinkedCellsConfig::BoundaryType::Outflow,
-           LinkedCellsConfig::BoundaryType::Outflow,
-           LinkedCellsConfig::BoundaryType::Outflow,
-           LinkedCellsConfig::BoundaryType::Outflow,
-       }});
+  LinkedCellsContainer container({.domain = {9, 9, 3},
+                                  .cutoff_radius = 3,
+                                  .boundary_config = {
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                  }});
 
   const LennardJones f{};
 
@@ -520,7 +520,6 @@ TEST(PeriodicBoundaryMoving, moveXRight) {
 
   container.addParticle(one);
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 2";
-
 
   double delta_t = 1;
   container.singleIterator([this, delta_t](Particle& p) {
@@ -545,8 +544,10 @@ TEST(PeriodicBoundaryMoving, moveXRight) {
   });
 
   // test that particle is registered in its true cell
-  const auto old_cell = container.getCells()[container.cellCoordToIndex_testing({2, 0, 0})];
-  const auto new_cell = container.getCells()[container.cellCoordToIndex_testing({0, 0, 0})];
+  const auto old_cell =
+      container.getCells()[container.cellCoordToIndex_testing({2, 0, 0})];
+  const auto new_cell =
+      container.getCells()[container.cellCoordToIndex_testing({0, 0, 0})];
 
   EXPECT_EQ(old_cell.size(), 0);
   EXPECT_EQ(new_cell.size(), 1);
@@ -556,17 +557,16 @@ TEST(PeriodicBoundaryMoving, moveXRight) {
  * tests that particles can move through the x periodic boundary
  */
 TEST(PeriodicBoundaryMoving, moveXDiagonal1) {
-  LinkedCellsContainer container(
-      {.domain = {9, 9, 3},
-       .cutoff_radius = 3,
-       .boundary_config = {
-           LinkedCellsConfig::BoundaryType::Periodic,
-           LinkedCellsConfig::BoundaryType::Periodic,
-           LinkedCellsConfig::BoundaryType::Outflow,
-           LinkedCellsConfig::BoundaryType::Outflow,
-           LinkedCellsConfig::BoundaryType::Outflow,
-           LinkedCellsConfig::BoundaryType::Outflow,
-       }});
+  LinkedCellsContainer container({.domain = {9, 9, 3},
+                                  .cutoff_radius = 3,
+                                  .boundary_config = {
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                  }});
 
   const LennardJones f{};
 
@@ -577,7 +577,6 @@ TEST(PeriodicBoundaryMoving, moveXDiagonal1) {
   container.addParticle(one);
   container.addParticle(two);
   EXPECT_EQ(container.size(), 2) << "Number of Particles is not 2";
-
 
   double delta_t = 1;
   container.singleIterator([this, delta_t](Particle& p) {
@@ -596,26 +595,24 @@ TEST(PeriodicBoundaryMoving, moveXDiagonal1) {
     p.setV(new_v);
   });
 
-  container.singleIterator([this](Particle& p) {
-    FAIL() << "Particle should have been deleted";
-  });
+  container.singleIterator(
+      [this](Particle& p) { FAIL() << "Particle should have been deleted"; });
 }
 
 /**
  * tests that particles can move through the x periodic boundary
  */
 TEST(PeriodicBoundaryMoving, moveXDiagonal2) {
-  LinkedCellsContainer container(
-      {.domain = {9, 9, 3},
-       .cutoff_radius = 3,
-       .boundary_config = {
-           LinkedCellsConfig::BoundaryType::Periodic,
-           LinkedCellsConfig::BoundaryType::Periodic,
-           LinkedCellsConfig::BoundaryType::Outflow,
-           LinkedCellsConfig::BoundaryType::Outflow,
-           LinkedCellsConfig::BoundaryType::Outflow,
-           LinkedCellsConfig::BoundaryType::Outflow,
-       }});
+  LinkedCellsContainer container({.domain = {9, 9, 3},
+                                  .cutoff_radius = 3,
+                                  .boundary_config = {
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                  }});
 
   const LennardJones f{};
 
@@ -626,7 +623,6 @@ TEST(PeriodicBoundaryMoving, moveXDiagonal2) {
   container.addParticle(one);
   container.addParticle(two);
   EXPECT_EQ(container.size(), 2) << "Number of Particles is not 2";
-
 
   double delta_t = 1;
   container.singleIterator([this, delta_t](Particle& p) {
@@ -645,26 +641,24 @@ TEST(PeriodicBoundaryMoving, moveXDiagonal2) {
     p.setV(new_v);
   });
 
-  container.singleIterator([this](Particle& p) {
-    FAIL() << "Particle should have been deleted";
-  });
+  container.singleIterator(
+      [this](Particle& p) { FAIL() << "Particle should have been deleted"; });
 }
 
 /**
  * tests that particles can move through the y periodic boundary
  */
 TEST(PeriodicBoundaryMoving, moveYDiagonal1) {
-  LinkedCellsContainer container(
-      {.domain = {9, 9, 3},
-       .cutoff_radius = 3,
-       .boundary_config = {
-           LinkedCellsConfig::BoundaryType::Outflow,
-           LinkedCellsConfig::BoundaryType::Outflow,
-           LinkedCellsConfig::BoundaryType::Periodic,
-           LinkedCellsConfig::BoundaryType::Periodic,
-           LinkedCellsConfig::BoundaryType::Outflow,
-           LinkedCellsConfig::BoundaryType::Outflow,
-       }});
+  LinkedCellsContainer container({.domain = {9, 9, 3},
+                                  .cutoff_radius = 3,
+                                  .boundary_config = {
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                  }});
 
   const LennardJones f{};
 
@@ -676,7 +670,6 @@ TEST(PeriodicBoundaryMoving, moveYDiagonal1) {
   container.addParticle(two);
   EXPECT_EQ(container.size(), 2) << "Number of Particles is not 2";
 
-
   double delta_t = 1;
   container.singleIterator([this, delta_t](Particle& p) {
     const dvec3 new_x = p.getX() + delta_t * p.getV() +
@@ -694,26 +687,24 @@ TEST(PeriodicBoundaryMoving, moveYDiagonal1) {
     p.setV(new_v);
   });
 
-  container.singleIterator([this](Particle& p) {
-    FAIL() << "Particle should have been deleted";
-  });
+  container.singleIterator(
+      [this](Particle& p) { FAIL() << "Particle should have been deleted"; });
 }
 
 /**
  * tests that particles can move through the y periodic boundary
  */
 TEST(PeriodicBoundaryMoving, moveYDiagonal2) {
-  LinkedCellsContainer container(
-      {.domain = {9, 9, 3},
-       .cutoff_radius = 3,
-       .boundary_config = {
-           LinkedCellsConfig::BoundaryType::Outflow,
-           LinkedCellsConfig::BoundaryType::Outflow,
-           LinkedCellsConfig::BoundaryType::Periodic,
-           LinkedCellsConfig::BoundaryType::Periodic,
-           LinkedCellsConfig::BoundaryType::Outflow,
-           LinkedCellsConfig::BoundaryType::Outflow,
-       }});
+  LinkedCellsContainer container({.domain = {9, 9, 3},
+                                  .cutoff_radius = 3,
+                                  .boundary_config = {
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                  }});
 
   const LennardJones f{};
 
@@ -725,7 +716,6 @@ TEST(PeriodicBoundaryMoving, moveYDiagonal2) {
   container.addParticle(two);
   EXPECT_EQ(container.size(), 2) << "Number of Particles is not 2";
 
-
   double delta_t = 1;
   container.singleIterator([this, delta_t](Particle& p) {
     const dvec3 new_x = p.getX() + delta_t * p.getV() +
@@ -743,26 +733,24 @@ TEST(PeriodicBoundaryMoving, moveYDiagonal2) {
     p.setV(new_v);
   });
 
-  container.singleIterator([this](Particle& p) {
-    FAIL() << "Particle should have been deleted";
-  });
+  container.singleIterator(
+      [this](Particle& p) { FAIL() << "Particle should have been deleted"; });
 }
 
 /**
  * tests that particles can move through the y periodic boundary
  */
 TEST(PeriodicBoundaryMoving, moveYDown) {
-  LinkedCellsContainer container(
-      {.domain = {9, 9, 3},
-       .cutoff_radius = 3,
-       .boundary_config = {
-           LinkedCellsConfig::BoundaryType::Outflow,
-           LinkedCellsConfig::BoundaryType::Outflow,
-           LinkedCellsConfig::BoundaryType::Periodic,
-           LinkedCellsConfig::BoundaryType::Periodic,
-           LinkedCellsConfig::BoundaryType::Outflow,
-           LinkedCellsConfig::BoundaryType::Outflow,
-       }});
+  LinkedCellsContainer container({.domain = {9, 9, 3},
+                                  .cutoff_radius = 3,
+                                  .boundary_config = {
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                  }});
 
   const LennardJones f{};
 
@@ -795,8 +783,10 @@ TEST(PeriodicBoundaryMoving, moveYDown) {
   });
 
   // test that particle is registered in its true cell
-  const auto old_cell = container.getCells()[container.cellCoordToIndex_testing({0, 0, 0})];
-  const auto new_cell = container.getCells()[container.cellCoordToIndex_testing({0, 2, 0})];
+  const auto old_cell =
+      container.getCells()[container.cellCoordToIndex_testing({0, 0, 0})];
+  const auto new_cell =
+      container.getCells()[container.cellCoordToIndex_testing({0, 2, 0})];
 
   EXPECT_EQ(old_cell.size(), 0);
   EXPECT_EQ(new_cell.size(), 1);
@@ -806,17 +796,16 @@ TEST(PeriodicBoundaryMoving, moveYDown) {
  * tests that particles can move through the y periodic boundary
  */
 TEST(PeriodicBoundaryMoving, moveYUp) {
-  LinkedCellsContainer container(
-      {.domain = {9, 9, 3},
-       .cutoff_radius = 3,
-       .boundary_config = {
-           LinkedCellsConfig::BoundaryType::Outflow,
-           LinkedCellsConfig::BoundaryType::Outflow,
-           LinkedCellsConfig::BoundaryType::Periodic,
-           LinkedCellsConfig::BoundaryType::Periodic,
-           LinkedCellsConfig::BoundaryType::Outflow,
-           LinkedCellsConfig::BoundaryType::Outflow,
-       }});
+  LinkedCellsContainer container({.domain = {9, 9, 3},
+                                  .cutoff_radius = 3,
+                                  .boundary_config = {
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                  }});
 
   const LennardJones f{};
 
@@ -825,7 +814,6 @@ TEST(PeriodicBoundaryMoving, moveYUp) {
 
   container.addParticle(one);
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 2";
-
 
   double delta_t = 1;
   container.singleIterator([this, delta_t](Particle& p) {
@@ -850,9 +838,232 @@ TEST(PeriodicBoundaryMoving, moveYUp) {
   });
 
   // test that particle is registered in its true cell
-  const auto old_cell = container.getCells()[container.cellCoordToIndex_testing({0, 2, 0})];
-  const auto new_cell = container.getCells()[container.cellCoordToIndex_testing({0, 0, 0})];
+  const auto old_cell =
+      container.getCells()[container.cellCoordToIndex_testing({0, 2, 0})];
+  const auto new_cell =
+      container.getCells()[container.cellCoordToIndex_testing({0, 0, 0})];
 
   EXPECT_EQ(old_cell.size(), 0);
   EXPECT_EQ(new_cell.size(), 1);
 }
+
+/**
+ * tests that particles can move through the y periodic boundary
+ */
+TEST(PeriodicBoundaryMoving, moveXYDiagonal1) {
+  LinkedCellsContainer container({.domain = {9, 9, 3},
+                                  .cutoff_radius = 3,
+                                  .boundary_config = {
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                  }});
+
+  const LennardJones f{};
+
+  // move to other end
+  const Particle one({1, 1, 1}, {-2, -2, 0}, 1, 5.0, 1);
+
+  container.addParticle(one);
+  EXPECT_EQ(container.size(), 1) << "Number of Particles is not 1";
+
+  double delta_t = 1;
+  container.singleIterator([this, delta_t](Particle& p) {
+    const dvec3 new_x = p.getX() + delta_t * p.getV() +
+                        (delta_t * delta_t / (2 * p.getM())) * (p.getF());
+    p.setX(new_x);
+  });
+
+  container.singleIterator([](Particle& p) { p.updateForceInTime(); });
+
+  container.imposeInvariant();
+
+  container.singleIterator([this, delta_t](Particle& p) {
+    const dvec3 new_v =
+        p.getV() + (delta_t / (2 * p.getM()) * (p.getOldF() + p.getF()));
+    p.setV(new_v);
+  });
+
+  container.singleIterator([this](Particle& p) {
+    DVEC3_NEAR(p.getX(), {8, 8, 1}, "position wrong", 1e-5);
+    DVEC3_NEAR(p.getV(), {-2, -2, 0}, "velocity wrong", 1e-5);
+  });
+
+  // test that particle is registered in its true cell
+  const auto old_cell =
+      container.getCells()[container.cellCoordToIndex_testing({0, 0, 0})];
+  const auto new_cell =
+      container.getCells()[container.cellCoordToIndex_testing({2, 2, 0})];
+
+  EXPECT_EQ(old_cell.size(), 0);
+  EXPECT_EQ(new_cell.size(), 1);
+}
+
+/**
+ * tests that particles can move through the y periodic boundary
+ */
+TEST(PeriodicBoundaryMoving, moveXYDiagonal2) {
+  LinkedCellsContainer container({.domain = {9, 9, 3},
+                                  .cutoff_radius = 3,
+                                  .boundary_config = {
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                  }});
+
+  const LennardJones f{};
+
+  // move to other end
+  const Particle one({8, 1, 1}, {2, -2, 0}, 1, 5.0, 1);
+
+  container.addParticle(one);
+  EXPECT_EQ(container.size(), 1) << "Number of Particles is not 2";
+
+  double delta_t = 1;
+  container.singleIterator([this, delta_t](Particle& p) {
+    const dvec3 new_x = p.getX() + delta_t * p.getV() +
+                        (delta_t * delta_t / (2 * p.getM())) * (p.getF());
+    p.setX(new_x);
+  });
+
+  container.singleIterator([](Particle& p) { p.updateForceInTime(); });
+
+  container.imposeInvariant();
+
+  container.singleIterator([this, delta_t](Particle& p) {
+    const dvec3 new_v =
+        p.getV() + (delta_t / (2 * p.getM()) * (p.getOldF() + p.getF()));
+    p.setV(new_v);
+  });
+
+  container.singleIterator([this](Particle& p) {
+    DVEC3_NEAR(p.getX(), {1, 8, 1}, "position wrong", 1e-5);
+    DVEC3_NEAR(p.getV(), {2, -2, 0}, "velocity wrong", 1e-5);
+  });
+
+  // test that particle is registered in its true cell
+  const auto old_cell =
+      container.getCells()[container.cellCoordToIndex_testing({2, 0, 0})];
+  const auto new_cell =
+      container.getCells()[container.cellCoordToIndex_testing({0, 2, 0})];
+
+  EXPECT_EQ(old_cell.size(), 0);
+  EXPECT_EQ(new_cell.size(), 1);
+}
+
+/**
+ * tests that particles can move through the y periodic boundary
+ */
+TEST(PeriodicBoundaryMoving, moveXYDiagonal3) {
+  LinkedCellsContainer container({.domain = {9, 9, 3},
+                                  .cutoff_radius = 3,
+                                  .boundary_config = {
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                  }});
+
+  const LennardJones f{};
+
+  // move to other end
+  const Particle one({1, 8, 1}, {-2, 2, 0}, 1, 5.0, 1);
+
+  container.addParticle(one);
+  EXPECT_EQ(container.size(), 1) << "Number of Particles is not 1";
+
+  double delta_t = 1;
+  container.singleIterator([this, delta_t](Particle& p) {
+    const dvec3 new_x = p.getX() + delta_t * p.getV() +
+                        (delta_t * delta_t / (2 * p.getM())) * (p.getF());
+    p.setX(new_x);
+  });
+
+  container.singleIterator([](Particle& p) { p.updateForceInTime(); });
+
+  container.imposeInvariant();
+
+  container.singleIterator([this, delta_t](Particle& p) {
+    const dvec3 new_v =
+        p.getV() + (delta_t / (2 * p.getM()) * (p.getOldF() + p.getF()));
+    p.setV(new_v);
+  });
+
+  container.singleIterator([this](Particle& p) {
+    DVEC3_NEAR(p.getX(), {8, 1, 1}, "position wrong", 1e-5);
+    DVEC3_NEAR(p.getV(), {-2, 2, 0}, "velocity wrong", 1e-5);
+  });
+
+  // test that particle is registered in its true cell
+  const auto old_cell =
+      container.getCells()[container.cellCoordToIndex_testing({0, 2, 0})];
+  const auto new_cell =
+      container.getCells()[container.cellCoordToIndex_testing({2, 0, 0})];
+
+  EXPECT_EQ(old_cell.size(), 0);
+  EXPECT_EQ(new_cell.size(), 1);
+}
+
+/**
+ * tests that particles can move through the y periodic boundary
+ */
+TEST(PeriodicBoundaryMoving, moveXYDiagonal4) {
+  LinkedCellsContainer container({.domain = {9, 9, 3},
+                                  .cutoff_radius = 3,
+                                  .boundary_config = {
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                  }});
+
+  const LennardJones f{};
+
+  // move to other end
+  const Particle one({8, 8, 1}, {2, 2, 0}, 1, 5.0, 1);
+
+  container.addParticle(one);
+  EXPECT_EQ(container.size(), 1) << "Number of Particles is not 2";
+
+  double delta_t = 1;
+  container.singleIterator([this, delta_t](Particle& p) {
+    const dvec3 new_x = p.getX() + delta_t * p.getV() +
+                        (delta_t * delta_t / (2 * p.getM())) * (p.getF());
+    p.setX(new_x);
+  });
+
+  container.singleIterator([](Particle& p) { p.updateForceInTime(); });
+
+  container.imposeInvariant();
+
+  container.singleIterator([this, delta_t](Particle& p) {
+    const dvec3 new_v =
+        p.getV() + (delta_t / (2 * p.getM()) * (p.getOldF() + p.getF()));
+    p.setV(new_v);
+  });
+
+  container.singleIterator([this](Particle& p) {
+    DVEC3_NEAR(p.getX(), {1, 1, 1}, "position wrong", 1e-5);
+    DVEC3_NEAR(p.getV(), {2, 2, 0}, "velocity wrong", 1e-5);
+  });
+
+  // test that particle is registered in its true cell
+  const auto old_cell =
+      container.getCells()[container.cellCoordToIndex_testing({2, 2, 0})];
+  const auto new_cell =
+      container.getCells()[container.cellCoordToIndex_testing({0, 0, 0})];
+
+  EXPECT_EQ(old_cell.size(), 0);
+  EXPECT_EQ(new_cell.size(), 1);
+}
+
