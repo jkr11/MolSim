@@ -18,6 +18,6 @@ class SingularForce {
    * @param p the particle to be operated on
    * @return the force vector on the particle p
    */
-  [[nodiscard]] virtual dvec3 applyForce(const Particle& p) const = 0;
+  [[nodiscard]] inline virtual dvec3 applyForce(const Particle& p) const = 0;
 };
 #endif  // SINGULARFORCE_H

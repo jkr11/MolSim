@@ -37,7 +37,7 @@
             <SingularGravity g="-12.44"/>
         </force>
         <delta_t>0.0005</delta_t>
-        <t_end>50</t_end>
+        <t_end>10</t_end>
         <twoD>true</twoD>
     </metadata>
     <cuboids>

@@ -34,7 +34,7 @@ Particle::Particle(const std::array<double, 3> &x_arg,
                    const double _epsilon, const double _sigma, int _type) {
   x = x_arg;
   v = v_arg;
-  m = m_arg;
+  m = 1.0 / (2 * m_arg);
   type = _type;
   f = {0., 0., 0.};
   old_f = {0., 0., 0.};
@@ -53,7 +53,7 @@ Particle::Particle(const std::array<double, 3> &x_arg,
       v(v_arg),
       f(f_arg),
       old_f(old_f_arg),
-      m(m_arg),
+      m(1.0 / (2 * m_arg)),
       type(type_arg),
       epsilon(epsilon_arg),
       sigma(sigma_arg) {}
@@ -104,13 +104,13 @@ void Particle::updateForceInTime() {
 }
 
 void Particle::updateX(const double &delta_t) {
-  const double delta_t_sq_over_2m = delta_t * delta_t / (2 * m);
+  const double delta_t_sq_over_2m = delta_t * delta_t * m;
   x = x + delta_t * v + delta_t_sq_over_2m * (f);
-  //x = new_x;
+  // x = new_x;
 }
 
 void Particle::updateV(const double &delta_t) {
-  v = v + (delta_t / (2 * m) * (old_f + f));
+  v = v + (delta_t * m * (old_f + f));
   // v = new_v;
 }
 

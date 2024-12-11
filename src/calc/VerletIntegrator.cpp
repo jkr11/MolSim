@@ -4,6 +4,7 @@
 #include "VerletIntegrator.h"
 
 #include "../utils/ArrayUtils.h"
+#include "forces/SingularGravity.h"
 
 void VerletIntegrator::step(ParticleContainer& particle_container) {
   particle_container.singleIterator(
@@ -24,12 +25,12 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
   particle_container.imposeInvariant();
 
   particle_container.singleIterator([this](Particle& p) {
-    dvec3 f = {0, 0, 0};
-    // TODO: this should be correct, as there is no cutoff on singular forces
-    for (const auto& force : singular_forces) {
-      f = f + force->applyForce(p);
-    }
-    p.addF(f);
+    // dvec3 f = {0, 0, 0};
+    //  TODO: this should be correct, as there is no cutoff on singular forces
+    // for (const auto& force : singular_forces) {
+    //   f = f + force->applyForce(p);
+    // }
+    p.addF(singular_forces[0]->applyForce(p));
   });
 
   particle_container.pairIterator(interactive_forces);
