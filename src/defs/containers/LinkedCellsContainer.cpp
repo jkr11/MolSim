@@ -208,9 +208,10 @@ void LinkedCellsContainer::imposeInvariant() {
         for (const std::size_t cell_index :
              boundary_direction_cells[dimension]) {
           ivec3 cell_coordinates = cellIndexToCoord(cell_index);
-          cell_coordinates[problematic_dimension] = 0;
 
-          for (ivec3 offset : index_offsets[problematic_dimension]) {
+          // change 3 to 9 for 3D
+          for (std::size_t i = 0; i < 3; ++i) {
+            ivec3 offset = index_offsets[problematic_dimension][i];
             const ivec3 cell_to_check = cell_coordinates + offset;
             const std::size_t cell_to_check_index =
                 cellCoordToIndex(cell_to_check);

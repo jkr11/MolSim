@@ -5,6 +5,7 @@
 
 #include "defs/Particle.h"
 #include "defs/containers/LinkedCellsContainer.h"
+#include "forces/LennardJones.h"
 #include "testUtil.h"
 #include "utils/ArrayUtils.h"
 
@@ -166,7 +167,7 @@ TEST(ReflectiveBoundary, warpingBothPeriodicForY) {
 
 /**
  * tests that warping is correct for x cells in 2D for a 3x3 cell grid
- * with x axis Periodic
+ * with x-axis Periodic
  */
 TEST(ReflectiveBoundary, warpingXPeriodicForX) {
   const LinkedCellsContainer container(
@@ -221,7 +222,7 @@ TEST(ReflectiveBoundary, warpingXPeriodicForX) {
 
 /**
  * tests that warping is correct for y cells in 2D for a 3x3 cell grid
- * with y axis Periodic
+ * with y-axis Periodic
  */
 TEST(ReflectiveBoundary, warpingYPeriodicForY) {
   const LinkedCellsContainer container(
@@ -274,4 +275,164 @@ TEST(ReflectiveBoundary, warpingYPeriodicForY) {
   EXPECT_EQ(is_adjacent, false) << "wrong adjacency5";
 }
 
+/**
+ * tests that the correct force ist calculated for a periodic boundary in the x
+ * dimension
+ */
+TEST(ReflectiveBoundaryForce, offsetX) {
+  const LinkedCellsContainer container(
+      {.domain = {9, 9, 1},
+       .cutoff_radius = 3,
+       .boundary_config = {
+           LinkedCellsConfig::BoundaryType::Periodic,
+           LinkedCellsConfig::BoundaryType::Periodic,
+           LinkedCellsConfig::BoundaryType::Outflow,
+           LinkedCellsConfig::BoundaryType::Outflow,
+           LinkedCellsConfig::BoundaryType::Outflow,
+           LinkedCellsConfig::BoundaryType::Outflow,
+       }});
 
+  const LennardJones f{};
+
+  // distance of 2, test particle is in theoretical position
+  const auto p = new Particle({8, 1, 1}, {0, 0, 0}, 1, 5.0, 1);  // in bd
+  const auto q = new Particle({1, 1, 1}, {0, 0, 0}, 1, 5.0, 1);  // in bb
+  const auto test = new Particle({-1, 1, 1}, {0, 0, 0}, 1, 5.0, 1);
+
+  auto [is_adjacent, new_coordinates, particle_offset] =
+      container.reflective_warp_around_testing(be, xhigh);
+  constexpr dvec3 expected_offset = {9, 0, 0};
+  EXPECT_EQ(is_adjacent, true) << "wrong adjacency";
+  EXPECT_IVEC3_EQ(new_coordinates, bb);
+  DVEC3_NEAR(particle_offset, expected_offset, "Offset wrong", 1e-5);
+
+  // compare that the force with offset is equal to what is the force in theory
+  const dvec3 accounted_particle_distance =
+      q->getX() - p->getX() + particle_offset;
+  ASSERT_EQ(LennardJones::directionalForceWithOffset(
+                *p, *q, accounted_particle_distance),
+            f.directionalForce(*test, *q));
+}
+
+/**
+ * tests that the correct force ist calculated for a periodic boundary in the y
+ * dimension
+ */
+TEST(ReflectiveBoundaryForce, offsetY) {
+  const LinkedCellsContainer container(
+      {.domain = {9, 9, 1},
+       .cutoff_radius = 3,
+       .boundary_config = {
+           LinkedCellsConfig::BoundaryType::Outflow,
+           LinkedCellsConfig::BoundaryType::Outflow,
+           LinkedCellsConfig::BoundaryType::Periodic,
+           LinkedCellsConfig::BoundaryType::Periodic,
+           LinkedCellsConfig::BoundaryType::Outflow,
+           LinkedCellsConfig::BoundaryType::Outflow,
+       }});
+
+  const LennardJones f{};
+
+  // distance of 2, test particle is in theoretical position
+  const auto p = new Particle({1, 8, 1}, {0, 0, 0}, 1, 5.0, 1);  // in bd
+  const auto q = new Particle({1, 1, 1}, {0, 0, 0}, 1, 5.0, 1);  // in bb
+  const auto test = new Particle({1, -1, 1}, {0, 0, 0}, 1, 5.0, 1);
+
+  auto [is_adjacent, new_coordinates, particle_offset] =
+      container.reflective_warp_around_testing(eb, yhigh);
+  constexpr dvec3 expected_offset = {0, 9, 0};
+  EXPECT_EQ(is_adjacent, true) << "wrong adjacency";
+  EXPECT_IVEC3_EQ(new_coordinates, bb);
+  DVEC3_NEAR(particle_offset, expected_offset, "Offset wrong", 1e-5);
+
+  // compare that the force with offset is equal to what is the force in theory
+  const dvec3 accounted_particle_distance =
+      q->getX() - p->getX() + particle_offset;
+  ASSERT_EQ(LennardJones::directionalForceWithOffset(
+                *p, *q, accounted_particle_distance),
+            f.directionalForce(*test, *q));
+}
+
+/**
+ * tests that the correct force ist calculated for a periodic boundary in the x
+ * and y dimension
+ */
+TEST(ReflectiveBoundaryForce, offsetXY1) {
+  const LinkedCellsContainer container(
+      {.domain = {9, 9, 1},
+       .cutoff_radius = 3,
+       .boundary_config = {
+           LinkedCellsConfig::BoundaryType::Periodic,
+           LinkedCellsConfig::BoundaryType::Periodic,
+           LinkedCellsConfig::BoundaryType::Periodic,
+           LinkedCellsConfig::BoundaryType::Periodic,
+           LinkedCellsConfig::BoundaryType::Outflow,
+           LinkedCellsConfig::BoundaryType::Outflow,
+       }});
+
+  const LennardJones f{};
+
+  // distance of 2, test particle is in theoretical position
+  const auto p = new Particle({8, 8, 1}, {0, 0, 0}, 1, 5.0, 1);  // in bd
+  const auto q = new Particle({1, 1, 1}, {0, 0, 0}, 1, 5.0, 1);  // in bb
+  const auto test = new Particle({-1, -1, 1}, {0, 0, 0}, 1, 5.0, 1);
+
+  auto [is_adjacent, new_coordinates, particle_offset] =
+      container.reflective_warp_around_testing(
+          ee,
+          xhigh);  // xhigh and not yhigh because corners are invalid for yhigh
+                   // if both boundaries are periodic to avoid double matching
+  constexpr dvec3 expected_offset = {9, 9, 0};
+  EXPECT_EQ(is_adjacent, true) << "wrong adjacency";
+  EXPECT_IVEC3_EQ(new_coordinates, bb);
+  DVEC3_NEAR(particle_offset, expected_offset, "Offset wrong", 1e-5);
+
+  // compare that the force with offset is equal to what is the force in theory
+  const dvec3 accounted_particle_distance =
+      q->getX() - p->getX() + particle_offset;
+  ASSERT_EQ(LennardJones::directionalForceWithOffset(
+                *p, *q, accounted_particle_distance),
+            f.directionalForce(*test, *q));
+}
+
+/**
+ * tests that the correct force ist calculated for a periodic boundary in the x
+ * and y dimension
+ */
+TEST(ReflectiveBoundaryForce, offsetXY2) {
+  const LinkedCellsContainer container(
+      {.domain = {9, 9, 1},
+       .cutoff_radius = 3,
+       .boundary_config = {
+           LinkedCellsConfig::BoundaryType::Periodic,
+           LinkedCellsConfig::BoundaryType::Periodic,
+           LinkedCellsConfig::BoundaryType::Periodic,
+           LinkedCellsConfig::BoundaryType::Periodic,
+           LinkedCellsConfig::BoundaryType::Outflow,
+           LinkedCellsConfig::BoundaryType::Outflow,
+       }});
+
+  const LennardJones f{};
+
+  // distance of 2, test particle is in theoretical position
+  const auto p = new Particle({8, 1, 1}, {0, 0, 0}, 1, 5.0, 1);  // in bd
+  const auto q = new Particle({1, 8, 1}, {0, 0, 0}, 1, 5.0, 1);  // in bb
+  const auto test = new Particle({-1, 10, 1}, {0, 0, 0}, 1, 5.0, 1);
+
+  auto [is_adjacent, new_coordinates, particle_offset] =
+      container.reflective_warp_around_testing(
+          ae,
+          xhigh);  // xhigh and not yhigh because corners are invalid for yhigh
+  // if both boundaries are periodic to avoid double matching
+  constexpr dvec3 expected_offset = {9, -9, 0};
+  EXPECT_EQ(is_adjacent, true) << "wrong adjacency";
+  EXPECT_IVEC3_EQ(new_coordinates, db);
+  DVEC3_NEAR(particle_offset, expected_offset, "Offset wrong", 1e-5);
+
+  // compare that the force with offset is equal to what is the force in theory
+  const dvec3 accounted_particle_distance =
+      q->getX() - p->getX() + particle_offset;
+  ASSERT_EQ(LennardJones::directionalForceWithOffset(
+                *p, *q, accounted_particle_distance),
+            f.directionalForce(*test, *q));
+}

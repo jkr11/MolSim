@@ -31,7 +31,7 @@ class LennardJones final : public Force {
    * @brief calculates the lennard jones force for periodic boundaries
    * @param p1 particle 1
    * @param p2 particle 2
-   * @param distance the real distance between the particles accounted for
+   * @param distance the real distance vector between the particles accounted for
    * periodic boundaries
    * @return the signed vector force between particles p1 and p2
    */

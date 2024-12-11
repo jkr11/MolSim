@@ -18,7 +18,7 @@ if (BUILD_TESTS)
             LennardJonesTest.cpp
             VerletIntegratorTest.cpp
             BoundaryConditionsTest.cpp
-            ReflectiveBoundaryTest.cpp
+            PeriodicBoundaryTest.cpp
             testUtil.h
             XmlReaderTest.cpp)
 
