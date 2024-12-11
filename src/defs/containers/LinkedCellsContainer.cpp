@@ -232,7 +232,7 @@ void LinkedCellsContainer::singleIterator(
 }
 
 void LinkedCellsContainer::pairIterator(
-    const std::function<void(Particle &, Particle &)> &f) {
+    const std::vector<std::unique_ptr<InteractiveForce>> &interactive_forces) {
   // - as x, y, z are all increasing offsets point to all neighbours in
   // positive directions
   // - for better cache usage (in flattened version) minimize max distance
@@ -270,16 +270,26 @@ void LinkedCellsContainer::pairIterator(
 
     // iterate over particles inside cell
     for (std::size_t i = 0; i < cellParticles.size(); ++i) {
+      dvec3 force_accumulator = {0.0, 0.0, 0.0};
       for (std::size_t j = i + 1; j < cellParticles.size(); ++j) {
         const dvec3 p = cellParticles[i].getX();
         const dvec3 q = cellParticles[j].getX();
-        if (dvec3 d = {p[0] - q[0], p[1] - q[1], p[2] - q[2]};
-            d[0] * d[0] + d[1] * d[1] + d[2] * d[2] > cutoff * cutoff)
-          continue;
-        f(cellParticles[i], cellParticles[j]);
+        const double d = ArrayUtils::L2InnerProduct(p - q);
+        if (d > cutoff * cutoff) continue;
+        dvec3 f12 = {0.0, 0.0, 0.0};
+        // TODO: this might either be wrong or inefficient for week5
+        for (const auto &force : interactive_forces) {
+          f12 = f12 +
+                force->directionalForce(cellParticles[i], cellParticles[j], d);
+        }
+        force_accumulator = force_accumulator + f12;
+        cellParticles[j].subF(f12);
+        // p2.subF(f12);
+        // f(cellParticles[i], cellParticles[j]);
         DEBUG_PRINT_FMT("Intra cell pair: ({}, {})", cellParticles[i].getType(),
                         cellParticles[j].getType());
       }
+      cellParticles[i].addF(force_accumulator);
     }
 
     // iterate over neighbouring particles
@@ -307,18 +317,25 @@ void LinkedCellsContainer::pairIterator(
       if (neighbourParticles.empty()) continue;
 
       for (auto &cellParticle : cellParticles) {
+        dvec3 force_accumulator = {0.0, 0.0, 0.0};
         for (auto &neighbourParticle : neighbourParticles) {
           auto p = cellParticle.getX();
           auto q = neighbourParticle.getX();
 
-          if (dvec3 d = {p[0] - q[0], p[1] - q[1], p[2] - q[2]};
-              d[0] * d[0] + d[1] * d[1] + d[2] * d[2] > cutoff * cutoff)
-            continue;
+          const double d = ArrayUtils::L2InnerProduct(p - q);
+          if (d > cutoff * cutoff) continue;
 
-          f(cellParticle, neighbourParticle);
+          dvec3 f12 = {0.0, 0.0, 0.0};
+          for (const auto &force : interactive_forces) {
+            f12 = f12 +
+                  force->directionalForce(cellParticle, neighbourParticle, d);
+          }
+          force_accumulator = force_accumulator + f12;
+          neighbourParticle.subF(f12);
           DEBUG_PRINT_FMT("Cross cell pair: ({}, {})", cellParticle.getType(),
                           neighbourParticle.getType())
         }
+        cellParticle.addF(force_accumulator);
       }
     }
   }

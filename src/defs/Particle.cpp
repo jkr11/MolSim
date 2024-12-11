@@ -103,6 +103,17 @@ void Particle::updateForceInTime() {
   f = {0., 0., 0.};
 }
 
+void Particle::updateX(const double &delta_t) {
+  const double delta_t_sq_over_2m = delta_t * delta_t / (2 * m);
+  x = x + delta_t * v + delta_t_sq_over_2m * (f);
+  //x = new_x;
+}
+
+void Particle::updateV(const double &delta_t) {
+  v = v + (delta_t / (2 * m) * (old_f + f));
+  // v = new_v;
+}
+
 std::string Particle::toString() const {
   std::stringstream stream;
   stream << "Particle: X:" << x << " v: " << v << " f: " << f

@@ -17,14 +17,14 @@ class LennardJones final : public InteractiveForce {
    * @param p2 particle 2
    * @return the singed vector force between particles p1 and p2
    */
-  dvec3 directionalForce(Particle& p1, Particle& p2) const override;
+  dvec3 directionalForce(Particle& p1, Particle& p2, const double r) const override;
 
   /**
    * @brief calculates the force of the ghost particle
    * @param p Particle to calculate Force for
-   * @param distance the distance to the boundary
+   * @param r_sq the distance to the boundary
    * @return the force in just one dimension
    */
-  static double simpleForce(const Particle& p, double distance);
+  static double simpleForce(const Particle& p, double r_sq);
 };
 #endif  // LENNARDJONES_H

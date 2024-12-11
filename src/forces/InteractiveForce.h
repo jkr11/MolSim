@@ -29,7 +29,8 @@ class InteractiveForce {
    * @param p2
    * @return Force-vector
    */
-  virtual dvec3 directionalForce(Particle& p1, Particle& p2) const = 0;
+  virtual dvec3 directionalForce(Particle& p1, Particle& p2,
+                                 double r) const = 0;
 
   /**
    * @brief calculates the force of the ghost particle
