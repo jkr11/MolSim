@@ -586,3 +586,15 @@ LinkedCellsContainer::reflective_warp_around_testing(
     const ivec3 cell_coordinate, const std::size_t raw_dimension) const {
   return reflective_warp_around(cell_coordinate, raw_dimension);
 }
+
+std::size_t LinkedCellsContainer::cellCoordToIndex_testing(
+    const ivec3 position) const {
+  return cellCoordToIndex(position);
+}
+
+ivec3 LinkedCellsContainer::cellIndexToCoord_testing(
+    const std::size_t cellIndex) const {
+  return cellIndexToCoord(cellIndex);
+}
+
+
