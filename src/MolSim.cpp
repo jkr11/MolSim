@@ -152,7 +152,7 @@ int main(const int argc, char* argv[]) {
           s = 0;
         }
         SpdWrapper::get()->info(
-            "[{:.0f} %]: Iteration {:<12} | [ETA: {}:{:02}:{:02}]",
+            "[{:<3.0f}%]: Iteration {:<12} | [ETA: {}:{:02}:{:02}]",
             100 * current_time / arguments.t_end, iteration, h, m, s);
         percentage++;
       }

@@ -67,6 +67,9 @@ std::tuple<std::filesystem::path, double, bool> CLArgumentParser::parse(
     }
   }
 
+  // TODO: remove
+  input_file = "/home/maximilian/CLionProjects/MolSim/input/week42.xml";
+
   try {
     validateInputFile(input_file);
   } catch (const std::exception &e) {

@@ -33,7 +33,7 @@ dvec3 LennardJones::directionalForceWithOffset(Particle& p1, Particle& p2,
                                                const dvec3& distance) {
   const double r = ArrayUtils::L2Norm(distance);
 
-  SpdWrapper::get()->info("[{}, {}, {}] -> {}", distance[0], distance[1], distance[2], r);
+  // SpdWrapper::get()->info("[{}, {}, {}] -> {}", distance[0], distance[1], distance[2], r);
 
   if (r == 0) return {0, 0, 0};
   constexpr double sigma = 1.0;
