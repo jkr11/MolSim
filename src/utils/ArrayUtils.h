@@ -184,6 +184,18 @@ auto squaredL2Norm(const Container &c) {
   return std::accumulate(std::cbegin(c), std::cend(c), 0.0,
                          [](auto a, auto b) { return a + b * b; });
 }
+
+/**
+ * @brief Calculates the inner product on L2
+ * @tparam Container
+ * @param c
+ * @return sum_i(c[i]*c[i]).
+ */
+template <class Container>
+auto L2InnerProduct(const Container &c) {
+  return std::accumulate(std::cbegin(c), std::cend(c), 0.0,
+                         [](auto a, auto b) { return a + b * b; });
+}
 }  // namespace ArrayUtils
 
 /**

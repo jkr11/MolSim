@@ -132,6 +132,12 @@ std::vector<Particle *> LinkedCellsContainer::getParticles() {
   return res;
 }
 
+std::vector<Particle> LinkedCellsContainer::getParticlesObjects() {
+  std::vector<Particle> res;
+  singleIterator([&res](const Particle &p) { res.push_back(p); });
+  return res;
+}
+
 [[nodiscard]] std::size_t LinkedCellsContainer::size() const {
   std::size_t count = 0;
   for (auto &c : cells) {
@@ -598,3 +604,11 @@ ivec3 LinkedCellsContainer::cellIndexToCoord_testing(
 }
 
 
+
+double LinkedCellsContainer::getKineticEnergy() {
+  double E_kin = 0.0;
+  singleIterator([&E_kin](const Particle &p) {
+    E_kin += 0.5 * p.getM() * ArrayUtils::L2InnerProduct(p.getV());
+  });
+  return E_kin;
+}

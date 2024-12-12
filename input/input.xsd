@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-
+    <!--<xs:schema  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">-->
     <xs:element name="simulation">
         <xs:complexType>
             <xs:sequence>
@@ -22,6 +22,7 @@
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
+                <xs:element name="thermostat" type="ThermostatType" minOccurs="0"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -33,6 +34,7 @@
             <xs:element name="delta_t" type="xs:decimal"/>
             <xs:element name="t_end" type="xs:double"/>
             <xs:element name="twoD" type="xs:boolean"/>
+            <xs:element name="checkpoint" type="xs:string" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -120,9 +122,29 @@
     </xs:complexType>
 
     <xs:complexType name="ForceType">
-        <xs:choice>
-            <xs:element name="Gravity"/>
-            <xs:element name="LennardJones"/>
-        </xs:choice>
+        <xs:sequence>
+            <xs:element name="Gravity" type="GravityType" minOccurs="0"/>
+            <xs:element name="LennardJones" type="LennardJonesForce" minOccurs="0"/>
+            <xs:element name="SingularGravity" type="SingularGravityType" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="GravityType">
+    </xs:complexType>
+
+    <xs:complexType name="LennardJonesForce">
+    </xs:complexType>
+
+    <xs:complexType name="SingularGravityType">
+        <xs:attribute name="g" type="xs:decimal"/>
+    </xs:complexType>
+
+    <xs:complexType name="ThermostatType">
+        <xs:sequence>
+            <xs:element name="T_init" type="xs:decimal"/>
+            <xs:element name="n_thermostat" type="xs:int"/>
+            <xs:element name="T_target" type="xs:decimal"/>
+            <xs:element name="deltaT" type="xs:decimal" minOccurs="0"/>
+        </xs:sequence>
     </xs:complexType>
 </xs:schema>

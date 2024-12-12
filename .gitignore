@@ -76,3 +76,4 @@ _deps
 *.jpeg
 *.mp4
 !graph.png
+/input/test.xml

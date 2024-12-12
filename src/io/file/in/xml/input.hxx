@@ -49,9 +49,9 @@
 
 #include <xsd/cxx/config.hxx>
 
-// #if (XSD_INT_VERSION != 4000000L)
+#if (XSD_INT_VERSION != 4000000L)
 // #error XSD runtime version mismatch
-// #endif
+#endif
 
 #include <xsd/cxx/pre.hxx>
 #include <xsd/cxx/tree/elements.hxx>
@@ -226,6 +226,10 @@ class DirectSumType;
 class BoundaryType;
 class BoundaryConfigType;
 class ForceType;
+class GravityType;
+class LennardJonesForce;
+class SingularGravityType;
+class ThermostatType;
 class simulation;
 class cuboids;
 class spheroids;
@@ -305,6 +309,22 @@ class MetadataType : public ::xml_schema::type {
 
   void twoD(const twoD_type& x);
 
+  // checkpoint
+  //
+  typedef ::xml_schema::string checkpoint_type;
+  typedef ::xsd::cxx::tree::optional<checkpoint_type> checkpoint_optional;
+  typedef ::xsd::cxx::tree::traits<checkpoint_type, char> checkpoint_traits;
+
+  const checkpoint_optional& checkpoint() const;
+
+  checkpoint_optional& checkpoint();
+
+  void checkpoint(const checkpoint_type& x);
+
+  void checkpoint(const checkpoint_optional& x);
+
+  void checkpoint(::std::auto_ptr<checkpoint_type> p);
+
   // Constructors.
   //
   MetadataType(const container_type&, const force_type&, const delta_t_type&,
@@ -337,6 +357,7 @@ class MetadataType : public ::xml_schema::type {
   ::xsd::cxx::tree::one<delta_t_type> delta_t_;
   ::xsd::cxx::tree::one<t_end_type> t_end_;
   ::xsd::cxx::tree::one<twoD_type> twoD_;
+  checkpoint_optional checkpoint_;
 };
 
 class cuboidType : public ::xml_schema::type {
@@ -1141,7 +1162,7 @@ class ForceType : public ::xml_schema::type {
  public:
   // Gravity
   //
-  typedef ::xml_schema::type Gravity_type;
+  typedef ::GravityType Gravity_type;
   typedef ::xsd::cxx::tree::optional<Gravity_type> Gravity_optional;
   typedef ::xsd::cxx::tree::traits<Gravity_type, char> Gravity_traits;
 
@@ -1157,7 +1178,7 @@ class ForceType : public ::xml_schema::type {
 
   // LennardJones
   //
-  typedef ::xml_schema::type LennardJones_type;
+  typedef ::LennardJonesForce LennardJones_type;
   typedef ::xsd::cxx::tree::optional<LennardJones_type> LennardJones_optional;
   typedef ::xsd::cxx::tree::traits<LennardJones_type, char> LennardJones_traits;
 
@@ -1170,6 +1191,24 @@ class ForceType : public ::xml_schema::type {
   void LennardJones(const LennardJones_optional& x);
 
   void LennardJones(::std::auto_ptr<LennardJones_type> p);
+
+  // SingularGravity
+  //
+  typedef ::SingularGravityType SingularGravity_type;
+  typedef ::xsd::cxx::tree::optional<SingularGravity_type>
+      SingularGravity_optional;
+  typedef ::xsd::cxx::tree::traits<SingularGravity_type, char>
+      SingularGravity_traits;
+
+  const SingularGravity_optional& SingularGravity() const;
+
+  SingularGravity_optional& SingularGravity();
+
+  void SingularGravity(const SingularGravity_type& x);
+
+  void SingularGravity(const SingularGravity_optional& x);
+
+  void SingularGravity(::std::auto_ptr<SingularGravity_type> p);
 
   // Constructors.
   //
@@ -1196,6 +1235,184 @@ class ForceType : public ::xml_schema::type {
  protected:
   Gravity_optional Gravity_;
   LennardJones_optional LennardJones_;
+  SingularGravity_optional SingularGravity_;
+};
+
+class GravityType : public ::xml_schema::type {
+ public:
+  // Constructors.
+  //
+  GravityType();
+
+  GravityType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
+              ::xml_schema::container* c = 0);
+
+  GravityType(const ::xercesc::DOMAttr& a, ::xml_schema::flags f = 0,
+              ::xml_schema::container* c = 0);
+
+  GravityType(const ::std::string& s, const ::xercesc::DOMElement* e,
+              ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+  GravityType(const GravityType& x, ::xml_schema::flags f = 0,
+              ::xml_schema::container* c = 0);
+
+  virtual GravityType* _clone(::xml_schema::flags f = 0,
+                              ::xml_schema::container* c = 0) const;
+
+  virtual ~GravityType();
+};
+
+class LennardJonesForce : public ::xml_schema::type {
+ public:
+  // Constructors.
+  //
+  LennardJonesForce();
+
+  LennardJonesForce(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
+                    ::xml_schema::container* c = 0);
+
+  LennardJonesForce(const ::xercesc::DOMAttr& a, ::xml_schema::flags f = 0,
+                    ::xml_schema::container* c = 0);
+
+  LennardJonesForce(const ::std::string& s, const ::xercesc::DOMElement* e,
+                    ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+  LennardJonesForce(const LennardJonesForce& x, ::xml_schema::flags f = 0,
+                    ::xml_schema::container* c = 0);
+
+  virtual LennardJonesForce* _clone(::xml_schema::flags f = 0,
+                                    ::xml_schema::container* c = 0) const;
+
+  virtual ~LennardJonesForce();
+};
+
+class SingularGravityType : public ::xml_schema::type {
+ public:
+  // g
+  //
+  typedef ::xml_schema::decimal g_type;
+  typedef ::xsd::cxx::tree::optional<g_type> g_optional;
+  typedef ::xsd::cxx::tree::traits<g_type, char,
+                                   ::xsd::cxx::tree::schema_type::decimal>
+      g_traits;
+
+  const g_optional& g() const;
+
+  g_optional& g();
+
+  void g(const g_type& x);
+
+  void g(const g_optional& x);
+
+  // Constructors.
+  //
+  SingularGravityType();
+
+  SingularGravityType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
+                      ::xml_schema::container* c = 0);
+
+  SingularGravityType(const SingularGravityType& x, ::xml_schema::flags f = 0,
+                      ::xml_schema::container* c = 0);
+
+  virtual SingularGravityType* _clone(::xml_schema::flags f = 0,
+                                      ::xml_schema::container* c = 0) const;
+
+  SingularGravityType& operator=(const SingularGravityType& x);
+
+  virtual ~SingularGravityType();
+
+  // Implementation.
+  //
+ protected:
+  void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
+
+ protected:
+  g_optional g_;
+};
+
+class ThermostatType : public ::xml_schema::type {
+ public:
+  // T_init
+  //
+  typedef ::xml_schema::decimal T_init_type;
+  typedef ::xsd::cxx::tree::traits<T_init_type, char,
+                                   ::xsd::cxx::tree::schema_type::decimal>
+      T_init_traits;
+
+  const T_init_type& T_init() const;
+
+  T_init_type& T_init();
+
+  void T_init(const T_init_type& x);
+
+  // n_thermostat
+  //
+  typedef ::xml_schema::int_ n_thermostat_type;
+  typedef ::xsd::cxx::tree::traits<n_thermostat_type, char> n_thermostat_traits;
+
+  const n_thermostat_type& n_thermostat() const;
+
+  n_thermostat_type& n_thermostat();
+
+  void n_thermostat(const n_thermostat_type& x);
+
+  // T_target
+  //
+  typedef ::xml_schema::decimal T_target_type;
+  typedef ::xsd::cxx::tree::traits<T_target_type, char,
+                                   ::xsd::cxx::tree::schema_type::decimal>
+      T_target_traits;
+
+  const T_target_type& T_target() const;
+
+  T_target_type& T_target();
+
+  void T_target(const T_target_type& x);
+
+  // deltaT
+  //
+  typedef ::xml_schema::decimal deltaT_type;
+  typedef ::xsd::cxx::tree::optional<deltaT_type> deltaT_optional;
+  typedef ::xsd::cxx::tree::traits<deltaT_type, char,
+                                   ::xsd::cxx::tree::schema_type::decimal>
+      deltaT_traits;
+
+  const deltaT_optional& deltaT() const;
+
+  deltaT_optional& deltaT();
+
+  void deltaT(const deltaT_type& x);
+
+  void deltaT(const deltaT_optional& x);
+
+  // Constructors.
+  //
+  ThermostatType(const T_init_type&, const n_thermostat_type&,
+                 const T_target_type&);
+
+  ThermostatType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
+                 ::xml_schema::container* c = 0);
+
+  ThermostatType(const ThermostatType& x, ::xml_schema::flags f = 0,
+                 ::xml_schema::container* c = 0);
+
+  virtual ThermostatType* _clone(::xml_schema::flags f = 0,
+                                 ::xml_schema::container* c = 0) const;
+
+  ThermostatType& operator=(const ThermostatType& x);
+
+  virtual ~ThermostatType();
+
+  // Implementation.
+  //
+ protected:
+  void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
+
+ protected:
+  ::xsd::cxx::tree::one<T_init_type> T_init_;
+  ::xsd::cxx::tree::one<n_thermostat_type> n_thermostat_;
+  ::xsd::cxx::tree::one<T_target_type> T_target_;
+  deltaT_optional deltaT_;
 };
 
 class simulation : public ::xml_schema::type {
@@ -1245,6 +1462,22 @@ class simulation : public ::xml_schema::type {
 
   void spheroids(::std::auto_ptr<spheroids_type> p);
 
+  // thermostat
+  //
+  typedef ::ThermostatType thermostat_type;
+  typedef ::xsd::cxx::tree::optional<thermostat_type> thermostat_optional;
+  typedef ::xsd::cxx::tree::traits<thermostat_type, char> thermostat_traits;
+
+  const thermostat_optional& thermostat() const;
+
+  thermostat_optional& thermostat();
+
+  void thermostat(const thermostat_type& x);
+
+  void thermostat(const thermostat_optional& x);
+
+  void thermostat(::std::auto_ptr<thermostat_type> p);
+
   // Constructors.
   //
   simulation(const metadata_type&);
@@ -1273,6 +1506,7 @@ class simulation : public ::xml_schema::type {
   ::xsd::cxx::tree::one<metadata_type> metadata_;
   cuboids_optional cuboids_;
   spheroids_optional spheroids_;
+  thermostat_optional thermostat_;
 };
 
 class cuboids : public ::xml_schema::type {

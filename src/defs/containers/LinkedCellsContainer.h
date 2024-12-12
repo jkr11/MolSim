@@ -45,7 +45,7 @@ class LinkedCellsContainer final : public ParticleContainer {
 
   /**
    * @brief
-   * number of cells for domain + 2 (halo)
+   * number of cells per direction for domain + 2 halo cells
    */
   ivec3 cell_count{};
 
@@ -168,6 +168,12 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @return Vector of references to particles in the container
    */
   [[nodiscard]] std::vector<Particle*> getParticles() override;
+
+  /**
+   * @brief Get a vector of all particles in the container
+   * @return Vector of all particles
+   */
+  [[nodiscard]] std::vector<Particle> getParticlesObjects() override;
 
   /**
    * @brief Get the count of particles in the container
@@ -363,6 +369,8 @@ class LinkedCellsContainer final : public ParticleContainer {
    */
   [[nodiscard]] std::tuple<bool, ivec3, dvec3> reflective_warp_around_testing(
       ivec3 cell_coordinate, std::size_t raw_dimension) const;
+
+  double getKineticEnergy() override;
 };
 
 /**

@@ -4,6 +4,8 @@
 
 #ifndef TYPES_H
 #define TYPES_H
+#pragma once
+#include <array>
 #include <vector>
 
 using dvec3 = std::array<double, 3>;

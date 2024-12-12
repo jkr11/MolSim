@@ -68,6 +68,12 @@ class Particle final {
       const std::array<double, 3> &x_arg, const std::array<double, 3> &v_arg,
       double m_arg, double _epsilon, double _sigma, int type = 0);
 
+  explicit Particle(const std::array<double, 3> &x_arg,
+                    const std::array<double, 3> &v_arg,
+                    const std::array<double, 3> &f_arg,
+                    const std::array<double, 3> &old_f_arg, double m_arg,
+                    int type_arg, double epsilon_arg, double sigma_arg);
+
   ~Particle();
 
   [[nodiscard]] const std::array<double, 3> &getX() const;
@@ -99,6 +105,16 @@ class Particle final {
   void setSigma(const double &sigma);
 
   void updateForceInTime();
+
+  void subV(const dvec3 &V);
+
+  void addV(const dvec3 &V);
+
+  void mulV(const double &scalar);
+
+  void addF(const dvec3 &F);
+
+  void subF(const dvec3 &F);
 
   bool operator==(const Particle &other) const;
 

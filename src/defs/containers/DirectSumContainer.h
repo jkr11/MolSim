@@ -6,6 +6,9 @@
 #include "defs/Particle.h"
 #include "defs/containers/ParticleContainer.h"
 
+/**
+ * Direct sum container class, standard n^2 / 2 newton 3 scheme is applied here
+ */
 class DirectSumContainer final : public ParticleContainer {
  private:
   std::vector<Particle> particles;
@@ -52,6 +55,12 @@ class DirectSumContainer final : public ParticleContainer {
   [[nodiscard]] std::vector<Particle*> getParticles() override;
 
   /**
+   * @brief Get a vector of all particles in the container
+   * @returns Vector of all particles
+   */
+  [[nodiscard]] std::vector<Particle> getParticlesObjects() override;
+
+  /**
    * @brief Get the count of particles in the container
    * @return Count of particles in the container
    */
@@ -77,4 +86,6 @@ class DirectSumContainer final : public ParticleContainer {
    */
   void pairIterator(
       const std::function<void(Particle&, Particle&)>& f) override;
+
+  double getKineticEnergy() override;
 };
