@@ -31,8 +31,8 @@ class LennardJones final : public InteractiveForce {
    * @brief calculates the lennard jones force for periodic boundaries
    * @param p1 particle 1
    * @param p2 particle 2
-   * @param distance the real distance vector between the particles accounted for
-   * periodic boundaries
+   * @param distance the real distance vector between the particles accounted
+   * for periodic boundaries
    * @return the signed vector force between particles p1 and p2
    */
   static dvec3 directionalForceWithOffset(const Particle& p1,

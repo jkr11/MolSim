@@ -253,10 +253,10 @@ class LinkedCellsContainer final : public ParticleContainer {
   [[nodiscard]] inline std::size_t cellCoordToIndex(ivec3 position) const;
 
   /**
- * @brief API for testing
- * @param position Cell coordinate in 3 dimensions
- * @return Associated cell index
- */
+   * @brief API for testing
+   * @param position Cell coordinate in 3 dimensions
+   * @return Associated cell index
+   */
   [[nodiscard]] std::size_t cellCoordToIndex_testing(ivec3 position) const;
 
   /**
@@ -267,10 +267,10 @@ class LinkedCellsContainer final : public ParticleContainer {
   [[nodiscard]] inline ivec3 cellIndexToCoord(std::size_t cellIndex) const;
 
   /**
- * @brief API for testing
- * @param cellIndex Index of the cell
- * @return Cell coodinate in 3 dimensions
- */
+   * @brief API for testing
+   * @param cellIndex Index of the cell
+   * @return Cell coodinate in 3 dimensions
+   */
   [[nodiscard]] ivec3 cellIndexToCoord_testing(std::size_t cellIndex) const;
 
   /**
@@ -355,7 +355,8 @@ class LinkedCellsContainer final : public ParticleContainer {
    * multiple periodic boundaries in corners. For now this does only work in 2D
    * @param cell_coordinate the cell to be checked
    * @param raw_dimension the dimension axis looked at
-   * @return bool: whether it is a valid cell to be checked, ivec3: real cell, dvec3: offset to be applied
+   * @return bool: whether it is a valid cell to be checked, ivec3: real cell,
+   * dvec3: offset to be applied
    */
   [[nodiscard]] inline std::tuple<bool, ivec3, dvec3> reflective_warp_around(
       ivec3 cell_coordinate, std::size_t raw_dimension) const;

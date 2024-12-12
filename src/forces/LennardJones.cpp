@@ -43,4 +43,3 @@ dvec3 LennardJones::directionalForceWithOffset(const Particle& p1,
       24 * epsilon * (sr6 - 2 * sr12) / std::pow(r, 2);
   return force_magnitude * distance;
 }
-

@@ -29,7 +29,7 @@ class Integrator {
              const double delta_t)
       : interactive_forces(std::move(interactive_forces)),
         singular_forces(std::move(singular_forces)),
-        delta_t(delta_t) {};
+        delta_t(delta_t){};
 
   /**
    * @brief Virtual destructor for all Integrator inheritors
