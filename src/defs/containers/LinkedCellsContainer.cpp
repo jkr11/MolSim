@@ -155,13 +155,7 @@ void LinkedCellsContainer::imposeInvariant() {
         ++it;
         continue;
       }
-      if (it->getX()[0] >= 100 || it->getF()[0] >= 10) {
-        SpdWrapper::get()->info("ALAAAARM!");
-        SpdWrapper::get()->info("x = [{}, {}, {}], v = [{}, {}, {}]", it->getX()[0], it->getX()[1], it->getX()[2], it->getV()[0], it->getX()[1], it->getV()[2]);
-      }
 
-      ivec3 current_cell = cellIndexToCoord(index);
-      ivec3 new_cell = cellIndexToCoord(shouldBeIndex);
       cells[shouldBeIndex].push_back(*it);
       it = cells[index].erase(it);
     }
@@ -199,7 +193,6 @@ void LinkedCellsContainer::imposeInvariant() {
           for (auto it = cells[cell_index].begin();
                it < cells[cell_index].end(); ++it) {
             counter++;
-            ivec3 c = cellIndexToCoord(cell_index);
             dvec3 new_pos = it->getX();
             new_pos[problematic_dimension] +=
                 domain[problematic_dimension] *
@@ -241,13 +234,15 @@ void LinkedCellsContainer::imposeInvariant() {
               continue;
             }
 
-            const auto adjacent_cell_index = cellCoordToIndex(adjacent_cell_coordinates);
+            const auto adjacent_cell_index =
+                cellCoordToIndex(adjacent_cell_coordinates);
 
             // // account for the dimension that is checked
             // particle_distance_offset[problematic_dimension] =
             //     domain[problematic_dimension];
 
             // iterate over all pairs and calculate force
+
             for (Particle &p : cells[cell_index]) {
               for (Particle &q : cells[adjacent_cell_index]) {
                 // distance check

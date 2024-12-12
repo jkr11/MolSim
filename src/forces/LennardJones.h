@@ -35,7 +35,8 @@ class LennardJones final : public InteractiveForce {
    * periodic boundaries
    * @return the signed vector force between particles p1 and p2
    */
-  static dvec3 directionalForceWithOffset(Particle& p1, Particle& p2,
+  static dvec3 directionalForceWithOffset(const Particle& p1,
+                                          const Particle& p2,
                                           const dvec3& distance);
 };
 #endif  // LENNARDJONES_H

@@ -29,12 +29,13 @@ double LennardJones::simpleForce(const Particle& p, const double distance) {
   return force_magnitude;
 }
 
-dvec3 LennardJones::directionalForceWithOffset(Particle& p1, Particle& p2,
+dvec3 LennardJones::directionalForceWithOffset(const Particle& p1,
+                                               const Particle& p2,
                                                const dvec3& distance) {
   const double r = ArrayUtils::L2Norm(distance);
   if (r == 0) return {0, 0, 0};
-  constexpr double sigma = 1.0;
-  constexpr double epsilon = 5.0;
+  const double sigma = (p1.getSigma() + p2.getSigma()) / 2;
+  const double epsilon = std::sqrt(p1.getEpsilon() * p2.getEpsilon());
   const double sr = sigma / r;
   const double sr6 = std::pow(sr, 6);
   const double sr12 = std::pow(sr6, 2);
