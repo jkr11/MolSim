@@ -848,7 +848,7 @@ TEST(PeriodicBoundaryMoving, moveYUp) {
 }
 
 /**
- * tests that particles can move through the y periodic boundary
+ * tests that particles can move through the xy periodic boundary
  */
 TEST(PeriodicBoundaryMoving, moveXYDiagonal1) {
   LinkedCellsContainer container({.domain = {9, 9, 3},
@@ -903,7 +903,7 @@ TEST(PeriodicBoundaryMoving, moveXYDiagonal1) {
 }
 
 /**
- * tests that particles can move through the y periodic boundary
+ * tests that particles can move through the xy periodic boundary
  */
 TEST(PeriodicBoundaryMoving, moveXYDiagonal2) {
   LinkedCellsContainer container({.domain = {9, 9, 3},
@@ -958,7 +958,7 @@ TEST(PeriodicBoundaryMoving, moveXYDiagonal2) {
 }
 
 /**
- * tests that particles can move through the y periodic boundary
+ * tests that particles can move through the xy periodic boundary
  */
 TEST(PeriodicBoundaryMoving, moveXYDiagonal3) {
   LinkedCellsContainer container({.domain = {9, 9, 3},
@@ -1013,7 +1013,7 @@ TEST(PeriodicBoundaryMoving, moveXYDiagonal3) {
 }
 
 /**
- * tests that particles can move through the y periodic boundary
+ * tests that particles can move through the xy periodic boundary
  */
 TEST(PeriodicBoundaryMoving, moveXYDiagonal4) {
   LinkedCellsContainer container({.domain = {9, 9, 3},
@@ -1066,4 +1066,3 @@ TEST(PeriodicBoundaryMoving, moveXYDiagonal4) {
   EXPECT_EQ(old_cell.size(), 0);
   EXPECT_EQ(new_cell.size(), 1);
 }
-
