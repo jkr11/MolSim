@@ -162,12 +162,6 @@ void LinkedCellsContainer::imposeInvariant() {
 
       ivec3 current_cell = cellIndexToCoord(index);
       ivec3 new_cell = cellIndexToCoord(shouldBeIndex);
-      // SpdWrapper::get()->info(
-      //     "|| Particle [{}, {}, {}]: [{}] -> [{}] / [{}, {}, {}] -> [{}, {}, "
-      //     "{}]",
-      //     it->getX()[0], it->getX()[1], it->getX()[2], index, shouldBeIndex,
-      //     current_cell[0], current_cell[1], current_cell[2], new_cell[0],
-      //     new_cell[1], new_cell[2]);
       cells[shouldBeIndex].push_back(*it);
       it = cells[index].erase(it);
     }
@@ -212,19 +206,12 @@ void LinkedCellsContainer::imposeInvariant() {
                 (problematic_dimension_direction % 2 == 0 ? 1 : -1);
             const std::size_t shouldBeIndex = dvec3ToCellIndex(new_pos);
 
-            // SpdWrapper::get()->info(
-            //     "particle moved: [{}, {}, {}] -> [{}, {}, {}] to cell [{}]", it->getX()[0],
-            //     it->getX()[1], it->getX()[2], new_pos[0], new_pos[1],
-            //     new_pos[2], shouldBeIndex);
             it->setX(new_pos);
             cells[shouldBeIndex].push_back(*it);
-            // std::this_thread::sleep_for(std::chrono::seconds(1));
           }
 
           cells[cell_index].clear();
           cells[cell_index].shrink_to_fit();
-          //SpdWrapper::get()->info("Done with this iteration of dim {}",
-          //                        dimension);
         }
 
         // skip force calculation for lower side of the axis
@@ -242,8 +229,6 @@ void LinkedCellsContainer::imposeInvariant() {
           for (std::size_t i = 0; i < 3; ++i) {
             ivec3 offset = index_offsets[problematic_dimension][i];
             const ivec3 cell_to_check = cell_coordinates + offset;
-            const std::size_t cell_to_check_index =
-                cellCoordToIndex(cell_to_check);
             bool is_adjacent_cell;
             ivec3 adjacent_cell_coordinates;
             dvec3 particle_distance_offset;
@@ -256,7 +241,7 @@ void LinkedCellsContainer::imposeInvariant() {
               continue;
             }
 
-            auto adjacent_cell_index = cellCoordToIndex(adjacent_cell_coordinates);
+            const auto adjacent_cell_index = cellCoordToIndex(adjacent_cell_coordinates);
 
             // // account for the dimension that is checked
             // particle_distance_offset[problematic_dimension] =
@@ -264,24 +249,15 @@ void LinkedCellsContainer::imposeInvariant() {
 
             // iterate over all pairs and calculate force
             for (Particle &p : cells[cell_index]) {
-              // if (cells[cell_index].size() > 0) {
-              //   SpdWrapper::get()->info("cell {} has {} particles", cell_index, cells[cell_index].size());
-              // }
               for (Particle &q : cells[adjacent_cell_index]) {
                 // distance check
                 const dvec3 accounted_particle_distance =
                     q.getX() - p.getX() + particle_distance_offset;
 
-                // SpdWrapper::get()->info("Possible Interaction: between [{}, {}, {}] and [{}, {}, {}]", p.getX()[0], p.getX()[1], p.getX()[2], q.getX()[0], q.getX()[1], q.getX()[2]);
-                // SpdWrapper::get()->info("\toffset = [{}, {}, {}]", particle_distance_offset[0], particle_distance_offset[1], particle_distance_offset[2]);
-
                 if (ArrayUtils::squaredL2Norm(accounted_particle_distance) >=
                     cutoff * cutoff) {
                   continue;
                 }
-
-                // SpdWrapper::get()->info("Interaction between [{}, {}, {}] and [{}, {}, {}]", p.getX()[0], p.getX()[1], p.getX()[2], q.getX()[0], q.getX()[1], q.getX()[2]);
-                // SpdWrapper::get()->info("\toffset = [{}, {}, {}]", particle_distance_offset[0], particle_distance_offset[1], particle_distance_offset[2]);
 
                 const dvec3 applied_force =
                     LennardJones::directionalForceWithOffset(
@@ -592,31 +568,20 @@ std::tuple<bool, ivec3, dvec3> LinkedCellsContainer::reflective_warp_around(
   for (std::size_t dimension = 0; dimension < 2; dimension++) {
     if (cell_coordinate[dimension] == -1) {
       // low wrap around to high cell
-      // SpdWrapper::get()->info("\t changed offset: [{}, {}, {}] ->  {}: {}",
-      //                         offset[0], offset[1], offset[2], dimension,
-      //                         -domain[dimension]);
       new_cell_coordinate[dimension] = cell_count[dimension] - 3;  // top cell
       offset[dimension] = -domain[dimension];
-      // SpdWrapper::get()->info("low warp to high in dim = {}", dimension);
     } else if (cell_coordinate[dimension] == cell_count[dimension] - 2) {
       // high warp around to low cell
       new_cell_coordinate[dimension] = 0;  // bottom cell
-      // SpdWrapper::get()->info("\t changed offset: [{}, {}, {}] ->  {}: {}",
-      //                         offset[0], offset[1], offset[2], dimension,
-      //                         domain[dimension]);
       offset[dimension] = domain[dimension];
-      // SpdWrapper::get()->info("high warp to low in dim = {}", dimension);
     } else {
       // no warp around, nothing can go wrong
-      // SpdWrapper::get()->info("no warp in dim = {}", dimension);
       continue;
     }
 
     // if it is wrapped around but dimension is not periodic, this cell is not
     // adjacent
     if (boundaries[2 * dimension] != LinkedCellsConfig::Periodic) {
-      // SpdWrapper::get()->info("exited due to warp for not periodic border: {}",
-      //                         2 * dimension);
       return std::make_tuple(false, cell_coordinate, offset);
     }
   }
