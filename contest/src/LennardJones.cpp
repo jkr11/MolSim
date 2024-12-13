@@ -8,7 +8,7 @@
 #include "LennardJones.h"
 
 dvec3 LennardJones::directionalForce(dvec3 pos1, dvec3 pos2, double sigma1, double sigma2, double eps1, double eps2) const {
-  const dvec3 differenceVector = pos1 - pos2;
+  const dvec3 differenceVector = pos2 - pos1;
   const double distance = ArrayUtils::L2Norm(differenceVector);
 
   const double sigma = (sigma1 + sigma2) / 2;
