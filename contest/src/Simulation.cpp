@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include <chrono>
 
 #include "Simulation.h"
 #include "CuboidGenerator.h"
@@ -22,8 +23,7 @@ void Simulation::run(std::string filepath) {
   };
 
   LinkedCellsConfig config = {
-                        //.domain = {300, 54, 1},
-                        .domain = {10, 10, 1},
+                        .domain = {300, 54, 1},
                         .cutoff_radius = 3.0,
                         .boundary_config = {
                             .x_high = LinkedCellsConfig::Outflow,
@@ -36,18 +36,15 @@ void Simulation::run(std::string filepath) {
 
 
   //init container
-  ParticleContainer container(typeinfo, config);
+  ParticleContainer container(typeinfo, config, 10000);
 
 
   //TODO: get info from xml -> defered
-  //CuboidGenerator gen1({0.6, 2, 0}, {250, 20, 1}, 1.2, {0, 0, 0}, 0.1, 0, true);
-  //gen1.generate(container);
+  CuboidGenerator gen1({0.6, 2, 0}, {250, 20, 1}, 1.2, {0, 0, 0}, 0.1, 0, true);
+  gen1.generate(container);
 
-  //CuboidGenerator gen2({0.6, 27, 0}, {250, 20, 1}, 1.2, {0, 0, 0}, 0.1, 1, true);
-  //gen2.generate(container);
-
-  CuboidGenerator gen3({1, 1, 0}, {5, 5, 1}, 1.1225, {0, 0, 0}, 0.0, 0, true);
-  gen3.generate(container);
+  CuboidGenerator gen2({0.6, 27, 0}, {250, 20, 1}, 1.2, {0, 0, 0}, 0.1, 1, true);
+  gen2.generate(container);
 
   //impose invariant to get correct setup after adding particles
   container.imposeInvariant();
@@ -71,13 +68,22 @@ void Simulation::run(std::string filepath) {
   double end_time = 1; //TODO
   double current_time = 0;
   int iteration = 0;
-  //const auto start_time = std::chrono::high_resolution_clock::now();
+  const auto startTime = std::chrono::high_resolution_clock::now();
 
   while (current_time <= end_time) {
-    //if (iteration % 100 == 0) {
-      std::cout << "Iteration: " << iteration << std::endl;
+    if (iteration == 1000) {
+      const auto endTime = std::chrono::high_resolution_clock::now();
 
-      outputWriter.initializeOutput(container.ids.size());
+      const std::chrono::duration<double> elapsed = endTime - startTime;
+
+      std::cout << elapsed.count() << " seconds" << std::endl;
+      exit(0);
+    }
+
+    if (iteration % 100 == 0) {
+      //std::cout << "Iteration: " << iteration << std::endl;
+
+      /*outputWriter.initializeOutput(container.ids.size());
 
       for (int i = 0; i < container.ids.size(); i++) {
         const dvec3 pos = {container.px[i], container.py[i], container.pz[i]};
@@ -88,8 +94,8 @@ void Simulation::run(std::string filepath) {
         outputWriter.plotParticle(pos, vel, of, type);
       }
 
-      outputWriter.writeFile("output/gore", iteration);
-    //}
+      outputWriter.writeFile("output/gore", iteration);*/
+    }
 
     integrator.step(container);
 

@@ -6,7 +6,7 @@
 
 #include "ParticleContainer.h"
 
-ParticleContainer::ParticleContainer(const ParticleTypeInfo particleTypeInfo, const LinkedCellsConfig linkedCellsConfig) {
+ParticleContainer::ParticleContainer(const ParticleTypeInfo particleTypeInfo, const LinkedCellsConfig linkedCellsConfig, const std::size_t initialCapacity) {
   this->particleTypeInfo = particleTypeInfo;
   this->linkedCellsConfig = linkedCellsConfig;
 
@@ -29,6 +29,26 @@ ParticleContainer::ParticleContainer(const ParticleTypeInfo particleTypeInfo, co
 
   std::cout << "Cell count: " << cellCount[0] << ", " << cellCount[1] << ", " << cellCount[2] << std::endl;
   std::cout << "Cell dim: " << cellDim[0] << ", " << cellDim[1] << ", " << cellDim[2] << std::endl;
+
+  //init aligned vectors
+  ids.reserve(initialCapacity);
+  types.reserve(initialCapacity);
+
+  px.reserve(initialCapacity);
+  py.reserve(initialCapacity);
+  pz.reserve(initialCapacity);
+
+  vx.reserve(initialCapacity);
+  vy.reserve(initialCapacity);
+  vz.reserve(initialCapacity);
+
+  fx.reserve(initialCapacity);
+  fy.reserve(initialCapacity);
+  fz.reserve(initialCapacity);
+
+  ofx.reserve(initialCapacity);
+  ofy.reserve(initialCapacity);
+  ofz.reserve(initialCapacity);
 }
 
 void ParticleContainer::addParticle(int id, int type, dvec3 position, dvec3 velocity, dvec3 force, dvec3 oldForce) {
@@ -58,7 +78,7 @@ void ParticleContainer::removeParticle(int id) {
 
 void ParticleContainer::imposeInvariant() {
   //TODO: ifdef DEBUG
-  int placedWrong = 0;
+  /*int placedWrong = 0;
   for (std::size_t i = 0; i < ids.size(); i++) {
     std::size_t correctPartition = dvec3ToIndex({px[i], py[i], pz[i]});
     std::size_t targetStart = partitionStart[correctPartition];
@@ -70,6 +90,8 @@ void ParticleContainer::imposeInvariant() {
 
   if (placedWrong > 0)
     std::cout << "placed wrong: " << placedWrong << std::endl;
+  */
+  //end debug
 
   // first pass: calc cell divisions and pointers
   // reset counts
@@ -97,7 +119,7 @@ void ParticleContainer::imposeInvariant() {
   //     -
 
   //TODO: add ifdef debug
-  int swapsPerformed = 0;
+  //int swapsPerformed = 0;
 
   for (std::size_t i = 0; i < ids.size(); ) {
     std::size_t currentPartition = dvec3ToIndex({px[i], py[i], pz[i]});
@@ -142,7 +164,7 @@ void ParticleContainer::imposeInvariant() {
       std::swap(ofz[i], ofz[targetIndex]);
 
       //TODO: add ifdef debug?
-      swapsPerformed++;
+      //swapsPerformed++;
       //std::cout << "Swap performed" << std::endl;
 
       // Increment swapPointers for the target partition
@@ -155,7 +177,7 @@ void ParticleContainer::imposeInvariant() {
   }
 
   //TODO: add ifdef debug
-  if (swapsPerformed > 0)
+  /*if (swapsPerformed > 0)
     std::cout << "Swaps performed: " << swapsPerformed << std::endl;
 
   //TODO: add ifdef debug
@@ -167,6 +189,7 @@ void ParticleContainer::imposeInvariant() {
 
     last = partition;
   }
-
+   */
+  //end debug
 
 }

@@ -67,8 +67,8 @@ void VerletIntegrator::step(ParticleContainer& container) {
     {{0, 0, 1}},
   }};
 
-  //debug
-  std::vector<std::pair<int, int>> pairs = {};
+  //TODO debug
+  /*std::vector<std::pair<int, int>> pairs = {};
   for (int i = 0; i < container.ids.size(); i++) {
     for (int j = i + 1; j < container.ids.size(); j++) {
       dvec3 d = { container.px[i] - container.px[j],
@@ -79,11 +79,12 @@ void VerletIntegrator::step(ParticleContainer& container) {
         continue;
 
       pairs.emplace_back(container.ids[i], container.ids[j]);
-      std::cout << "should be pair: (" << container.ids[i] << ", " << container.ids[j] << ")" << std::endl;
+      //std::cout << "should be pair: (" << container.ids[i] << ", " << container.ids[j] << ")" << std::endl;
     }
   }
 
   int pairCount = 0;
+*/
   //debug end
 
   // go over all cell indices
@@ -110,7 +111,8 @@ void VerletIntegrator::step(ParticleContainer& container) {
         if (d[0] * d[0] + d[1] * d[1] + d[2] * d[2] > container.linkedCellsConfig.cutoff_radius * container.linkedCellsConfig.cutoff_radius)
           continue;
 
-        bool found = false;
+        //TODO debug
+        /*bool found = false;
         for (int k = 0; k < pairs.size(); k++) {
             if ((pairs[k].first == container.ids[i] && pairs[k].second == container.ids[j]) || (pairs[k].first == container.ids[j] && pairs[k].second == container.ids[i])) {
               found = true;
@@ -124,6 +126,7 @@ void VerletIntegrator::step(ParticleContainer& container) {
 
         std::cout << "Intra cell pair: (" << container.ids[i] << ", " << container.ids[j] << ")" << std::endl;
         pairCount++;
+        */
 
         //function start
         dvec3 f12 = {0.0, 0.0, 0.0};
@@ -177,7 +180,8 @@ void VerletIntegrator::step(ParticleContainer& container) {
           if (d[0] * d[0] + d[1] * d[1] + d[2] * d[2] > container.linkedCellsConfig.cutoff_radius * container.linkedCellsConfig.cutoff_radius)
             continue;
 
-          bool found = false;
+          //TODO debug
+          /*bool found = false;
           for (int k = 0; k < pairs.size(); k++) {
               if ((pairs[k].first == container.ids[i] && pairs[k].second == container.ids[j]) || (pairs[k].first == container.ids[j] && pairs[k].second == container.ids[i])) {
                 found = true;
@@ -190,7 +194,7 @@ void VerletIntegrator::step(ParticleContainer& container) {
           }
 
           std::cout << "Cross cell pair: (" << container.ids[i] << ", " << container.ids[j] << ")" << std::endl;
-          pairCount++;
+          pairCount++;*/
 
           //function start
           dvec3 f12 = {0.0, 0.0, 0.0};
@@ -217,9 +221,10 @@ void VerletIntegrator::step(ParticleContainer& container) {
     }
   }
 
-  std::cout << pairCount << ", " << pairs.size() << std::endl;
+  //TODO debug
+  //std::cout << pairCount << ", " << pairs.size() << std::endl;
 
-  //
+  //update velocity
   for (int i = 0; i < container.ids.size(); i++) {
     const dvec3 pos = {container.px[i], container.py[i], container.pz[i]};
     const dvec3 vel = {container.vx[i], container.vy[i], container.vz[i]};

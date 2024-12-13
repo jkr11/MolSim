@@ -8,6 +8,7 @@
 
 #include "../../src/defs/types.h"
 #include "Simulation.h"
+#include "AlignedAllocator.h"
 
 class ParticleContainer {
 public:
@@ -21,16 +22,16 @@ public:
   std::vector<std::size_t> partitionStart;
   std::vector<std::size_t> swapPointers;
 
-  std::vector<int> ids;
-  std::vector<int> types;
+  std::vector<int, AlignedAllocator<int>> ids;
+  std::vector<int, AlignedAllocator<int>> types;
 
-  std::vector<double> px, py, pz;
-  std::vector<double> vx, vy, vz;
-  std::vector<double> fx, fy, fz;
-  std::vector<double> ofx, ofy, ofz;
+  std::vector<double, AlignedAllocator<double>> px, py, pz;
+  std::vector<double, AlignedAllocator<double>> vx, vy, vz;
+  std::vector<double, AlignedAllocator<double>> fx, fy, fz;
+  std::vector<double, AlignedAllocator<double>> ofx, ofy, ofz;
 
 public:
-  ParticleContainer(const ParticleTypeInfo particleTypeInfo, const LinkedCellsConfig linkedCellsConfig);
+  ParticleContainer(const ParticleTypeInfo particleTypeInfo, const LinkedCellsConfig linkedCellsConfig, const std::size_t maxParticles);
   ~ParticleContainer() = default;
 
   void addParticle(int id, int type, dvec3 position, dvec3 velocity, dvec3 force, dvec3 oldForce);
