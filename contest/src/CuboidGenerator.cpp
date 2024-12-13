@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include "CuboidGenerator.h"
+#include "ParticleContainer.h"
 #include "../../src/utils/ArrayUtils.h"
 #include "../../src/utils/MaxwellBoltzmannDistribution.h"
 

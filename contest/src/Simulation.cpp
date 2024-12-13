@@ -10,6 +10,7 @@
 #include "LennardJones.h"
 #include "VerletIntegrator.h"
 #include "VTKWriter.h"
+#include "../../src/defs/types.h"
 
 void Simulation::run(std::string filepath) {
   //TODO: get info from xml -> defered
@@ -21,7 +22,8 @@ void Simulation::run(std::string filepath) {
   };
 
   LinkedCellsConfig config = {
-                        .domain = {100, 100, 100},
+                        //.domain = {300, 54, 1},
+                        .domain = {10, 10, 1},
                         .cutoff_radius = 3.0,
                         .boundary_config = {
                             .x_high = LinkedCellsConfig::Outflow,
@@ -38,15 +40,17 @@ void Simulation::run(std::string filepath) {
 
 
   //TODO: get info from xml -> defered
-  CuboidGenerator gen1({0.6, 2, 0}, {250, 20, 1}, 1.2, {0, 0, 0}, 0.1, 0, true);
-  gen1.generate(container);
+  //CuboidGenerator gen1({0.6, 2, 0}, {250, 20, 1}, 1.2, {0, 0, 0}, 0.1, 0, true);
+  //gen1.generate(container);
 
-  CuboidGenerator gen2({0.6, 27, 0}, {250, 20, 1}, 1.2, {0, 0, 0}, 0.1, 1, true);
-  gen2.generate(container);
+  //CuboidGenerator gen2({0.6, 27, 0}, {250, 20, 1}, 1.2, {0, 0, 0}, 0.1, 1, true);
+  //gen2.generate(container);
+
+  CuboidGenerator gen3({1, 1, 0}, {5, 5, 1}, 1.1225, {0, 0, 0}, 0.0, 0, true);
+  gen3.generate(container);
 
   //impose invariant to get correct setup after adding particles
   container.imposeInvariant();
-
 
   //init integrator
   std::vector<std::unique_ptr<InteractiveForce>> interactiveForces;
@@ -70,7 +74,7 @@ void Simulation::run(std::string filepath) {
   //const auto start_time = std::chrono::high_resolution_clock::now();
 
   while (current_time <= end_time) {
-    if (iteration % 100 == 0) {
+    //if (iteration % 100 == 0) {
       std::cout << "Iteration: " << iteration << std::endl;
 
       outputWriter.initializeOutput(container.ids.size());
@@ -85,7 +89,7 @@ void Simulation::run(std::string filepath) {
       }
 
       outputWriter.writeFile("output/gore", iteration);
-    }
+    //}
 
     integrator.step(container);
 
