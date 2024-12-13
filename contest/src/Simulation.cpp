@@ -36,7 +36,7 @@ void Simulation::run(std::string filepath) {
 
 
   //init container
-  ParticleContainer container(typeinfo, config, 10000);
+  ParticleContainer container(typeinfo, config, 1024 * 16);
 
 
   //TODO: get info from xml -> defered

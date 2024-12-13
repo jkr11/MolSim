@@ -16,7 +16,7 @@ dvec3 LennardJones::directionalForce(dvec3 pos1, dvec3 pos2, double sigma1, doub
 
   const double sr = sigma / distance;
   const double sr6 = std::pow(sr, 6);
-  const double sr12 = std::pow(sr, 12);
+  const double sr12 = std::pow(sr6, 2);
 
   const double force_magnitude = 24 * epsilon * (sr6 - 2 * sr12) / std::pow(distance, 2);
   return force_magnitude * differenceVector;

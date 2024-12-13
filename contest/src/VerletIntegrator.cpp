@@ -2,14 +2,15 @@
 // Created by mcarn on 12/11/24.
 //
 
+#include <iostream>
+#include <immintrin.h>
+
 #include "VerletIntegrator.h"
 #include "../../src/defs/types.h"
 #include "../../src/utils/ArrayUtils.h"
 
-#include <iostream>
-
 void VerletIntegrator::step(ParticleContainer& container) {
-  for (int i = 0; i < container.ids.size(); i++) {
+  /*for (int i = 0; i < container.ids.size(); i++) {
     const dvec3 pos = {container.px[i], container.py[i], container.pz[i]};
     const dvec3 vel = {container.vx[i], container.vy[i], container.vz[i]};
     const dvec3 f = {container.fx[i], container.fy[i], container.fz[i]};
@@ -22,10 +23,16 @@ void VerletIntegrator::step(ParticleContainer& container) {
     container.py[i] = newX[1];
     container.pz[i] = newX[2];
 
-    //TODO update force here?
+    container.ofx[i] = container.fx[i];
+    container.ofy[i] = container.fy[i];
+    container.ofz[i] = container.fz[i];
 
+    container.fx[i] = 0;
+    container.fy[i] = 0;
+    container.fz[i] = 0;
   }
 
+  //TODO: merge loops?
   for (int i = 0; i < container.ids.size(); i++) {
     container.ofx[i] = container.fx[i];
     container.ofy[i] = container.fy[i];
@@ -34,6 +41,55 @@ void VerletIntegrator::step(ParticleContainer& container) {
     container.fx[i] = 0;
     container.fy[i] = 0;
     container.fz[i] = 0;
+  }
+
+*/
+
+  const std::size_t size = container.ids.size();
+  const __m256d delta_t_vec = _mm256_set1_pd(delta_t);
+  const __m256d half_delta_t_squared = _mm256_set1_pd((delta_t * delta_t) / 2.0);
+
+  for (int i = 0; i < container.ids.size(); i += 4) {
+    // Load position vectors
+    __m256d px = _mm256_load_pd(&container.px[i]);
+    __m256d py = _mm256_load_pd(&container.py[i]);
+    __m256d pz = _mm256_load_pd(&container.pz[i]);
+
+    // Load velocity vectors
+    __m256d vx = _mm256_load_pd(&container.vx[i]);
+    __m256d vy = _mm256_load_pd(&container.vy[i]);
+    __m256d vz = _mm256_load_pd(&container.vz[i]);
+
+    // Load force vectors
+    __m256d fx = _mm256_load_pd(&container.fx[i]);
+    __m256d fy = _mm256_load_pd(&container.fy[i]);
+    __m256d fz = _mm256_load_pd(&container.fz[i]);
+
+    // Compute mass for each particle (scalar lookup -> broadcast to SIMD)
+    alignas(64) double masses[4];
+    for (int j = 0; j < 4; ++j) {
+      masses[j] = container.particleTypeInfo.mass[container.types[i + j]];
+    }
+    __m256d mass = _mm256_load_pd(masses);
+
+    // Compute new positions: pos + delta_t * vel + (delta_t^2 / 2m) * f
+    __m256d new_px = _mm256_fmadd_pd(delta_t_vec, vx, _mm256_fmadd_pd(_mm256_div_pd(half_delta_t_squared, mass), fx, px));
+    __m256d new_py = _mm256_fmadd_pd(delta_t_vec, vy, _mm256_fmadd_pd(_mm256_div_pd(half_delta_t_squared, mass), fy, py));
+    __m256d new_pz = _mm256_fmadd_pd(delta_t_vec, vz, _mm256_fmadd_pd(_mm256_div_pd(half_delta_t_squared, mass), fz, pz));
+
+    // Store the results back to memory
+    _mm256_store_pd(&container.px[i], new_px);
+    _mm256_store_pd(&container.py[i], new_py);
+    _mm256_store_pd(&container.pz[i], new_pz);
+
+    _mm256_store_pd(&container.ofx[i], fx);
+    _mm256_store_pd(&container.ofy[i], fy);
+    _mm256_store_pd(&container.ofz[i], fz);
+
+    __m256 zero = _mm256_setzero_pd();
+    _mm256_store_pd(&container.fx[i], zero);
+    _mm256_store_pd(&container.fy[i], zero);
+    _mm256_store_pd(&container.fz[i], zero);
   }
 
   container.imposeInvariant();

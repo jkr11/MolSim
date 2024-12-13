@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 set(CMAKE_BUILD_TYPE Release)
-add_compile_options(-O3 -ffast-math -march=native -std=c++17 -g)
+add_compile_options(-O3 -ffast-math -march=native -std=c++17 -g -mavx2)
 
 file(GLOB_RECURSE SOURCES
         "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
