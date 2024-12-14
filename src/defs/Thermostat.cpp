@@ -45,13 +45,13 @@ void Thermostat::applyBeta(ParticleContainer &particle_container,
 
 void Thermostat::setTemperature(ParticleContainer &particle_container) const {
   const double current_temp = getTemperature(particle_container);
-  //SpdWrapper::get()->info("current temperature is {}", current_temp);
+  SpdWrapper::get()->info("current temperature is {}", current_temp);
   const double dT = T_target - current_temp;
 
   const auto adjustment = std::abs(dT) < d_temp ? dT : d_temp;
   const double new_temp = current_temp + adjustment;
-  //SpdWrapper::get()->info("new_temp is {}", new_temp);
+  SpdWrapper::get()->info("new_temp is {}", new_temp);
   const double beta = std::sqrt(new_temp / current_temp);
-  //SpdWrapper::get()->info("beta is {}", beta);
+  SpdWrapper::get()->info("beta is {}", beta);
   applyBeta(particle_container, beta);
 }

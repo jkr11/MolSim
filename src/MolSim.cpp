@@ -117,9 +117,9 @@ int main(const int argc, char* argv[]) {
     verlet_integrator.step(*container);
     if (arguments.use_thermostat) {
       if (iteration % thermostat.n_thermostat == 0 && iteration > 0) {
-        // SpdWrapper::get()->info("Setting temperature at iteration {}",
-        //                        iteration);
-                                thermostat.setTemperature(*container);
+        SpdWrapper::get()->info("Setting temperature at iteration {}",
+                                iteration);
+        thermostat.setTemperature(*container);
       }
     }
 #ifdef BENCHMARK  // these are the first 1000 iterations for the contest

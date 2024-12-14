@@ -116,10 +116,6 @@ class Particle final {
 
   void subF(const dvec3 &F);
 
-  void updateX(const double &delta_t);
-
-  void updateV(const double &delta_t);
-
   bool operator==(const Particle &other) const;
 
   [[nodiscard]] std::string toString() const;
