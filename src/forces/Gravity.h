@@ -17,9 +17,11 @@ class Gravity final : public InteractiveForce {
    * Compute the gravitational force between two particles p1 and p2
    * @param p1 Particle1
    * @param p2 Particle2
+   * @param rv
    * @return Force-vector
    */
-  dvec3 directionalForce(Particle& p1, Particle& p2) const override;
+  dvec3 directionalForce(Particle& p1, Particle& p2, const double& r_sq,
+                         const dvec3& rv) const override;
 
   /**
    * @brief calculates the force of the ghost particle, not implemented for this

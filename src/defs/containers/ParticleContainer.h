@@ -5,9 +5,11 @@
 
 #include <cstddef>
 #include <functional>
+#include <memory>
 #include <vector>
 
 #include "defs/Particle.h"
+#include "forces/InteractiveForce.h"
 
 /**
  * @brief Interface for an object storing particles while providing single and
@@ -67,10 +69,10 @@ class ParticleContainer {
   /**
    * @brief Apply a function to each unique pair of particles (i.e., (p1, p2) ==
    * (p2, p1)).
-   * @param f Lambda to be applied to each particle pair (p1, p2).
    */
   virtual void pairIterator(
-      const std::function<void(Particle&, Particle&)>& f) = 0;
+      const std::vector<std::unique_ptr<InteractiveForce>>&
+          interactive_forces) = 0;
 
   virtual double getKineticEnergy() = 0;
 };
