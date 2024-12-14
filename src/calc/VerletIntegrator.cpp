@@ -5,7 +5,7 @@
 
 #include "../utils/ArrayUtils.h"
 
-void VerletIntegrator::step(ParticleContainer& particle_container) {
+void VerletIntegrator::step(ParticleContainer& particle_container) const {
   particle_container.singleIterator(
       [this](Particle& p) { p.updateX(delta_t); });
 

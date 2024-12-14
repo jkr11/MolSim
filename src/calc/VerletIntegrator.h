@@ -7,13 +7,18 @@
 #pragma once
 #include <utility>
 
-#include "Integrator.h"
-
+#include "defs/containers/ParticleContainer.h"
+#include "forces/InteractiveForce.h"
+#include "forces/SingularForce.h"
 /**
  * @brief Integrator using the Verlet-integration method on a particle
  * container.
  */
-class VerletIntegrator final : public Integrator {
+class VerletIntegrator {
+  std::vector<std::unique_ptr<InteractiveForce>> interactive_forces;
+  std::vector<std::unique_ptr<SingularForce>> singular_forces;
+  double delta_t;
+
  public:
   /**
    * @brief Create VerletIntegrator object
@@ -25,12 +30,14 @@ class VerletIntegrator final : public Integrator {
       std::vector<std::unique_ptr<InteractiveForce>>& interactive_forces,
       std::vector<std::unique_ptr<SingularForce>>& singular_forces,
       const double delta_t)
-      : Integrator(interactive_forces, singular_forces, delta_t) {}
+      : interactive_forces(std::move(interactive_forces)),
+        singular_forces(std::move(singular_forces)),
+        delta_t(delta_t) {};
 
   /**
    * @brief Destructor
    */
-  ~VerletIntegrator() override = default;
+  ~VerletIntegrator() = default;
 
   /**
    * @brief Advance particle-system by one time-step.
@@ -41,6 +48,6 @@ class VerletIntegrator final : public Integrator {
    *
    * @param particle_container Reference to the current particle-system
    */
-  void step(ParticleContainer& particle_container) override;
+  void step(ParticleContainer& particle_container) const;
 };
 #endif  // VERLET_H
