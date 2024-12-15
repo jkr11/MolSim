@@ -13,7 +13,6 @@
 #include "io/file/out/OutputHelper.h"
 #include "io/file/out/VTKWriter.h"
 #include "io/file/out/XmlWriter.h"
-#include "spdlog/fmt/bundled/chrono.h"
 #include "spdlog/stopwatch.h"
 #include "utils/ArrayUtils.h"
 #include "utils/SpdWrapper.h"
@@ -106,13 +105,17 @@ int main(const int argc, char* argv[]) {
 
   double current_time = 0;
   int iteration = 0;
-#ifndef BENCHMARK
+//#ifndef BENCHMARK
   int writes = 0;
   int percentage = 0;
   double next_output_time = 0;
   spdlog::stopwatch stopwatch;
-#endif
+  // it is unfeasible to check the numbers of outflown particles every iteration, so it is assumed that the number of particles is constant
+  auto number_of_particles = particles.size();
+  auto iteration_of_last_mups = 0;
+//#endif
   const auto start_time = std::chrono::high_resolution_clock::now();
+  auto time_of_last_mups = start_time;
   while (current_time <= arguments.t_end) {
     verlet_integrator.step(*container);
     if (arguments.use_thermostat) {
@@ -130,7 +133,7 @@ int main(const int argc, char* argv[]) {
     }
 #endif
 
-#ifndef BENCHMARK
+//#ifndef BENCHMARK
     if (current_time >= next_output_time) {
       plotParticles(outputDirectory, iteration, writer, *container);
       writes++;
@@ -151,13 +154,20 @@ int main(const int argc, char* argv[]) {
           m = 0;
           s = 0;
         }
+
+        auto current_time_hrc = std::chrono::high_resolution_clock::now();
+        auto microseconds = std::chrono::duration_cast<std::chrono::microseconds>(current_time_hrc - time_of_last_mups).count();
+        double mups = (iteration - iteration_of_last_mups) * static_cast<double>(number_of_particles) * 10e6 / static_cast<double>(microseconds);
+        iteration_of_last_mups = iteration;
+        time_of_last_mups = current_time_hrc;
+
         SpdWrapper::get()->info(
-            "[{:<3.0f}%]: Iteration {:<12} | [ETA: {}:{:02}:{:02}]",
-            100 * current_time / arguments.t_end, iteration, h, m, s);
+            "[{:<3.0f}%]: Iteration {:<12} | [ETA: {}:{:02}:{:02}], [average MUPS since last log: {:e}]",
+            100 * current_time / arguments.t_end, iteration, h, m, s, mups);
         percentage++;
       }
     }
-#endif
+//#endif
     iteration++;
     current_time = arguments.delta_t * iteration;
   }
