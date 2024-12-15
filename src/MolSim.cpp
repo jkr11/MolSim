@@ -31,7 +31,7 @@ int main(const int argc, char* argv[]) {
               .T_target = 0.5,
               .deltaT = 0.5,
               .n_thermostat = 1000,
-              .use_relative = true,
+              .use_relative = false,
           },
       .container_data =
           LinkedCellsConfig{.domain = {100, 100, 100},
@@ -105,23 +105,22 @@ int main(const int argc, char* argv[]) {
 
   double current_time = 0;
   int iteration = 0;
-//#ifndef BENCHMARK
+  // #ifndef BENCHMARK
   int writes = 0;
   int percentage = 0;
   double next_output_time = 0;
   spdlog::stopwatch stopwatch;
-  // it is unfeasible to check the numbers of outflown particles every iteration, so it is assumed that the number of particles is constant
+  // it is unfeasible to check the numbers of outflown particles every
+  // iteration, so it is assumed that the number of particles is constant
   auto number_of_particles = particles.size();
   auto iteration_of_last_mups = 0;
-//#endif
+  // #endif
   const auto start_time = std::chrono::high_resolution_clock::now();
   auto time_of_last_mups = start_time;
   while (current_time <= arguments.t_end) {
     verlet_integrator.step(*container);
     if (arguments.use_thermostat) {
       if (iteration % thermostat.n_thermostat == 0 && iteration > 0) {
-        SpdWrapper::get()->info("Setting temperature at iteration {}",
-                                iteration);
         thermostat.setTemperature(*container);
       }
     }
@@ -129,11 +128,16 @@ int main(const int argc, char* argv[]) {
     if (iteration == 1000) {
       const auto first_1k = std::chrono::high_resolution_clock::now();
       const std::chrono::duration<double> elapsed = first_1k - start_time;
-      std::cout << elapsed.count() << " seconds" << std::endl;
+      std::cout << "First 1k iterations took: " << elapsed.count() << " seconds"
+                << std::endl;
+      const auto mups = static_cast<double>(number_of_particles) * 1000 *
+                        (1.0 / elapsed.count());
+      std::cout << "MMUPS for first 1k iterations: " << mups * (1.0 / 1e6)
+                << std::endl;
     }
 #endif
 
-//#ifndef BENCHMARK
+#ifndef BENCHMARK
     if (current_time >= next_output_time) {
       plotParticles(outputDirectory, iteration, writer, *container);
       writes++;
@@ -156,18 +160,24 @@ int main(const int argc, char* argv[]) {
         }
 
         auto current_time_hrc = std::chrono::high_resolution_clock::now();
-        auto microseconds = std::chrono::duration_cast<std::chrono::microseconds>(current_time_hrc - time_of_last_mups).count();
-        double mups = (iteration - iteration_of_last_mups) * static_cast<double>(number_of_particles) * 10e6 / static_cast<double>(microseconds);
+        auto microseconds =
+            std::chrono::duration_cast<std::chrono::microseconds>(
+                current_time_hrc - time_of_last_mups)
+                .count();
+        double mmups = (iteration - iteration_of_last_mups) *
+                      static_cast<double>(number_of_particles) *
+                      (1.0 / static_cast<double>(microseconds));
         iteration_of_last_mups = iteration;
         time_of_last_mups = current_time_hrc;
 
         SpdWrapper::get()->info(
-            "[{:<3.0f}%]: Iteration {:<12} | [ETA: {}:{:02}:{:02}], [average MUPS since last log: {:e}]",
-            100 * current_time / arguments.t_end, iteration, h, m, s, mups);
+            "[{:<3.0f}%]: Iteration {:<12} | [ETA: {}:{:02}:{:02}], [average "
+            "MMUPS since last log: {:02}]",
+            100 * current_time / arguments.t_end, iteration, h, m, s, mmups);
         percentage++;
       }
     }
-//#endif
+#endif
     iteration++;
     current_time = arguments.delta_t * iteration;
   }
