@@ -1,5 +1,7 @@
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-include_directories(dss/dsshome1/lxc0B/di34miq/libs/xerces-c-3.3.0)
+set(XERCESC_DIR /dss/dsshome1/lxc0B/di34miq/xercesc)
+include_directories(${XERCESC_DIR}/include)
+link_directories(${XERCESC_DIR}/lib64)
 
 ##### Collect all cpp files except MolSim.cpp #####
 file(GLOB_RECURSE MY_SRC
@@ -16,9 +18,10 @@ add_library(MolSimLib
 
 target_link_libraries(MolSimLib
         PUBLIC
-        xerces-c
         spdlog::spdlog
 )
+
+target_link_libraries(MolSimLib PRIVATE xerces-c)
 
 target_compile_features(MolSimLib
         PUBLIC cxx_std_17
