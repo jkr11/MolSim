@@ -1,4 +1,5 @@
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(dss/dsshome1/lxc0B/di34miq/libs/xerces-c-3.3.0)
 
 ##### Collect all cpp files except MolSim.cpp #####
 file(GLOB_RECURSE MY_SRC
