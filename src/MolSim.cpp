@@ -57,6 +57,7 @@ int main(const int argc, char* argv[]) {
 
   printConfiguration(arguments);
   SpdWrapper::get()->info("Step size: {}", step_size);
+  const std::size_t num_particles = particles.size();
 
   std::unique_ptr<ParticleContainer> container;
   if (std::holds_alternative<LinkedCellsConfig>(arguments.container_data)) {
@@ -119,7 +120,7 @@ int main(const int argc, char* argv[]) {
       if (iteration % thermostat.n_thermostat == 0 && iteration > 0) {
         // SpdWrapper::get()->info("Setting temperature at iteration {}",
         //                        iteration);
-                                thermostat.setTemperature(*container);
+        thermostat.setTemperature(*container);
       }
     }
 #ifdef BENCHMARK  // these are the first 1000 iterations for the contest
@@ -127,6 +128,10 @@ int main(const int argc, char* argv[]) {
       const auto first_1k = std::chrono::high_resolution_clock::now();
       const std::chrono::duration<double> elapsed = first_1k - start_time;
       std::cout << elapsed.count() << " seconds" << std::endl;
+      double mups = 1000.0 * num_particles * (1.0 / elapsed.count());
+      std::cout << mups << std::endl;
+      double mmups = mups * (1.0 / 1000000);
+      std::cout << mmups << " MMUPS" << std::endl;
     }
 #endif
 
