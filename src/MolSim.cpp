@@ -110,7 +110,8 @@ int main(const int argc, char* argv[]) {
   int percentage = 0;
   double next_output_time = 0;
   spdlog::stopwatch stopwatch;
-  // it is unfeasible to check the numbers of outflown particles every iteration, so it is assumed that the number of particles is constant
+  // it is unfeasible to check the numbers of outflown particles every
+  // iteration, so it is assumed that the number of particles is constant
   auto number_of_particles = particles.size();
   auto iteration_of_last_mups = 0;
 #endif
@@ -156,13 +157,19 @@ int main(const int argc, char* argv[]) {
         }
 
         auto current_time_hrc = std::chrono::high_resolution_clock::now();
-        auto microseconds = std::chrono::duration_cast<std::chrono::microseconds>(current_time_hrc - time_of_last_mups).count();
-        double mups = (iteration - iteration_of_last_mups) * static_cast<double>(number_of_particles) * 10e6 / static_cast<double>(microseconds);
+        auto microseconds =
+            std::chrono::duration_cast<std::chrono::microseconds>(
+                current_time_hrc - time_of_last_mups)
+                .count();
+        double mups = (iteration - iteration_of_last_mups) *
+                      static_cast<double>(number_of_particles) * 10e6 /
+                      static_cast<double>(microseconds);
         iteration_of_last_mups = iteration;
         time_of_last_mups = current_time_hrc;
 
         SpdWrapper::get()->info(
-            "[{:<3.0f}%]: Iteration {:<12} | [ETA: {}:{:02}:{:02}], [average MUPS since last log: {:e}]",
+            "[{:<3.0f}%]: Iteration {:<12} | [ETA: {}:{:02}:{:02}], [average "
+            "MUPS since last log: {:e}]",
             100 * current_time / arguments.t_end, iteration, h, m, s, mups);
         percentage++;
       }
