@@ -31,7 +31,7 @@ int main(const int argc, char* argv[]) {
               .T_target = 0.5,
               .deltaT = 0.5,
               .n_thermostat = 1000,
-              .use_relative = true,
+              .use_relative = false,
           },
       .container_data =
           LinkedCellsConfig{.domain = {100, 100, 100},
@@ -101,6 +101,7 @@ int main(const int argc, char* argv[]) {
 
   const std::string outputDirectory =
       createOutputDirectory("./output/", argc, argv);
+  arguments.thermostat_config.use_relative = false;
   Thermostat thermostat(arguments.thermostat_config);
 
   double current_time = 0;
