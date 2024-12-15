@@ -12,10 +12,10 @@
                 <r_cutoff>2.5</r_cutoff>
                 <boundary>
                     <x_high>
-                        <Reflective/>
+                        <Periodic/>
                     </x_high>
                     <x_low>
-                        <Reflective/>
+                        <Periodic/>
                     </x_low>
                     <y_high>
                         <Reflective/>
@@ -34,7 +34,6 @@
         </container>
         <force>
             <LennardJones/>
-            <SingularGravity g="-12.44"/>
         </force>
         <delta_t>0.0005</delta_t>
         <t_end>25</t_end>
@@ -43,7 +42,7 @@
     <cuboids>
         <cuboid>
             <velocity>
-                <x>0.0</x>
+                <x>2.0</x>
                 <y>0.0</y>
                 <z>0.0</z>
             </velocity>
@@ -66,7 +65,7 @@
         </cuboid>
         <cuboid>
             <velocity>
-                <x>0</x>
+                <x>2</x>
                 <y>0</y>
                 <z>0</z>
             </velocity>
@@ -88,9 +87,4 @@
             <mv>0.1</mv>
         </cuboid>
     </cuboids>
-    <thermostat>
-        <T_init>40</T_init>
-        <n_thermostat>1000</n_thermostat>
-        <T_target>40</T_target>
-    </thermostat>
 </simulation>

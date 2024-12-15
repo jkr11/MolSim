@@ -4,6 +4,7 @@
 #include "LennardJones.h"
 
 #include "utils/ArrayUtils.h"  // do not remove this even if clion copes about it
+#include "utils/SpdWrapper.h"
 
 dvec3 LennardJones::directionalForce(Particle& p1, Particle& p2) const {
   const dvec3 rv = p2.getX() - p1.getX();
@@ -26,4 +27,19 @@ double LennardJones::simpleForce(const Particle& p, const double distance) {
   const double force_magnitude =
       24 * p.getEpsilon() * (sr6 - 2 * sr12) / (std::pow(distance, 2));
   return force_magnitude;
+}
+
+dvec3 LennardJones::directionalForceWithOffset(const Particle& p1,
+                                               const Particle& p2,
+                                               const dvec3& distance) {
+  const double r = ArrayUtils::L2Norm(distance);
+  if (r == 0) return {0, 0, 0};
+  const double sigma = (p1.getSigma() + p2.getSigma()) / 2;
+  const double epsilon = std::sqrt(p1.getEpsilon() * p2.getEpsilon());
+  const double sr = sigma / r;
+  const double sr6 = std::pow(sr, 6);
+  const double sr12 = std::pow(sr6, 2);
+  const double force_magnitude =
+      24 * epsilon * (sr6 - 2 * sr12) / std::pow(r, 2);
+  return force_magnitude * distance;
 }
