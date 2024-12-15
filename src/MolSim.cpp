@@ -105,7 +105,7 @@ int main(const int argc, char* argv[]) {
 
   double current_time = 0;
   int iteration = 0;
-//#ifndef BENCHMARK
+#ifndef BENCHMARK
   int writes = 0;
   int percentage = 0;
   double next_output_time = 0;
@@ -113,7 +113,7 @@ int main(const int argc, char* argv[]) {
   // it is unfeasible to check the numbers of outflown particles every iteration, so it is assumed that the number of particles is constant
   auto number_of_particles = particles.size();
   auto iteration_of_last_mups = 0;
-//#endif
+#endif
   const auto start_time = std::chrono::high_resolution_clock::now();
   auto time_of_last_mups = start_time;
   while (current_time <= arguments.t_end) {
@@ -133,7 +133,7 @@ int main(const int argc, char* argv[]) {
     }
 #endif
 
-//#ifndef BENCHMARK
+#ifndef BENCHMARK
     if (current_time >= next_output_time) {
       plotParticles(outputDirectory, iteration, writer, *container);
       writes++;
@@ -167,7 +167,7 @@ int main(const int argc, char* argv[]) {
         percentage++;
       }
     }
-//#endif
+#endif
     iteration++;
     current_time = arguments.delta_t * iteration;
   }
