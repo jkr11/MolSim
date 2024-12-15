@@ -162,7 +162,7 @@ int main(const int argc, char* argv[]) {
                 current_time_hrc - time_of_last_mups)
                 .count();
         double mups = (iteration - iteration_of_last_mups) *
-                      static_cast<double>(number_of_particles) * 10e6 /
+                      static_cast<double>(number_of_particles) * 1e6 /
                       static_cast<double>(microseconds);
         iteration_of_last_mups = iteration;
         time_of_last_mups = current_time_hrc;
