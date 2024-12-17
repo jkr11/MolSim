@@ -177,7 +177,7 @@ auto L2Norm(const Container &c) {
  * Calculates the square L2 norm for a given container.
  * @tparam Container
  * @param c
- * @return sqrt(sum_i(c[i]*c[i])).l
+ * @return sum_i(c[i]*c[i]).
  */
 template <class Container>
 auto squaredL2Norm(const Container &c) {

@@ -119,7 +119,8 @@ void XmlReader::read(std::vector<Particle>& particles,
         dvec3 velocity =
             unwrapVec<const Dvec3Type&, dvec3>(_velocity, "velocity");
         double mv;
-        if (config->thermostat().present() && cubes.mv() == 0.0) {
+        if (config->thermostat().present() &&
+            velocity == dvec3{0.0, 0.0, 0.0}) {
           mv = std::sqrt(simulation_parameters.thermostat_config.T_init /
                          cubes.mass());
         } else {
@@ -141,7 +142,8 @@ void XmlReader::read(std::vector<Particle>& particles,
         dvec3 origin = {_origin.x(), _origin.y(), _origin.z()};
         dvec3 velocity = {_velocity.x(), _velocity.y(), _velocity.z()};
         double mv;
-        if (config->thermostat().present() && spheres.mv() == 0.0) {
+        if (config->thermostat().present() &&
+            velocity == dvec3{0.0, 0.0, 0.0}) {
           mv = std::sqrt(simulation_parameters.thermostat_config.T_init /
                          spheres.mass());
         } else {
