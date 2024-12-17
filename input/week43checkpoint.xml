@@ -37,7 +37,7 @@
             <SingularGravity g="-12.44"/>
         </force>
         <delta_t>0.0005</delta_t>
-        <t_end>5</t_end>
+        <t_end>15</t_end>
         <twoD>true</twoD>
     </metadata>
     <cuboids>
@@ -62,7 +62,7 @@
             <mass>1.0</mass>
             <epsilon>1.0</epsilon>
             <sigma>1.2</sigma>
-            <mv>0.0</mv>
+            <mv>0.1</mv>
         </cuboid>
     </cuboids>
     <thermostat>
