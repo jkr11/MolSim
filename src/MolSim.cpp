@@ -106,6 +106,7 @@ int main(const int argc, char* argv[]) {
 
   double current_time = 0;
   int iteration = 0;
+  auto number_of_particles = particles.size();
 #ifndef BENCHMARK
   int writes = 0;
   int percentage = 0;
@@ -113,7 +114,6 @@ int main(const int argc, char* argv[]) {
   spdlog::stopwatch stopwatch;
   // it is unfeasible to check the numbers of outflown particles every
   // iteration, so it is assumed that the number of particles is constant
-  auto number_of_particles = particles.size();
   auto iteration_of_last_mups = 0;
 #endif
   const auto start_time = std::chrono::high_resolution_clock::now();
@@ -171,6 +171,7 @@ int main(const int argc, char* argv[]) {
         iteration_of_last_mups = iteration;
         time_of_last_mups = current_time_hrc;
 
+        // mmups are unaccounted for write time, therefore it is always a lower bound
         SpdWrapper::get()->info(
             "[{:<3.0f}%]: Iteration {:<12} | [ETA: {}:{:02}:{:02}], [average "
             "MMUPS since last log: {:02}]",
@@ -195,7 +196,18 @@ int main(const int argc, char* argv[]) {
   std::cout << "Simulation Time: " << elapsed_time.count() << " seconds"
             << std::endl;
 #endif
+  auto current_time_hrc = std::chrono::high_resolution_clock::now();
+  auto microseconds =
+      std::chrono::duration_cast<std::chrono::microseconds>(
+          current_time_hrc - start_time)
+          .count();
+  double mmups = iteration *
+                static_cast<double>(number_of_particles) *
+                (1.0 / static_cast<double>(microseconds));
+  std::cout << "MMUPS: " << mmups << std::endl;
   SpdWrapper::get()->info("Output written. Terminating...");
+
+
 
   return 0;
 }
