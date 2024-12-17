@@ -60,4 +60,10 @@
             <mv>0.0</mv>
         </spheroid>
     </spheroids>
+    <thermostat>
+        <T_init>80</T_init>
+        <n_thermostat>100</n_thermostat>
+        <T_target>20</T_target>
+        <deltaT>1</deltaT>
+    </thermostat>
 </simulation>

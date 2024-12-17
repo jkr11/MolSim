@@ -16,7 +16,7 @@ Thermostat::Thermostat(const ThermostatConfig &config) {
 }
 
 double Thermostat::getTemperature(ParticleContainer &particle_container) {
-  constexpr double D = 2;
+  constexpr double D = 2;  // TODO: make global so its 3D
   const auto E_kin = particle_container.getKineticEnergy();
   return (2 * E_kin) /
          (D * static_cast<double>(particle_container.getParticles().size()));
@@ -27,20 +27,13 @@ dvec3 Thermostat::getGlobalVelocity(ParticleContainer &particle_container) {
   particle_container.singleIterator([&avg_velocity_acc](const Particle &p) {
     avg_velocity_acc = avg_velocity_acc + p.getV();
   });
-  return avg_velocity_acc;
+  return (1.0 / static_cast<double>(particle_container.size())) *
+         avg_velocity_acc;
 }
+
 void Thermostat::applyBeta(ParticleContainer &particle_container,
                            const double beta) const {
-  const auto average_velocity = getGlobalVelocity(particle_container);
-  if (use_relative) {
-    particle_container.singleIterator([&average_velocity, &beta](Particle &p) {
-      p.subV(average_velocity);
-      p.mulV(beta);
-      p.addV(average_velocity);
-    });
-  } else {
-    particle_container.singleIterator([&beta](Particle &p) { p.mulV(beta); });
-  }
+  particle_container.singleIterator([&beta](Particle &p) { p.mulV(beta); });
 }
 
 void Thermostat::setTemperature(ParticleContainer &particle_container) const {
@@ -48,10 +41,17 @@ void Thermostat::setTemperature(ParticleContainer &particle_container) const {
   SpdWrapper::get()->info("current temperature is {}", current_temp);
   const double dT = T_target - current_temp;
 
-  const auto adjustment = std::abs(dT) < d_temp ? dT : d_temp;
+  double adjustment = 0;
+  if (std::abs(dT) > d_temp) {
+    adjustment = (dT / std::abs(dT)) * d_temp;
+  } else {
+    adjustment = dT;
+  }
   const double new_temp = current_temp + adjustment;
   SpdWrapper::get()->info("new_temp is {}", new_temp);
   const double beta = std::sqrt(new_temp / current_temp);
   SpdWrapper::get()->info("beta is {}", beta);
   applyBeta(particle_container, beta);
+  auto temp_after = getTemperature(particle_container);
+  SpdWrapper::get()->info("temp_after is {}", temp_after);
 }
