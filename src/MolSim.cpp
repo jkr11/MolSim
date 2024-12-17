@@ -122,8 +122,6 @@ int main(const int argc, char* argv[]) {
     verlet_integrator.step(*container);
     if (arguments.use_thermostat) {
       if (iteration % thermostat.n_thermostat == 0 && iteration > 0) {
-        SpdWrapper::get()->info("Setting temperature at iteration {}",
-                                iteration);
         thermostat.setTemperature(*container);
       }
     }
@@ -131,7 +129,12 @@ int main(const int argc, char* argv[]) {
     if (iteration == 1000) {
       const auto first_1k = std::chrono::high_resolution_clock::now();
       const std::chrono::duration<double> elapsed = first_1k - start_time;
-      std::cout << elapsed.count() << " seconds" << std::endl;
+      std::cout << "First 1k iterations took: " << elapsed.count() << " seconds"
+                << std::endl;
+      const auto mups = static_cast<double>(number_of_particles) * 1000 *
+                        (1.0 / elapsed.count());
+      std::cout << "MMUPS for first 1k iterations: " << mups * (1.0 / 1e6)
+                << std::endl;
     }
 #endif
 
@@ -162,16 +165,17 @@ int main(const int argc, char* argv[]) {
             std::chrono::duration_cast<std::chrono::microseconds>(
                 current_time_hrc - time_of_last_mups)
                 .count();
-        double mups = (iteration - iteration_of_last_mups) *
-                      static_cast<double>(number_of_particles) * 1e6 /
-                      static_cast<double>(microseconds);
+        double mmups = (iteration - iteration_of_last_mups) *
+                      static_cast<double>(number_of_particles) *
+                      (1.0 / static_cast<double>(microseconds));
         iteration_of_last_mups = iteration;
         time_of_last_mups = current_time_hrc;
 
         SpdWrapper::get()->info(
             "[{:<3.0f}%]: Iteration {:<12} | [ETA: {}:{:02}:{:02}], [average "
-            "MUPS since last log: {:e}]",
-            100 * current_time / arguments.t_end, iteration, h, m, s, mups);
+            "MMUPS since last log: {:02}]",
+            100 * current_time / arguments.t_end, iteration, h, m, s, mmups);
+
         percentage++;
       }
     }
