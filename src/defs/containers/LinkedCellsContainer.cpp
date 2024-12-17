@@ -607,7 +607,7 @@ ivec3 LinkedCellsContainer::cellIndexToCoord_testing(
 double LinkedCellsContainer::getKineticEnergy() {
   double E_kin = 0.0;
   singleIterator([&E_kin](const Particle &p) {
-    E_kin += 0.5 * p.getM() * ArrayUtils::L2InnerProduct(p.getV());
+    E_kin += p.getM() * ArrayUtils::L2InnerProduct(p.getV());
   });
-  return E_kin;
+  return E_kin * 0.5;
 }
