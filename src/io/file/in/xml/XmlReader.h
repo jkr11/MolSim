@@ -28,6 +28,31 @@ class XmlReader {
                    const std::string& filepath,
                    Arguments& simulation_parameters);
 
+  /**
+   * @brief validate that reflective boundaries are always pairs
+   * @param boundary the boundary configuration
+   */
+  static inline void validateBoundaries(
+      const LinkedCellsConfig::BoundaryConfig& boundary) {
+    if (boundary.x_high != boundary.x_low &&
+        (boundary.x_high == LinkedCellsConfig::Periodic ||
+         boundary.x_low == LinkedCellsConfig::Periodic)) {
+      throw std::runtime_error("x dimension has incompatible boundaries");
+    }
+
+    if (boundary.y_high != boundary.y_low &&
+        (boundary.y_high == LinkedCellsConfig::Periodic ||
+         boundary.y_low == LinkedCellsConfig::Periodic)) {
+      throw std::runtime_error("y dimension has incompatible boundaries");
+    }
+
+    if (boundary.z_high != boundary.z_low &&
+        (boundary.z_high == LinkedCellsConfig::Periodic ||
+         boundary.z_low == LinkedCellsConfig::Periodic)) {
+      throw std::runtime_error("z dimension has incompatible boundaries");
+    }
+  }
+
   static void loadCheckpoint(const std::string& filepath,
                              std::vector<Particle>& particles);
 };
