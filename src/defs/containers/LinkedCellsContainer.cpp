@@ -249,7 +249,7 @@ void LinkedCellsContainer::imposeInvariant() {
                 const dvec3 accounted_particle_distance =
                     q.getX() - p.getX() + particle_distance_offset;
 
-                if (ArrayUtils::squaredL2Norm(accounted_particle_distance) >=
+                if (ArrayUtils::L2InnerProduct(accounted_particle_distance) >=
                     cutoff * cutoff) {
                   continue;
                 }
