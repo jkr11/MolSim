@@ -62,5 +62,4 @@ void Thermostat::setTemperature(ParticleContainer &particle_container) const {
   auto temp_after = getTemperature(particle_container);
   SpdWrapper::get()->info("temp_after is {}", temp_after);
 #endif
-
 }

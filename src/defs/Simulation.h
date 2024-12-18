@@ -125,9 +125,11 @@ inline void printConfiguration(const Arguments& args) {
   // logger->info(
   //    "-- LennardJones");  // TODO: add printing to forces or write a map
   //}
-  logger->info("Thermostat: T_init {}", args.thermostat_config.T_init);
-  logger->info("--- T_target: {}", args.thermostat_config.T_target);
-  logger->info("--- deltaT: {}", args.thermostat_config.deltaT);
+  if (args.use_thermostat) {
+    logger->info("Thermostat: T_init {}", args.thermostat_config.T_init);
+    logger->info("--- T_target: {}", args.thermostat_config.T_target);
+    logger->info("--- deltaT: {}", args.thermostat_config.deltaT);
+  }
 
   if (std::holds_alternative<LinkedCellsConfig>(args.container_data)) {
     logger->info("Container Type: Linked Cells");
