@@ -183,7 +183,7 @@ void XmlReader::loadCheckpoint(const std::string& _filepath,
       int type = p.type();
       // TODO: this is also bad
       temp_particles.emplace_back(position, velocity, force, old_force, mass,
-                                  epsilon, sigma, type);
+                                  type, epsilon, sigma);
     }
     SpdWrapper::get()->info("Read {} particles from checkpoint",
                             temp_particles.size());

@@ -99,10 +99,12 @@ int main(const int argc, char* argv[]) {
   VerletIntegrator verlet_integrator(interactive_forces, singular_forces,
                                      arguments.delta_t);
   outputWriter::VTKWriter writer;
-
+  std::unique_ptr<Thermostat> thermostat;
   const std::string outputDirectory =
       createOutputDirectory("./output/", argc, argv);
-  Thermostat thermostat(arguments.thermostat_config);
+  if (arguments.use_thermostat) {
+    thermostat = std::make_unique<Thermostat>(arguments.thermostat_config);
+  }
 
   double current_time = 0;
   int iteration = 0;
@@ -116,10 +118,10 @@ int main(const int argc, char* argv[]) {
   while (current_time <= arguments.t_end) {
     verlet_integrator.step(*container);
     if (arguments.use_thermostat) {
-      if (iteration % thermostat.n_thermostat == 0 && iteration > 0) {
+      if (iteration % thermostat->n_thermostat == 0 && iteration > 0) {
         SpdWrapper::get()->info("Setting temperature at iteration {}",
                                 iteration);
-        thermostat.setTemperature(*container);
+        thermostat->setTemperature(*container);
       }
     }
 #ifdef BENCHMARK  // these are the first 1000 iterations for the contest
