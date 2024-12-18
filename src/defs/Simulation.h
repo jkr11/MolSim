@@ -117,14 +117,6 @@ inline void printConfiguration(const Arguments& args) {
   logger->info("t_end: {}", args.t_end);
   logger->info("delta_t: {}", args.delta_t);
   logger->info("Singular Forces:");
-  // TODO: fix this
-  // for (auto& force : args.singular_forces) {
-  //  logger->info("-- SingularGravityConfig");
-  // }
-  // for (auto& force : args.interactive_forces) {
-  // logger->info(
-  //    "-- LennardJones");  // TODO: add printing to forces or write a map
-  //}
   if (args.use_thermostat) {
     logger->info("Thermostat: T_init {}", args.thermostat_config.T_init);
     logger->info("--- T_target: {}", args.thermostat_config.T_target);
