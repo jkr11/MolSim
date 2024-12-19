@@ -35,7 +35,7 @@ TEST(LennardJones, directionalForce2) {
 /*
  * LennardJones directional force, arbitrary example 3
  */
-/* TODO: remove because this never happens in an actual simulation
+/* removed because this never happens in an actual simulation
 TEST(LennardJones, directionalForce3) {
   Particle p({0, 0, 0}, {0, 0, 0}, 0, 0, 0);
   Particle q({0, 0, 0}, {0, 0, 0}, 0, 0, 0);

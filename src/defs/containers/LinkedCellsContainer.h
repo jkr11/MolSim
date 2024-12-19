@@ -348,8 +348,6 @@ class LinkedCellsContainer final : public ParticleContainer {
    */
   std::vector<std::vector<Particle>>& getCells() { return cells; }
 
-  // TODO: this is a bit costly for every cell, either only apply it to edges or
-  // preprocess all results
   /**
    * @brief warp negative cell index to maximum cell coordinate to enable
    * multiple periodic boundaries in corners. For now this does only work in 2D

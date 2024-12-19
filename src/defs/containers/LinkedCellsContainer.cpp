@@ -79,7 +79,6 @@ LinkedCellsContainer::LinkedCellsContainer(
     }
   }
 
-  // TODO: pretty
   this->boundaries = {
       linked_cells_config.boundary_config.x_low,
       linked_cells_config.boundary_config.x_high,
@@ -164,7 +163,6 @@ void LinkedCellsContainer::imposeInvariant() {
   // apply boundary condition
   // it is assumed that GhostParticles do not have to persist, so we dont have
   // to iterate over the halo cells of Reflective Boundaries
-  // TODO: this is heavily inefficient in 2D if 6 is used, make dimension
   // accessible, 4 instead of 6
 
   for (size_t dimension = 0; dimension < 4; ++dimension) {
@@ -544,7 +542,6 @@ void LinkedCellsContainer::apply_reflective_boundary(const size_t dimension) {
 
 std::tuple<bool, ivec3, dvec3> LinkedCellsContainer::reflective_warp_around(
     const ivec3 cell_coordinate, const std::size_t raw_dimension) const {
-  // TODO: this is really bad code
   dvec3 offset = {0, 0, 0};
 
   if (raw_dimension == yhigh &&
