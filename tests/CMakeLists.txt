@@ -20,7 +20,8 @@ if (BUILD_TESTS)
             BoundaryConditionsTest.cpp
             PeriodicBoundaryTest.cpp
             testUtil.h
-            XmlReaderTest.cpp)
+            XmlReaderTest.cpp
+            ThermostatTest.cpp)
 
     target_link_libraries(MolSimTest MolSimLib GTest::gtest_main)
     include(GoogleTest)
