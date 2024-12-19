@@ -17,9 +17,7 @@ TEST(VerletIntegrator, step1) {
   LennardJones lj;
   std::vector<std::unique_ptr<InteractiveForce>> interactive_forces;
   interactive_forces.push_back(std::make_unique<LennardJones>());
-  // SingularGravity sg(-12.44);
   std::vector<std::unique_ptr<SingularForce>> singular_forces;
-  // singular_forces.push_back(std::make_unique<SingularGravity>(sg));
   VerletIntegrator integrator(interactive_forces, singular_forces, 0.01f);
 
   p.setF({0, 1, 0});
@@ -45,9 +43,7 @@ TEST(VerletIntegrator, step2) {
   LennardJones lj;
   std::vector<std::unique_ptr<InteractiveForce>> interactive_forces;
   interactive_forces.push_back(std::make_unique<LennardJones>());
-  // SingularGravity sg(-12.44);
   std::vector<std::unique_ptr<SingularForce>> singular_forces;
-  // singular_forces.push_back(std::make_unique<SingularGravity>(sg));
   VerletIntegrator integrator(interactive_forces, singular_forces, 0.01f);
 
   p.setF({0, 1, 0});

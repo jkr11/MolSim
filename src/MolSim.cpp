@@ -105,7 +105,6 @@ int main(const int argc, char* argv[]) {
     thermostat = std::make_unique<Thermostat>(arguments.thermostat_config);
   }
 
-
   double current_time = 0;
   int iteration = 0;
   auto number_of_particles = particles.size();
@@ -124,10 +123,7 @@ int main(const int argc, char* argv[]) {
     verlet_integrator.step(*container);
     if (arguments.use_thermostat) {
       if (iteration % thermostat->n_thermostat == 0 && iteration > 0) {
-        SpdWrapper::get()->info("Setting temperature at iteration {}",
-                                iteration);
         thermostat->setTemperature(*container);
-
       }
     }
 #ifdef BENCHMARK  // these are the first 1000 iterations for the contest

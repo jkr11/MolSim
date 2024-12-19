@@ -94,8 +94,6 @@ void CLArgumentParser::validateInputFile(
 // TODO: adjust this
 void CLArgumentParser::printUsage(const std::string &additionalNote,
                                   const std::string &programName) {
-  // std::cerr << red << "[Error:] " << additionalNote << reset << "\n";
-
   SpdWrapper::get()->set_level(spdlog::level::err);
   SpdWrapper::get()->error(additionalNote);
   SpdWrapper::get()->error(

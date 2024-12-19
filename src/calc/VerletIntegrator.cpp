@@ -18,22 +18,17 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
 
   particle_container.singleIterator([this](Particle& p) {
     dvec3 f = {0, 0, 0};
-    // TODO: this should be correct, as there is no cutoff on singular forces
     for (const auto& force : singular_forces) {
       f = f + force->applyForce(p);
     }
-    // p.setF(p.getF() + f);
     p.addF(f);
   });
 
   particle_container.pairIterator([this](Particle& p1, Particle& p2) {
     dvec3 f12 = {0.0, 0.0, 0.0};
-    // TODO: this might either be wrong or inefficient for week5
     for (const auto& force : interactive_forces) {
       f12 = f12 + force->directionalForce(p1, p2);
     }
-    // p1.setF(p1.getF() + f12);  // F_i = \sum_j F_ij
-    // p2.setF(p2.getF() - f12);  // g12 = -g21
     p1.addF(f12);
     p2.subF(f12);
   });

@@ -17,7 +17,6 @@ TEST(CLArgumentParser, parse) {
 
   int argc = 7;
 
-  // this is because of some warning
   char arg0[] = "MolSim";
   char arg1[] = "-f";
   char arg2[] = "testFile.txt";
@@ -26,7 +25,7 @@ TEST(CLArgumentParser, parse) {
   char arg5[] = "-l";
   char arg6[] = "warn";
 
-  char* argv[] = {arg0, arg1, arg2, arg3, arg4, arg5, arg6};  // , arg7, arg8 };
+  char* argv[] = {arg0, arg1, arg2, arg3, arg4, arg5, arg6};
 
   auto [name, step, write_checkpoint] = CLArgumentParser::parse(argc, argv);
   EXPECT_EQ(name, "testFile.txt");

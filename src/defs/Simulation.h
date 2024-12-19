@@ -57,11 +57,11 @@ struct ThermostatConfig {
   int n_thermostat{};
   bool use_relative{};
 };
-// TODO: apparently we cant nest these for access in XMLReader
+
 /**
  * @brief struct to hold command line arguments
  */
-// TODO: remove unecessary force configs, keep them for now
+
 struct Arguments {
   using SingularForceTypes =
       std::variant<SingularGravityConfig, HarmonicForceConfig>;
@@ -71,7 +71,6 @@ struct Arguments {
   enum ForceType { LennardJones, Gravity } force_type;
   enum SingularForceType { SingularGravity } singular_force_type;
   ThermostatConfig thermostat_config;
-  // TODO: remove this vvvvv
   bool use_thermostat;
   std::variant<LinkedCellsConfig, DirectSumConfig> container_data;
   std::vector<SingularForceTypes> singular_force_types;
