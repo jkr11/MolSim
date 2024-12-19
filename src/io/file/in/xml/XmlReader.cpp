@@ -84,7 +84,10 @@ void XmlReader::read(std::vector<Particle>& particles,
       auto thermostat = config->thermostat();
       ThermostatConfig thermostat_config = {
           .T_init = thermostat->T_init(),
-          .T_target = thermostat->T_target(),  // TODO: make this optional
+          .T_target =
+              thermostat->T_init(),  // we initialize both this and deltaT to
+                                     // its defaults first and then check if the
+                                     // actual values are present
           .deltaT =
               std::numeric_limits<double>::max(),  // Default to infinity, dont
                                                    // use infinity() limit
@@ -94,6 +97,9 @@ void XmlReader::read(std::vector<Particle>& particles,
 
       if (thermostat->deltaT().present()) {
         thermostat_config.deltaT = thermostat->deltaT().get();
+      }
+      if (thermostat->T_target().present()) {
+        thermostat_config.T_target = thermostat->T_target().get();
       }
 
       SpdWrapper::get()->info("Checkpoint thermostat deltaT {}",
@@ -185,7 +191,6 @@ void XmlReader::loadCheckpoint(const std::string& _filepath,
       double epsilon = p.epsilon();
       double sigma = p.sigma();
       int type = p.type();
-      // TODO: this is also bad
       temp_particles.emplace_back(position, velocity, force, old_force, mass,
                                   type, epsilon, sigma);
     }

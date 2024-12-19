@@ -49,6 +49,9 @@ void Thermostat::setTemperature(ParticleContainer &particle_container) const {
   } else {
     adjustment = dT;
   }
+#ifndef BENCHMARK
+  SpdWrapper::get()->info("adjustment is {}", adjustment);
+#endif
   const double new_temp = current_temp + adjustment;
 #ifndef BENCHMARK
   SpdWrapper::get()->info("new_temp is {}", new_temp);
