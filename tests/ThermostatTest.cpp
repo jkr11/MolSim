@@ -12,11 +12,11 @@
 #include "forces/SingularGravity.h"
 #include "io/CLArgumentParser.h"
 #include "io/file/in/xml/XmlReader.h"
-#include "io/file/out/XmlWriter.h"
 
+/**
+ *  @brief tests holding the temperature at 1.0
+ */
 TEST(Thermostat, holding) {
-  XmlReader reader;
-
   char arg0[] = "MolSim";
   char arg1[] = "-f";
   char arg2[] = "../../../tests/test_cuboid.xml";
@@ -95,6 +95,9 @@ TEST(Thermostat, holding) {
   }
 }
 
+/**
+ *  @brief test cooling from 20 to 1.0 with absolute values
+ */
 TEST(Thermostat, cooling) {
   char arg0[] = "MolSim";
   char arg1[] = "-f";
@@ -166,6 +169,9 @@ TEST(Thermostat, cooling) {
   EXPECT_NEAR(thermostat->getTemperature(*container), 1.0, 1e-6);
 }
 
+/**
+ *  @brief test heating from 1.0 to 10.0 with absolute values
+ */
 TEST(Thermostat, heating) {
   char arg0[] = "MolSim";
   char arg1[] = "-f";
@@ -239,7 +245,8 @@ TEST(Thermostat, heating) {
 
 /*
  * this test the gradual thermostat, so when deltaT is set. In this case its 2.0
- * as specified, so we would expect around 1k iterations if n_thermostat is 100
+ * as specified, so we would expect that it converges after at 3k iterations (a
+ * lot earlier actually but this is good enough) if n_thermostat is 100
  */
 TEST(Thermostat, gradual) {
   char arg0[] = "MolSim";
@@ -312,8 +319,6 @@ TEST(Thermostat, gradual) {
                   temp + thermostat->d_temp, thermostat->d_temp);
     }
   }
-
-  double temp = Thermostat::getTemperature(*container);
 
   EXPECT_NEAR(thermostat->getTemperature(*container), thermostat->T_target, 1);
 }
