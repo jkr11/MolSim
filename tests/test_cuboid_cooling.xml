@@ -38,7 +38,7 @@
         </cuboid>
     </cuboids>
     <thermostat>
-        <T_init>1.0</T_init>
+        <T_init>20</T_init>
         <n_thermostat>1000</n_thermostat>
         <T_target>1.0</T_target>
     </thermostat>

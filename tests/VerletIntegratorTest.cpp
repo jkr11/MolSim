@@ -5,8 +5,9 @@
 #include "../src/calc/VerletIntegrator.h"
 #include "../src/defs/containers/DirectSumContainer.h"
 #include "../src/forces/LennardJones.h"
+#include "forces/SingularGravity.h"
 #include "testUtil.h"
-
+#if 1
 /*
  * Positions correct after one step, arbitrary example 1
  */
@@ -14,7 +15,12 @@ TEST(VerletIntegrator, step1) {
   DirectSumContainer container;
   Particle p({1, 0, 0}, {1, 0, 0}, 1, 5, 1);
   LennardJones lj;
-  VerletIntegrator integrator(lj, 0.01f);
+  std::vector<std::unique_ptr<InteractiveForce>> interactive_forces;
+  interactive_forces.push_back(std::make_unique<LennardJones>());
+  // SingularGravity sg(-12.44);
+  std::vector<std::unique_ptr<SingularForce>> singular_forces;
+  // singular_forces.push_back(std::make_unique<SingularGravity>(sg));
+  VerletIntegrator integrator(interactive_forces, singular_forces, 0.01f);
 
   p.setF({0, 1, 0});
   container.addParticle(p);
@@ -37,7 +43,12 @@ TEST(VerletIntegrator, step2) {
   Particle p({1, 0, 0}, {0, 0, 0}, 1, 5, 1);
   Particle q({0, 1, 0}, {0, 0, 0}, 1, 5, 1);
   LennardJones lj;
-  VerletIntegrator integrator(lj, 0.01f);
+  std::vector<std::unique_ptr<InteractiveForce>> interactive_forces;
+  interactive_forces.push_back(std::make_unique<LennardJones>());
+  // SingularGravity sg(-12.44);
+  std::vector<std::unique_ptr<SingularForce>> singular_forces;
+  // singular_forces.push_back(std::make_unique<SingularGravity>(sg));
+  VerletIntegrator integrator(interactive_forces, singular_forces, 0.01f);
 
   p.setF({0, 1, 0});
   container.addParticle(p);
@@ -58,3 +69,4 @@ TEST(VerletIntegrator, step2) {
   DVEC3_NEAR(q.getF(), {5.62584, -5.62556, 0}, "New F of q wrong.", 1e-5f);
   DVEC3_NEAR(q.getV(), {0.02812, -0.02812, 0}, "Velocity of q wrong.", 1e-5f);
 }
+#endif

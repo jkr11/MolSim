@@ -28,8 +28,10 @@ TEST(CLArgumentParser, parse) {
 
   char* argv[] = {arg0, arg1, arg2, arg3, arg4, arg5, arg6};  // , arg7, arg8 };
 
-  auto [name, step] = CLArgumentParser::parse(argc, argv);
+  auto [name, step, write_checkpoint] = CLArgumentParser::parse(argc, argv);
   EXPECT_EQ(name, "testFile.txt");
   EXPECT_EQ(step, 0.5);
   EXPECT_EQ(SpdWrapper::get()->level(), spdlog::level::warn);
+  EXPECT_EQ(write_checkpoint, false);
+
 }

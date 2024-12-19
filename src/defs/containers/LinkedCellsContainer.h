@@ -73,6 +73,52 @@ class LinkedCellsContainer final : public ParticleContainer {
    */
   LinkedCellsConfig::BoundaryConfig boundary_config{};
 
+  /**
+   * @brief apply reflective boundary condition to a dimension
+   * @param dimension the problematic dimension
+   */
+  inline void apply_reflective_boundary(size_t dimension);
+
+  /**
+   *@brief index offsets orthogonal to a cell for each dimension, optimized for
+   *2D simulations
+   *
+   */
+  std::array<std::array<ivec3, 9>, 3> index_offsets = {{
+      // x
+      {{{1, 1, 0},
+        {1, 0, 0},
+        {1, -1, 0},
+        // optional for 3D
+        {1, 1, 1},
+        {1, 0, 1},
+        {1, -1, 1},
+        {1, 1, -1},
+        {1, 0, -1},
+        {1, -1, -1}}},
+      // y
+      {{{1, 1, 0},
+        {0, 1, 0},
+        {-1, 1, 0},
+        // optional for 3D
+        {1, 1, 1},
+        {0, 1, 1},
+        {-1, 1, 1},
+        {1, 1, -1},
+        {0, 1, -1},
+        {-1, 1, -1}}},
+      // z, order irrelevant for 2D
+      {{{1, 1, 1},
+        {1, 0, 1},
+        {1, -1, 1},
+        {0, 1, 1},
+        {0, 0, 1},
+        {0, -1, 1},
+        {-1, 1, 1},
+        {-1, 0, 1},
+        {-1, -1, 1}}},
+  }};
+
  public:
   /**
    * 6th root of 2
@@ -122,6 +168,12 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @return Vector of references to particles in the container
    */
   [[nodiscard]] std::vector<Particle*> getParticles() override;
+
+  /**
+   * @brief Get a vector of all particles in the container
+   * @return Vector of all particles
+   */
+  [[nodiscard]] std::vector<Particle> getParticlesObjects() override;
 
   /**
    * @brief Get the count of particles in the container
@@ -201,11 +253,25 @@ class LinkedCellsContainer final : public ParticleContainer {
   [[nodiscard]] inline std::size_t cellCoordToIndex(ivec3 position) const;
 
   /**
+   * @brief API for testing
+   * @param position Cell coordinate in 3 dimensions
+   * @return Associated cell index
+   */
+  [[nodiscard]] std::size_t cellCoordToIndex_testing(ivec3 position) const;
+
+  /**
    * @brief Gets the cell coordinate from the cell index
    * @param cellIndex Index of the cell
    * @return Cell coodinate in 3 dimensions
    */
   [[nodiscard]] inline ivec3 cellIndexToCoord(std::size_t cellIndex) const;
+
+  /**
+   * @brief API for testing
+   * @param cellIndex Index of the cell
+   * @return Cell coodinate in 3 dimensions
+   */
+  [[nodiscard]] ivec3 cellIndexToCoord_testing(std::size_t cellIndex) const;
 
   /**
    * @brief Checks if a cell coordinate exists in the container
@@ -257,21 +323,6 @@ class LinkedCellsContainer final : public ParticleContainer {
   [[nodiscard]] bool isBoundary_testing(std::size_t cellIndex) const;
 
   /**
-   * @brief calculates all directions of the halo cell
-   *  empty: no halo cell
-   *  0: west | low x
-   *  1: east | high x
-   *  2: down | low y
-   *  3: up | high y
-   *  4: south | low z
-   *  5: north | high z
-   * @param cellIndex cell index to be checked
-   * @return the direction of the halo cell
-   */
-  [[nodiscard]] std::vector<std::size_t> halo_direction(
-      std::size_t cellIndex) const;
-
-  /**
    * @brief calculates all directions of the boundary cell
    *
    *  empty: no boundary cell
@@ -282,14 +333,48 @@ class LinkedCellsContainer final : public ParticleContainer {
    *  4: south
    *  5: north
    * @param cellIndex cell index to be checked
+   * @param f function to check if it is a special cell
+   * @param lowerMagicNumber lower bound index
+   * @param upperMagicNumber upper bound index
    * @return the directions of the boundary cell
    */
-  [[nodiscard]] std::vector<std::size_t> boundary_direction(
-      std::size_t cellIndex) const;
+  [[nodiscard]] std::vector<std::size_t> special_cell_direction(
+      std::size_t cellIndex, const std::function<bool(std::size_t)>& f,
+      int lowerMagicNumber, int upperMagicNumber) const;
 
   /**
    * @brief Debug method to get direct access to the cells vector
    * @return Reference to the cell vector
    */
   std::vector<std::vector<Particle>>& getCells() { return cells; }
+
+  // TODO: this is a bit costly for every cell, either only apply it to edges or
+  // preprocess all results
+  /**
+   * @brief warp negative cell index to maximum cell coordinate to enable
+   * multiple periodic boundaries in corners. For now this does only work in 2D
+   * @param cell_coordinate the cell to be checked
+   * @param raw_dimension the dimension axis looked at
+   * @return bool: whether it is a valid cell to be checked, ivec3: real cell,
+   * dvec3: offset to be applied
+   */
+  [[nodiscard]] inline std::tuple<bool, ivec3, dvec3> reflective_warp_around(
+      ivec3 cell_coordinate, std::size_t raw_dimension) const;
+
+  /**
+   * API for testing
+   * @param cell_coordinate the cell to be checked
+   * @param raw_dimension the dimension axis looked at
+   * @return bool: whether it is a valid cell to be checked, ivec3: real cell,
+   * dvec3: offset to be applied
+   */
+  [[nodiscard]] std::tuple<bool, ivec3, dvec3> reflective_warp_around_testing(
+      ivec3 cell_coordinate, std::size_t raw_dimension) const;
+
+  double getKineticEnergy() override;
 };
+
+/**
+ * @brief directions for better readability; implicitly cast
+ */
+enum Directions { xlow, xhigh, ylow, yhigh, zlow, zhigh };

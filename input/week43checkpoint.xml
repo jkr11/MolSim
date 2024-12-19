@@ -5,8 +5,8 @@
         <container>
             <linkedCells>
                 <domain>
-                    <x>120</x>
-                    <y>50</y>
+                    <x>303</x>
+                    <y>180</y>
                     <z>1</z>
                 </domain>
                 <r_cutoff>3.0</r_cutoff>
@@ -34,36 +34,39 @@
         </container>
         <force>
             <LennardJones/>
+            <SingularGravity g="-12.44"/>
         </force>
-        <delta_t>0.00005</delta_t>
-        <t_end>10</t_end>
+        <delta_t>0.0005</delta_t>
+        <t_end>15</t_end>
         <twoD>true</twoD>
     </metadata>
-    <spheroids>
-        <spheroid>
+    <cuboids>
+        <cuboid>
             <velocity>
-                <x>0.0</x>
-                <y>-10</y>
-                <z>0.0</z>
-            </velocity>
-            <origin>
-                <x>60</x>
-                <y>25</y>
+                <x>0</x>
+                <y>0</y>
                 <z>0</z>
-            </origin>
-            <radius>15</radius>
-            <type>2</type>
-            <h>1.1225</h>
+            </velocity>
+            <corner>
+                <x>1.5</x>
+                <y>2</y>
+                <z>0</z>
+            </corner>
+            <dimensions>
+                <x>250</x>
+                <y>50</y>
+                <z>1</z>
+            </dimensions>
+            <type>1</type>
+            <h>1.2</h>
             <mass>1.0</mass>
-            <epsilon>5</epsilon>
-            <sigma>1</sigma>
-            <mv>0.0</mv>
-        </spheroid>
-    </spheroids>
+            <epsilon>1.0</epsilon>
+            <sigma>1.2</sigma>
+            <mv>0.1</mv>
+        </cuboid>
+    </cuboids>
     <thermostat>
-        <T_init>80</T_init>
-        <n_thermostat>100</n_thermostat>
-        <T_target>20</T_target>
-        <deltaT>1</deltaT>
+        <T_init>0.5</T_init>
+        <n_thermostat>1000</n_thermostat>
     </thermostat>
 </simulation>

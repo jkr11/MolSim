@@ -25,8 +25,8 @@ class CLArgumentParser {
    * @param argv Directly from main
    * @returns path to the input file
    */
-  static std::tuple<std::filesystem::path, double> parse(int argc,
-                                                         char *argv[]);
+  static std::tuple<std::filesystem::path, double, bool> parse(int argc,
+                                                               char *argv[]);
 
   /**
    * @brief print usage
