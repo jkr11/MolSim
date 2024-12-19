@@ -91,6 +91,5 @@
     <thermostat>
         <T_init>40</T_init>
         <n_thermostat>1000</n_thermostat>
-        <T_target>40</T_target>
     </thermostat>
 </simulation>
