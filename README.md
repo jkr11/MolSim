@@ -1,6 +1,8 @@
 MolSim - Group A
 ===
 
+Final Assignment
+
 ## Dependencies
 
 - Cmake 3.10
