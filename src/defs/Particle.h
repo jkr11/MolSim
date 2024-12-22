@@ -57,6 +57,12 @@ class Particle final {
    */
   double sigma{};
 
+  /**
+   * @brief neighbouring cells for the membranes
+   */
+public:
+  std::vector<Particle> neighbours;
+
  public:
   explicit Particle(int type = 0);
 
