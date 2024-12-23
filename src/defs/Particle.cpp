@@ -72,7 +72,7 @@ double Particle::getEpsilon() const { return epsilon; }
 
 double Particle::getSigma() const { return sigma; }
 
-const std::vector<Particle> &Particle::getNeighbours() const {
+const std::vector<std::pair<bool, Particle>> &Particle::getNeighbours() const {
   return neighbours;
 }
 
@@ -87,6 +87,10 @@ void Particle::setOldF(const dvec3 &oF) { old_f = oF; }
 void Particle::setEpsilon(const double &_epsilon) { epsilon = _epsilon; }
 
 void Particle::setSigma(const double &_sigma) { sigma = _sigma; }
+
+void Particle::pushBackNeighbour(bool diag, Particle &particle) {
+  neighbours.emplace_back(diag, particle);
+}
 
 void Particle::addV(const dvec3 &V) { v = v + V; }
 

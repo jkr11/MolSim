@@ -11,6 +11,8 @@ list(REMOVE_ITEM MY_SRC "${CMAKE_CURRENT_SOURCE_DIR}/MolSim.cpp")
 
 add_library(MolSimLib
         ${MY_SRC}
+        forces/HarmonicForce.cpp
+        forces/HarmonicForce.h
 )
 
 target_link_libraries(MolSimLib

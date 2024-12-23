@@ -82,9 +82,10 @@ void CuboidGenerator::generate(std::vector<Particle> &particles) {
               if (ni >= 0 && ni < dimensions[0] && nj >= 0 &&
                   nj < dimensions[1] && nk >= 0 && nk < dimensions[2]) {
                 const long neighborIndex = ni * dimensions[1] * dimensions[2] +
-                                    nj * dimensions[2] + nk;
-                particles[currentIndex].neighbours.push_back(
-                    particles[neighborIndex]);
+                                           nj * dimensions[2] + nk;
+                const bool isDiagonal = (di != 0) + (dj != 0) + (dk != 0) > 1;
+                particles[currentIndex].pushBackNeighbour(
+                    isDiagonal, particles[neighborIndex]);
               }
             }
           }

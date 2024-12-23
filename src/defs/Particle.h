@@ -60,7 +60,7 @@ class Particle final {
   /**
    * neighbouring cells for the membranes
    */
-  std::vector<Particle> neighbours{};
+  std::vector<std::pair<bool,Particle>> neighbours{};
 
  public:
   explicit Particle(int type = 0);
@@ -97,7 +97,7 @@ class Particle final {
 
   [[nodiscard]] double getSigma() const;
 
-  [[nodiscard]] const std::vector<Particle> &getNeighbours() const;
+  [[nodiscard]] const std::vector<std::pair<bool, Particle>> &getNeighbours() const;
 
   void setF(const std::array<double, 3> &F);
 
@@ -110,6 +110,8 @@ class Particle final {
   void setEpsilon(const double &epsilon);
 
   void setSigma(const double &sigma);
+
+  void pushBackNeighbour(bool diag, Particle &particle);
 
   void updateForceInTime();
 
