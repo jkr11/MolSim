@@ -58,10 +58,9 @@ class Particle final {
   double sigma{};
 
   /**
-   * @brief neighbouring cells for the membranes
+   * neighbouring cells for the membranes
    */
-public:
-  std::vector<Particle> neighbours;
+  std::vector<Particle> neighbours{};
 
  public:
   explicit Particle(int type = 0);
@@ -97,6 +96,8 @@ public:
   [[nodiscard]] double getEpsilon() const;
 
   [[nodiscard]] double getSigma() const;
+
+  [[nodiscard]] const std::vector<Particle> &getNeighbours() const;
 
   void setF(const std::array<double, 3> &F);
 
