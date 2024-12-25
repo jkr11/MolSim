@@ -3,3 +3,7 @@
 //
 
 #include "LennardJonesCutoff.h"
+
+dvec3 LennardJonesCutoff::directionalForce(Particle& p1, Particle& p2) const {
+  
+}
