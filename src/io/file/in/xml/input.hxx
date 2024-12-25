@@ -50,7 +50,7 @@
 #include <xsd/cxx/config.hxx>
 
 #if (XSD_INT_VERSION != 4000000L)
-//#error XSD runtime version mismatch
+// #error XSD runtime version mismatch
 #endif
 
 #include <xsd/cxx/pre.hxx>
@@ -254,6 +254,7 @@ class ForceType;
 class GravityType;
 class LennardJonesForce;
 class SingularGravityType;
+class HarmonicForceType;
 class ThermostatType;
 class simulation;
 class cuboids;
@@ -1235,6 +1236,23 @@ class ForceType : public ::xml_schema::type {
 
   void SingularGravity(::std::auto_ptr<SingularGravity_type> p);
 
+  // HarmonicForce
+  //
+  typedef ::HarmonicForceType HarmonicForce_type;
+  typedef ::xsd::cxx::tree::optional<HarmonicForce_type> HarmonicForce_optional;
+  typedef ::xsd::cxx::tree::traits<HarmonicForce_type, char>
+      HarmonicForce_traits;
+
+  const HarmonicForce_optional& HarmonicForce() const;
+
+  HarmonicForce_optional& HarmonicForce();
+
+  void HarmonicForce(const HarmonicForce_type& x);
+
+  void HarmonicForce(const HarmonicForce_optional& x);
+
+  void HarmonicForce(::std::auto_ptr<HarmonicForce_type> p);
+
   // Constructors.
   //
   ForceType();
@@ -1261,6 +1279,7 @@ class ForceType : public ::xml_schema::type {
   Gravity_optional Gravity_;
   LennardJones_optional LennardJones_;
   SingularGravity_optional SingularGravity_;
+  HarmonicForce_optional HarmonicForce_;
 };
 
 class GravityType : public ::xml_schema::type {
@@ -1353,6 +1372,61 @@ class SingularGravityType : public ::xml_schema::type {
 
  protected:
   g_optional g_;
+};
+
+class HarmonicForceType : public ::xml_schema::type {
+ public:
+  // r_0
+  //
+  typedef ::xml_schema::decimal r_0_type;
+  typedef ::xsd::cxx::tree::traits<r_0_type, char,
+                                   ::xsd::cxx::tree::schema_type::decimal>
+      r_0_traits;
+
+  const r_0_type& r_0() const;
+
+  r_0_type& r_0();
+
+  void r_0(const r_0_type& x);
+
+  // k
+  //
+  typedef ::xml_schema::decimal k_type;
+  typedef ::xsd::cxx::tree::traits<k_type, char,
+                                   ::xsd::cxx::tree::schema_type::decimal>
+      k_traits;
+
+  const k_type& k() const;
+
+  k_type& k();
+
+  void k(const k_type& x);
+
+  // Constructors.
+  //
+  HarmonicForceType(const r_0_type&, const k_type&);
+
+  HarmonicForceType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
+                    ::xml_schema::container* c = 0);
+
+  HarmonicForceType(const HarmonicForceType& x, ::xml_schema::flags f = 0,
+                    ::xml_schema::container* c = 0);
+
+  virtual HarmonicForceType* _clone(::xml_schema::flags f = 0,
+                                    ::xml_schema::container* c = 0) const;
+
+  HarmonicForceType& operator=(const HarmonicForceType& x);
+
+  virtual ~HarmonicForceType();
+
+  // Implementation.
+  //
+ protected:
+  void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
+
+ protected:
+  ::xsd::cxx::tree::one<r_0_type> r_0_;
+  ::xsd::cxx::tree::one<k_type> k_;
 };
 
 class ThermostatType : public ::xml_schema::type {
@@ -1802,6 +1876,8 @@ void operator<<(::xercesc::DOMAttr&, const LennardJonesForce&);
 void operator<<(::xml_schema::list_stream&, const LennardJonesForce&);
 
 void operator<<(::xercesc::DOMElement&, const SingularGravityType&);
+
+void operator<<(::xercesc::DOMElement&, const HarmonicForceType&);
 
 void operator<<(::xercesc::DOMElement&, const ThermostatType&);
 

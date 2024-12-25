@@ -71,6 +71,13 @@ void XmlReader::read(std::vector<Particle>& particles,
       simulation_parameters.singular_force_types.emplace_back(
           SingularGravityConfig{singular_force.SingularGravity()->g().get()});
     }
+    if (auto& singular_force = metadata.force();
+        singular_force.HarmonicForce().present()) {
+      simulation_parameters.singular_force_types.emplace_back(
+          HarmonicForceConfig{singular_force.HarmonicForce()->r_0(),
+                              singular_force.HarmonicForce()->k()});
+      DEBUG_PRINT("Using HarmonicForce");
+    }
     if (metadata.checkpoint().present()) {
       loadCheckpoint(metadata.checkpoint().get(), particles);
     }

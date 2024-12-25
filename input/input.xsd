@@ -126,6 +126,7 @@
             <xs:element name="Gravity" type="GravityType" minOccurs="0"/>
             <xs:element name="LennardJones" type="LennardJonesForce" minOccurs="0"/>
             <xs:element name="SingularGravity" type="SingularGravityType" minOccurs="0"/>
+            <xs:element name="HarmonicForce" type="HarmonicForceType" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -137,6 +138,13 @@
 
     <xs:complexType name="SingularGravityType">
         <xs:attribute name="g" type="xs:decimal"/>
+    </xs:complexType>
+
+    <xs:complexType name="HarmonicForceType">
+        <xs:sequence>
+            <xs:element name="r_0" type="xs:decimal"/>
+            <xs:element name="k" type="xs:decimal"/>
+        </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="ThermostatType">

@@ -625,6 +625,26 @@ void ForceType::SingularGravity(::std::auto_ptr<SingularGravity_type> x) {
   this->SingularGravity_.set(x);
 }
 
+const ForceType::HarmonicForce_optional& ForceType::HarmonicForce() const {
+  return this->HarmonicForce_;
+}
+
+ForceType::HarmonicForce_optional& ForceType::HarmonicForce() {
+  return this->HarmonicForce_;
+}
+
+void ForceType::HarmonicForce(const HarmonicForce_type& x) {
+  this->HarmonicForce_.set(x);
+}
+
+void ForceType::HarmonicForce(const HarmonicForce_optional& x) {
+  this->HarmonicForce_ = x;
+}
+
+void ForceType::HarmonicForce(::std::auto_ptr<HarmonicForce_type> x) {
+  this->HarmonicForce_.set(x);
+}
+
 // GravityType
 //
 
@@ -643,6 +663,27 @@ SingularGravityType::g_optional& SingularGravityType::g() { return this->g_; }
 void SingularGravityType::g(const g_type& x) { this->g_.set(x); }
 
 void SingularGravityType::g(const g_optional& x) { this->g_ = x; }
+
+// HarmonicForceType
+//
+
+const HarmonicForceType::r_0_type& HarmonicForceType::r_0() const {
+  return this->r_0_.get();
+}
+
+HarmonicForceType::r_0_type& HarmonicForceType::r_0() {
+  return this->r_0_.get();
+}
+
+void HarmonicForceType::r_0(const r_0_type& x) { this->r_0_.set(x); }
+
+const HarmonicForceType::k_type& HarmonicForceType::k() const {
+  return this->k_.get();
+}
+
+HarmonicForceType::k_type& HarmonicForceType::k() { return this->k_.get(); }
+
+void HarmonicForceType::k(const k_type& x) { this->k_.set(x); }
 
 // ThermostatType
 //
@@ -2079,21 +2120,24 @@ ForceType::ForceType()
     : ::xml_schema::type(),
       Gravity_(this),
       LennardJones_(this),
-      SingularGravity_(this) {}
+      SingularGravity_(this),
+      HarmonicForce_(this) {}
 
 ForceType::ForceType(const ForceType& x, ::xml_schema::flags f,
                      ::xml_schema::container* c)
     : ::xml_schema::type(x, f, c),
       Gravity_(x.Gravity_, f, this),
       LennardJones_(x.LennardJones_, f, this),
-      SingularGravity_(x.SingularGravity_, f, this) {}
+      SingularGravity_(x.SingularGravity_, f, this),
+      HarmonicForce_(x.HarmonicForce_, f, this) {}
 
 ForceType::ForceType(const ::xercesc::DOMElement& e, ::xml_schema::flags f,
                      ::xml_schema::container* c)
     : ::xml_schema::type(e, f | ::xml_schema::flags::base, c),
       Gravity_(this),
       LennardJones_(this),
-      SingularGravity_(this) {
+      SingularGravity_(this),
+      HarmonicForce_(this) {
   if ((f & ::xml_schema::flags::base) == 0) {
     ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
     this->parse(p, f);
@@ -2142,6 +2186,18 @@ void ForceType::parse(::xsd::cxx::xml::dom::parser<char>& p,
       }
     }
 
+    // HarmonicForce
+    //
+    if (n.name() == "HarmonicForce" && n.namespace_().empty()) {
+      ::std::auto_ptr<HarmonicForce_type> r(
+          HarmonicForce_traits::create(i, f, this));
+
+      if (!this->HarmonicForce_) {
+        this->HarmonicForce_.set(r);
+        continue;
+      }
+    }
+
     break;
   }
 }
@@ -2157,6 +2213,7 @@ ForceType& ForceType::operator=(const ForceType& x) {
     this->Gravity_ = x.Gravity_;
     this->LennardJones_ = x.LennardJones_;
     this->SingularGravity_ = x.SingularGravity_;
+    this->HarmonicForce_ = x.HarmonicForce_;
   }
 
   return *this;
@@ -2275,6 +2332,83 @@ SingularGravityType& SingularGravityType::operator=(
 }
 
 SingularGravityType::~SingularGravityType() {}
+
+// HarmonicForceType
+//
+
+HarmonicForceType::HarmonicForceType(const r_0_type& r_0, const k_type& k)
+    : ::xml_schema::type(), r_0_(r_0, this), k_(k, this) {}
+
+HarmonicForceType::HarmonicForceType(const HarmonicForceType& x,
+                                     ::xml_schema::flags f,
+                                     ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c), r_0_(x.r_0_, f, this), k_(x.k_, f, this) {}
+
+HarmonicForceType::HarmonicForceType(const ::xercesc::DOMElement& e,
+                                     ::xml_schema::flags f,
+                                     ::xml_schema::container* c)
+    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c),
+      r_0_(this),
+      k_(this) {
+  if ((f & ::xml_schema::flags::base) == 0) {
+    ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
+    this->parse(p, f);
+  }
+}
+
+void HarmonicForceType::parse(::xsd::cxx::xml::dom::parser<char>& p,
+                              ::xml_schema::flags f) {
+  for (; p.more_content(); p.next_content(false)) {
+    const ::xercesc::DOMElement& i(p.cur_element());
+    const ::xsd::cxx::xml::qualified_name<char> n(
+        ::xsd::cxx::xml::dom::name<char>(i));
+
+    // r_0
+    //
+    if (n.name() == "r_0" && n.namespace_().empty()) {
+      if (!r_0_.present()) {
+        this->r_0_.set(r_0_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    // k
+    //
+    if (n.name() == "k" && n.namespace_().empty()) {
+      if (!k_.present()) {
+        this->k_.set(k_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    break;
+  }
+
+  if (!r_0_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("r_0", "");
+  }
+
+  if (!k_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("k", "");
+  }
+}
+
+HarmonicForceType* HarmonicForceType::_clone(::xml_schema::flags f,
+                                             ::xml_schema::container* c) const {
+  return new class HarmonicForceType(*this, f, c);
+}
+
+HarmonicForceType& HarmonicForceType::operator=(const HarmonicForceType& x) {
+  if (this != &x) {
+    static_cast< ::xml_schema::type&>(*this) = x;
+    this->r_0_ = x.r_0_;
+    this->k_ = x.k_;
+  }
+
+  return *this;
+}
+
+HarmonicForceType::~HarmonicForceType() {}
 
 // ThermostatType
 //
@@ -3364,6 +3498,15 @@ void operator<<(::xercesc::DOMElement& e, const ForceType& i) {
 
     s << *i.SingularGravity();
   }
+
+  // HarmonicForce
+  //
+  if (i.HarmonicForce()) {
+    ::xercesc::DOMElement& s(
+        ::xsd::cxx::xml::dom::create_element("HarmonicForce", e));
+
+    s << *i.HarmonicForce();
+  }
 }
 
 void operator<<(::xercesc::DOMElement& e, const GravityType& i) {
@@ -3391,6 +3534,26 @@ void operator<<(::xercesc::DOMElement& e, const SingularGravityType& i) {
     ::xercesc::DOMAttr& a(::xsd::cxx::xml::dom::create_attribute("g", e));
 
     a << ::xml_schema::as_decimal(*i.g());
+  }
+}
+
+void operator<<(::xercesc::DOMElement& e, const HarmonicForceType& i) {
+  e << static_cast<const ::xml_schema::type&>(i);
+
+  // r_0
+  //
+  {
+    ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("r_0", e));
+
+    s << ::xml_schema::as_decimal(i.r_0());
+  }
+
+  // k
+  //
+  {
+    ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("k", e));
+
+    s << ::xml_schema::as_decimal(i.k());
   }
 }
 

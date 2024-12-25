@@ -165,7 +165,7 @@ void LinkedCellsContainer::imposeInvariant() {
   // to iterate over the halo cells of Reflective Boundaries
   // accessible, 4 instead of 6
 
-  for (size_t dimension = 0; dimension < 4; ++dimension) {
+  for (size_t dimension = 0; dimension < 6; ++dimension) {
     switch (boundaries[dimension]) {
       case LinkedCellsConfig::BoundaryType::Outflow: {
         // clear halo
@@ -217,7 +217,7 @@ void LinkedCellsContainer::imposeInvariant() {
           ivec3 cell_coordinates = cellIndexToCoord(cell_index);
 
           // change 3 to 9 for 3D
-          for (std::size_t i = 0; i < 3; ++i) {
+          for (std::size_t i = 0; i < 9; ++i) {
             ivec3 offset = index_offsets[problematic_dimension][i];
             const ivec3 cell_to_check = cell_coordinates + offset;
             bool is_adjacent_cell;

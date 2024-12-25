@@ -41,7 +41,10 @@ struct SingularGravityConfig {
   double g{};
 };
 
-struct HarmonicForceConfig {};
+struct HarmonicForceConfig {
+  double r_0{};
+  double k{};
+};
 
 struct LennardJonesConfig {};
 
