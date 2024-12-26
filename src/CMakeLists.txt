@@ -15,6 +15,8 @@ add_library(MolSimLib
         forces/HarmonicForce.h
         forces/LennardJonesCutoff.cpp
         forces/LennardJonesCutoff.h
+        forces/IndexForce.cpp
+        forces/IndexForce.h
 )
 
 target_link_libraries(MolSimLib

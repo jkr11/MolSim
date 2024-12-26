@@ -57,6 +57,14 @@ class CuboidGenerator final : public ParticleGenerator {
    * this cuboid is saved in
    */
   void generate(std::vector<Particle> &particles) override;
+
+  /**
+   * @brief Converts 3 to 1 D indeces
+   * @param two_d_indeces 3 D indeces
+   * @return 1 D indeces
+   */
+  [[nodiscard]] std::vector<int> getIndeces(
+      const std::vector<ivec3> &two_d_indeces) const;
 };
 
 #endif  // CUBOIDGENERATOR_H

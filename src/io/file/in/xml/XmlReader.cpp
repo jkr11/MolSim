@@ -78,6 +78,10 @@ void XmlReader::read(std::vector<Particle>& particles,
                               singular_force.HarmonicForce()->k()});
       DEBUG_PRINT("Using HarmonicForce");
     }
+    // if (auto& index_force = metadata.force();
+    // index_force.IndexForce().present()) {
+    //
+    // }
     if (metadata.checkpoint().present()) {
       loadCheckpoint(metadata.checkpoint().get(), particles);
     }
