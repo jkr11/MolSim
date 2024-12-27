@@ -255,6 +255,7 @@ class GravityType;
 class LennardJonesForce;
 class SingularGravityType;
 class HarmonicForceType;
+class IndexForceType;
 class ThermostatType;
 class simulation;
 class cuboids;
@@ -1253,6 +1254,22 @@ class ForceType : public ::xml_schema::type {
 
   void HarmonicForce(::std::auto_ptr<HarmonicForce_type> p);
 
+  // IndexForce
+  //
+  typedef ::IndexForceType IndexForce_type;
+  typedef ::xsd::cxx::tree::optional<IndexForce_type> IndexForce_optional;
+  typedef ::xsd::cxx::tree::traits<IndexForce_type, char> IndexForce_traits;
+
+  const IndexForce_optional& IndexForce() const;
+
+  IndexForce_optional& IndexForce();
+
+  void IndexForce(const IndexForce_type& x);
+
+  void IndexForce(const IndexForce_optional& x);
+
+  void IndexForce(::std::auto_ptr<IndexForce_type> p);
+
   // Constructors.
   //
   ForceType();
@@ -1280,6 +1297,7 @@ class ForceType : public ::xml_schema::type {
   LennardJones_optional LennardJones_;
   SingularGravity_optional SingularGravity_;
   HarmonicForce_optional HarmonicForce_;
+  IndexForce_optional IndexForce_;
 };
 
 class GravityType : public ::xml_schema::type {
@@ -1427,6 +1445,94 @@ class HarmonicForceType : public ::xml_schema::type {
  protected:
   ::xsd::cxx::tree::one<r_0_type> r_0_;
   ::xsd::cxx::tree::one<k_type> k_;
+};
+
+class IndexForceType : public ::xml_schema::type {
+ public:
+  // index
+  //
+  typedef ::Ivec3Type index_type;
+  typedef ::xsd::cxx::tree::sequence<index_type> index_sequence;
+  typedef index_sequence::iterator index_iterator;
+  typedef index_sequence::const_iterator index_const_iterator;
+  typedef ::xsd::cxx::tree::traits<index_type, char> index_traits;
+
+  const index_sequence& index() const;
+
+  index_sequence& index();
+
+  void index(const index_sequence& s);
+
+  // time
+  //
+  typedef ::xml_schema::decimal time_type;
+  typedef ::xsd::cxx::tree::traits<time_type, char,
+                                   ::xsd::cxx::tree::schema_type::decimal>
+      time_traits;
+
+  const time_type& time() const;
+
+  time_type& time();
+
+  void time(const time_type& x);
+
+  // force_values
+  //
+  typedef ::Dvec3Type force_values_type;
+  typedef ::xsd::cxx::tree::traits<force_values_type, char> force_values_traits;
+
+  const force_values_type& force_values() const;
+
+  force_values_type& force_values();
+
+  void force_values(const force_values_type& x);
+
+  void force_values(::std::auto_ptr<force_values_type> p);
+
+  // dimensions
+  //
+  typedef ::Ivec3Type dimensions_type;
+  typedef ::xsd::cxx::tree::traits<dimensions_type, char> dimensions_traits;
+
+  const dimensions_type& dimensions() const;
+
+  dimensions_type& dimensions();
+
+  void dimensions(const dimensions_type& x);
+
+  void dimensions(::std::auto_ptr<dimensions_type> p);
+
+  // Constructors.
+  //
+  IndexForceType(const time_type&, const force_values_type&,
+                 const dimensions_type&);
+
+  IndexForceType(const time_type&, ::std::auto_ptr<force_values_type>,
+                 ::std::auto_ptr<dimensions_type>);
+
+  IndexForceType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
+                 ::xml_schema::container* c = 0);
+
+  IndexForceType(const IndexForceType& x, ::xml_schema::flags f = 0,
+                 ::xml_schema::container* c = 0);
+
+  virtual IndexForceType* _clone(::xml_schema::flags f = 0,
+                                 ::xml_schema::container* c = 0) const;
+
+  IndexForceType& operator=(const IndexForceType& x);
+
+  virtual ~IndexForceType();
+
+  // Implementation.
+  //
+ protected:
+  void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
+
+ protected:
+  index_sequence index_;
+  ::xsd::cxx::tree::one<time_type> time_;
+  ::xsd::cxx::tree::one<force_values_type> force_values_;
+  ::xsd::cxx::tree::one<dimensions_type> dimensions_;
 };
 
 class ThermostatType : public ::xml_schema::type {
@@ -1878,6 +1984,8 @@ void operator<<(::xml_schema::list_stream&, const LennardJonesForce&);
 void operator<<(::xercesc::DOMElement&, const SingularGravityType&);
 
 void operator<<(::xercesc::DOMElement&, const HarmonicForceType&);
+
+void operator<<(::xercesc::DOMElement&, const IndexForceType&);
 
 void operator<<(::xercesc::DOMElement&, const ThermostatType&);
 

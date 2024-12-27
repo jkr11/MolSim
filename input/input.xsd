@@ -127,6 +127,7 @@
             <xs:element name="LennardJones" type="LennardJonesForce" minOccurs="0"/>
             <xs:element name="SingularGravity" type="SingularGravityType" minOccurs="0"/>
             <xs:element name="HarmonicForce" type="HarmonicForceType" minOccurs="0"/>
+            <xs:element name="IndexForce" type="IndexForceType" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -144,6 +145,15 @@
         <xs:sequence>
             <xs:element name="r_0" type="xs:decimal"/>
             <xs:element name="k" type="xs:decimal"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="IndexForceType">
+        <xs:sequence>
+            <xs:element name="index" type="Ivec3Type" maxOccurs="unbounded"/>
+            <xs:element name="time" type="xs:decimal" maxOccurs="1"/>
+            <xs:element name="force_values" type="Dvec3Type" maxOccurs="1"/>
+            <xs:element name="dimensions" type="Ivec3Type" maxOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
 

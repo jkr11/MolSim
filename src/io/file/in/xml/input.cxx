@@ -645,6 +645,26 @@ void ForceType::HarmonicForce(::std::auto_ptr<HarmonicForce_type> x) {
   this->HarmonicForce_.set(x);
 }
 
+const ForceType::IndexForce_optional& ForceType::IndexForce() const {
+  return this->IndexForce_;
+}
+
+ForceType::IndexForce_optional& ForceType::IndexForce() {
+  return this->IndexForce_;
+}
+
+void ForceType::IndexForce(const IndexForce_type& x) {
+  this->IndexForce_.set(x);
+}
+
+void ForceType::IndexForce(const IndexForce_optional& x) {
+  this->IndexForce_ = x;
+}
+
+void ForceType::IndexForce(::std::auto_ptr<IndexForce_type> x) {
+  this->IndexForce_.set(x);
+}
+
 // GravityType
 //
 
@@ -684,6 +704,57 @@ const HarmonicForceType::k_type& HarmonicForceType::k() const {
 HarmonicForceType::k_type& HarmonicForceType::k() { return this->k_.get(); }
 
 void HarmonicForceType::k(const k_type& x) { this->k_.set(x); }
+
+// IndexForceType
+//
+
+const IndexForceType::index_sequence& IndexForceType::index() const {
+  return this->index_;
+}
+
+IndexForceType::index_sequence& IndexForceType::index() { return this->index_; }
+
+void IndexForceType::index(const index_sequence& s) { this->index_ = s; }
+
+const IndexForceType::time_type& IndexForceType::time() const {
+  return this->time_.get();
+}
+
+IndexForceType::time_type& IndexForceType::time() { return this->time_.get(); }
+
+void IndexForceType::time(const time_type& x) { this->time_.set(x); }
+
+const IndexForceType::force_values_type& IndexForceType::force_values() const {
+  return this->force_values_.get();
+}
+
+IndexForceType::force_values_type& IndexForceType::force_values() {
+  return this->force_values_.get();
+}
+
+void IndexForceType::force_values(const force_values_type& x) {
+  this->force_values_.set(x);
+}
+
+void IndexForceType::force_values(::std::auto_ptr<force_values_type> x) {
+  this->force_values_.set(x);
+}
+
+const IndexForceType::dimensions_type& IndexForceType::dimensions() const {
+  return this->dimensions_.get();
+}
+
+IndexForceType::dimensions_type& IndexForceType::dimensions() {
+  return this->dimensions_.get();
+}
+
+void IndexForceType::dimensions(const dimensions_type& x) {
+  this->dimensions_.set(x);
+}
+
+void IndexForceType::dimensions(::std::auto_ptr<dimensions_type> x) {
+  this->dimensions_.set(x);
+}
 
 // ThermostatType
 //
@@ -2121,7 +2192,8 @@ ForceType::ForceType()
       Gravity_(this),
       LennardJones_(this),
       SingularGravity_(this),
-      HarmonicForce_(this) {}
+      HarmonicForce_(this),
+      IndexForce_(this) {}
 
 ForceType::ForceType(const ForceType& x, ::xml_schema::flags f,
                      ::xml_schema::container* c)
@@ -2129,7 +2201,8 @@ ForceType::ForceType(const ForceType& x, ::xml_schema::flags f,
       Gravity_(x.Gravity_, f, this),
       LennardJones_(x.LennardJones_, f, this),
       SingularGravity_(x.SingularGravity_, f, this),
-      HarmonicForce_(x.HarmonicForce_, f, this) {}
+      HarmonicForce_(x.HarmonicForce_, f, this),
+      IndexForce_(x.IndexForce_, f, this) {}
 
 ForceType::ForceType(const ::xercesc::DOMElement& e, ::xml_schema::flags f,
                      ::xml_schema::container* c)
@@ -2137,7 +2210,8 @@ ForceType::ForceType(const ::xercesc::DOMElement& e, ::xml_schema::flags f,
       Gravity_(this),
       LennardJones_(this),
       SingularGravity_(this),
-      HarmonicForce_(this) {
+      HarmonicForce_(this),
+      IndexForce_(this) {
   if ((f & ::xml_schema::flags::base) == 0) {
     ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
     this->parse(p, f);
@@ -2198,6 +2272,17 @@ void ForceType::parse(::xsd::cxx::xml::dom::parser<char>& p,
       }
     }
 
+    // IndexForce
+    //
+    if (n.name() == "IndexForce" && n.namespace_().empty()) {
+      ::std::auto_ptr<IndexForce_type> r(IndexForce_traits::create(i, f, this));
+
+      if (!this->IndexForce_) {
+        this->IndexForce_.set(r);
+        continue;
+      }
+    }
+
     break;
   }
 }
@@ -2214,6 +2299,7 @@ ForceType& ForceType::operator=(const ForceType& x) {
     this->LennardJones_ = x.LennardJones_;
     this->SingularGravity_ = x.SingularGravity_;
     this->HarmonicForce_ = x.HarmonicForce_;
+    this->IndexForce_ = x.IndexForce_;
   }
 
   return *this;
@@ -2409,6 +2495,132 @@ HarmonicForceType& HarmonicForceType::operator=(const HarmonicForceType& x) {
 }
 
 HarmonicForceType::~HarmonicForceType() {}
+
+// IndexForceType
+//
+
+IndexForceType::IndexForceType(const time_type& time,
+                               const force_values_type& force_values,
+                               const dimensions_type& dimensions)
+    : ::xml_schema::type(),
+      index_(this),
+      time_(time, this),
+      force_values_(force_values, this),
+      dimensions_(dimensions, this) {}
+
+IndexForceType::IndexForceType(const time_type& time,
+                               ::std::auto_ptr<force_values_type> force_values,
+                               ::std::auto_ptr<dimensions_type> dimensions)
+    : ::xml_schema::type(),
+      index_(this),
+      time_(time, this),
+      force_values_(force_values, this),
+      dimensions_(dimensions, this) {}
+
+IndexForceType::IndexForceType(const IndexForceType& x, ::xml_schema::flags f,
+                               ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c),
+      index_(x.index_, f, this),
+      time_(x.time_, f, this),
+      force_values_(x.force_values_, f, this),
+      dimensions_(x.dimensions_, f, this) {}
+
+IndexForceType::IndexForceType(const ::xercesc::DOMElement& e,
+                               ::xml_schema::flags f,
+                               ::xml_schema::container* c)
+    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c),
+      index_(this),
+      time_(this),
+      force_values_(this),
+      dimensions_(this) {
+  if ((f & ::xml_schema::flags::base) == 0) {
+    ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
+    this->parse(p, f);
+  }
+}
+
+void IndexForceType::parse(::xsd::cxx::xml::dom::parser<char>& p,
+                           ::xml_schema::flags f) {
+  for (; p.more_content(); p.next_content(false)) {
+    const ::xercesc::DOMElement& i(p.cur_element());
+    const ::xsd::cxx::xml::qualified_name<char> n(
+        ::xsd::cxx::xml::dom::name<char>(i));
+
+    // index
+    //
+    if (n.name() == "index" && n.namespace_().empty()) {
+      ::std::auto_ptr<index_type> r(index_traits::create(i, f, this));
+
+      this->index_.push_back(r);
+      continue;
+    }
+
+    // time
+    //
+    if (n.name() == "time" && n.namespace_().empty()) {
+      if (!time_.present()) {
+        this->time_.set(time_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    // force_values
+    //
+    if (n.name() == "force_values" && n.namespace_().empty()) {
+      ::std::auto_ptr<force_values_type> r(
+          force_values_traits::create(i, f, this));
+
+      if (!force_values_.present()) {
+        this->force_values_.set(r);
+        continue;
+      }
+    }
+
+    // dimensions
+    //
+    if (n.name() == "dimensions" && n.namespace_().empty()) {
+      ::std::auto_ptr<dimensions_type> r(dimensions_traits::create(i, f, this));
+
+      if (!dimensions_.present()) {
+        this->dimensions_.set(r);
+        continue;
+      }
+    }
+
+    break;
+  }
+
+  if (!time_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("time", "");
+  }
+
+  if (!force_values_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("force_values", "");
+  }
+
+  if (!dimensions_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("dimensions", "");
+  }
+}
+
+IndexForceType* IndexForceType::_clone(::xml_schema::flags f,
+                                       ::xml_schema::container* c) const {
+  return new class IndexForceType(*this, f, c);
+}
+
+IndexForceType& IndexForceType::operator=(const IndexForceType& x) {
+  if (this != &x) {
+    static_cast< ::xml_schema::type&>(*this) = x;
+    this->index_ = x.index_;
+    this->time_ = x.time_;
+    this->force_values_ = x.force_values_;
+    this->dimensions_ = x.dimensions_;
+  }
+
+  return *this;
+}
+
+IndexForceType::~IndexForceType() {}
 
 // ThermostatType
 //
@@ -3507,6 +3719,15 @@ void operator<<(::xercesc::DOMElement& e, const ForceType& i) {
 
     s << *i.HarmonicForce();
   }
+
+  // IndexForce
+  //
+  if (i.IndexForce()) {
+    ::xercesc::DOMElement& s(
+        ::xsd::cxx::xml::dom::create_element("IndexForce", e));
+
+    s << *i.IndexForce();
+  }
 }
 
 void operator<<(::xercesc::DOMElement& e, const GravityType& i) {
@@ -3554,6 +3775,46 @@ void operator<<(::xercesc::DOMElement& e, const HarmonicForceType& i) {
     ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("k", e));
 
     s << ::xml_schema::as_decimal(i.k());
+  }
+}
+
+void operator<<(::xercesc::DOMElement& e, const IndexForceType& i) {
+  e << static_cast<const ::xml_schema::type&>(i);
+
+  // index
+  //
+  for (IndexForceType::index_const_iterator b(i.index().begin()),
+       n(i.index().end());
+       b != n; ++b) {
+    ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("index", e));
+
+    s << *b;
+  }
+
+  // time
+  //
+  {
+    ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("time", e));
+
+    s << ::xml_schema::as_decimal(i.time());
+  }
+
+  // force_values
+  //
+  {
+    ::xercesc::DOMElement& s(
+        ::xsd::cxx::xml::dom::create_element("force_values", e));
+
+    s << i.force_values();
+  }
+
+  // dimensions
+  //
+  {
+    ::xercesc::DOMElement& s(
+        ::xsd::cxx::xml::dom::create_element("dimensions", e));
+
+    s << i.dimensions();
   }
 }
 

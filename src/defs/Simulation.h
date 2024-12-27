@@ -46,6 +46,13 @@ struct HarmonicForceConfig {
   double k{};
 };
 
+struct IndexForceConfig {
+  std::vector<ivec3> indeces{};
+  double ent_time{};
+  dvec3 force_values{};
+  ivec3 domain{};
+};
+
 struct LennardJonesConfig {};
 
 struct GravityConfig {};
@@ -78,6 +85,7 @@ struct Arguments {
   std::variant<LinkedCellsConfig, DirectSumConfig> container_data;
   std::vector<SingularForceTypes> singular_force_types;
   std::vector<InteractiveForceTypes> interactive_force_types;
+  std::vector<IndexForceConfig> index_force_configs;
 };
 
 /**

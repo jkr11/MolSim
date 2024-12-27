@@ -6,6 +6,7 @@
 #include "defs/containers/DirectSumContainer.h"
 #include "defs/containers/LinkedCellsContainer.h"
 #include "forces/Gravity.h"
+#include "forces/IndexForce.h"
 #include "forces/LennardJones.h"
 #include "forces/SingularGravity.h"
 #include "io/CLArgumentParser.h"
@@ -93,6 +94,12 @@ int main(const int argc, char* argv[]) {
     } else {
       SpdWrapper::get()->error("Unrecognized singular force");
     }
+  }
+  std::vector<std::unique_ptr<IndexForce>> index_forces;
+  for (const auto& config : arguments.index_force_configs) {
+    const auto& [ids, time, force_values, dims] = config;
+    index_forces.push_back(
+        std::make_unique<IndexForce>(ids, time, force_values, dims));
   }
 
   VerletIntegrator verlet_integrator(interactive_forces, singular_forces,

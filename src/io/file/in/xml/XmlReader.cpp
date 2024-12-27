@@ -78,10 +78,21 @@ void XmlReader::read(std::vector<Particle>& particles,
                               singular_force.HarmonicForce()->k()});
       DEBUG_PRINT("Using HarmonicForce");
     }
-    // if (auto& index_force = metadata.force();
-    // index_force.IndexForce().present()) {
-    //
-    // }
+    if (auto& index_force = metadata.force();
+        index_force.IndexForce().present()) {
+      std::vector<ivec3> indices{};
+      for (auto& i : index_force.IndexForce()->index()) {
+        indices.push_back(unwrapVec<const Ivec3Type&, ivec3>(i, "index"));
+      }
+      simulation_parameters.index_force_configs.emplace_back(IndexForceConfig{
+          indices,
+          index_force.IndexForce()->time(),
+          unwrapVec<const Dvec3Type&, dvec3>(
+              index_force.IndexForce()->force_values(), "force_values"),
+          unwrapVec<const Ivec3Type&, ivec3>(
+              index_force.IndexForce()->dimensions(), "dimensions"),
+      });
+    }
     if (metadata.checkpoint().present()) {
       loadCheckpoint(metadata.checkpoint().get(), particles);
     }
