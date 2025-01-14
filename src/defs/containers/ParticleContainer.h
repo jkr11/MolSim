@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "defs/Particle.h"
+#include "forces/IndexForce.h"
 
 /**
  * @brief Interface for an object storing particles while providing single and
@@ -73,4 +74,6 @@ class ParticleContainer {
       const std::function<void(Particle&, Particle&)>& f) = 0;
 
   virtual double getKineticEnergy() = 0;
+
+  virtual void addIndexForce(IndexForce& index_force);
 };

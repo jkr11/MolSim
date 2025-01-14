@@ -6,6 +6,7 @@
 #include "defs/Particle.h"
 #include "defs/Simulation.h"
 #include "defs/containers/ParticleContainer.h"
+#include "forces/IndexForce.h"
 
 /**
  * @brief a particle container with linked cells
@@ -72,6 +73,8 @@ class LinkedCellsContainer final : public ParticleContainer {
    * the boundary config of each direction of the simulation
    */
   LinkedCellsConfig::BoundaryConfig boundary_config{};
+
+  IndexForce index_force;
 
   /**
    * @brief apply reflective boundary condition to a dimension
@@ -370,6 +373,10 @@ class LinkedCellsContainer final : public ParticleContainer {
       ivec3 cell_coordinate, std::size_t raw_dimension) const;
 
   double getKineticEnergy() override;
+
+  void setIndexForce(const IndexForce& index_force) {
+    this->index_force = index_force;
+  }
 };
 
 /**

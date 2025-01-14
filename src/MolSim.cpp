@@ -58,6 +58,13 @@ int main(const int argc, char* argv[]) {
   printConfiguration(arguments);
   SpdWrapper::get()->info("Step size: {}", step_size);
 
+  std::vector<std::unique_ptr<IndexForce>> index_forces;
+  for (const auto& config : arguments.index_force_configs) {
+    const auto& [ids, time, force_values, dims] = config;
+    index_forces.push_back(
+        std::make_unique<IndexForce>(ids, time, force_values, dims));
+  }
+
   std::unique_ptr<ParticleContainer> container;
   if (std::holds_alternative<LinkedCellsConfig>(arguments.container_data)) {
     const auto& linked_cells_data =
@@ -65,6 +72,7 @@ int main(const int argc, char* argv[]) {
     container = std::make_unique<LinkedCellsContainer>(linked_cells_data);
     container->addParticles(particles);
     container->imposeInvariant();
+    container->addIndexForce(*index_forces[0]); // this is disgusting TODO
   } else if (std::holds_alternative<DirectSumConfig>(
                  arguments.container_data)) {
     container = std::make_unique<DirectSumContainer>();
@@ -94,12 +102,6 @@ int main(const int argc, char* argv[]) {
     } else {
       SpdWrapper::get()->error("Unrecognized singular force");
     }
-  }
-  std::vector<std::unique_ptr<IndexForce>> index_forces;
-  for (const auto& config : arguments.index_force_configs) {
-    const auto& [ids, time, force_values, dims] = config;
-    index_forces.push_back(
-        std::make_unique<IndexForce>(ids, time, force_values, dims));
   }
 
   VerletIntegrator verlet_integrator(interactive_forces, singular_forces,
