@@ -4,7 +4,8 @@
 #include "calc/VerletIntegrator.h"
 #include "defs/Thermostat.h"
 #include "defs/containers/DirectSumContainer.h"
-#include "defs/containers/LinkedCellsContainer.h"
+//#include "defs/containers/LinkedCellsContainer.h"
+#include "defs/containers/CNPC.h"
 #include "forces/Gravity.h"
 #include "forces/LennardJones.h"
 #include "forces/SingularGravity.h"
@@ -61,7 +62,7 @@ int main(const int argc, char* argv[]) {
   if (std::holds_alternative<LinkedCellsConfig>(arguments.container_data)) {
     const auto& linked_cells_data =
         std::get<LinkedCellsConfig>(arguments.container_data);
-    container = std::make_unique<LinkedCellsContainer>(linked_cells_data);
+    container = std::make_unique<CNPC>(linked_cells_data);  // TODO: change back if CNPC is not used
     container->addParticles(particles);
     container->imposeInvariant();
   } else if (std::holds_alternative<DirectSumConfig>(
