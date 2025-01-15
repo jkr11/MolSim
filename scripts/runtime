@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Check if a command is provided as an argument
+if [ $# -eq 0 ]; then
+    echo "Usage: $0 <command>"
+    exit 1
+fi
+
+command=$@
+total_time=0
+
+# Execute the command three times
+for i in {1..3}; do
+    echo "Run $i: Executing '$command'..."
+    start_time=$(date +%s.%N)  # Record start time
+    eval "$command" >/dev/null 2>&1  # Execute the command, suppress output
+    end_time=$(date +%s.%N)    # Record end time
+
+    # Calculate the elapsed time for this run
+    elapsed_time=$(echo "$end_time - $start_time" | bc)
+    echo "Run $i: Execution time = ${elapsed_time}s"
+    total_time=$(echo "$total_time + $elapsed_time" | bc)
+done
+
+# Calculate and print the average execution time
+average_time=$(echo "$total_time / 3" | bc -l)
+printf "Average execution time: %.6fs\n" "$average_time"
