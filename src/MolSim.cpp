@@ -147,6 +147,7 @@ int main(const int argc, char* argv[]) {
       // check if next percentage complete
       if (const double t = 100 * current_time / arguments.t_end;
           t >= percentage) {
+        percentage = static_cast<int> (100 * current_time / arguments.t_end);
         auto elapsed = stopwatch.elapsed();
         auto eta = (elapsed / percentage) * 100 - elapsed;
         auto h = std::chrono::duration_cast<std::chrono::hours>(eta).count();
@@ -176,9 +177,8 @@ int main(const int argc, char* argv[]) {
         // bound
         SpdWrapper::get()->info(
             "[{:<3.0f}%]: Iteration {:<12} | [ETA: {}:{:02}:{:02}], [average "
-            "MMUPS since last log: {:02}]",
+            "MMUPS since last log: {:02.3f}]",
             100 * current_time / arguments.t_end, iteration, h, m, s, mmups);
-
         percentage++;
       }
     }
