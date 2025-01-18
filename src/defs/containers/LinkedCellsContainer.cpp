@@ -377,7 +377,7 @@ void LinkedCellsContainer::pairIterator(
           if (dvec3 d = {p[0] - q[0], p[1] - q[1], p[2] - q[2]};
               d[0] * d[0] + d[1] * d[1] + d[2] * d[2] > cutoff * cutoff)
             continue;
-#define MEMBRANE
+//#define MEMBRANE
           f(cellParticle, neighbourParticle);
 #ifdef MEMBRANE
           std::vector<Particle> particles = this->getParticlesObjects();
