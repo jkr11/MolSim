@@ -8,7 +8,7 @@
 
 #include "SingularForce.h"
 
-class HarmonicForce : public SingularForce {
+class HarmonicForce final : public SingularForce {
  private:
   double k{};
   double r_0{};

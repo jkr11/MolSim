@@ -5,6 +5,7 @@
 
 #include "defs/Particle.h"
 #include "defs/containers/ParticleContainer.h"
+#include "forces/IndexForce.h"
 
 /**
  * Direct sum container class, standard n^2 / 2 newton 3 scheme is applied here
@@ -12,6 +13,7 @@
 class DirectSumContainer final : public ParticleContainer {
  private:
   std::vector<Particle> particles;
+  IndexForce index_force;
 
  public:
   /**
@@ -88,4 +90,6 @@ class DirectSumContainer final : public ParticleContainer {
       const std::function<void(Particle&, Particle&)>& f) override;
 
   double getKineticEnergy() override;
+
+  void setIndexForce(const IndexForce& index_force) override;
 };

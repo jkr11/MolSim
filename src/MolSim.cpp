@@ -60,6 +60,7 @@ int main(const int argc, char* argv[]) {
 
   std::vector<std::unique_ptr<IndexForce>> index_forces;
   for (const auto& config : arguments.index_force_configs) {
+    SpdWrapper::get()->info("Index forces added");
     const auto& [ids, time, force_values, dims] = config;
     index_forces.push_back(
         std::make_unique<IndexForce>(ids, time, force_values, dims));
@@ -72,7 +73,7 @@ int main(const int argc, char* argv[]) {
     container = std::make_unique<LinkedCellsContainer>(linked_cells_data);
     container->addParticles(particles);
     container->imposeInvariant();
-    container->addIndexForce(*index_forces[0]); // this is disgusting TODO
+    container->setIndexForce(*index_forces[0]);  // this is disgusting TODO
   } else if (std::holds_alternative<DirectSumConfig>(
                  arguments.container_data)) {
     container = std::make_unique<DirectSumContainer>();
@@ -85,8 +86,10 @@ int main(const int argc, char* argv[]) {
   std::vector<std::unique_ptr<InteractiveForce>> interactive_forces;
   for (auto& config : arguments.interactive_force_types) {
     if (std::holds_alternative<LennardJonesConfig>(config)) {
+      SpdWrapper::get()->debug("Adding LennardJones");
       interactive_forces.push_back(std::make_unique<LennardJones>());
     } else if (std::holds_alternative<GravityConfig>(config)) {
+      SpdWrapper::get()->debug("Adding Gravity");
       interactive_forces.push_back(std::make_unique<Gravity>());
     } else {
       SpdWrapper::get()->error("Unrecognized interactive_force_type");
@@ -97,8 +100,7 @@ int main(const int argc, char* argv[]) {
   for (auto config : arguments.singular_force_types) {
     if (std::holds_alternative<SingularGravityConfig>(config)) {
       const auto& [g] = std::get<SingularGravityConfig>(config);
-      singular_forces.push_back(
-          std::move(std::make_unique<SingularGravity>(g)));
+      singular_forces.push_back(std::make_unique<SingularGravity>(g));
     } else {
       SpdWrapper::get()->error("Unrecognized singular force");
     }

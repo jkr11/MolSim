@@ -74,7 +74,7 @@ class LinkedCellsContainer final : public ParticleContainer {
    */
   LinkedCellsConfig::BoundaryConfig boundary_config{};
 
-  IndexForce index_force;
+  IndexForce index_force{};
 
   /**
    * @brief apply reflective boundary condition to a dimension
@@ -374,9 +374,10 @@ class LinkedCellsContainer final : public ParticleContainer {
 
   double getKineticEnergy() override;
 
-  void setIndexForce(const IndexForce& index_force) {
-    this->index_force = index_force;
-  }
+  void setIndexForce(const IndexForce& index_force) override;
+
+  void addParticleId(const Particle& particle, std::size_t id,
+                     std::size_t size);
 };
 
 /**

@@ -75,5 +75,5 @@ class ParticleContainer {
 
   virtual double getKineticEnergy() = 0;
 
-  virtual void addIndexForce(IndexForce& index_force);
+  virtual void setIndexForce(const IndexForce& index_force) = 0;
 };

@@ -96,3 +96,7 @@ double DirectSumContainer::getKineticEnergy() {
 void DirectSumContainer::imposeInvariant() {
   SPDLOG_TRACE("DirectSumContainer::imposeInvariant()");
 }
+
+void DirectSumContainer::setIndexForce(const IndexForce& index_force) {
+  this->index_force = index_force;
+};

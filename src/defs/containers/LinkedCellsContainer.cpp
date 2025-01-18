@@ -1,7 +1,7 @@
 //
 // created by mcarn on 11/15/24
 //
-#include "LinkedCellsContainer.h"
+#include "defs/containers/LinkedCellsContainer.h"
 
 #include <algorithm>
 #include <cmath>
@@ -42,7 +42,7 @@ LinkedCellsContainer::LinkedCellsContainer(
   // possible pairs are already iterated over
   for (std::size_t i = 0; i < 2; i++) {
     if (cell_count[i] < 3) {
-      SpdWrapper::get()->info(
+      SpdWrapper::get()->warn(
           "cell count is too small if reflective boundaries are used");
     }
   }
@@ -104,10 +104,23 @@ void LinkedCellsContainer::addParticle(const Particle &p) {
                   p.getX()[0], p.getX()[1], p.getX()[2], index)
 }
 
+void LinkedCellsContainer::addParticleId(const Particle &p, std::size_t id,
+                                         std::size_t size) {
+  const std::size_t index = dvec3ToCellIndex(p.getX());
+  SpdWrapper::get()->info("Adding particle {} out of {}", id, size);
+  if (!isValidCellCoordinate(cellIndexToCoord(index))) {
+    SpdWrapper::get()->error("Tried to add particle out of bounds");
+    exit(1);
+  }
+  cells[index].emplace_back(p);
+}
+
 void LinkedCellsContainer::addParticles(
     const std::vector<Particle> &particles) {
+  SpdWrapper::get()->info("Adding {} particles", particles.size());
+  size_t id = 0;
   for (const Particle &p : particles) {
-    addParticle(p);
+    addParticleId(p,id++,particles.size());
   }
 }
 
@@ -367,7 +380,7 @@ void LinkedCellsContainer::pairIterator(
 #define MEMBRANE
           f(cellParticle, neighbourParticle);
 #ifdef MEMBRANE
-          std::vector<Particle*> particles = this->getParticles();
+          std::vector<Particle> particles = this->getParticlesObjects();
           index_force.applyForce(particles);
 #endif
           DEBUG_PRINT_FMT("Cross cell pair: ({}, {})", cellParticle.getType(),
@@ -611,4 +624,8 @@ double LinkedCellsContainer::getKineticEnergy() {
     E_kin += p.getM() * ArrayUtils::L2InnerProduct(p.getV());
   });
   return E_kin * 0.5;
+}
+
+void LinkedCellsContainer::setIndexForce(const IndexForce &index_force) {
+  this->index_force = index_force;
 }

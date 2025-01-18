@@ -24,10 +24,10 @@
                         <Outflow/>
                     </y_low>
                     <z_high>
-                        <Reflective/>
+                        <Outflow/>
                     </z_high>
                     <z_low>
-                        <Reflective/>
+                        <Outflow/>
                     </z_low>
                 </boundary>
             </linkedCells>

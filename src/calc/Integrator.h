@@ -14,7 +14,7 @@ class Integrator {
  protected:
   std::vector<std::unique_ptr<InteractiveForce>> interactive_forces;
   std::vector<std::unique_ptr<SingularForce>> singular_forces;
-  std::vector<std::unique_ptr<IndexForce>> index_forces;
+  //std::vector<std::unique_ptr<IndexForce>> index_forces;
   double delta_t;
 
  public:
@@ -29,11 +29,11 @@ class Integrator {
    */
   Integrator(std::vector<std::unique_ptr<InteractiveForce>>& interactive_forces,
              std::vector<std::unique_ptr<SingularForce>>& singular_forces,
-             std::vector<std::unique_ptr<IndexForce>>& index_forces,
+             //std::vector<std::unique_ptr<IndexForce>>& index_forces,
              const double delta_t)
       : interactive_forces(std::move(interactive_forces)),
         singular_forces(std::move(singular_forces)),
-        index_forces(std::move(index_forces)),
+        //index_forces(std::move(index_forces)),
         delta_t(delta_t) {};
 
   /**
