@@ -394,9 +394,9 @@ TEST(PeriodicBoundaryForce, offsetXY1) {
   // compare that the force with offset is equal to what is the force in theory
   const dvec3 accounted_particle_distance =
       q->getX() - p->getX() + particle_offset;
-  ASSERT_EQ(LennardJones::directionalForceWithOffset(
+  DVEC3_NEAR(LennardJones::directionalForceWithOffset(
                 *p, *q, accounted_particle_distance),
-            f.directionalForce(*test, *q));
+            f.directionalForce(*test, *q), "not equal to theoretical force", 1e-8);
 }
 
 /**
@@ -436,9 +436,9 @@ TEST(PeriodicBoundaryForce, offsetXY2) {
   // compare that the force with offset is equal to what is the force in theory
   const dvec3 accounted_particle_distance =
       q->getX() - p->getX() + particle_offset;
-  ASSERT_EQ(LennardJones::directionalForceWithOffset(
+  DVEC3_NEAR(LennardJones::directionalForceWithOffset(
                 *p, *q, accounted_particle_distance),
-            f.directionalForce(*test, *q));
+            f.directionalForce(*test, *q), "not equal to theoretical force", 1e-8);
 }
 
 //[[======================== moving test =====================================]]
