@@ -33,7 +33,6 @@ class LinkedCellsContainer final : public ParticleContainer {
    */
   size_t special_particle_count{};
 
-
   /**
    * @brief
    * stores the indexes of all halo_cells for faster iteration in the
@@ -187,10 +186,12 @@ class LinkedCellsContainer final : public ParticleContainer {
   [[nodiscard]] size_t getParticleCount() const { return particle_count; }
 
   /**
- * @brief the exact number of current special particles, updated accordingly
- * @return the current count of special particles left in the simulation
- */
-  [[nodiscard]] size_t getSpecialParticleCount() const { return special_particle_count; }
+   * @brief the exact number of current special particles, updated accordingly
+   * @return the current count of special particles left in the simulation
+   */
+  [[nodiscard]] size_t getSpecialParticleCount() const {
+    return special_particle_count;
+  }
 
   /**
    * @brief Get a vector of all particles in the container
@@ -393,6 +394,11 @@ class LinkedCellsContainer final : public ParticleContainer {
       ivec3 cell_coordinate, std::size_t raw_dimension) const;
 
   double getKineticEnergy() override;
+
+  std::size_t getParticleCount() override { return particle_count; }
+  std::size_t getSpecialParticleCount() override {
+    return special_particle_count;
+  }
 };
 
 /**
