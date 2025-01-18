@@ -145,6 +145,7 @@
             <xs:element name="n_thermostat" type="xs:int"/>
             <xs:element name="T_target" type="xs:decimal" minOccurs="0"/>
             <xs:element name="deltaT" type="xs:decimal" minOccurs="0"/>
+            <xs:element name="use_thermal_motion" type="xs:boolean" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 </xs:schema>

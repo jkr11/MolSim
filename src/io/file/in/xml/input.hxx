@@ -50,7 +50,7 @@
 #include <xsd/cxx/config.hxx>
 
 #if (XSD_INT_VERSION != 4000000L)
-//#error XSD runtime version mismatch
+// #error XSD runtime version mismatch
 #endif
 
 #include <xsd/cxx/pre.hxx>
@@ -1413,6 +1413,22 @@ class ThermostatType : public ::xml_schema::type {
 
   void deltaT(const deltaT_optional& x);
 
+  // use_thermal_motion
+  //
+  typedef ::xml_schema::boolean use_thermal_motion_type;
+  typedef ::xsd::cxx::tree::optional<use_thermal_motion_type>
+      use_thermal_motion_optional;
+  typedef ::xsd::cxx::tree::traits<use_thermal_motion_type, char>
+      use_thermal_motion_traits;
+
+  const use_thermal_motion_optional& use_thermal_motion() const;
+
+  use_thermal_motion_optional& use_thermal_motion();
+
+  void use_thermal_motion(const use_thermal_motion_type& x);
+
+  void use_thermal_motion(const use_thermal_motion_optional& x);
+
   // Constructors.
   //
   ThermostatType(const T_init_type&, const n_thermostat_type&);
@@ -1440,6 +1456,7 @@ class ThermostatType : public ::xml_schema::type {
   ::xsd::cxx::tree::one<n_thermostat_type> n_thermostat_;
   T_target_optional T_target_;
   deltaT_optional deltaT_;
+  use_thermal_motion_optional use_thermal_motion_;
 };
 
 class simulation : public ::xml_schema::type {

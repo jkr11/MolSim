@@ -128,11 +128,13 @@ inline void printConfiguration(const Arguments& args) {
   if (std::holds_alternative<LinkedCellsConfig>(args.container_data)) {
     logger->info("Container Type: Linked Cells");
 
-    const auto& [domain, cutoff_radius, boundary_type, boundary_config] =
+    const auto& [domain, cutoff_radius, boundary_type, boundary_config,
+                 particle_count, special_particle_count] =
         std::get<LinkedCellsConfig>(args.container_data);
     logger->info("-- Domain: ({}, {}, {})", domain[0], domain[1], domain[2]);
     logger->info("-- Cutoff Radius: {}", cutoff_radius);
-
+    logger->info("-- {} particles of which {} are walls", particle_count,
+                 special_particle_count);
     logger->info("Boundary Configuration:");
     logger->info("------------------------");
 

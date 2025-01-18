@@ -697,6 +697,24 @@ void ThermostatType::deltaT(const deltaT_type& x) { this->deltaT_.set(x); }
 
 void ThermostatType::deltaT(const deltaT_optional& x) { this->deltaT_ = x; }
 
+const ThermostatType::use_thermal_motion_optional&
+ThermostatType::use_thermal_motion() const {
+  return this->use_thermal_motion_;
+}
+
+ThermostatType::use_thermal_motion_optional&
+ThermostatType::use_thermal_motion() {
+  return this->use_thermal_motion_;
+}
+
+void ThermostatType::use_thermal_motion(const use_thermal_motion_type& x) {
+  this->use_thermal_motion_.set(x);
+}
+
+void ThermostatType::use_thermal_motion(const use_thermal_motion_optional& x) {
+  this->use_thermal_motion_ = x;
+}
+
 // simulation
 //
 
@@ -2285,7 +2303,8 @@ ThermostatType::ThermostatType(const T_init_type& T_init,
       T_init_(T_init, this),
       n_thermostat_(n_thermostat, this),
       T_target_(this),
-      deltaT_(this) {}
+      deltaT_(this),
+      use_thermal_motion_(this) {}
 
 ThermostatType::ThermostatType(const ThermostatType& x, ::xml_schema::flags f,
                                ::xml_schema::container* c)
@@ -2293,7 +2312,8 @@ ThermostatType::ThermostatType(const ThermostatType& x, ::xml_schema::flags f,
       T_init_(x.T_init_, f, this),
       n_thermostat_(x.n_thermostat_, f, this),
       T_target_(x.T_target_, f, this),
-      deltaT_(x.deltaT_, f, this) {}
+      deltaT_(x.deltaT_, f, this),
+      use_thermal_motion_(x.use_thermal_motion_, f, this) {}
 
 ThermostatType::ThermostatType(const ::xercesc::DOMElement& e,
                                ::xml_schema::flags f,
@@ -2302,7 +2322,8 @@ ThermostatType::ThermostatType(const ::xercesc::DOMElement& e,
       T_init_(this),
       n_thermostat_(this),
       T_target_(this),
-      deltaT_(this) {
+      deltaT_(this),
+      use_thermal_motion_(this) {
   if ((f & ::xml_schema::flags::base) == 0) {
     ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
     this->parse(p, f);
@@ -2352,6 +2373,16 @@ void ThermostatType::parse(::xsd::cxx::xml::dom::parser<char>& p,
       }
     }
 
+    // use_thermal_motion
+    //
+    if (n.name() == "use_thermal_motion" && n.namespace_().empty()) {
+      if (!this->use_thermal_motion_) {
+        this->use_thermal_motion_.set(
+            use_thermal_motion_traits::create(i, f, this));
+        continue;
+      }
+    }
+
     break;
   }
 
@@ -2376,6 +2407,7 @@ ThermostatType& ThermostatType::operator=(const ThermostatType& x) {
     this->n_thermostat_ = x.n_thermostat_;
     this->T_target_ = x.T_target_;
     this->deltaT_ = x.deltaT_;
+    this->use_thermal_motion_ = x.use_thermal_motion_;
   }
 
   return *this;
@@ -3429,6 +3461,15 @@ void operator<<(::xercesc::DOMElement& e, const ThermostatType& i) {
     ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("deltaT", e));
 
     s << ::xml_schema::as_decimal(*i.deltaT());
+  }
+
+  // use_thermal_motion
+  //
+  if (i.use_thermal_motion()) {
+    ::xercesc::DOMElement& s(
+        ::xsd::cxx::xml::dom::create_element("use_thermal_motion", e));
+
+    s << *i.use_thermal_motion();
   }
 }
 

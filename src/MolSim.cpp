@@ -62,7 +62,9 @@ int main(const int argc, char* argv[]) {
     auto& linked_cells_data =
         std::get<LinkedCellsConfig>(arguments.container_data);
     linked_cells_data.particle_count = particles.size();
-    linked_cells_data.special_particle_count = std::count_if(particles.begin(), particles.end(), [](Particle& p) { return p.getType() < 0; });
+    linked_cells_data.special_particle_count =
+        std::count_if(particles.begin(), particles.end(),
+                      [](Particle& p) { return p.getType() < 0; });
     container = std::make_unique<LinkedCellsContainer>(linked_cells_data);
     container->addParticles(particles);
     container->imposeInvariant();
@@ -110,17 +112,19 @@ int main(const int argc, char* argv[]) {
   double current_time = 0;
   int iteration = 0;
   auto number_of_particles = particles.size();
+  const auto start_time = std::chrono::high_resolution_clock::now();
+
 #ifndef BENCHMARK
   int writes = 0;
   int percentage = 0;
   double next_output_time = 0;
   spdlog::stopwatch stopwatch;
   auto time_of_last_mups = start_time;
+  auto iteration_of_last_mups = 0;
   // it is unfeasible to check the numbers of outflown particles every
   // iteration, so it is assumed that the number of particles is constant
-  auto iteration_of_last_mups = 0;
 #endif
-  const auto start_time = std::chrono::high_resolution_clock::now();
+
   while (current_time <= arguments.t_end) {
     verlet_integrator.step(*container);
     if (arguments.use_thermostat) {

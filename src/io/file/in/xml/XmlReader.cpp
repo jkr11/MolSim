@@ -87,6 +87,8 @@ void XmlReader::read(std::vector<Particle>& particles,
                                                    // use infinity() limit
                                                    // because of -ffast-math
           .n_thermostat = thermostat->n_thermostat(),
+          .use_thermal_motion =
+              static_cast<bool>(thermostat->use_thermal_motion()),
       };
 
       if (thermostat->deltaT().present()) {
