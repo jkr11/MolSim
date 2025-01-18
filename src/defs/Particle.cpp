@@ -9,6 +9,7 @@
 
 #include "utils/ArrayUtils.h"
 #include "utils/SpdWrapper.h"
+#include "debug/debug_print.h"
 
 Particle::Particle(int type_arg) {
   type = type_arg;
@@ -58,45 +59,7 @@ Particle::Particle(const std::array<double, 3> &x_arg,
       epsilon(epsilon_arg),
       sigma(sigma_arg) {}
 
-Particle::~Particle() { /*DEBUG_PRINT("Particle destructed!");*/ }
-
-const std::array<double, 3> &Particle::getX() const { return x; }
-
-const std::array<double, 3> &Particle::getV() const { return v; }
-
-const std::array<double, 3> &Particle::getF() const { return f; }
-
-const std::array<double, 3> &Particle::getOldF() const { return old_f; }
-
-double Particle::getM() const { return m; }
-
-int Particle::getType() const { return type; }
-
-double Particle::getEpsilon() const { return epsilon; }
-
-double Particle::getSigma() const { return sigma; }
-
-void Particle::setF(const std::array<double, 3> &F) { f = F; }
-
-void Particle::setV(const std::array<double, 3> &V) { v = V; }
-
-void Particle::setX(const std::array<double, 3> &X) { x = X; }
-
-void Particle::setOldF(const dvec3 &oF) { old_f = oF; }
-
-void Particle::setEpsilon(const double &Epsilon) { epsilon = Epsilon; }
-
-void Particle::setSigma(const double &Sigma) { sigma = Sigma; }
-
-void Particle::addV(const dvec3 &V) { v = v + V; }
-
-void Particle::subV(const dvec3 &V) { v = v - V; }
-
-void Particle::mulV(const double &scalar) { v = scalar * v; }
-
-void Particle::addF(const dvec3 &F) { f = f + F; }
-
-void Particle::subF(const dvec3 &F) { f = f - F; }
+Particle::~Particle() { DEBUG_PRINT("Particle destructed!"); }
 
 void Particle::updateForceInTime() {
   old_f = f;
