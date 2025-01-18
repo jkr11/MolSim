@@ -237,12 +237,7 @@ void LinkedCellsContainer::imposeInvariant() {
             const auto adjacent_cell_index =
                 cellCoordToIndex(adjacent_cell_coordinates);
 
-            // // account for the dimension that is checked
-            // particle_distance_offset[problematic_dimension] =
-            //     domain[problematic_dimension];
-
             // iterate over all pairs and calculate force
-
             for (Particle &p : cells[cell_index]) {
               for (Particle &q : cells[adjacent_cell_index]) {
                 // distance check
