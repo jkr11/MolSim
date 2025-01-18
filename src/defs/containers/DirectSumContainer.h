@@ -88,4 +88,8 @@ class DirectSumContainer final : public ParticleContainer {
       const std::function<void(Particle&, Particle&)>& f) override;
 
   double getKineticEnergy() override;
+
+  size_t getParticleCount() override { return particles.size(); }
+
+  size_t getSpecialParticleCount() override { return 0;};
 };

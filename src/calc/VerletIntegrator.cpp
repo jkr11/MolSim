@@ -7,6 +7,7 @@
 
 void VerletIntegrator::step(ParticleContainer& particle_container) {
   particle_container.singleIterator([this](Particle& p) {
+    if (p.getType() < 0) return;  // ignore position update for walls
     const dvec3 new_x = p.getX() + delta_t * p.getV() +
                         (delta_t * delta_t / (2 * p.getM())) * (p.getF());
     p.setX(new_x);
@@ -34,6 +35,7 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
   });
 
   particle_container.singleIterator([this](Particle& p) {
+    if (p.getType() < 0) return;  // ignore velocity update for walls, theoretically
     const dvec3 new_v =
         p.getV() + (delta_t / (2 * p.getM()) * (p.getOldF() + p.getF()));
     p.setV(new_v);

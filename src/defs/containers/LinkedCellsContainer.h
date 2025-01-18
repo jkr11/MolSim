@@ -24,6 +24,17 @@ class LinkedCellsContainer final : public ParticleContainer {
   std::vector<std::vector<Particle>> cells;
 
   /**
+   * @brief current number of particles
+   */
+  size_t particle_count{};
+
+  /**
+   * @brief number of particles, that are immovable
+   */
+  size_t special_particle_count{};
+
+
+  /**
    * @brief
    * stores the indexes of all halo_cells for faster iteration in the
    * corresponding direction vector
@@ -168,6 +179,18 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @return Vector of references to particles in the container
    */
   [[nodiscard]] std::vector<Particle*> getParticles() override;
+
+  /**
+   * @brief the exact number of current particles, updated accordingly
+   * @return the current count of particles left in the simulation
+   */
+  [[nodiscard]] size_t getParticleCount() const { return particle_count; }
+
+  /**
+ * @brief the exact number of current special particles, updated accordingly
+ * @return the current count of special particles left in the simulation
+ */
+  [[nodiscard]] size_t getSpecialParticleCount() const { return special_particle_count; }
 
   /**
    * @brief Get a vector of all particles in the container

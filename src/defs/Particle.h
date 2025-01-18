@@ -43,6 +43,7 @@ class Particle final {
   /**
    * Type of the particle. Use it for whatever you want (e.g. to separate
    * molecules belonging to different bodies, matters, and so on)
+   * negative types are immovable and are being ignored by some calculations
    */
   int type{};
 

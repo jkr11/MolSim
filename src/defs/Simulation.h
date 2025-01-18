@@ -28,6 +28,8 @@ struct LinkedCellsConfig {
     BoundaryType z_high;
     BoundaryType z_low;
   } boundary_config;
+  size_t particle_count;
+  size_t special_particle_count;
 };
 
 /**
@@ -56,6 +58,7 @@ struct ThermostatConfig {
   double deltaT{};
   int n_thermostat{};
   bool use_relative{};
+  bool use_thermal_motion{};
 };
 
 /**

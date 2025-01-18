@@ -20,6 +20,8 @@ const double LinkedCellsContainer::sigma_factor = std::pow(2.0, 1.0 / 6.0);
 LinkedCellsContainer::LinkedCellsContainer(
     const LinkedCellsConfig &linked_cells_config) {
   domain = linked_cells_config.domain;
+  particle_count = linked_cells_config.particle_count;
+  special_particle_count = linked_cells_config.special_particle_count;
 
   DEBUG_PRINT("LinkedCellsContainer instantiated");
   SpdWrapper::get()->info("domain size: ({}, {}, {})", domain[0], domain[1],
@@ -170,6 +172,9 @@ void LinkedCellsContainer::imposeInvariant() {
       case LinkedCellsConfig::BoundaryType::Outflow: {
         // clear halo
         for (const size_t cell_index : halo_direction_cells[dimension]) {
+          particle_count -=
+              cells[cell_index].size();  // update particle count, only place
+                                         // where particles are deleted
           cells[cell_index].clear();
           cells[cell_index].shrink_to_fit();
         }
