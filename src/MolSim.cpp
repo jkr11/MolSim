@@ -138,7 +138,6 @@ int main(const int argc, char* argv[]) {
                 << std::endl;
     }
 #endif
-
 #ifndef BENCHMARK
     if (current_time >= next_output_time) {
       plotParticles(outputDirectory, iteration, writer, *container);
