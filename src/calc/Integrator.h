@@ -1,24 +1,35 @@
 #pragma once
-#include "../defs/containers/ParticleContainer.h"
-#include "../forces/Force.h"
+#include <memory>
+#include <vector>
+
+#include "defs/containers/ParticleContainer.h"
+#include "forces/InteractiveForce.h"
+#include "forces/SingularForce.h"
 
 /**
  * @brief Interface for different types of integrators
  */
 class Integrator {
  protected:
-  Force &force;
+  std::vector<std::unique_ptr<InteractiveForce>> interactive_forces;
+  std::vector<std::unique_ptr<SingularForce>> singular_forces;
   double delta_t;
 
  public:
   /**
    * @brief Create Integrator object
-   * @param force Reference to the type of force applied each iteration
+   * @param interactive_forces References to the type of force applied each
+   * iteration
+   * @param singular_forces singular forces acting on single particles globally
    * @param delta_t Delta time
    * @note Since this is an interface, it's invalid
    */
-  Integrator(Force &force, const double delta_t)
-      : force(force), delta_t(delta_t) {}
+  Integrator(std::vector<std::unique_ptr<InteractiveForce>>& interactive_forces,
+             std::vector<std::unique_ptr<SingularForce>>& singular_forces,
+             const double delta_t)
+      : interactive_forces(std::move(interactive_forces)),
+        singular_forces(std::move(singular_forces)),
+        delta_t(delta_t){};
 
   /**
    * @brief Virtual destructor for all Integrator inheritors
@@ -29,5 +40,5 @@ class Integrator {
    * @brief Virtual method to advance time by one step
    * @param particle_container
    */
-  virtual void step(ParticleContainer &particle_container) = 0;
+  virtual void step(ParticleContainer& particle_container) = 0;
 };

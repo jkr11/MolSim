@@ -45,7 +45,6 @@ void SpheroidGenerator::generate(std::vector<Particle>& particles) {
   // Approximate the size by area of disk and volume of sphere
   // There are between (r-h)/h, (r+h)/h particles on one bisector, so we
   // overestimate with (r+h)
-  // TODO: maybe change this in pattern for exact alloc
   if (twoD) {
     size = static_cast<int>(M_PI * std::pow((radius + h) / h, 2));
   } else {

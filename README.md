@@ -2,17 +2,21 @@ MolSim - Group A
 ===
 
 ## Dependencies
-- Cmake 3.10
+
+- Cmake 3.24
 - Doygen 1.9.8 (`sudo apt install doxygen`)
 - Libxerces (`sudo apt install libxerces-c-dev`)
 
 ## Build
+
 ### Configuration
+
 - Install
   ```bash
   git clone https://github.com/jkr11/MolSim.git
   ```
-- Build the project using the provided build script by using source, add `-t` to also build and run tests, add `-b` to enable the BENCHMARK cmake macro
+- Build the project using the provided build script by using source, add `-t` to also build and run tests, add `-b` to
+  enable the BENCHMARK cmake macro
   ```bash
   cd MolSim/scripts
   source build <CMAKE_BUILD_TYPE= Release (default) | Debug | asan | asan-quiet>  [-t|--test] [-b|--benchmark]
@@ -44,10 +48,13 @@ MolSim - Group A
   [--step_size | -s <double>]     Specify how often the output will be written wrt. time(step_size), default=1
                                     Note that this is independent of the time resolution (t_delta) and dependent on the simulation time
   [--loglevel | -l <level>]       Specify the log level, default=info, valid=[off, error, warn, info, debug, trace]
+  [--checkpoint | -c ]            Specifies if the final particle state will be saved to a checkpoint file.
   Example usage:
   $BUILD -f $INPUT -l <loglevel> -s <number>
   ```
+
 - Output is located in `./output/<current_time>`
+- Checkpoint is currently fixed to `checkpoint.xml` also in `./output/`
 - `--step_size` is relative to the passed simulation time and not the number of iterations
 - `--loglevel debug` is only available if compiled with CMAKE_BUILD_TYPE=Debug
 - all other options are specified in the .xml input file
@@ -59,7 +66,8 @@ MolSim - Group A
 
 For optimal performance run scripts/build with -b for benchmarking
 The python script uses the generated executable in buildDir/Release/src for execution.
-Ensure you have python 3.6 or later installed 
+Ensure you have python 3.6 or later installed
+
 ```bash
 cd benchmark
 python -m vevn <name>

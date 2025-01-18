@@ -4,6 +4,9 @@
 
 #ifndef VERLET_H
 #define VERLET_H
+#pragma once
+#include <utility>
+
 #include "Integrator.h"
 
 /**
@@ -14,11 +17,15 @@ class VerletIntegrator final : public Integrator {
  public:
   /**
    * @brief Create VerletIntegrator object
-   * @param force Reference to the type of force applied each iteration
+   * @param interactive_forces Reference to the type of force applied each
+   * @param singular_forces Global forces acting on each particle as is
    * @param delta_t Delta time
    */
-  VerletIntegrator(Force& force, const double delta_t)
-      : Integrator(force, delta_t) {}
+  VerletIntegrator(
+      std::vector<std::unique_ptr<InteractiveForce>>& interactive_forces,
+      std::vector<std::unique_ptr<SingularForce>>& singular_forces,
+      const double delta_t)
+      : Integrator(interactive_forces, singular_forces, delta_t) {}
 
   /**
    * @brief Destructor

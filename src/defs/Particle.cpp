@@ -7,8 +7,6 @@
 
 #include "Particle.h"
 
-#include "debug/debug_print.h"
-#include "spdlog/spdlog.h"
 #include "utils/ArrayUtils.h"
 #include "utils/SpdWrapper.h"
 
@@ -45,6 +43,21 @@ Particle::Particle(const std::array<double, 3> &x_arg,
   // DEBUG_PRINT("Particle generated!");
 }
 
+Particle::Particle(const std::array<double, 3> &x_arg,
+                   const std::array<double, 3> &v_arg,
+                   const std::array<double, 3> &f_arg,
+                   const std::array<double, 3> &old_f_arg, const double m_arg,
+                   const int type_arg, const double epsilon_arg,
+                   const double sigma_arg)
+    : x(x_arg),
+      v(v_arg),
+      f(f_arg),
+      old_f(old_f_arg),
+      m(m_arg),
+      type(type_arg),
+      epsilon(epsilon_arg),
+      sigma(sigma_arg) {}
+
 Particle::~Particle() { /*DEBUG_PRINT("Particle destructed!");*/ }
 
 const std::array<double, 3> &Particle::getX() const { return x; }
@@ -74,6 +87,16 @@ void Particle::setOldF(const dvec3 &oF) { old_f = oF; }
 void Particle::setEpsilon(const double &Epsilon) { epsilon = Epsilon; }
 
 void Particle::setSigma(const double &Sigma) { sigma = Sigma; }
+
+void Particle::addV(const dvec3 &V) { v = v + V; }
+
+void Particle::subV(const dvec3 &V) { v = v - V; }
+
+void Particle::mulV(const double &scalar) { v = scalar * v; }
+
+void Particle::addF(const dvec3 &F) { f = f + F; }
+
+void Particle::subF(const dvec3 &F) { f = f - F; }
 
 void Particle::updateForceInTime() {
   old_f = f;

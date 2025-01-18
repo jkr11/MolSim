@@ -8,16 +8,18 @@
 
 #include <filesystem>
 #include <fstream>
+#include <tuple>
 
 #include "spdlog/fmt/bundled/chrono.h"
 #include "utils/SpdWrapper.h"
 
-std::tuple<std::filesystem::path, double> CLArgumentParser::parse(
+std::tuple<std::filesystem::path, double, bool> CLArgumentParser::parse(
     const int argc, char *argv[]) {
   const option long_options[] = {{"help", no_argument, nullptr, 'h'},
                                  {"file", required_argument, nullptr, 'f'},
                                  {"step_size", required_argument, nullptr, 's'},
                                  {"loglevel", required_argument, nullptr, 'l'},
+                                 {"checkpoint", no_argument, nullptr, 'c'},
                                  {nullptr, 0, nullptr, 0}};
 
   int opt;
@@ -25,8 +27,9 @@ std::tuple<std::filesystem::path, double> CLArgumentParser::parse(
 
   std::filesystem::path input_file{};
   double step_size = 0.5;
+  bool write_checkpoint = false;
 
-  while ((opt = getopt_long(argc, argv, "hf:s:l:R:", long_options,
+  while ((opt = getopt_long(argc, argv, "hf:s:l:c", long_options,
                             &option_index)) != -1) {
     try {
       if ((opt == 'f' || opt == 't' || opt == 'd' || opt == 's') &&
@@ -51,6 +54,9 @@ std::tuple<std::filesystem::path, double> CLArgumentParser::parse(
                 "invalid argument for option --loglevel" + std::string(optarg));
           }
           break;
+        case 'c':
+          write_checkpoint = true;
+          break;
         default:
           throw std::invalid_argument("Unsupported option: -" +
                                       std::string(1, static_cast<char>(opt)));
@@ -67,7 +73,7 @@ std::tuple<std::filesystem::path, double> CLArgumentParser::parse(
     printUsage(e.what(), argv[0]);
     exit(EXIT_FAILURE);
   }
-  return {input_file, step_size};
+  return {input_file, step_size, write_checkpoint};
 }
 
 void CLArgumentParser::validateInputFile(
@@ -85,11 +91,8 @@ void CLArgumentParser::validateInputFile(
   }
 }
 
-// TODO: adjust this
 void CLArgumentParser::printUsage(const std::string &additionalNote,
                                   const std::string &programName) {
-  // std::cerr << red << "[Error:] " << additionalNote << reset << "\n";
-
   SpdWrapper::get()->set_level(spdlog::level::err);
   SpdWrapper::get()->error(additionalNote);
   SpdWrapper::get()->error(
@@ -105,6 +108,8 @@ void CLArgumentParser::printUsage(const std::string &additionalNote,
       "resolution (t_delta) and dependent on the simulation time\n"
       "  [--loglevel | -l <level>]       Specify the log level, default=info, "
       "valid=[off, error, warn, info, debug, trace]\n"
+      "  [--checkpoint | -c ]            Specify if the end state will be "
+      "written to a checkpoint file "
       "Example:\n"
       "  {} -f <relative input location>.xml --loglevel info --step_size "
       "0.01\n",

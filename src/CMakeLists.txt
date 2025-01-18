@@ -13,13 +13,7 @@ add_library(MolSimLib
         ${MY_SRC}
 )
 
-#target_include_directories(MolSimLib
-#        PUBLIC
-#        ../libs/libxsd
-#)
-
 target_link_libraries(MolSimLib
-        # stuff that is used in headers and source files
         PUBLIC
         xerces-c
         spdlog::spdlog
@@ -28,11 +22,6 @@ target_link_libraries(MolSimLib
 target_compile_features(MolSimLib
         PUBLIC cxx_std_17
 )
-#target_compile_options(MolSimLib
-#        PRIVATE
-#        $<$<CXX_COMPILER_ID:GNU>: -w>
-#        $<$<CXX_COMPILER_ID:Clang>: -w>
-#)
 
 target_include_directories(MolSimLib PUBLIC
         ${libxsd_SOURCE_DIR}
@@ -49,6 +38,12 @@ add_executable(MolSim MolSim.cpp
         defs/Generators/ParticleGenerator.h
         defs/Generators/SpheroidGenerator.h
         defs/Generators/SpheroidGenerator.cpp
+        forces/SingularGravity.h
+        defs/Thermostat.cpp
+        io/file/out/XmlWriter.h
+        io/file/out/checkpoint-schema.hxx
+        io/file/out/checkpoint-schema.cxx
+        io/file/out/XmlWriter.cpp
 )
 
 set(FILES_TO_DISABLE_WARNINGS

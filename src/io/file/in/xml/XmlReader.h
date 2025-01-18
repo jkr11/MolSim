@@ -27,7 +27,56 @@ class XmlReader {
   static void read(std::vector<Particle>& particles,
                    const std::string& filepath,
                    Arguments& simulation_parameters);
+
+  /**
+   * @brief validate that reflective boundaries are always pairs
+   * @param boundary the boundary configuration
+   */
+  static inline void validateBoundaries(
+      const LinkedCellsConfig::BoundaryConfig& boundary) {
+    if (boundary.x_high != boundary.x_low &&
+        (boundary.x_high == LinkedCellsConfig::Periodic ||
+         boundary.x_low == LinkedCellsConfig::Periodic)) {
+      throw std::runtime_error("x dimension has incompatible boundaries");
+    }
+
+    if (boundary.y_high != boundary.y_low &&
+        (boundary.y_high == LinkedCellsConfig::Periodic ||
+         boundary.y_low == LinkedCellsConfig::Periodic)) {
+      throw std::runtime_error("y dimension has incompatible boundaries");
+    }
+
+    if (boundary.z_high != boundary.z_low &&
+        (boundary.z_high == LinkedCellsConfig::Periodic ||
+         boundary.z_low == LinkedCellsConfig::Periodic)) {
+      throw std::runtime_error("z dimension has incompatible boundaries");
+    }
+  }
+
+  static void loadCheckpoint(const std::string& filepath,
+                             std::vector<Particle>& particles);
 };
+
+/**
+ * @brief ensures the input files are valid (not empty, extension, path)
+ * @param path the path pointing to the file
+ * @param extension the desired file extension
+ * @param type the type of file you are checking (Input, checkpoint, etc)
+ */
+inline void validate_path(const std::filesystem::path& path,
+                          const std::string& extension,
+                          const std::string& type) {
+  if (!exists(path)) {
+    throw std::runtime_error(type + " file not found: " + path.string());
+  }
+  if (path.extension() != extension) {
+    throw std::invalid_argument(
+        type + " file extension is not supported: " + path.string());
+  }
+  if (std::filesystem::is_empty(path)) {
+    throw std::runtime_error(type + "file is empty " + path.string());
+  }
+}
 
 /**
  * @brief converts the xsd type to a ::Arguments:: type

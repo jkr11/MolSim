@@ -3,10 +3,14 @@
 #include <fstream>
 
 #include "../src/io/file/in/xml/XmlReader.h"
+#if 1
 #include "../src/io/file/in/xml/input.cxx"  // It wants this idk why
 #include "../src/io/file/in/xml/input.hxx"
+
 #include "spdlog/fmt/bundled/os.h"
 #include "testUtil.h"
+#include "io/file/out/checkpoint-schema.hxx"
+#include "io/file/out/checkpoint-schema.cxx"
 
 Arguments arguments = {
     .t_end = 5,
@@ -80,3 +84,4 @@ TEST(XmlReader, testCuboidSpheroidLinkedCells) {
   EXPECT_EQ(config.boundary_config.z_high, LinkedCellsConfig::Outflow);
   EXPECT_EQ(config.boundary_config.z_low, LinkedCellsConfig::Outflow);
 }
+#endif
