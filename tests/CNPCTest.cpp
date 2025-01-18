@@ -1,10 +1,13 @@
+//
+// Created by maximilian on 15.01.25.
+//
 #include <gtest/gtest.h>
 
 #include <vector>
 
 #include "defs/Simulation.h"
-#include "defs/containers/LinkedCellsContainer.cpp"
-#include "defs/containers/LinkedCellsContainer.h"
+#include "defs/containers/CNPC.cpp"
+#include "defs/containers/CNPC.h"
 #include "defs/containers/ParticleContainer.h"
 #include "defs/types.h"
 #include "testUtil.h"
@@ -23,7 +26,7 @@ Particle createParticle(double x, double y, double z) {
 /*
  * Container creates the right amount of cells and correct cell dimensions
  */
-TEST(LinkedCellsContainer, constructor) {
+TEST(CNPC, constructor) {
   LinkedCellsConfig config = {.domain = {10, 20, 30},
                               .cutoff_radius = 3,
                               .boundary_config = {
@@ -35,7 +38,7 @@ TEST(LinkedCellsContainer, constructor) {
                                   .z_low = LinkedCellsConfig::Outflow,
                               }};
 
-  LinkedCellsContainer container(config);
+  CNPC container(config);
 
   EXPECT_EQ(container.getCellCount()[0], 5) << "X count wrong.";
   EXPECT_EQ(container.getCellCount()[1], 8) << "Y count wrong.";
@@ -49,7 +52,7 @@ TEST(LinkedCellsContainer, constructor) {
 /*
  * .isBoundary(...) is correct for some examples
  */
-TEST(LinkedCellsContainer, isBoudary) {
+TEST(CNPC, isBoudary) {
   LinkedCellsConfig config = {.domain = {20, 20, 30},
                               .cutoff_radius = 10,
                               .boundary_config = {
@@ -61,7 +64,7 @@ TEST(LinkedCellsContainer, isBoudary) {
                                   .z_low = LinkedCellsConfig::Outflow,
                               }};
 
-  LinkedCellsContainer container(
+  CNPC container(
       config);  // 2x2x3 => [-1, 2] x [-1, 2] x [-1, 3]
   EXPECT_TRUE(container.isBoundary({0, 0, 0}));
   EXPECT_TRUE(container.isBoundary({0, 1, 0}));
@@ -81,7 +84,7 @@ TEST(LinkedCellsContainer, isBoudary) {
 /*
  * .isHalo(...) is correct for some examples
  */
-TEST(LinkedCellsContainer, isHalo) {
+TEST(CNPC, isHalo) {
   LinkedCellsConfig config = {.domain = {20, 20, 30},
                               .cutoff_radius = 10,
                               .boundary_config = {
@@ -93,7 +96,7 @@ TEST(LinkedCellsContainer, isHalo) {
                                   .z_low = LinkedCellsConfig::Outflow,
                               }};
 
-  LinkedCellsContainer container(
+  CNPC container(
       config);  // 2x2x3 => [-1, 2] x [-1, 2] x [-1, 3]
 
   EXPECT_TRUE(container.isHalo({-1, -1, -1}));
@@ -116,7 +119,7 @@ TEST(LinkedCellsContainer, isHalo) {
  * .cellCoordToIndex(...) works for some exmaples
  * .isValidCellCoordinate(...) works for some examples
  */
-TEST(LinkedCellsContainer,
+TEST(CNPC,
      cellIndexToCoord_cellCoordToIndex_isValidCellCoordinate) {
   LinkedCellsConfig config = {.domain = {10, 10, 10},
                               .cutoff_radius = 3,
@@ -129,7 +132,7 @@ TEST(LinkedCellsContainer,
                                   .z_low = LinkedCellsConfig::Outflow,
                               }};
 
-  LinkedCellsContainer container(config);
+  CNPC container(config);
 
   EXPECT_EQ(container.cellIndexToCoord(0)[0], -1)
       << ".cellIndexToCoord(...) x coordinate wrong";
@@ -166,7 +169,7 @@ TEST(LinkedCellsContainer,
  * .addParticle(...) increments .size()
  * .removeParticle(...) decrements .size()
  */
-TEST(LinkedCellsContainer, Size_addParticle_and_removeParticle) {
+TEST(CNPC, Size_addParticle_and_removeParticle) {
   LinkedCellsConfig config = {.domain = {10, 10, 10},
                               .cutoff_radius = 5,
                               .boundary_config = {
@@ -178,7 +181,7 @@ TEST(LinkedCellsContainer, Size_addParticle_and_removeParticle) {
                                   .z_low = LinkedCellsConfig::Outflow,
                               }};
 
-  LinkedCellsContainer container(config);
+  CNPC container(config);
   EXPECT_EQ(container.size(), 0)
       << "Freshly instantiated LinkedCellsContainer is not empty.";
 
@@ -198,7 +201,7 @@ TEST(LinkedCellsContainer, Size_addParticle_and_removeParticle) {
 /*
  * .singleIterator() iterates over all particles
  */
-TEST(LinkedCellsContainer, singleIterator) {
+TEST(CNPC, singleIterator) {
   LinkedCellsConfig config = {.domain = {10, 10, 10},
                               .cutoff_radius = 2,
                               .boundary_config = {
@@ -210,7 +213,7 @@ TEST(LinkedCellsContainer, singleIterator) {
                                   .z_low = LinkedCellsConfig::Outflow,
                               }};
 
-  LinkedCellsContainer container(config);
+  CNPC container(config);
 
   Particle p1 = createParticle(1, 1, 1);
   Particle p2 = createParticle(5, 1, 6);
@@ -243,7 +246,7 @@ TEST(LinkedCellsContainer, singleIterator) {
   Note: does not test if all pairs produces are distinct (only matters
         if total generated pair count is the same as in reference impl)
 */
-TEST(LinkedCellsContainer, pairIterator) {
+TEST(CNPC, pairIterator) {
   LinkedCellsConfig config = {.domain = {10, 10, 10},
                               .cutoff_radius = 5,
                               .boundary_config = {
@@ -255,7 +258,7 @@ TEST(LinkedCellsContainer, pairIterator) {
                                   .z_low = LinkedCellsConfig::Outflow,
                               }};
 
-  LinkedCellsContainer container(config);
+  CNPC container(config);
 
   std::array<Particle, 10> particles = {
       createParticle(1, 1, 1), createParticle(5, 1, 6), createParticle(7, 7, 8),
@@ -290,6 +293,7 @@ TEST(LinkedCellsContainer, pairIterator) {
   container.pairIterator([&pairs, &count](Particle& p, Particle& q) {
     count++;
 
+    int c = 0;
     for (auto it = pairs.begin(); it != pairs.end(); ++it) {
       if ((*(*it)[0] == p && *(*it)[1] == q) ||
           (*(*it)[0] == q && *(*it)[1] == p))
@@ -306,7 +310,7 @@ TEST(LinkedCellsContainer, pairIterator) {
 /*
  * boundaryIterator(...) goes over all particles in boundary
  */
-TEST(LinkedCellsContainer, boundaryIterator) {
+TEST(CNPC, boundaryIterator) {
   LinkedCellsConfig config = {.domain = {10, 10, 10},
                               .cutoff_radius = 3,
                               .boundary_config = {
@@ -318,7 +322,7 @@ TEST(LinkedCellsContainer, boundaryIterator) {
                                   .z_low = LinkedCellsConfig::Outflow,
                               }};
 
-  LinkedCellsContainer container(config);
+  CNPC container(config);
 
   Particle p1 = createParticle(0, 0, 0);
   Particle p2 = createParticle(9, 0, 0);
@@ -338,7 +342,7 @@ TEST(LinkedCellsContainer, boundaryIterator) {
 /*
  * haloIterator(...) goes over all particles in halo
  */
-TEST(LinkedCellsContainer, haloIterator) {
+TEST(CNPC, haloIterator) {
   LinkedCellsConfig config = {.domain = {10, 10, 10},
                               .cutoff_radius = 5,
                               .boundary_config = {
@@ -350,7 +354,7 @@ TEST(LinkedCellsContainer, haloIterator) {
                                   .z_low = LinkedCellsConfig::Outflow,
                               }};
 
-  LinkedCellsContainer container(config);
+  CNPC container(config);
 
   Particle p1 = createParticle(-1, -1, -1);
   Particle p2 = createParticle(-1, 0, 0);
