@@ -3,7 +3,7 @@ MolSim - Group A
 
 ## Dependencies
 
-- Cmake 3.10
+- Cmake 3.24
 - Doygen 1.9.8 (`sudo apt install doxygen`)
 - Libxerces (`sudo apt install libxerces-c-dev`)
 

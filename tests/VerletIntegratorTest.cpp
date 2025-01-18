@@ -7,7 +7,7 @@
 #include "../src/forces/LennardJones.h"
 #include "forces/SingularGravity.h"
 #include "testUtil.h"
-#if 1
+
 /*
  * Positions correct after one step, arbitrary example 1
  */
@@ -65,4 +65,3 @@ TEST(VerletIntegrator, step2) {
   DVEC3_NEAR(q.getF(), {5.62584, -5.62556, 0}, "New F of q wrong.", 1e-5f);
   DVEC3_NEAR(q.getV(), {0.02812, -0.02812, 0}, "Velocity of q wrong.", 1e-5f);
 }
-#endif
