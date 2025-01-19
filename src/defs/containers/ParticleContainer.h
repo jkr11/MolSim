@@ -81,8 +81,8 @@ class ParticleContainer {
   [[nodiscard]] virtual size_t getParticleCount() = 0;
 
   /**
- * @brief the exact number of current speical particles, updated accordingly
- * @return the current count of special particles left in the simulation
- */
+   * @brief the exact number of current speical particles, updated accordingly
+   * @return the current count of special particles left in the simulation
+   */
   [[nodiscard]] virtual size_t getSpecialParticleCount() = 0;
 };

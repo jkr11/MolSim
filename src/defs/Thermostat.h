@@ -36,10 +36,10 @@ class Thermostat {
   static dvec3 getGlobalVelocity(ParticleContainer& particle_container);
 
   /**
- * @calculates the average global velocity excluding special particles
- * @param particle_container container
- * @return the average global velocity
- */
+   * @calculates the average global velocity excluding special particles
+   * @param particle_container container
+   * @return the average global velocity
+   */
   static dvec3 getAverageVelocity(ParticleContainer& particle_container);
 
   /**
@@ -71,6 +71,7 @@ class Thermostat {
    * @param avg_velocity average velocity of particles
    * @return the temperature according to the thermal motion
    */
-  static double getThermalTemperature(ParticleContainer& particle_container, dvec3 avg_velocity);
+  static double getThermalTemperature(ParticleContainer& particle_container,
+                                      dvec3 avg_velocity);
 };
 #endif  // THERMOSTAT_H

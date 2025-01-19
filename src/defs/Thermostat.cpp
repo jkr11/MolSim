@@ -38,8 +38,11 @@ void Thermostat::applyBeta(ParticleContainer &particle_container,
 }
 
 void Thermostat::applyThermalBeta(ParticleContainer &particle_container,
-                           const double beta, const dvec3 &avg_velocity) const {
-  particle_container.singleIterator([&beta, avg_velocity](Particle &p) { p.setV(avg_velocity + beta * (p.getV() - avg_velocity)); });
+                                  const double beta,
+                                  const dvec3 &avg_velocity) const {
+  particle_container.singleIterator([&beta, avg_velocity](Particle &p) {
+    p.setV(avg_velocity + beta * (p.getV() - avg_velocity));
+  });
 }
 
 dvec3 Thermostat::getAverageVelocity(ParticleContainer &particle_container) {
@@ -57,8 +60,8 @@ dvec3 Thermostat::getAverageVelocity(ParticleContainer &particle_container) {
   return {total_velocity[0] / c, total_velocity[1] / c, total_velocity[2 / c]};
 }
 
-double Thermostat::getThermalTemperature(
-    ParticleContainer &particle_container, dvec3 avg_velocity) {
+double Thermostat::getThermalTemperature(ParticleContainer &particle_container,
+                                         dvec3 avg_velocity) {
   constexpr double D = 3;
   double E_kin = 0.0;
   particle_container.singleIterator([&E_kin, avg_velocity](const Particle &p) {
@@ -73,7 +76,8 @@ double Thermostat::getThermalTemperature(
 void Thermostat::setTemperature(ParticleContainer &particle_container) const {
   if (use_thermal_motion) {
     const dvec3 average_velocity = getAverageVelocity(particle_container);
-    const double current_temp = getThermalTemperature(particle_container, average_velocity);
+    const double current_temp =
+        getThermalTemperature(particle_container, average_velocity);
 #ifndef BENCHMARK
     SpdWrapper::get()->info("current temperature is {}", current_temp);
 #endif

@@ -96,6 +96,3 @@ double DirectSumContainer::getKineticEnergy() {
 void DirectSumContainer::imposeInvariant() {
   SPDLOG_TRACE("DirectSumContainer::imposeInvariant()");
 }
-
-
-
