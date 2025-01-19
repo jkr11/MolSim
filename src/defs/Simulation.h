@@ -61,10 +61,17 @@ struct ThermostatConfig {
   bool use_thermal_motion{};
 };
 
+struct StatisticsConfig {
+  int x_bins{};
+  int y_bins{};
+  int output_interval{};
+  std::string velocity_output_location{};
+  std::string density_output_location{};
+};
+
 /**
  * @brief struct to hold command line arguments
  */
-
 struct Arguments {
   using SingularForceTypes =
       std::variant<SingularGravityConfig, HarmonicForceConfig>;
@@ -78,6 +85,7 @@ struct Arguments {
   std::variant<LinkedCellsConfig, DirectSumConfig> container_data;
   std::vector<SingularForceTypes> singular_force_types;
   std::vector<InteractiveForceTypes> interactive_force_types;
+  StatisticsConfig statistics_config;
 };
 
 /**

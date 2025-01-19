@@ -50,7 +50,7 @@
 #include <xsd/cxx/config.hxx>
 
 #if (XSD_INT_VERSION != 4000000L)
-// #error XSD runtime version mismatch
+//#error XSD runtime version mismatch
 #endif
 
 #include <xsd/cxx/pre.hxx>
@@ -241,6 +241,7 @@ const XMLCh* const tree_node_key = ::xsd::cxx::tree::user_data_keys::node;
 // Forward declarations.
 //
 class MetadataType;
+class StatisticsType;
 class cuboidType;
 class spheroidType;
 class Dvec3Type;
@@ -350,6 +351,22 @@ class MetadataType : public ::xml_schema::type {
 
   void checkpoint(::std::auto_ptr<checkpoint_type> p);
 
+  // statistics
+  //
+  typedef ::StatisticsType statistics_type;
+  typedef ::xsd::cxx::tree::optional<statistics_type> statistics_optional;
+  typedef ::xsd::cxx::tree::traits<statistics_type, char> statistics_traits;
+
+  const statistics_optional& statistics() const;
+
+  statistics_optional& statistics();
+
+  void statistics(const statistics_type& x);
+
+  void statistics(const statistics_optional& x);
+
+  void statistics(::std::auto_ptr<statistics_type> p);
+
   // Constructors.
   //
   MetadataType(const container_type&, const force_type&, const delta_t_type&,
@@ -383,6 +400,72 @@ class MetadataType : public ::xml_schema::type {
   ::xsd::cxx::tree::one<t_end_type> t_end_;
   ::xsd::cxx::tree::one<twoD_type> twoD_;
   checkpoint_optional checkpoint_;
+  statistics_optional statistics_;
+};
+
+class StatisticsType : public ::xml_schema::type {
+ public:
+  // x_bins
+  //
+  typedef ::xml_schema::int_ x_bins_type;
+  typedef ::xsd::cxx::tree::traits<x_bins_type, char> x_bins_traits;
+
+  const x_bins_type& x_bins() const;
+
+  x_bins_type& x_bins();
+
+  void x_bins(const x_bins_type& x);
+
+  // y_bins
+  //
+  typedef ::xml_schema::int_ y_bins_type;
+  typedef ::xsd::cxx::tree::traits<y_bins_type, char> y_bins_traits;
+
+  const y_bins_type& y_bins() const;
+
+  y_bins_type& y_bins();
+
+  void y_bins(const y_bins_type& x);
+
+  // output_interval
+  //
+  typedef ::xml_schema::int_ output_interval_type;
+  typedef ::xsd::cxx::tree::traits<output_interval_type, char>
+      output_interval_traits;
+
+  const output_interval_type& output_interval() const;
+
+  output_interval_type& output_interval();
+
+  void output_interval(const output_interval_type& x);
+
+  // Constructors.
+  //
+  StatisticsType(const x_bins_type&, const y_bins_type&,
+                 const output_interval_type&);
+
+  StatisticsType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
+                 ::xml_schema::container* c = 0);
+
+  StatisticsType(const StatisticsType& x, ::xml_schema::flags f = 0,
+                 ::xml_schema::container* c = 0);
+
+  virtual StatisticsType* _clone(::xml_schema::flags f = 0,
+                                 ::xml_schema::container* c = 0) const;
+
+  StatisticsType& operator=(const StatisticsType& x);
+
+  virtual ~StatisticsType();
+
+  // Implementation.
+  //
+ protected:
+  void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
+
+ protected:
+  ::xsd::cxx::tree::one<x_bins_type> x_bins_;
+  ::xsd::cxx::tree::one<y_bins_type> y_bins_;
+  ::xsd::cxx::tree::one<output_interval_type> output_interval_;
 };
 
 class cuboidType : public ::xml_schema::type {
@@ -1781,6 +1864,8 @@ void simulation_(::xercesc::DOMDocument& d, const ::simulation& x,
     ::xml_schema::flags f = 0);
 
 void operator<<(::xercesc::DOMElement&, const MetadataType&);
+
+void operator<<(::xercesc::DOMElement&, const StatisticsType&);
 
 void operator<<(::xercesc::DOMElement&, const cuboidType&);
 

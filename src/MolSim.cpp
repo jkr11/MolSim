@@ -64,7 +64,7 @@ int main(const int argc, char* argv[]) {
     linked_cells_data.particle_count = particles.size();
     linked_cells_data.special_particle_count =
         std::count_if(particles.begin(), particles.end(),
-                      [](Particle& p) { return p.getType() < 0; });
+                      [](const Particle& p) { return p.getType() < 0; });
     container = std::make_unique<LinkedCellsContainer>(linked_cells_data);
     container->addParticles(particles);
     container->imposeInvariant();
@@ -113,6 +113,8 @@ int main(const int argc, char* argv[]) {
   int iteration = 0;
   auto number_of_particles = particles.size();
   const auto start_time = std::chrono::high_resolution_clock::now();
+
+
 
 #ifndef BENCHMARK
   int writes = 0;

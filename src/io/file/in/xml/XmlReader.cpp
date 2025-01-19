@@ -74,6 +74,17 @@ void XmlReader::read(std::vector<Particle>& particles,
     if (metadata.checkpoint().present()) {
       loadCheckpoint(metadata.checkpoint().get(), particles);
     }
+    if (metadata.statistics().present()) {
+      auto statistics = metadata.statistics().get();
+      StatisticsConfig statistics_config = {
+          .x_bins = statistics.x_bins(),
+          .y_bins = statistics.y_bins(),
+          .output_interval = statistics.output_interval(),
+          .velocity_output_location = "velocity.csv",
+          .density_output_location = "density.csv",
+      };
+      simulation_parameters.statistics_config = statistics_config;
+    }
     if (config->thermostat().present()) {
       auto thermostat = config->thermostat();
       ThermostatConfig thermostat_config = {
