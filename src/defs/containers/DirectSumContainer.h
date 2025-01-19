@@ -92,4 +92,6 @@ class DirectSumContainer final : public ParticleContainer {
   size_t getParticleCount() override { return particles.size(); }
 
   size_t getSpecialParticleCount() override { return 0; };
+
+  ivec3 getDomain() override;
 };

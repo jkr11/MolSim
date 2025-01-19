@@ -62,6 +62,7 @@ struct ThermostatConfig {
 };
 
 struct StatisticsConfig {
+  bool calc_stats{};
   int x_bins{};
   int y_bins{};
   int output_interval{};

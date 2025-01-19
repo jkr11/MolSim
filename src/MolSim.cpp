@@ -16,6 +16,7 @@
 #include "spdlog/stopwatch.h"
 #include "utils/ArrayUtils.h"
 #include "utils/SpdWrapper.h"
+#include "utils/Statistics.h"
 
 int main(const int argc, char* argv[]) {
 #ifndef BENCHMARK
@@ -45,7 +46,15 @@ int main(const int argc, char* argv[]) {
                                     .z_high = LinkedCellsConfig::Outflow,
                                     .z_low = LinkedCellsConfig::Outflow,
                                 }},
-
+      .statistics_config =
+          StatisticsConfig{
+              .calc_stats = false,
+              .x_bins = 0,
+              .y_bins = 0,
+              .output_interval = 0,
+              .velocity_output_location = "",
+              .density_output_location = "",
+          },
   };
   auto [input_file, step_size, write_checkpoint] =
       CLArgumentParser::parse(argc, argv);
@@ -113,8 +122,7 @@ int main(const int argc, char* argv[]) {
   int iteration = 0;
   auto number_of_particles = particles.size();
   const auto start_time = std::chrono::high_resolution_clock::now();
-
-
+  size_t particle_updates = 0;
 
 #ifndef BENCHMARK
   int writes = 0;
@@ -123,8 +131,12 @@ int main(const int argc, char* argv[]) {
   spdlog::stopwatch stopwatch;
   auto time_of_last_mups = start_time;
   auto iteration_of_last_mups = 0;
-  // it is unfeasible to check the numbers of outflown particles every
-  // iteration, so it is assumed that the number of particles is constant
+  Statistics statistics(
+      arguments.statistics_config.x_bins, arguments.statistics_config.y_bins,
+      *container,
+      "./output/" + arguments.statistics_config.density_output_location,
+      "./output/" + arguments.statistics_config.velocity_output_location);
+
 #endif
 
   while (current_time <= arguments.t_end) {
@@ -146,6 +158,8 @@ int main(const int argc, char* argv[]) {
                 << std::endl;
     }
 #endif
+
+    particle_updates += container->getParticleCount();
 
 #ifndef BENCHMARK
     if (current_time >= next_output_time) {
@@ -174,11 +188,11 @@ int main(const int argc, char* argv[]) {
             std::chrono::duration_cast<std::chrono::microseconds>(
                 current_time_hrc - time_of_last_mups)
                 .count();
-        double mmups = (iteration - iteration_of_last_mups) *
-                       static_cast<double>(number_of_particles) *
+        double mmups = particle_updates *
                        (1.0 / static_cast<double>(microseconds));
         iteration_of_last_mups = iteration;
         time_of_last_mups = current_time_hrc;
+        particle_updates = 0;
 
         // mmups are unaccounted for write time, therefore it is always a lower
         // bound
@@ -189,6 +203,11 @@ int main(const int argc, char* argv[]) {
 
         percentage++;
       }
+    }
+
+    if (arguments.statistics_config.calc_stats &&
+        iteration % arguments.statistics_config.output_interval == 0) {
+      statistics.writeStatistics(current_time);
     }
 #endif
     iteration++;

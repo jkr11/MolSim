@@ -74,17 +74,24 @@ void XmlReader::read(std::vector<Particle>& particles,
     if (metadata.checkpoint().present()) {
       loadCheckpoint(metadata.checkpoint().get(), particles);
     }
+    StatisticsConfig statistics_config;
     if (metadata.statistics().present()) {
       auto statistics = metadata.statistics().get();
-      StatisticsConfig statistics_config = {
+      statistics_config = {
+          .calc_stats = true,
           .x_bins = statistics.x_bins(),
           .y_bins = statistics.y_bins(),
           .output_interval = statistics.output_interval(),
           .velocity_output_location = "velocity.csv",
           .density_output_location = "density.csv",
       };
-      simulation_parameters.statistics_config = statistics_config;
+    } else {
+      statistics_config = {
+          .calc_stats = false,
+      };
     }
+    simulation_parameters.statistics_config = statistics_config;
+
     if (config->thermostat().present()) {
       auto thermostat = config->thermostat();
       ThermostatConfig thermostat_config = {
@@ -168,7 +175,6 @@ void XmlReader::read(std::vector<Particle>& particles,
         sg.generate(particles);
       }
     }
-
   } catch (const std::exception& e) {
     SpdWrapper::get()->error("Error reading XML file: {}", e.what());
     exit(EXIT_FAILURE);

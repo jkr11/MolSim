@@ -417,7 +417,7 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @brief returns the domain of the container
    * @return the domain of the container
    */
-  [[nodiscard]] ivec3 getDomain() const { return domain;}
+  ivec3 getDomain() override { return domain;}
 };
 
 /**
