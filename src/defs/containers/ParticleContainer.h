@@ -74,3 +74,5 @@ class ParticleContainer {
 
   virtual double getKineticEnergy() = 0;
 };
+
+int Particle::global_id_counter = 0;

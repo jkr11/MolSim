@@ -58,8 +58,6 @@ int main(const int argc, char* argv[]) {
   printConfiguration(arguments);
   SpdWrapper::get()->info("Step size: {}", step_size);
 
-
-
   std::unique_ptr<ParticleContainer> container;
   if (std::holds_alternative<LinkedCellsConfig>(arguments.container_data)) {
     const auto& linked_cells_data =
