@@ -26,7 +26,7 @@ int main(const int argc, char* argv[]) {
   #ifdef _OPENMP
   #pragma omp parallel for
   for (int i = 0; i < 10; ++i) {
-    std::cout << "Thread " << omp_get_thread_num() << " is processing iteration " << i << "\n";
+    std::cout << "Thread " << omp_get_thread_num() << " is processing iteration " << i << std::endl;
   }
   #endif
 
