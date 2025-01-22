@@ -73,6 +73,8 @@ class ParticleContainer {
       const std::function<void(Particle&, Particle&)>& f) = 0;
 
   virtual double getKineticEnergy() = 0;
-};
 
-int Particle::global_id_counter = 0;
+  virtual void incrementTime() { this->current_time++; }
+
+  double current_time = 0;
+};

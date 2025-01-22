@@ -19,13 +19,16 @@ class VerletIntegrator final : public Integrator {
    * @brief Create VerletIntegrator object
    * @param interactive_forces Reference to the type of force applied each
    * @param singular_forces Global forces acting on each particle as is
+   * @param index_forces
    * @param delta_t Delta time
    */
   VerletIntegrator(
       std::vector<std::unique_ptr<InteractiveForce>>& interactive_forces,
       std::vector<std::unique_ptr<SingularForce>>& singular_forces,
+      const std::vector<std::unique_ptr<IndexForce>>& index_forces,
       const double delta_t)
-      : Integrator(interactive_forces, singular_forces, delta_t) {}
+      : Integrator(interactive_forces, singular_forces, delta_t, index_forces) {
+  }
 
   /**
    * @brief Destructor

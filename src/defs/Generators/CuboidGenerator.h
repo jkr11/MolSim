@@ -30,7 +30,8 @@ class CuboidGenerator final : public ParticleGenerator {
    * initialization
    */
   const bool twoD{};
-
+  std::vector<int> ids{};
+  std::vector<ivec3> indeces{};
  public:
   /**
    * @brief Constructor for the particle generator
@@ -65,6 +66,10 @@ class CuboidGenerator final : public ParticleGenerator {
    */
   [[nodiscard]] std::vector<int> getIndeces(
       const std::vector<ivec3> &two_d_indeces) const;
+
+  void setTargetIndeces(const std::vector<ivec3> &indeces) {
+    this->indeces = indeces;
+  }
 };
 
 #endif  // CUBOIDGENERATOR_H

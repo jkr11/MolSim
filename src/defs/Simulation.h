@@ -13,7 +13,7 @@
 #include "utils/SpdWrapper.h"
 
 struct IndexForceConfig {
-  std::vector<ivec3> indeces{};
+  std::vector<int> indeces{};
   double ent_time{};
   dvec3 force_values{};
   ivec3 domain{};

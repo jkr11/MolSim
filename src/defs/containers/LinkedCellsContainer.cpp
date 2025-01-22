@@ -87,13 +87,11 @@ LinkedCellsContainer::LinkedCellsContainer(
       linked_cells_config.boundary_config.z_low,
       linked_cells_config.boundary_config.z_high,
   };
-  std::vector<std::unique_ptr<IndexForce>> index_forces;
-  for (const auto &config : linked_cells_config.index_force_config) {
-    const auto &[ids, time, force_values, dims] = config;
-    index_forces.push_back(
-        std::make_unique<IndexForce>(ids, time, force_values, dims));
-  }
-  index_force = *index_forces[0];
+
+
+  const auto &[ids, time, force_values, dims] = linked_cells_config.index_force_config;
+  index_force = IndexForce(ids, time, force_values);
+
   SpdWrapper::get()->info("cell dim: {}, {}, {}; cell count: {}, {}, {}",
                           cell_dim[0], cell_dim[1], cell_dim[2], cell_count[0],
                           cell_count[1], cell_count[2]);
@@ -288,6 +286,8 @@ void LinkedCellsContainer::singleIterator(
   }
 }
 
+
+
 void LinkedCellsContainer::setIndexForce(const IndexForce &index_force) {
   this->index_force = index_force;
 }
@@ -327,13 +327,14 @@ void LinkedCellsContainer::pairIterator(
     ivec3 cellCoordinate = cellIndexToCoord(cellIndex);
     DEBUG_PRINT_FMT("cell index: {}; coord = ({}, {}, {}); halo? = {}",
                     cellIndex, cellCoordinate[0], cellCoordinate[1],
-                    cellCoordinate[2], isHalo(cellIndex));
+                    cellCoordinate[2], isHalo(cellIndex))
 
     // iterate over particles inside cell
     for (std::size_t i = 0; i < cellParticles.size(); ++i) {
       for (std::size_t j = i + 1; j < cellParticles.size(); ++j) {
         const dvec3 p = cellParticles[i].getX();
         const dvec3 q = cellParticles[j].getX();
+        // if (index_force) ...
         if (dvec3 d = {p[0] - q[0], p[1] - q[1], p[2] - q[2]};
             d[0] * d[0] + d[1] * d[1] + d[2] * d[2] > cutoff * cutoff)
           continue;

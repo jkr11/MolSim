@@ -7,6 +7,7 @@
 
 #include "Particle.h"
 
+#include "io/file/out/checkpoint-schema.hxx"
 #include "utils/ArrayUtils.h"
 #include "utils/SpdWrapper.h"
 
@@ -109,6 +110,8 @@ void Particle::updateForceInTime() {
   f = {0., 0., 0.};
 }
 
+int Particle::getId() const { return id; }
+
 std::string Particle::toString() const {
   std::stringstream stream;
   stream << "Particle: X:" << x << " v: " << v << " f: " << f
@@ -125,3 +128,5 @@ std::ostream &operator<<(std::ostream &stream, const Particle &p) {
   stream << p.toString();
   return stream;
 }
+
+int Particle::global_id_counter = 0;

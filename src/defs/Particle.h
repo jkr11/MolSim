@@ -132,6 +132,8 @@ class Particle final {
 
   void subF(const dvec3 &F);
 
+  [[nodiscard]] int getId() const;
+
   bool operator==(const Particle &other) const;
 
   [[nodiscard]] std::string toString() const;

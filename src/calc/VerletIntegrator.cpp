@@ -4,6 +4,7 @@
 #include "VerletIntegrator.h"
 
 #include "../utils/ArrayUtils.h"
+#include "utils/SpdWrapper.h"
 
 void VerletIntegrator::step(ParticleContainer& particle_container) {
   particle_container.singleIterator([this](Particle& p) {
@@ -24,6 +25,19 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
     p.addF(f);
   });
 
+  // TODO: refactor in lower iterator? maybe pass time to all? just get the
+  // global var?
+  particle_container.singleIterator([this](Particle& p) {
+    SpdWrapper::get()->info("Current time: {}", current_time);
+    for (const auto& index_force : index_forces) {
+      for (const int id : index_force->getIndeces()) {
+        if (p.getId() == id) {
+          index_force->applyForce(p, current_time);
+        }
+      }
+    }
+  });
+
   particle_container.pairIterator([this](Particle& p1, Particle& p2) {
     dvec3 f12 = {0.0, 0.0, 0.0};
     for (const auto& force : interactive_forces) {
@@ -38,4 +52,7 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
         p.getV() + (delta_t / (2 * p.getM()) * (p.getOldF() + p.getF()));
     p.setV(new_v);
   });
+
+  //TODO: remove
+  particle_container.incrementTime();
 }

@@ -56,6 +56,11 @@ void CuboidGenerator::generate(std::vector<Particle> &particles) {
             initialVelocity +
             maxwellBoltzmannDistributedVelocity(mv, twoD ? 2 : 3);
         particles.emplace_back(position, V, m, epsilon, sigma, type);
+        for (auto vec : indeces) {
+          if (ivec3{i, j, k} == vec) {
+            ids.push_back(particles.back().getId());
+          }
+        }
       }
     }
   }
@@ -98,7 +103,9 @@ void CuboidGenerator::generate(std::vector<Particle> &particles) {
   DEBUG_PRINT("particles: " + std::to_string(particles.size()));
 }
 
-std::vector<int> CuboidGenerator::getIndeces(const std::vector<ivec3>& two_d_indeces) const {
+
+std::vector<int> CuboidGenerator::getIndeces(
+    const std::vector<ivec3> &two_d_indeces) const {
   std::vector<int> indeces;
   for (auto [fst, snd, thd] : two_d_indeces) {
     indeces.push_back((fst * dimensions[0] * dimensions[2]) +
