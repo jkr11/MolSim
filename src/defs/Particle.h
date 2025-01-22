@@ -8,6 +8,7 @@
 #pragma once
 
 #include <array>
+#include <memory>
 #include <string>
 
 #include "defs/types.h"
@@ -60,7 +61,7 @@ class Particle final {
   /**
    * neighbouring cells for the membranes
    */
-  std::vector<std::pair<bool,Particle>> neighbours{};
+  std::vector<std::pair<bool, std::shared_ptr<Particle>>> neighbours{};
 
  public:
   explicit Particle(int type = 0);
@@ -97,7 +98,8 @@ class Particle final {
 
   [[nodiscard]] double getSigma() const;
 
-  [[nodiscard]] const std::vector<std::pair<bool, Particle>> &getNeighbours() const;
+  [[nodiscard]] const std::vector<std::pair<bool, std::shared_ptr<Particle>>> &
+  getNeighbours() const;
 
   void setF(const std::array<double, 3> &F);
 

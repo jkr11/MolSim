@@ -8,10 +8,12 @@
 #include <cstddef>
 #include <functional>
 #include <vector>
+#include <xsd/cxx/tree/bits/literals.hxx>
 
 #include "debug/debug_print.h"
 #include "defs/Particle.h"
 #include "forces/LennardJones.h"
+#include "io/file/out/checkpoint-schema.hxx"
 #include "utils/ArrayUtils.h"
 #include "utils/SpdWrapper.h"
 
@@ -26,6 +28,7 @@ LinkedCellsContainer::LinkedCellsContainer(
                           domain[2]);
 
   cells = {};
+
   this->cutoff = linked_cells_config.cutoff_radius;
 
   cell_count = {std::max(static_cast<int>(std::floor(domain[0] / cutoff)), 1),
@@ -53,7 +56,7 @@ LinkedCellsContainer::LinkedCellsContainer(
   cells.resize(cell_count[0] * cell_count[1] * cell_count[2]);
 
   this->boundary_config = linked_cells_config.boundary_config;
-
+  SpdWrapper::get()->info("Num Cells: {}", cells.size());
   DEBUG_PRINT_FMT("Num Cells: {}", cells.size());
 
   halo_direction_cells = {};
@@ -104,23 +107,10 @@ void LinkedCellsContainer::addParticle(const Particle &p) {
                   p.getX()[0], p.getX()[1], p.getX()[2], index)
 }
 
-void LinkedCellsContainer::addParticleId(const Particle &p, std::size_t id,
-                                         std::size_t size) {
-  const std::size_t index = dvec3ToCellIndex(p.getX());
-  SpdWrapper::get()->info("Adding particle {} out of {}", id, size);
-  if (!isValidCellCoordinate(cellIndexToCoord(index))) {
-    SpdWrapper::get()->error("Tried to add particle out of bounds");
-    exit(1);
-  }
-  cells[index].emplace_back(p);
-}
-
 void LinkedCellsContainer::addParticles(
     const std::vector<Particle> &particles) {
-  SpdWrapper::get()->info("Adding {} particles", particles.size());
-  size_t id = 0;
   for (const Particle &p : particles) {
-    addParticleId(p,id++,particles.size());
+    addParticle(p);
   }
 }
 
@@ -377,14 +367,14 @@ void LinkedCellsContainer::pairIterator(
           if (dvec3 d = {p[0] - q[0], p[1] - q[1], p[2] - q[2]};
               d[0] * d[0] + d[1] * d[1] + d[2] * d[2] > cutoff * cutoff)
             continue;
-//#define MEMBRANE
+          // #define MEMBRANE
           f(cellParticle, neighbourParticle);
 #ifdef MEMBRANE
           std::vector<Particle> particles = this->getParticlesObjects();
           index_force.applyForce(particles);
 #endif
           DEBUG_PRINT_FMT("Cross cell pair: ({}, {})", cellParticle.getType(),
-                          neighbourParticle.getType());
+                          neighbourParticle.getType())
         }
       }
     }

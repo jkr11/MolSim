@@ -74,6 +74,9 @@ class LinkedCellsContainer final : public ParticleContainer {
    */
   LinkedCellsConfig::BoundaryConfig boundary_config{};
 
+  /**
+   * @brief Forces acting on s selection of indeces
+   */
   IndexForce index_force{};
 
   /**
