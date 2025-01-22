@@ -633,7 +633,7 @@ bool LinkedCellsContainer::isDoubleCorner(
     }
   }
 
-  if (edge_of_x_dimensions_counter != 2) {
+  if (edge_of_x_dimensions_counter < 2) {
     SpdWrapper::get()->info("[{}, {}, {}] is not a corner!", cell_coordinate[0],
                           cell_coordinate[1], cell_coordinate[2]);
     return false;
