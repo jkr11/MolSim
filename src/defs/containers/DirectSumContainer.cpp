@@ -7,7 +7,6 @@
 #include <algorithm>
 #include <cstddef>
 #include <functional>
-#include <memory>
 #include <vector>
 
 #include "debug/debug_print.h"
@@ -76,19 +75,12 @@ void DirectSumContainer::singleIterator(
   }
 }
 
-// TODO: fix
 void DirectSumContainer::pairIterator(
-    const std::vector<std::unique_ptr<InteractiveForce>>& interactive_forces) {
+    const std::function<void(Particle&, Particle&)>& f) {
   // note that the upper tri-diag matrix is iterated over
   for (size_t i = 0; i < particles.size(); ++i) {
     for (size_t j = i + 1; j < particles.size(); ++j) {
-      // f(particles[i], particles[j]);
-      for (auto& f : interactive_forces) {
-        f->directionalForce(
-            particles[i], particles[j],
-            ArrayUtils::L2Norm(particles[i].getX() - particles[j].getX()),
-            particles[i].getX() - particles[j].getX());
-      }
+      f(particles[i], particles[j]);
     }
   }
 }
@@ -102,6 +94,5 @@ double DirectSumContainer::getKineticEnergy() {
 }
 
 void DirectSumContainer::imposeInvariant() {
-  // TODO: this better? DEBUG_PRINT("DirectSumContainer::imposeInvariant()");
   SPDLOG_TRACE("DirectSumContainer::imposeInvariant()");
 }

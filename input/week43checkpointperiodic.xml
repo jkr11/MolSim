@@ -5,11 +5,11 @@
         <container>
             <linkedCells>
                 <domain>
-                    <x>300</x>
-                    <y>54</y>
+                    <x>303</x>
+                    <y>180</y>
                     <z>1</z>
                 </domain>
-                <r_cutoff>2.5</r_cutoff>
+                <r_cutoff>3.0</r_cutoff>
                 <boundary>
                     <x_high>
                         <Periodic/>
@@ -37,24 +37,24 @@
             <SingularGravity g="-12.44"/>
         </force>
         <delta_t>0.0005</delta_t>
-        <t_end>50</t_end>
+        <t_end>15</t_end>
         <twoD>true</twoD>
     </metadata>
     <cuboids>
         <cuboid>
             <velocity>
-                <x>0.0</x>
-                <y>0.0</y>
-                <z>0.0</z>
+                <x>0</x>
+                <y>0</y>
+                <z>0</z>
             </velocity>
             <corner>
-                <x>0.6</x>
+                <x>1.5</x>
                 <y>2</y>
                 <z>0</z>
             </corner>
             <dimensions>
                 <x>250</x>
-                <y>20</y>
+                <y>50</y>
                 <z>1</z>
             </dimensions>
             <type>1</type>
@@ -64,32 +64,9 @@
             <sigma>1.2</sigma>
             <mv>0.1</mv>
         </cuboid>
-        <cuboid>
-            <velocity>
-                <x>0</x>
-                <y>0</y>
-                <z>0</z>
-            </velocity>
-            <corner>
-                <x>0.6</x>
-                <y>27</y>
-                <z>0</z>
-            </corner>
-            <dimensions>
-                <x>250</x>
-                <y>20</y>
-                <z>1</z>
-            </dimensions>
-            <type>2</type>
-            <h>1.2</h>
-            <mass>2.0</mass>
-            <epsilon>1.0</epsilon>
-            <sigma>1.1</sigma>
-            <mv>0.1</mv>
-        </cuboid>
     </cuboids>
     <thermostat>
-        <T_init>40</T_init>
+        <T_init>0.5</T_init>
         <n_thermostat>1000</n_thermostat>
     </thermostat>
 </simulation>

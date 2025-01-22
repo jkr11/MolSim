@@ -6,6 +6,7 @@
 #define VERLET_H
 #pragma once
 #include <utility>
+#include <memory>
 
 #include "defs/containers/ParticleContainer.h"
 #include "forces/InteractiveForce.h"

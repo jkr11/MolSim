@@ -82,9 +82,10 @@ class DirectSumContainer final : public ParticleContainer {
   /**
    * @brief Pair iterator over all distinct particle pairs in the container with
    * distance <= cutoff
+   * @param f Function to be applied
    */
-  void pairIterator(const std::vector<std::unique_ptr<InteractiveForce>>&
-                        interactive_forces) override;
+  void pairIterator(
+      const std::function<void(Particle&, Particle&)>& f) override;
 
   double getKineticEnergy() override;
 };

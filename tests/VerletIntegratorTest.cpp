@@ -7,7 +7,7 @@
 #include "../src/forces/LennardJones.h"
 #include "forces/SingularGravity.h"
 #include "testUtil.h"
-#if 1
+
 /*
  * Positions correct after one step, arbitrary example 1
  */
@@ -17,9 +17,7 @@ TEST(VerletIntegrator, step1) {
   LennardJones lj;
   std::vector<std::unique_ptr<InteractiveForce>> interactive_forces;
   interactive_forces.push_back(std::make_unique<LennardJones>());
-  // SingularGravity sg(-12.44);
   std::vector<std::unique_ptr<SingularForce>> singular_forces;
-  // singular_forces.push_back(std::make_unique<SingularGravity>(sg));
   VerletIntegrator integrator(interactive_forces, singular_forces, 0.01f);
 
   p.setF({0, 1, 0});
@@ -45,9 +43,7 @@ TEST(VerletIntegrator, step2) {
   LennardJones lj;
   std::vector<std::unique_ptr<InteractiveForce>> interactive_forces;
   interactive_forces.push_back(std::make_unique<LennardJones>());
-  // SingularGravity sg(-12.44);
   std::vector<std::unique_ptr<SingularForce>> singular_forces;
-  // singular_forces.push_back(std::make_unique<SingularGravity>(sg));
   VerletIntegrator integrator(interactive_forces, singular_forces, 0.01f);
 
   p.setF({0, 1, 0});
@@ -69,4 +65,3 @@ TEST(VerletIntegrator, step2) {
   DVEC3_NEAR(q.getF(), {5.62584, -5.62556, 0}, "New F of q wrong.", 1e-5f);
   DVEC3_NEAR(q.getV(), {0.02812, -0.02812, 0}, "Velocity of q wrong.", 1e-5f);
 }
-#endif

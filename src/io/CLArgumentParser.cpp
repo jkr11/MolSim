@@ -8,6 +8,7 @@
 
 #include <filesystem>
 #include <fstream>
+#include <iostream>
 #include <tuple>
 
 #include "spdlog/fmt/bundled/chrono.h"
@@ -73,11 +74,20 @@ std::tuple<std::filesystem::path, double, bool> CLArgumentParser::parse(
     printUsage(e.what(), argv[0]);
     exit(EXIT_FAILURE);
   }
+
+  SpdWrapper::get()->info("Resetting getopt vars ... ");
+
+  optind =
+      0;  // Reset position for GNU - so techically this should work everywhere
+  optarg = nullptr;  // Reset argument pointer
+  optopt = 0;        // Reset last option character
+
   return {input_file, step_size, write_checkpoint};
 }
 
 void CLArgumentParser::validateInputFile(
     const std::filesystem::path &file_path) {
+  SpdWrapper::get()->warn("Validating: {}", file_path.string());
   if (!exists(file_path) || is_directory(file_path)) {
     printUsage("File does not exist", file_path);
     throw std::invalid_argument("Input file '" + std::string(file_path) +
@@ -91,11 +101,8 @@ void CLArgumentParser::validateInputFile(
   }
 }
 
-// TODO: adjust this
 void CLArgumentParser::printUsage(const std::string &additionalNote,
                                   const std::string &programName) {
-  // std::cerr << red << "[Error:] " << additionalNote << reset << "\n";
-
   SpdWrapper::get()->set_level(spdlog::level::err);
   SpdWrapper::get()->error(additionalNote);
   SpdWrapper::get()->error(

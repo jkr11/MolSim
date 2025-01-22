@@ -50,7 +50,7 @@
 #include <xsd/cxx/config.hxx>
 
 #if (XSD_INT_VERSION != 4000000L)
-// #error XSD runtime version mismatch
+//#error XSD runtime version mismatch
 #endif
 
 #include <xsd/cxx/pre.hxx>
@@ -69,9 +69,23 @@
 #include <xsd/cxx/tree/parsing/unsigned-int.hxx>
 #include <xsd/cxx/tree/parsing/unsigned-long.hxx>
 #include <xsd/cxx/tree/parsing/unsigned-short.hxx>
+#include <xsd/cxx/tree/serialization.hxx>
+#include <xsd/cxx/tree/serialization/boolean.hxx>
+#include <xsd/cxx/tree/serialization/byte.hxx>
+#include <xsd/cxx/tree/serialization/decimal.hxx>
+#include <xsd/cxx/tree/serialization/double.hxx>
+#include <xsd/cxx/tree/serialization/float.hxx>
+#include <xsd/cxx/tree/serialization/int.hxx>
+#include <xsd/cxx/tree/serialization/long.hxx>
+#include <xsd/cxx/tree/serialization/short.hxx>
+#include <xsd/cxx/tree/serialization/unsigned-byte.hxx>
+#include <xsd/cxx/tree/serialization/unsigned-int.hxx>
+#include <xsd/cxx/tree/serialization/unsigned-long.hxx>
+#include <xsd/cxx/tree/serialization/unsigned-short.hxx>
 #include <xsd/cxx/tree/types.hxx>
 #include <xsd/cxx/xml/char-utf8.hxx>
 #include <xsd/cxx/xml/dom/auto-ptr.hxx>
+#include <xsd/cxx/xml/dom/serialization-header.hxx>
 #include <xsd/cxx/xml/error-handler.hxx>
 
 namespace xml_schema {
@@ -169,6 +183,16 @@ typedef ::xsd::cxx::tree::entity<char, ncname> entity;
 typedef ::xsd::cxx::tree::entities<char, simple_type, entity> entities;
 
 typedef ::xsd::cxx::tree::content_order content_order;
+// Namespace information and list stream. Used in
+// serialization functions.
+//
+typedef ::xsd::cxx::xml::dom::namespace_info<char> namespace_info;
+typedef ::xsd::cxx::xml::dom::namespace_infomap<char> namespace_infomap;
+typedef ::xsd::cxx::tree::list_stream<char> list_stream;
+typedef ::xsd::cxx::tree::as_double<double_> as_double;
+typedef ::xsd::cxx::tree::as_decimal<decimal> as_decimal;
+typedef ::xsd::cxx::tree::facet facet;
+
 // Flags and properties.
 //
 typedef ::xsd::cxx::tree::flags flags;
@@ -192,6 +216,7 @@ typedef ::xsd::cxx::tree::expected_attribute<char> expected_attribute;
 typedef ::xsd::cxx::tree::unexpected_enumerator<char> unexpected_enumerator;
 typedef ::xsd::cxx::tree::expected_text_content<char> expected_text_content;
 typedef ::xsd::cxx::tree::no_prefix_mapping<char> no_prefix_mapping;
+typedef ::xsd::cxx::tree::serialization<char> serialization;
 
 // Error handler callback interface.
 //
@@ -1359,15 +1384,18 @@ class ThermostatType : public ::xml_schema::type {
   // T_target
   //
   typedef ::xml_schema::decimal T_target_type;
+  typedef ::xsd::cxx::tree::optional<T_target_type> T_target_optional;
   typedef ::xsd::cxx::tree::traits<T_target_type, char,
                                    ::xsd::cxx::tree::schema_type::decimal>
       T_target_traits;
 
-  const T_target_type& T_target() const;
+  const T_target_optional& T_target() const;
 
-  T_target_type& T_target();
+  T_target_optional& T_target();
 
   void T_target(const T_target_type& x);
+
+  void T_target(const T_target_optional& x);
 
   // deltaT
   //
@@ -1387,8 +1415,7 @@ class ThermostatType : public ::xml_schema::type {
 
   // Constructors.
   //
-  ThermostatType(const T_init_type&, const n_thermostat_type&,
-                 const T_target_type&);
+  ThermostatType(const T_init_type&, const n_thermostat_type&);
 
   ThermostatType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
                  ::xml_schema::container* c = 0);
@@ -1411,7 +1438,7 @@ class ThermostatType : public ::xml_schema::type {
  protected:
   ::xsd::cxx::tree::one<T_init_type> T_init_;
   ::xsd::cxx::tree::one<n_thermostat_type> n_thermostat_;
-  ::xsd::cxx::tree::one<T_target_type> T_target_;
+  T_target_optional T_target_;
   deltaT_optional deltaT_;
 };
 
@@ -1674,6 +1701,115 @@ class spheroids : public ::xml_schema::type {
     ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument> d,
     ::xml_schema::flags f = 0,
     const ::xml_schema::properties& p = ::xml_schema::properties());
+
+#include <iosfwd>
+#include <xercesc/dom/DOMDocument.hpp>
+#include <xercesc/dom/DOMErrorHandler.hpp>
+#include <xercesc/framework/XMLFormatter.hpp>
+#include <xsd/cxx/xml/dom/auto-ptr.hxx>
+
+// Serialize to std::ostream.
+//
+
+void simulation_(::std::ostream& os, const ::simulation& x,
+                 const ::xml_schema::namespace_infomap& m =
+                     ::xml_schema::namespace_infomap(),
+                 const ::std::string& e = "UTF-8", ::xml_schema::flags f = 0);
+
+void simulation_(::std::ostream& os, const ::simulation& x,
+                 ::xml_schema::error_handler& eh,
+                 const ::xml_schema::namespace_infomap& m =
+                     ::xml_schema::namespace_infomap(),
+                 const ::std::string& e = "UTF-8", ::xml_schema::flags f = 0);
+
+void simulation_(::std::ostream& os, const ::simulation& x,
+                 ::xercesc::DOMErrorHandler& eh,
+                 const ::xml_schema::namespace_infomap& m =
+                     ::xml_schema::namespace_infomap(),
+                 const ::std::string& e = "UTF-8", ::xml_schema::flags f = 0);
+
+// Serialize to xercesc::XMLFormatTarget.
+//
+
+void simulation_(::xercesc::XMLFormatTarget& ft, const ::simulation& x,
+                 const ::xml_schema::namespace_infomap& m =
+                     ::xml_schema::namespace_infomap(),
+                 const ::std::string& e = "UTF-8", ::xml_schema::flags f = 0);
+
+void simulation_(::xercesc::XMLFormatTarget& ft, const ::simulation& x,
+                 ::xml_schema::error_handler& eh,
+                 const ::xml_schema::namespace_infomap& m =
+                     ::xml_schema::namespace_infomap(),
+                 const ::std::string& e = "UTF-8", ::xml_schema::flags f = 0);
+
+void simulation_(::xercesc::XMLFormatTarget& ft, const ::simulation& x,
+                 ::xercesc::DOMErrorHandler& eh,
+                 const ::xml_schema::namespace_infomap& m =
+                     ::xml_schema::namespace_infomap(),
+                 const ::std::string& e = "UTF-8", ::xml_schema::flags f = 0);
+
+// Serialize to an existing xercesc::DOMDocument.
+//
+
+void simulation_(::xercesc::DOMDocument& d, const ::simulation& x,
+                 ::xml_schema::flags f = 0);
+
+// Serialize to a new xercesc::DOMDocument.
+//
+
+::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument> simulation_(
+    const ::simulation& x,
+    const ::xml_schema::namespace_infomap& m =
+        ::xml_schema::namespace_infomap(),
+    ::xml_schema::flags f = 0);
+
+void operator<<(::xercesc::DOMElement&, const MetadataType&);
+
+void operator<<(::xercesc::DOMElement&, const cuboidType&);
+
+void operator<<(::xercesc::DOMElement&, const spheroidType&);
+
+void operator<<(::xercesc::DOMElement&, const Dvec3Type&);
+
+void operator<<(::xercesc::DOMElement&, const Ivec3Type&);
+
+void operator<<(::xercesc::DOMElement&, const ContainerType&);
+
+void operator<<(::xercesc::DOMElement&, const LinkedCellsType&);
+
+void operator<<(::xercesc::DOMElement&, const DirectSumType&);
+
+void operator<<(::xercesc::DOMAttr&, const DirectSumType&);
+
+void operator<<(::xml_schema::list_stream&, const DirectSumType&);
+
+void operator<<(::xercesc::DOMElement&, const BoundaryType&);
+
+void operator<<(::xercesc::DOMElement&, const BoundaryConfigType&);
+
+void operator<<(::xercesc::DOMElement&, const ForceType&);
+
+void operator<<(::xercesc::DOMElement&, const GravityType&);
+
+void operator<<(::xercesc::DOMAttr&, const GravityType&);
+
+void operator<<(::xml_schema::list_stream&, const GravityType&);
+
+void operator<<(::xercesc::DOMElement&, const LennardJonesForce&);
+
+void operator<<(::xercesc::DOMAttr&, const LennardJonesForce&);
+
+void operator<<(::xml_schema::list_stream&, const LennardJonesForce&);
+
+void operator<<(::xercesc::DOMElement&, const SingularGravityType&);
+
+void operator<<(::xercesc::DOMElement&, const ThermostatType&);
+
+void operator<<(::xercesc::DOMElement&, const simulation&);
+
+void operator<<(::xercesc::DOMElement&, const cuboids&);
+
+void operator<<(::xercesc::DOMElement&, const spheroids&);
 
 #include <xsd/cxx/post.hxx>
 

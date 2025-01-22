@@ -40,6 +40,6 @@
     <thermostat>
         <T_init>1.0</T_init>
         <n_thermostat>1000</n_thermostat>
-        <T_target>1.0</T_target>
+        <T_target>10.0</T_target>
     </thermostat>
 </simulation>

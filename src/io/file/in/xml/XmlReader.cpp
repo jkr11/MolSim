@@ -46,6 +46,8 @@ void XmlReader::read(std::vector<Particle>& particles,
           .z_high = toBoundaryType(boundaries.z_high()),
           .z_low = toBoundaryType(boundaries.z_low()),
       };
+      validateBoundaries(boundary_config);
+
       linked_cells_config.boundary_config = boundary_config;
       simulation_parameters.container_data = linked_cells_config;
       DEBUG_PRINT("Using LinkedCells container");
@@ -54,13 +56,10 @@ void XmlReader::read(std::vector<Particle>& particles,
           "No container provided, using default LinkedCells");
     }
     if (auto& force = metadata.force(); force.LennardJones().present()) {
-      // auto _force = std::make_unique<LennardJones>();
       simulation_parameters.interactive_force_types.emplace_back(
           LennardJonesConfig{});
       DEBUG_PRINT("Using LennardJones");
     } else if (force.Gravity().present()) {
-      // auto _force = std::make_unique<Gravity>();
-      // simulation_parameters.interactive_forces.push_back(std::move(_force));
       simulation_parameters.interactive_force_types.emplace_back(
           GravityConfig{});
       DEBUG_PRINT("Using Gravity");
@@ -69,9 +68,6 @@ void XmlReader::read(std::vector<Particle>& particles,
     }
     if (auto& singular_force = metadata.force();
         singular_force.SingularGravity().present()) {
-      // auto _force = std::make_unique<SingularGravity>(
-      //     singular_force.SingularGravity()->g().get());
-      // simulation_parameters.singular_forces.push_back(std::move(_force));
       simulation_parameters.singular_force_types.emplace_back(
           SingularGravityConfig{singular_force.SingularGravity()->g().get()});
     }
@@ -82,7 +78,10 @@ void XmlReader::read(std::vector<Particle>& particles,
       auto thermostat = config->thermostat();
       ThermostatConfig thermostat_config = {
           .T_init = thermostat->T_init(),
-          .T_target = thermostat->T_target(),  // TODO: make this optional
+          .T_target =
+              thermostat->T_init(),  // we initialize both this and deltaT to
+                                     // its defaults first and then check if the
+                                     // actual values are present
           .deltaT =
               std::numeric_limits<double>::max(),  // Default to infinity, dont
                                                    // use infinity() limit
@@ -93,6 +92,9 @@ void XmlReader::read(std::vector<Particle>& particles,
       if (thermostat->deltaT().present()) {
         thermostat_config.deltaT = thermostat->deltaT().get();
       }
+      if (thermostat->T_target().present()) {
+        thermostat_config.T_target = thermostat->T_target().get();
+      }
 
       SpdWrapper::get()->info("Checkpoint thermostat deltaT {}",
                               thermostat_config.deltaT);
@@ -101,7 +103,6 @@ void XmlReader::read(std::vector<Particle>& particles,
     } else {
       simulation_parameters.use_thermostat = false;
     }
-    // TODO: singular forces here , but its a good start
     simulation_parameters.delta_t = metadata.delta_t();
     simulation_parameters.t_end = metadata.t_end();
     const auto& twoD = metadata.twoD();
@@ -117,7 +118,8 @@ void XmlReader::read(std::vector<Particle>& particles,
         dvec3 velocity =
             unwrapVec<const Dvec3Type&, dvec3>(_velocity, "velocity");
         double mv;
-        if (config->thermostat().present() && cubes.mv() == 0.0) {
+        if (config->thermostat().present() &&
+            velocity == dvec3{0.0, 0.0, 0.0}) {
           mv = std::sqrt(simulation_parameters.thermostat_config.T_init /
                          cubes.mass());
         } else {
@@ -139,7 +141,8 @@ void XmlReader::read(std::vector<Particle>& particles,
         dvec3 origin = {_origin.x(), _origin.y(), _origin.z()};
         dvec3 velocity = {_velocity.x(), _velocity.y(), _velocity.z()};
         double mv;
-        if (config->thermostat().present() && spheres.mv() == 0.0) {
+        if (config->thermostat().present() &&
+            velocity == dvec3{0.0, 0.0, 0.0}) {
           mv = std::sqrt(simulation_parameters.thermostat_config.T_init /
                          spheres.mass());
         } else {
@@ -181,9 +184,8 @@ void XmlReader::loadCheckpoint(const std::string& _filepath,
       double epsilon = p.epsilon();
       double sigma = p.sigma();
       int type = p.type();
-      // TODO: this is also bad
       temp_particles.emplace_back(position, velocity, force, old_force, mass,
-                                  epsilon, sigma, type);
+                                  type, epsilon, sigma);
     }
     SpdWrapper::get()->info("Read {} particles from checkpoint",
                             temp_particles.size());
