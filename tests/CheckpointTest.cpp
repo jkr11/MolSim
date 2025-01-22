@@ -70,11 +70,23 @@ TEST(Checkpoint, cuboid) {
   char arg31[] ="-c";
   char* argv1[] = {arg01, arg11, arg21, arg31};
   auto [name1, step1, write_checkpoint1] = CLArgumentParser::parse(4, argv1);
-#if 1
+
   Arguments arguments1;
   std::vector<Particle> particles1;
   XmlReader::read(particles1, name1, arguments1);
 
   ASSERT_EQ(particles.size(), particles1.size());
-#endif
+
+  std::sort(particles.begin(), particles.end(), [](const Particle& a, const Particle& b) {
+        return a.getX() < b.getX();
+    });
+
+  std::sort(particles1.begin(), particles1.end(), [](const Particle& a, const Particle& b) {
+        return a.getX() < b.getX();
+    });
+
+  for (size_t i = 0; i < particles.size(); ++i) {
+    ASSERT_EQ_VEC3(particles[i].getX(), particles1[i].getX(), "Vectors not equal at index " + std::to_string(i));
+  }
+
 }
