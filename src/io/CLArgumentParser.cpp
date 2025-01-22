@@ -8,6 +8,7 @@
 
 #include <filesystem>
 #include <fstream>
+#include <iostream>
 #include <tuple>
 
 #include "spdlog/fmt/bundled/chrono.h"
@@ -24,6 +25,10 @@ std::tuple<std::filesystem::path, double, bool> CLArgumentParser::parse(
 
   int opt;
   int option_index = 0;
+
+  for (int i = 0; i < argc; i++) {
+    std::cout << argv[i] << " " << std::endl;
+  }
 
   std::filesystem::path input_file{};
   double step_size = 0.5;
@@ -43,6 +48,7 @@ std::tuple<std::filesystem::path, double, bool> CLArgumentParser::parse(
           printUsage("Display Help page, no execution", argv[0]);
           exit(EXIT_FAILURE);
         case 'f':
+          std::cout << "file: " << optarg << std::endl;
           input_file = optarg;
           break;
         case 's':
@@ -73,11 +79,17 @@ std::tuple<std::filesystem::path, double, bool> CLArgumentParser::parse(
     printUsage(e.what(), argv[0]);
     exit(EXIT_FAILURE);
   }
+  SpdWrapper::get()->info("Resetting getopt vars ... ");
+  optind = 0;  // Reset position for GNU
+  optarg = nullptr;  // Reset argument pointer
+  optopt = 0;  // Reset last option character
+
   return {input_file, step_size, write_checkpoint};
 }
 
 void CLArgumentParser::validateInputFile(
     const std::filesystem::path &file_path) {
+  SpdWrapper::get()->warn("Validating: {}", file_path.string());
   if (!exists(file_path) || is_directory(file_path)) {
     printUsage("File does not exist", file_path);
     throw std::invalid_argument("Input file '" + std::string(file_path) +
