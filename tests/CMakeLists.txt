@@ -20,6 +20,7 @@ if (BUILD_TESTS)
             BoundaryConditionsTest.cpp
             PeriodicBoundaryTest.cpp
             PeriodicBoundary3DTest.cpp
+            PeriodicAndReflectiveCornerTest.cpp
             testUtil.h
             XmlReaderTest.cpp
             ThermostatTest.cpp)

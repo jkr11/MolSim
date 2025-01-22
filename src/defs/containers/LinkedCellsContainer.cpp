@@ -634,12 +634,12 @@ bool LinkedCellsContainer::isDoubleCorner(
   }
 
   if (edge_of_x_dimensions_counter < 2) {
-    SpdWrapper::get()->info("[{}, {}, {}] is not a corner!", cell_coordinate[0],
-                          cell_coordinate[1], cell_coordinate[2]);
+    // SpdWrapper::get()->info("[{}, {}, {}] is not a corner!", cell_coordinate[0],
+    //                       cell_coordinate[1], cell_coordinate[2]);
     return false;
   }
-  SpdWrapper::get()->info("[{}, {}, {}] is a corner!", cell_coordinate[0],
-                          cell_coordinate[1], cell_coordinate[2]);
+  // SpdWrapper::get()->info("[{}, {}, {}] is a corner!", cell_coordinate[0],
+  //                         cell_coordinate[1], cell_coordinate[2]);
 
   // TODO: make beautiful
   // lookup table via some if statements
@@ -648,7 +648,7 @@ bool LinkedCellsContainer::isDoubleCorner(
       boundaries[ylow] == LinkedCellsConfig::Periodic &&
       boundaries[zlow] != LinkedCellsConfig::Periodic) {
     // 110
-    SpdWrapper::get()->info("isDoubleCorner - xlow ylow !zlow");
+    // SpdWrapper::get()->info("isDoubleCorner - xlow ylow !zlow");
     if (raw_dimension == yhigh &&
         (cell_coordinate[0] == -1 || cell_coordinate[0] == cell_count[0] - 2)) {
       return true;
@@ -659,7 +659,7 @@ bool LinkedCellsContainer::isDoubleCorner(
       boundaries[ylow] != LinkedCellsConfig::Periodic &&
       boundaries[zlow] == LinkedCellsConfig::Periodic) {
     // 101
-    SpdWrapper::get()->info("isDoubleCorner - xlow !ylow zlow");
+    // SpdWrapper::get()->info("isDoubleCorner - xlow !ylow zlow");
     if (raw_dimension == zhigh &&
         (cell_coordinate[0] == -1 || cell_coordinate[0] == cell_count[0] - 2)) {
       return true;
@@ -670,7 +670,7 @@ bool LinkedCellsContainer::isDoubleCorner(
       boundaries[ylow] == LinkedCellsConfig::Periodic &&
       boundaries[zlow] == LinkedCellsConfig::Periodic) {
     // 011
-    SpdWrapper::get()->info("isDoubleCorner - !xlow ylow zlow");
+    // SpdWrapper::get()->info("isDoubleCorner - !xlow ylow zlow");
     if (raw_dimension == zhigh &&
         (cell_coordinate[1] == -1 || cell_coordinate[1] == cell_count[1] - 2)) {
       return true;
@@ -681,7 +681,7 @@ bool LinkedCellsContainer::isDoubleCorner(
       boundaries[ylow] == LinkedCellsConfig::Periodic &&
       boundaries[zlow] == LinkedCellsConfig::Periodic) {
     // 111
-    SpdWrapper::get()->info("isDoubleCorner - xlow ylow zlow");
+    // SpdWrapper::get()->info("isDoubleCorner - xlow ylow zlow");
     if (raw_dimension == yhigh &&
         (cell_coordinate[0] == -1 || cell_coordinate[0] == cell_count[0] - 2)) {
       return true;

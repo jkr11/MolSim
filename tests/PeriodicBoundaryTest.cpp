@@ -358,6 +358,50 @@ TEST(PeriodicBoundaryForce, offsetY) {
 }
 
 /**
+ * tests that the correct force ist calculated for a periodic boundary in the z
+ * dimension
+ */
+TEST(PeriodicBoundaryForce, offsetZ) {
+  const LinkedCellsContainer container(
+      {.domain = {9, 9, 9},
+       .cutoff_radius = 3,
+       .boundary_config = {
+           LinkedCellsConfig::BoundaryType::Outflow,
+           LinkedCellsConfig::BoundaryType::Outflow,
+           LinkedCellsConfig::BoundaryType::Outflow,
+           LinkedCellsConfig::BoundaryType::Outflow,
+           LinkedCellsConfig::BoundaryType::Periodic,
+           LinkedCellsConfig::BoundaryType::Periodic,
+       }});
+
+  const LennardJones f{};
+
+  // distance of 2, test particle is in theoretical position
+  const auto p = new Particle({1, 1, 8}, {0, 0, 0}, 1, 5.0, 1);  // in bd
+  const auto q = new Particle({1, 1, 1}, {0, 0, 0}, 1, 5.0, 1);  // in bb
+  const auto test = new Particle({1, 1, -1}, {0, 0, 0}, 1, 5.0, 1);
+
+  auto [is_adjacent, new_coordinates, particle_offset] =
+      container.reflective_warp_around_testing({0, 0, 3}, zhigh);
+  constexpr dvec3 expected_offset = {0, 0, 9};
+
+  SpdWrapper::get()->info("{}, [{}, {}, {}], [{}, {}, {}]", is_adjacent,
+                          new_coordinates[0], new_coordinates[1],
+                          new_coordinates[2], particle_offset[0],
+                          particle_offset[1], particle_offset[2]);
+  EXPECT_EQ(is_adjacent, true) << "wrong adjacency";
+  EXPECT_IVEC3_EQ(new_coordinates, {0, 0, 0});
+  DVEC3_NEAR(particle_offset, expected_offset, "Offset wrong", 1e-5);
+
+  // compare that the force with offset is equal to what is the force in theory
+  const dvec3 accounted_particle_distance =
+      q->getX() - p->getX() + particle_offset;
+  ASSERT_EQ(LennardJones::directionalForceWithOffset(
+                *p, *q, accounted_particle_distance),
+            f.directionalForce(*test, *q));
+}
+
+/**
  * tests that the correct force ist calculated for a periodic boundary in the x
  * and y dimension
  */
@@ -395,8 +439,9 @@ TEST(PeriodicBoundaryForce, offsetXY1) {
   const dvec3 accounted_particle_distance =
       q->getX() - p->getX() + particle_offset;
   DVEC3_NEAR(LennardJones::directionalForceWithOffset(
-                *p, *q, accounted_particle_distance),
-            f.directionalForce(*test, *q), "not equal to theoretical force", 1e-8);
+                 *p, *q, accounted_particle_distance),
+             f.directionalForce(*test, *q), "not equal to theoretical force",
+             1e-8);
 }
 
 /**
@@ -437,8 +482,60 @@ TEST(PeriodicBoundaryForce, offsetXY2) {
   const dvec3 accounted_particle_distance =
       q->getX() - p->getX() + particle_offset;
   DVEC3_NEAR(LennardJones::directionalForceWithOffset(
-                *p, *q, accounted_particle_distance),
-            f.directionalForce(*test, *q), "not equal to theoretical force", 1e-8);
+                 *p, *q, accounted_particle_distance),
+             f.directionalForce(*test, *q), "not equal to theoretical force",
+             1e-8);
+}
+
+/**
+ * note that the offset tests do not add any real value over the warp tests,
+ * therefore, for the extension to 3D, these will include fewer examples for Z.
+ * It only has to be tested that the directionalForceWithOffset accepts a Z
+ * offset
+ */
+
+/**
+ * tests that the correct force ist calculated for a periodic boundary in the x,
+ * y and z dimension
+ */
+TEST(PeriodicBoundaryForce, offsetXYZ) {
+  const LinkedCellsContainer container(
+      {.domain = {9, 9, 9},
+       .cutoff_radius = 3,
+       .boundary_config = {
+           LinkedCellsConfig::BoundaryType::Periodic,
+           LinkedCellsConfig::BoundaryType::Periodic,
+           LinkedCellsConfig::BoundaryType::Periodic,
+           LinkedCellsConfig::BoundaryType::Periodic,
+           LinkedCellsConfig::BoundaryType::Periodic,
+           LinkedCellsConfig::BoundaryType::Periodic,
+       }});
+
+  const LennardJones f{};
+
+  // distance of 2, test particle is in theoretical position
+  const auto p = new Particle({8, 8, 8}, {0, 0, 0}, 1, 5.0, 1);  // in bd
+  const auto q = new Particle({1, 1, 1}, {0, 0, 0}, 1, 5.0, 1);  // in bb
+  const auto test = new Particle({-1, -1, -1}, {0, 0, 0}, 1, 5.0, 1);
+
+  auto [is_adjacent, new_coordinates, particle_offset] =
+      container.reflective_warp_around_testing(
+          {3, 3, 3},
+          xhigh);  // xhigh and not yhigh or zhigh because corners are invalid
+                   // for yhigh and zhigh
+  // if all three boundaries are periodic to avoid double matching
+  constexpr dvec3 expected_offset = {9, 9, 9};
+  EXPECT_EQ(is_adjacent, true) << "wrong adjacency";
+  EXPECT_IVEC3_EQ(new_coordinates, {0, 0, 0});
+  DVEC3_NEAR(particle_offset, expected_offset, "Offset wrong", 1e-5);
+
+  // compare that the force with offset is equal to what is the force in theory
+  const dvec3 accounted_particle_distance =
+      q->getX() - p->getX() + particle_offset;
+  DVEC3_NEAR(LennardJones::directionalForceWithOffset(
+                 *p, *q, accounted_particle_distance),
+             f.directionalForce(*test, *q), "not equal to theoretical force",
+             1e-8);
 }
 
 //[[======================== moving test =====================================]]
@@ -1060,6 +1157,171 @@ TEST(PeriodicBoundaryMoving, moveXYDiagonal4) {
   // test that particle is registered in its true cell
   const auto old_cell =
       container.getCells()[container.cellCoordToIndex_testing({2, 2, 0})];
+  const auto new_cell =
+      container.getCells()[container.cellCoordToIndex_testing({0, 0, 0})];
+
+  EXPECT_EQ(old_cell.size(), 0);
+  EXPECT_EQ(new_cell.size(), 1);
+}
+
+/**
+ * tests that particles can move through the y periodic boundary
+ */
+TEST(PeriodicBoundaryMoving, moveZForward) {
+  LinkedCellsContainer container({.domain = {9, 9, 9},
+                                  .cutoff_radius = 3,
+                                  .boundary_config = {
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                  }});
+
+  const LennardJones f{};
+
+  // move to other end
+  const Particle one({1, 1, 1}, {0, 0, -2}, 1, 5.0, 1);  // in bb
+
+  container.addParticle(one);
+  EXPECT_EQ(container.size(), 1) << "Number of Particles is not 2";
+
+  double delta_t = 1;
+  container.singleIterator([this, delta_t](Particle& p) {
+    const dvec3 new_x = p.getX() + delta_t * p.getV() +
+                        (delta_t * delta_t / (2 * p.getM())) * (p.getF());
+    p.setX(new_x);
+  });
+
+  container.singleIterator([](Particle& p) { p.updateForceInTime(); });
+
+  container.imposeInvariant();
+
+  container.singleIterator([this, delta_t](Particle& p) {
+    const dvec3 new_v =
+        p.getV() + (delta_t / (2 * p.getM()) * (p.getOldF() + p.getF()));
+    p.setV(new_v);
+  });
+
+  container.singleIterator([this](Particle& p) {
+    DVEC3_NEAR(p.getV(), {0.0, 0.0, -2.0}, "wrong velocity", 1e-5);
+    DVEC3_NEAR(p.getX(), {1, 1, 8}, "wrong position", 1e-5);
+  });
+
+  // test that particle is registered in its true cell
+  const auto old_cell =
+      container.getCells()[container.cellCoordToIndex_testing({0, 0, 0})];
+  const auto new_cell =
+      container.getCells()[container.cellCoordToIndex_testing({0, 0, 2})];
+
+  EXPECT_EQ(old_cell.size(), 0);
+  EXPECT_EQ(new_cell.size(), 1);
+}
+
+/**
+ * tests that particles can move through the z periodic boundary
+ */
+TEST(PeriodicBoundaryMoving, moveZBackward) {
+  LinkedCellsContainer container({.domain = {9, 9, 9},
+                                  .cutoff_radius = 3,
+                                  .boundary_config = {
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                  }});
+
+  const LennardJones f{};
+
+  // move to other end
+  const Particle one({1, 1, 8}, {0, 0, 2}, 1, 5.0, 1);  // in bb
+
+  container.addParticle(one);
+  EXPECT_EQ(container.size(), 1) << "Number of Particles is not 1";
+
+  double delta_t = 1;
+  container.singleIterator([this, delta_t](Particle& p) {
+    const dvec3 new_x = p.getX() + delta_t * p.getV() +
+                        (delta_t * delta_t / (2 * p.getM())) * (p.getF());
+    p.setX(new_x);
+  });
+
+  container.singleIterator([](Particle& p) { p.updateForceInTime(); });
+
+  container.imposeInvariant();
+
+  container.singleIterator([this, delta_t](Particle& p) {
+    const dvec3 new_v =
+        p.getV() + (delta_t / (2 * p.getM()) * (p.getOldF() + p.getF()));
+    p.setV(new_v);
+  });
+
+  container.singleIterator([this](Particle& p) {
+    DVEC3_NEAR(p.getV(), {0.0, 0.0, 2.0}, "wrong velocity", 1e-5);
+    DVEC3_NEAR(p.getX(), {1, 1, 1}, "wrong position", 1e-5);
+  });
+
+  // test that particle is registered in its true cell
+  const auto old_cell =
+      container.getCells()[container.cellCoordToIndex_testing({0, 0, 2})];
+  const auto new_cell =
+      container.getCells()[container.cellCoordToIndex_testing({0, 0, 0})];
+
+  EXPECT_EQ(old_cell.size(), 0);
+  EXPECT_EQ(new_cell.size(), 1);
+}
+
+/**
+ * tests that particles can move through the x, y and z periodic boundary
+ */
+TEST(PeriodicBoundaryMoving, moveXYZDiagonal) {
+  LinkedCellsContainer container({.domain = {9, 9, 9},
+                                  .cutoff_radius = 3,
+                                  .boundary_config = {
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                  }});
+
+  const LennardJones f{};
+
+  // move to other end
+  const Particle one({8, 8, 8}, {2, 2, 2}, 1, 5.0, 1);  // in bb
+
+  container.addParticle(one);
+  EXPECT_EQ(container.size(), 1) << "Number of Particles is not 1";
+
+  double delta_t = 1;
+  container.singleIterator([this, delta_t](Particle& p) {
+    const dvec3 new_x = p.getX() + delta_t * p.getV() +
+                        (delta_t * delta_t / (2 * p.getM())) * (p.getF());
+    p.setX(new_x);
+  });
+
+  container.singleIterator([](Particle& p) { p.updateForceInTime(); });
+
+  container.imposeInvariant();
+
+  container.singleIterator([this, delta_t](Particle& p) {
+    const dvec3 new_v =
+        p.getV() + (delta_t / (2 * p.getM()) * (p.getOldF() + p.getF()));
+    p.setV(new_v);
+  });
+
+  container.singleIterator([this](Particle& p) {
+    DVEC3_NEAR(p.getV(), {2.0, 2.0, 2.0}, "wrong velocity", 1e-5);
+    DVEC3_NEAR(p.getX(), {1, 1, 1}, "wrong position", 1e-5);
+  });
+
+  // test that particle is registered in its true cell
+  const auto old_cell =
+      container.getCells()[container.cellCoordToIndex_testing({2, 2, 2})];
   const auto new_cell =
       container.getCells()[container.cellCoordToIndex_testing({0, 0, 0})];
 
