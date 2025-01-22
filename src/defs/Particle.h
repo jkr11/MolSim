@@ -14,6 +14,7 @@
 
 class Particle final {
  private:
+  static int global_id_counter;
   /**
    * Position of the particle
    */
@@ -58,9 +59,14 @@ class Particle final {
   double sigma{};
 
   /**
+   * unique identifier for every particle
+   */
+  int id{};
+
+  /**
    * neighbouring cells for the membranes
    */
-  std::vector<std::pair<bool,Particle>> neighbours{};
+  std::vector<std::pair<bool, Particle>> neighbours{};
 
  public:
   explicit Particle(int type = 0);
@@ -97,7 +103,8 @@ class Particle final {
 
   [[nodiscard]] double getSigma() const;
 
-  [[nodiscard]] const std::vector<std::pair<bool, Particle>> &getNeighbours() const;
+  [[nodiscard]] const std::vector<std::pair<bool, Particle>> &getNeighbours()
+      const;
 
   void setF(const std::array<double, 3> &F);
 

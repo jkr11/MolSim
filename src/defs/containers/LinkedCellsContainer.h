@@ -6,6 +6,7 @@
 #include "defs/Particle.h"
 #include "defs/Simulation.h"
 #include "defs/containers/ParticleContainer.h"
+#include "forces/IndexForce.h"
 
 /**
  * @brief a particle container with linked cells
@@ -78,6 +79,8 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @param dimension the problematic dimension
    */
   inline void apply_reflective_boundary(size_t dimension);
+
+  IndexForce index_force{};
 
   /**
    *@brief index offsets orthogonal to a cell for each dimension, optimized for
@@ -180,6 +183,8 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @return Count of particles in the container
    */
   [[nodiscard]] std::size_t size() const override;
+
+  void setIndexForce(const IndexForce& index_force);
 
   /**
    * @brief Impose the invariant, that the particles are spatially sorted into
@@ -370,6 +375,7 @@ class LinkedCellsContainer final : public ParticleContainer {
       ivec3 cell_coordinate, std::size_t raw_dimension) const;
 
   double getKineticEnergy() override;
+
 };
 
 /**

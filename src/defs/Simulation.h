@@ -9,9 +9,15 @@
 #include <variant>
 
 #include "defs/types.h"
-#include "forces/InteractiveForce.h"
 #include "forces/SingularForce.h"
 #include "utils/SpdWrapper.h"
+
+struct IndexForceConfig {
+  std::vector<ivec3> indeces{};
+  double ent_time{};
+  dvec3 force_values{};
+  ivec3 domain{};
+};
 
 /**
  * @brief holds the specification for the LinkedCellsContainer
@@ -20,6 +26,7 @@ struct LinkedCellsConfig {
   ivec3 domain;  // size of the dimensions
   double cutoff_radius;
   enum BoundaryType { Outflow, Reflective, Periodic } boundary_type;
+  IndexForceConfig index_force_config;
   struct BoundaryConfig {
     BoundaryType x_high;
     BoundaryType x_low;
@@ -44,13 +51,6 @@ struct SingularGravityConfig {
 struct HarmonicForceConfig {
   double r_0{};
   double k{};
-};
-
-struct IndexForceConfig {
-  std::vector<ivec3> indeces{};
-  double ent_time{};
-  dvec3 force_values{};
-  ivec3 domain{};
 };
 
 struct LennardJonesConfig {};
@@ -136,7 +136,7 @@ inline void printConfiguration(const Arguments& args) {
   if (std::holds_alternative<LinkedCellsConfig>(args.container_data)) {
     logger->info("Container Type: Linked Cells");
 
-    const auto& [domain, cutoff_radius, boundary_type, boundary_config] =
+    const auto& [domain, cutoff_radius, boundary_type, idf, boundary_config] =
         std::get<LinkedCellsConfig>(args.container_data);
     logger->info("-- Domain: ({}, {}, {})", domain[0], domain[1], domain[2]);
     logger->info("-- Cutoff Radius: {}", cutoff_radius);

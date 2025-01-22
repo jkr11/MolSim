@@ -87,6 +87,13 @@ LinkedCellsContainer::LinkedCellsContainer(
       linked_cells_config.boundary_config.z_low,
       linked_cells_config.boundary_config.z_high,
   };
+  std::vector<std::unique_ptr<IndexForce>> index_forces;
+  for (const auto &config : linked_cells_config.index_force_config) {
+    const auto &[ids, time, force_values, dims] = config;
+    index_forces.push_back(
+        std::make_unique<IndexForce>(ids, time, force_values, dims));
+  }
+  index_force = *index_forces[0];
   SpdWrapper::get()->info("cell dim: {}, {}, {}; cell count: {}, {}, {}",
                           cell_dim[0], cell_dim[1], cell_dim[2], cell_count[0],
                           cell_count[1], cell_count[2]);
@@ -279,6 +286,10 @@ void LinkedCellsContainer::singleIterator(
       f(p);
     }
   }
+}
+
+void LinkedCellsContainer::setIndexForce(const IndexForce &index_force) {
+  this->index_force = index_force;
 }
 
 void LinkedCellsContainer::pairIterator(

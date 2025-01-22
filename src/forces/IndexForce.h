@@ -23,6 +23,7 @@ class IndexForce {
         time(time),
         force_values(force_values),
         dimensions(dimensions) {}
+  IndexForce() = default;
 
   void applyForce(std::vector<Particle>& particles);
 

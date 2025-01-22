@@ -29,7 +29,7 @@ Particle::Particle(const Particle &other)
 
 Particle::Particle(const std::array<double, 3> &x_arg,
                    const std::array<double, 3> &v_arg, const double m_arg,
-                   const double _epsilon, const double _sigma, int _type)
+                   const double _epsilon, const double _sigma, const int _type)
     : x(x_arg),
       v(v_arg),
       f({0, 0, 0}),
@@ -37,7 +37,8 @@ Particle::Particle(const std::array<double, 3> &x_arg,
       m(m_arg),
       type(_type),
       epsilon(_epsilon),
-      sigma(_sigma) {}
+      sigma(_sigma),
+      id(global_id_counter++) {}
 
 Particle::Particle(const std::array<double, 3> &x_arg,
                    const std::array<double, 3> &v_arg,
@@ -52,7 +53,8 @@ Particle::Particle(const std::array<double, 3> &x_arg,
       m(m_arg),
       type(type_arg),
       epsilon(epsilon_arg),
-      sigma(sigma_arg) {}
+      sigma(sigma_arg),
+      id(global_id_counter++) {}
 
 Particle::~Particle() = default;
 
