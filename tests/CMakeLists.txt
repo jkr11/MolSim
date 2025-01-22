@@ -19,6 +19,7 @@ if (BUILD_TESTS)
             VerletIntegratorTest.cpp
             BoundaryConditionsTest.cpp
             PeriodicBoundaryTest.cpp
+            PeriodicBoundary3DTest.cpp
             testUtil.h
             XmlReaderTest.cpp
             ThermostatTest.cpp)

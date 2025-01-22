@@ -206,6 +206,13 @@ class LinkedCellsContainer final : public ParticleContainer {
   [[nodiscard]] std::size_t size() const override;
 
   /**
+   * applies the periodic boundary conditions to the given dimension
+   * @param dimension the dimension that the periodic boundary should be applied
+   * to
+   */
+  inline void applyPeriodicBoundary(size_t dimension);
+
+  /**
    * @brief Impose the invariant, that the particles are spatially sorted into
    * the correct vectors
    */
