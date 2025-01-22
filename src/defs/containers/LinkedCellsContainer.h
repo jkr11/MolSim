@@ -417,7 +417,16 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @brief returns the domain of the container
    * @return the domain of the container
    */
-  ivec3 getDomain() override { return domain;}
+  ivec3 getDomain() override { return domain; }
+
+  /**
+   * @brief if true, this corner should not be evaluated because it was already
+   * done
+   * @param cell_coordinate the coordinate of the cell
+   * @param raw_dimension the evaluated dimension
+   * @return if cell should be ignored
+   */
+  inline bool isDoubleCorner(ivec3 cell_coordinate, std::size_t raw_dimension) const;
 };
 
 /**

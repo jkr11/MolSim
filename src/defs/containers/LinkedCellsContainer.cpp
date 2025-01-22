@@ -44,8 +44,9 @@ LinkedCellsContainer::LinkedCellsContainer(
   // possible pairs are already iterated over
   for (std::size_t i = 0; i < 2; i++) {
     if (cell_count[i] < 3) {
-      SpdWrapper::get()->info(
-          "cell count is too small if reflective boundaries are used");
+      SpdWrapper::get()->error(
+          "Cell count is too small if reflective boundaries are used! If this "
+          "is not a testing instance, please exit the simulation");
     }
   }
 
@@ -165,9 +166,8 @@ void LinkedCellsContainer::imposeInvariant() {
   // apply boundary condition
   // it is assumed that GhostParticles do not have to persist, so we dont have
   // to iterate over the halo cells of Reflective Boundaries
-  // accessible, 4 instead of 6
 
-  for (size_t dimension = 0; dimension < 4; ++dimension) {
+  for (size_t dimension = 0; dimension < 6; ++dimension) {
     switch (boundaries[dimension]) {
       case LinkedCellsConfig::BoundaryType::Outflow: {
         // clear halo
@@ -557,12 +557,12 @@ std::tuple<bool, ivec3, dvec3> LinkedCellsContainer::reflective_warp_around(
     // only once! skip this for the y dimension, since it was already calculated
     // in the x dimension
 
-    SpdWrapper::get()->info("cell should not be warped");
+    DEBUG_PRINT("cell should not be warped");
     return std::make_tuple(false, cell_coordinate, offset);
   }
 
   ivec3 new_cell_coordinate = cell_coordinate;
-  for (std::size_t dimension = 0; dimension < 2; dimension++) {
+  for (std::size_t dimension = 0; dimension < 3; dimension++) {
     if (cell_coordinate[dimension] == -1) {
       // low wrap around to high cell
       new_cell_coordinate[dimension] = cell_count[dimension] - 3;  // top cell
@@ -612,4 +612,68 @@ double LinkedCellsContainer::getKineticEnergy() {
     E_kin += p.getM() * ArrayUtils::L2InnerProduct(p.getV());
   });
   return E_kin * 0.5;
+}
+
+bool LinkedCellsContainer::isDoubleCorner(
+    const ivec3 cell_coordinate, const std::size_t raw_dimension) const {
+  // check whether it really is a corner
+  for (std::size_t dimension = 0; dimension < 3; dimension++) {
+    if (cell_coordinate[dimension] != -1 &&
+        cell_coordinate[dimension] != cell_count[dimension] - 2) {
+      return false;  // no problem, should be evaluated
+    }
+  }
+
+  // TODO: make beautiful
+  // lookup table via some if statements
+  // ugly, but best I could think of
+  if (boundaries[xlow] == LinkedCellsConfig::Periodic &&
+      boundaries[ylow] == LinkedCellsConfig::Periodic &&
+      boundaries[zlow] != LinkedCellsConfig::Periodic) {
+    // 110
+    if (raw_dimension == yhigh &&
+        (cell_coordinate[0] == -1 || cell_coordinate[0] == cell_count[0] - 2)) {
+      return true;
+    }
+    return false;
+  }
+  if (boundaries[xlow] == LinkedCellsConfig::Periodic &&
+      boundaries[ylow] != LinkedCellsConfig::Periodic &&
+      boundaries[zlow] == LinkedCellsConfig::Periodic) {
+    // 101
+    if (raw_dimension == zhigh &&
+        (cell_coordinate[0] == -1 || cell_coordinate[0] == cell_count[0] - 2)) {
+      return true;
+    }
+    return false;
+  }
+  if (boundaries[xlow] != LinkedCellsConfig::Periodic &&
+      boundaries[ylow] == LinkedCellsConfig::Periodic &&
+      boundaries[zlow] == LinkedCellsConfig::Periodic) {
+    // 011
+    if (raw_dimension == zhigh &&
+        (cell_coordinate[1] == -1 || cell_coordinate[1] == cell_count[1] - 2)) {
+      return true;
+    }
+    return false;
+  }
+  if (boundaries[xlow] == LinkedCellsConfig::Periodic &&
+      boundaries[ylow] == LinkedCellsConfig::Periodic &&
+      boundaries[zlow] == LinkedCellsConfig::Periodic) {
+    // 111
+    if (raw_dimension == yhigh &&
+        (cell_coordinate[0] == -1 || cell_coordinate[0] == cell_count[0] - 2)) {
+      return true;
+    }
+    if (raw_dimension == zhigh &&
+        (cell_coordinate[0] == -1 || cell_coordinate[0] == cell_count[0] - 2)) {
+      return true;
+    }
+    if (raw_dimension == zhigh &&
+        (cell_coordinate[1] == -1 || cell_coordinate[1] == cell_count[1] - 2)) {
+      return true;
+    }
+    return false;
+  }
+  return false;
 }
