@@ -26,10 +26,6 @@ std::tuple<std::filesystem::path, double, bool> CLArgumentParser::parse(
   int opt;
   int option_index = 0;
 
-  for (int i = 0; i < argc; i++) {
-    std::cout << argv[i] << " " << std::endl;
-  }
-
   std::filesystem::path input_file{};
   double step_size = 0.5;
   bool write_checkpoint = false;
@@ -48,7 +44,6 @@ std::tuple<std::filesystem::path, double, bool> CLArgumentParser::parse(
           printUsage("Display Help page, no execution", argv[0]);
           exit(EXIT_FAILURE);
         case 'f':
-          std::cout << "file: " << optarg << std::endl;
           input_file = optarg;
           break;
         case 's':
@@ -79,10 +74,13 @@ std::tuple<std::filesystem::path, double, bool> CLArgumentParser::parse(
     printUsage(e.what(), argv[0]);
     exit(EXIT_FAILURE);
   }
+
   SpdWrapper::get()->info("Resetting getopt vars ... ");
-  optind = 0;  // Reset position for GNU
+
+  optind =
+      0;  // Reset position for GNU - so techically this should work everywhere
   optarg = nullptr;  // Reset argument pointer
-  optopt = 0;  // Reset last option character
+  optopt = 0;        // Reset last option character
 
   return {input_file, step_size, write_checkpoint};
 }

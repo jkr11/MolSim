@@ -85,8 +85,11 @@ TEST(Checkpoint, cuboid) {
         return a.getX() < b.getX();
     });
 
+  // ASSERT vs NEAR is ok here since positions are evenly spaced but velocity may be random due to brownian motion init
+  // TODO: is this true?
   for (size_t i = 0; i < particles.size(); ++i) {
     ASSERT_EQ_VEC3(particles[i].getX(), particles1[i].getX(), "Vectors not equal at index " + std::to_string(i));
+    DVEC3_NEAR(particles[i].getV(), particles1[i].getV(), "Vector velocity not near at index " + std::to_string(i));
   }
 
 }

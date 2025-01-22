@@ -172,7 +172,6 @@ void XmlReader::loadCheckpoint(const std::string& _filepath,
     const std::unique_ptr<::CheckpointType> checkpoint = Checkpoint(filepath);
     SpdWrapper::get()->info("Reading checkpoint particles");
     std::vector<Particle> temp_particles;
-    int i = 0;
     for (const auto& p : checkpoint->Particles().Particle()) {
       auto position =
           unwrapVec<const CDvec3Type, dvec3>(p.Position(), "position");
@@ -187,7 +186,6 @@ void XmlReader::loadCheckpoint(const std::string& _filepath,
       int type = p.type();
       temp_particles.emplace_back(position, velocity, force, old_force, mass,
                                   type, epsilon, sigma);
-      std::cout << "Particle " << i++ << std::endl;
     }
     SpdWrapper::get()->info("Read {} particles from checkpoint",
                             temp_particles.size());
