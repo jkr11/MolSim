@@ -6,7 +6,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
-
+#include <filesystem>
 #include "defs/Thermostat.h"
 #include "io/file/out/checkpoint-schema.hxx"
 
@@ -39,7 +39,8 @@ void XmlWriter::writeFile(ParticleContainer& particle_container,
                           const std::string& filepath) {
   try {
     ParticlesType xml_particles;
-
+    SpdWrapper::get()->info("Writing {} particles to {}",
+                            particle_container.size(), filepath.c_str());
     particle_container.singleIterator(
         [&xml_particles](const Particle& particle) {
           const ParticleType xml_particle = wrapParticle(particle);
@@ -48,7 +49,8 @@ void XmlWriter::writeFile(ParticleContainer& particle_container,
     xml_schema::namespace_infomap map;
 
     map[""].name = "";
-    map[""].schema = "../../src/io/file/out/checkpoint-schema.xsd";
+    map[""].schema = "../src/io/file/out/checkpoint-schema.xsd";
+
 
     std::ostringstream fileName;
     CheckpointType checkpoint{xml_particles};
@@ -57,7 +59,6 @@ void XmlWriter::writeFile(ParticleContainer& particle_container,
     SpdWrapper::get()->info("--- Written checkpoint to {}", filepath);
     Checkpoint(checkpoint_file, checkpoint, map);
     checkpoint_file.close();
-
   } catch (const std::exception& e) {
     std::cerr << "Error writing XML file: " << e.what() << "\n";
   }
