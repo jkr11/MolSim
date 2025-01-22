@@ -61,7 +61,7 @@ TEST(Checkpoint, cuboid) {
                                      0.1);
 
   if constexpr (true) {
-    XmlWriter::writeFile(*container, "./output/test.xml");
+    XmlWriter::writeFile(*container, "../../../input/checkpoint_test.xml");
   }
   std::cout << "New file trying .... " << std::endl;
   char arg01[] = "MolSim";
