@@ -143,6 +143,7 @@ int main(const int argc, char* argv[]) {
     verlet_integrator.step(*container);
     if (arguments.use_thermostat) {
       if (iteration % thermostat->n_thermostat == 0 && iteration > 0) {
+        SpdWrapper::get()->info("Applying thermostat in iteration [{}] / time [{:.4}/{}]", iteration, current_time, arguments.t_end);
         thermostat->setTemperature(*container);
       }
     }

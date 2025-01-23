@@ -6,6 +6,7 @@
 
 #include "containers/ParticleContainer.h"
 #include "utils/ArrayUtils.h"
+#include "debug/debug_print.h"
 
 Thermostat::Thermostat(const ThermostatConfig &config) {
   this->T_init = config.T_init;
@@ -84,9 +85,7 @@ void Thermostat::setTemperature(ParticleContainer &particle_container) const {
   } else {
     current_temp = getTemperature(particle_container);
   }
-#ifndef BENCHMARK
-  SpdWrapper::get()->info("current temperature is {}", current_temp);
-#endif
+  DEBUG_PRINT_FMT("current temperature is {}", current_temp);
   const double dT = T_target - current_temp;
 
   double adjustment = 0;
@@ -95,25 +94,21 @@ void Thermostat::setTemperature(ParticleContainer &particle_container) const {
   } else {
     adjustment = dT;
   }
-#ifndef BENCHMARK
-  SpdWrapper::get()->info("adjustment is {}", adjustment);
-#endif
+  DEBUG_PRINT_FMT("adjustment is {}", adjustment);
   const double new_temp = current_temp + adjustment;
-#ifndef BENCHMARK
-  SpdWrapper::get()->info("new_temp is {}", new_temp);
-#endif
+  DEBUG_PRINT_FMT("new_temp is {}", new_temp);
   const double beta = std::sqrt(new_temp / current_temp);
-#ifndef BENCHMARK
-  SpdWrapper::get()->info("beta is {}", beta);
-#endif
+  DEBUG_PRINT_FMT("beta is {}", beta);
   if (use_thermal_motion) {
     applyThermalBeta(particle_container, beta, average_velocity);
   } else {
     applyBeta(particle_container, beta);
   }
 #ifndef BENCHMARK
+#ifdef DEBUG
   average_velocity = getAverageVelocity(particle_container);
   auto temp_after = getThermalTemperature(particle_container, average_velocity);
-  SpdWrapper::get()->info("temp_after is {}", temp_after);
+  DEBUG_PRINT_FMT("temp_after is {}", temp_after);
+#endif
 #endif
 }

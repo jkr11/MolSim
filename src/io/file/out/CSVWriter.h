@@ -23,8 +23,8 @@ class CSVWriter {
     closeFile();
   }
 
-  void writeLine(const double iteration, const std::vector<std::string>& data) {
-    file << iteration << ",";
+  void writeLine(const double time, const std::vector<std::string>& data) {
+    file << time << ",";
     for (size_t i = 0; i < data.size(); ++i) {
       file << data[i];
       if (i < data.size() - 1) {
@@ -32,6 +32,7 @@ class CSVWriter {
       }
     }
     file << "\n";
+    file.flush();
   }
 
   void closeFile() {
