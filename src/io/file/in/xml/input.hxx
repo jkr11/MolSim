@@ -242,6 +242,7 @@ const XMLCh* const tree_node_key = ::xsd::cxx::tree::user_data_keys::node;
 //
 class MetadataType;
 class cuboidType;
+class membraneType;
 class spheroidType;
 class Dvec3Type;
 class Ivec3Type;
@@ -260,6 +261,7 @@ class ThermostatType;
 class simulation;
 class cuboids;
 class spheroids;
+class membranes;
 
 #include <algorithm>  // std::binary_search
 #include <limits>     // std::numeric_limits
@@ -527,6 +529,164 @@ class cuboidType : public ::xml_schema::type {
   cuboidType& operator=(const cuboidType& x);
 
   virtual ~cuboidType();
+
+  // Implementation.
+  //
+ protected:
+  void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
+
+ protected:
+  ::xsd::cxx::tree::one<velocity_type> velocity_;
+  ::xsd::cxx::tree::one<corner_type> corner_;
+  ::xsd::cxx::tree::one<dimensions_type> dimensions_;
+  ::xsd::cxx::tree::one<type_type> type_;
+  ::xsd::cxx::tree::one<h_type> h_;
+  ::xsd::cxx::tree::one<mass_type> mass_;
+  ::xsd::cxx::tree::one<epsilon_type> epsilon_;
+  ::xsd::cxx::tree::one<sigma_type> sigma_;
+  ::xsd::cxx::tree::one<mv_type> mv_;
+};
+
+class membraneType : public ::xml_schema::type {
+ public:
+  // velocity
+  //
+  typedef ::Dvec3Type velocity_type;
+  typedef ::xsd::cxx::tree::traits<velocity_type, char> velocity_traits;
+
+  const velocity_type& velocity() const;
+
+  velocity_type& velocity();
+
+  void velocity(const velocity_type& x);
+
+  void velocity(::std::auto_ptr<velocity_type> p);
+
+  // corner
+  //
+  typedef ::Dvec3Type corner_type;
+  typedef ::xsd::cxx::tree::traits<corner_type, char> corner_traits;
+
+  const corner_type& corner() const;
+
+  corner_type& corner();
+
+  void corner(const corner_type& x);
+
+  void corner(::std::auto_ptr<corner_type> p);
+
+  // dimensions
+  //
+  typedef ::Ivec3Type dimensions_type;
+  typedef ::xsd::cxx::tree::traits<dimensions_type, char> dimensions_traits;
+
+  const dimensions_type& dimensions() const;
+
+  dimensions_type& dimensions();
+
+  void dimensions(const dimensions_type& x);
+
+  void dimensions(::std::auto_ptr<dimensions_type> p);
+
+  // type
+  //
+  typedef ::xml_schema::int_ type_type;
+  typedef ::xsd::cxx::tree::traits<type_type, char> type_traits;
+
+  const type_type& type() const;
+
+  type_type& type();
+
+  void type(const type_type& x);
+
+  // h
+  //
+  typedef ::xml_schema::decimal h_type;
+  typedef ::xsd::cxx::tree::traits<h_type, char,
+                                   ::xsd::cxx::tree::schema_type::decimal>
+      h_traits;
+
+  const h_type& h() const;
+
+  h_type& h();
+
+  void h(const h_type& x);
+
+  // mass
+  //
+  typedef ::xml_schema::decimal mass_type;
+  typedef ::xsd::cxx::tree::traits<mass_type, char,
+                                   ::xsd::cxx::tree::schema_type::decimal>
+      mass_traits;
+
+  const mass_type& mass() const;
+
+  mass_type& mass();
+
+  void mass(const mass_type& x);
+
+  // epsilon
+  //
+  typedef ::xml_schema::decimal epsilon_type;
+  typedef ::xsd::cxx::tree::traits<epsilon_type, char,
+                                   ::xsd::cxx::tree::schema_type::decimal>
+      epsilon_traits;
+
+  const epsilon_type& epsilon() const;
+
+  epsilon_type& epsilon();
+
+  void epsilon(const epsilon_type& x);
+
+  // sigma
+  //
+  typedef ::xml_schema::decimal sigma_type;
+  typedef ::xsd::cxx::tree::traits<sigma_type, char,
+                                   ::xsd::cxx::tree::schema_type::decimal>
+      sigma_traits;
+
+  const sigma_type& sigma() const;
+
+  sigma_type& sigma();
+
+  void sigma(const sigma_type& x);
+
+  // mv
+  //
+  typedef ::xml_schema::decimal mv_type;
+  typedef ::xsd::cxx::tree::traits<mv_type, char,
+                                   ::xsd::cxx::tree::schema_type::decimal>
+      mv_traits;
+
+  const mv_type& mv() const;
+
+  mv_type& mv();
+
+  void mv(const mv_type& x);
+
+  // Constructors.
+  //
+  membraneType(const velocity_type&, const corner_type&, const dimensions_type&,
+               const type_type&, const h_type&, const mass_type&,
+               const epsilon_type&, const sigma_type&, const mv_type&);
+
+  membraneType(::std::auto_ptr<velocity_type>, ::std::auto_ptr<corner_type>,
+               ::std::auto_ptr<dimensions_type>, const type_type&,
+               const h_type&, const mass_type&, const epsilon_type&,
+               const sigma_type&, const mv_type&);
+
+  membraneType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
+               ::xml_schema::container* c = 0);
+
+  membraneType(const membraneType& x, ::xml_schema::flags f = 0,
+               ::xml_schema::container* c = 0);
+
+  virtual membraneType* _clone(::xml_schema::flags f = 0,
+                               ::xml_schema::container* c = 0) const;
+
+  membraneType& operator=(const membraneType& x);
+
+  virtual ~membraneType();
 
   // Implementation.
   //
@@ -1489,26 +1649,11 @@ class IndexForceType : public ::xml_schema::type {
 
   void force_values(::std::auto_ptr<force_values_type> p);
 
-  // dimensions
-  //
-  typedef ::Ivec3Type dimensions_type;
-  typedef ::xsd::cxx::tree::traits<dimensions_type, char> dimensions_traits;
-
-  const dimensions_type& dimensions() const;
-
-  dimensions_type& dimensions();
-
-  void dimensions(const dimensions_type& x);
-
-  void dimensions(::std::auto_ptr<dimensions_type> p);
-
   // Constructors.
   //
-  IndexForceType(const time_type&, const force_values_type&,
-                 const dimensions_type&);
+  IndexForceType(const time_type&, const force_values_type&);
 
-  IndexForceType(const time_type&, ::std::auto_ptr<force_values_type>,
-                 ::std::auto_ptr<dimensions_type>);
+  IndexForceType(const time_type&, ::std::auto_ptr<force_values_type>);
 
   IndexForceType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
                  ::xml_schema::container* c = 0);
@@ -1532,7 +1677,6 @@ class IndexForceType : public ::xml_schema::type {
   index_sequence index_;
   ::xsd::cxx::tree::one<time_type> time_;
   ::xsd::cxx::tree::one<force_values_type> force_values_;
-  ::xsd::cxx::tree::one<dimensions_type> dimensions_;
 };
 
 class ThermostatType : public ::xml_schema::type {
@@ -1669,6 +1813,22 @@ class simulation : public ::xml_schema::type {
 
   void spheroids(::std::auto_ptr<spheroids_type> p);
 
+  // membranes
+  //
+  typedef ::membranes membranes_type;
+  typedef ::xsd::cxx::tree::optional<membranes_type> membranes_optional;
+  typedef ::xsd::cxx::tree::traits<membranes_type, char> membranes_traits;
+
+  const membranes_optional& membranes() const;
+
+  membranes_optional& membranes();
+
+  void membranes(const membranes_type& x);
+
+  void membranes(const membranes_optional& x);
+
+  void membranes(::std::auto_ptr<membranes_type> p);
+
   // thermostat
   //
   typedef ::ThermostatType thermostat_type;
@@ -1713,6 +1873,7 @@ class simulation : public ::xml_schema::type {
   ::xsd::cxx::tree::one<metadata_type> metadata_;
   cuboids_optional cuboids_;
   spheroids_optional spheroids_;
+  membranes_optional membranes_;
   thermostat_optional thermostat_;
 };
 
@@ -1798,6 +1959,48 @@ class spheroids : public ::xml_schema::type {
 
  protected:
   spheroid_sequence spheroid_;
+};
+
+class membranes : public ::xml_schema::type {
+ public:
+  // membrane
+  //
+  typedef ::membraneType membrane_type;
+  typedef ::xsd::cxx::tree::sequence<membrane_type> membrane_sequence;
+  typedef membrane_sequence::iterator membrane_iterator;
+  typedef membrane_sequence::const_iterator membrane_const_iterator;
+  typedef ::xsd::cxx::tree::traits<membrane_type, char> membrane_traits;
+
+  const membrane_sequence& membrane() const;
+
+  membrane_sequence& membrane();
+
+  void membrane(const membrane_sequence& s);
+
+  // Constructors.
+  //
+  membranes();
+
+  membranes(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
+            ::xml_schema::container* c = 0);
+
+  membranes(const membranes& x, ::xml_schema::flags f = 0,
+            ::xml_schema::container* c = 0);
+
+  virtual membranes* _clone(::xml_schema::flags f = 0,
+                            ::xml_schema::container* c = 0) const;
+
+  membranes& operator=(const membranes& x);
+
+  virtual ~membranes();
+
+  // Implementation.
+  //
+ protected:
+  void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
+
+ protected:
+  membrane_sequence membrane_;
 };
 
 #include <iosfwd>
@@ -1947,6 +2150,8 @@ void operator<<(::xercesc::DOMElement&, const MetadataType&);
 
 void operator<<(::xercesc::DOMElement&, const cuboidType&);
 
+void operator<<(::xercesc::DOMElement&, const membraneType&);
+
 void operator<<(::xercesc::DOMElement&, const spheroidType&);
 
 void operator<<(::xercesc::DOMElement&, const Dvec3Type&);
@@ -1994,6 +2199,8 @@ void operator<<(::xercesc::DOMElement&, const simulation&);
 void operator<<(::xercesc::DOMElement&, const cuboids&);
 
 void operator<<(::xercesc::DOMElement&, const spheroids&);
+
+void operator<<(::xercesc::DOMElement&, const membranes&);
 
 #include <xsd/cxx/post.hxx>
 

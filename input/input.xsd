@@ -22,6 +22,13 @@
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
+                <xs:element name="membranes" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="membrane" type="membraneType" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
                 <xs:element name="thermostat" type="ThermostatType" minOccurs="0"/>
             </xs:sequence>
         </xs:complexType>
@@ -39,6 +46,21 @@
     </xs:complexType>
 
     <xs:complexType name="cuboidType">
+        <xs:sequence>
+            <xs:element name="velocity" type="Dvec3Type"/>
+            <xs:element name="corner" type="Dvec3Type"/>
+            <xs:element name="dimensions" type="Ivec3Type"/>
+            <xs:element name="type" type="xs:int"/>
+            <xs:element name="h" type="xs:decimal"/>
+            <xs:element name="mass" type="xs:decimal"/>
+            <xs:element name="epsilon" type="xs:decimal"/>
+            <xs:element name="sigma" type="xs:decimal"/>
+            <xs:element name="mv" type="xs:decimal"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- here this is equalt to cuboid, internally this changes -->
+    <xs:complexType name="membraneType">
         <xs:sequence>
             <xs:element name="velocity" type="Dvec3Type"/>
             <xs:element name="corner" type="Dvec3Type"/>

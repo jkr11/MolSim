@@ -56,8 +56,8 @@
         <t_end>500</t_end>
         <twoD>false</twoD>
     </metadata>
-    <cuboids>
-        <cuboid>
+    <membranes>
+        <membrane>
             <velocity>
                 <x>0</x>
                 <y>0</y>
@@ -79,6 +79,6 @@
             <epsilon>1.0</epsilon>
             <sigma>1.0</sigma>
             <mv>0.0</mv>
-        </cuboid>
-    </cuboids>
+        </membrane>
+    </membranes>
 </simulation>

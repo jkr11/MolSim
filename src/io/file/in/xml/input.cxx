@@ -204,6 +204,101 @@ cuboidType::mv_type& cuboidType::mv() { return this->mv_.get(); }
 
 void cuboidType::mv(const mv_type& x) { this->mv_.set(x); }
 
+// membraneType
+//
+
+const membraneType::velocity_type& membraneType::velocity() const {
+  return this->velocity_.get();
+}
+
+membraneType::velocity_type& membraneType::velocity() {
+  return this->velocity_.get();
+}
+
+void membraneType::velocity(const velocity_type& x) { this->velocity_.set(x); }
+
+void membraneType::velocity(::std::auto_ptr<velocity_type> x) {
+  this->velocity_.set(x);
+}
+
+const membraneType::corner_type& membraneType::corner() const {
+  return this->corner_.get();
+}
+
+membraneType::corner_type& membraneType::corner() {
+  return this->corner_.get();
+}
+
+void membraneType::corner(const corner_type& x) { this->corner_.set(x); }
+
+void membraneType::corner(::std::auto_ptr<corner_type> x) {
+  this->corner_.set(x);
+}
+
+const membraneType::dimensions_type& membraneType::dimensions() const {
+  return this->dimensions_.get();
+}
+
+membraneType::dimensions_type& membraneType::dimensions() {
+  return this->dimensions_.get();
+}
+
+void membraneType::dimensions(const dimensions_type& x) {
+  this->dimensions_.set(x);
+}
+
+void membraneType::dimensions(::std::auto_ptr<dimensions_type> x) {
+  this->dimensions_.set(x);
+}
+
+const membraneType::type_type& membraneType::type() const {
+  return this->type_.get();
+}
+
+membraneType::type_type& membraneType::type() { return this->type_.get(); }
+
+void membraneType::type(const type_type& x) { this->type_.set(x); }
+
+const membraneType::h_type& membraneType::h() const { return this->h_.get(); }
+
+membraneType::h_type& membraneType::h() { return this->h_.get(); }
+
+void membraneType::h(const h_type& x) { this->h_.set(x); }
+
+const membraneType::mass_type& membraneType::mass() const {
+  return this->mass_.get();
+}
+
+membraneType::mass_type& membraneType::mass() { return this->mass_.get(); }
+
+void membraneType::mass(const mass_type& x) { this->mass_.set(x); }
+
+const membraneType::epsilon_type& membraneType::epsilon() const {
+  return this->epsilon_.get();
+}
+
+membraneType::epsilon_type& membraneType::epsilon() {
+  return this->epsilon_.get();
+}
+
+void membraneType::epsilon(const epsilon_type& x) { this->epsilon_.set(x); }
+
+const membraneType::sigma_type& membraneType::sigma() const {
+  return this->sigma_.get();
+}
+
+membraneType::sigma_type& membraneType::sigma() { return this->sigma_.get(); }
+
+void membraneType::sigma(const sigma_type& x) { this->sigma_.set(x); }
+
+const membraneType::mv_type& membraneType::mv() const {
+  return this->mv_.get();
+}
+
+membraneType::mv_type& membraneType::mv() { return this->mv_.get(); }
+
+void membraneType::mv(const mv_type& x) { this->mv_.set(x); }
+
 // spheroidType
 //
 
@@ -740,22 +835,6 @@ void IndexForceType::force_values(::std::auto_ptr<force_values_type> x) {
   this->force_values_.set(x);
 }
 
-const IndexForceType::dimensions_type& IndexForceType::dimensions() const {
-  return this->dimensions_.get();
-}
-
-IndexForceType::dimensions_type& IndexForceType::dimensions() {
-  return this->dimensions_.get();
-}
-
-void IndexForceType::dimensions(const dimensions_type& x) {
-  this->dimensions_.set(x);
-}
-
-void IndexForceType::dimensions(::std::auto_ptr<dimensions_type> x) {
-  this->dimensions_.set(x);
-}
-
 // ThermostatType
 //
 
@@ -858,6 +937,24 @@ void simulation::spheroids(::std::auto_ptr<spheroids_type> x) {
   this->spheroids_.set(x);
 }
 
+const simulation::membranes_optional& simulation::membranes() const {
+  return this->membranes_;
+}
+
+simulation::membranes_optional& simulation::membranes() {
+  return this->membranes_;
+}
+
+void simulation::membranes(const membranes_type& x) { this->membranes_.set(x); }
+
+void simulation::membranes(const membranes_optional& x) {
+  this->membranes_ = x;
+}
+
+void simulation::membranes(::std::auto_ptr<membranes_type> x) {
+  this->membranes_.set(x);
+}
+
 const simulation::thermostat_optional& simulation::thermostat() const {
   return this->thermostat_;
 }
@@ -899,6 +996,17 @@ const spheroids::spheroid_sequence& spheroids::spheroid() const {
 spheroids::spheroid_sequence& spheroids::spheroid() { return this->spheroid_; }
 
 void spheroids::spheroid(const spheroid_sequence& s) { this->spheroid_ = s; }
+
+// membranes
+//
+
+const membranes::membrane_sequence& membranes::membrane() const {
+  return this->membrane_;
+}
+
+membranes::membrane_sequence& membranes::membrane() { return this->membrane_; }
+
+void membranes::membrane(const membrane_sequence& s) { this->membrane_ = s; }
 
 #include <xsd/cxx/xml/dom/parsing-source.hxx>
 
@@ -1289,6 +1397,232 @@ cuboidType& cuboidType::operator=(const cuboidType& x) {
 }
 
 cuboidType::~cuboidType() {}
+
+// membraneType
+//
+
+membraneType::membraneType(const velocity_type& velocity,
+                           const corner_type& corner,
+                           const dimensions_type& dimensions,
+                           const type_type& type, const h_type& h,
+                           const mass_type& mass, const epsilon_type& epsilon,
+                           const sigma_type& sigma, const mv_type& mv)
+    : ::xml_schema::type(),
+      velocity_(velocity, this),
+      corner_(corner, this),
+      dimensions_(dimensions, this),
+      type_(type, this),
+      h_(h, this),
+      mass_(mass, this),
+      epsilon_(epsilon, this),
+      sigma_(sigma, this),
+      mv_(mv, this) {}
+
+membraneType::membraneType(::std::auto_ptr<velocity_type> velocity,
+                           ::std::auto_ptr<corner_type> corner,
+                           ::std::auto_ptr<dimensions_type> dimensions,
+                           const type_type& type, const h_type& h,
+                           const mass_type& mass, const epsilon_type& epsilon,
+                           const sigma_type& sigma, const mv_type& mv)
+    : ::xml_schema::type(),
+      velocity_(velocity, this),
+      corner_(corner, this),
+      dimensions_(dimensions, this),
+      type_(type, this),
+      h_(h, this),
+      mass_(mass, this),
+      epsilon_(epsilon, this),
+      sigma_(sigma, this),
+      mv_(mv, this) {}
+
+membraneType::membraneType(const membraneType& x, ::xml_schema::flags f,
+                           ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c),
+      velocity_(x.velocity_, f, this),
+      corner_(x.corner_, f, this),
+      dimensions_(x.dimensions_, f, this),
+      type_(x.type_, f, this),
+      h_(x.h_, f, this),
+      mass_(x.mass_, f, this),
+      epsilon_(x.epsilon_, f, this),
+      sigma_(x.sigma_, f, this),
+      mv_(x.mv_, f, this) {}
+
+membraneType::membraneType(const ::xercesc::DOMElement& e,
+                           ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c),
+      velocity_(this),
+      corner_(this),
+      dimensions_(this),
+      type_(this),
+      h_(this),
+      mass_(this),
+      epsilon_(this),
+      sigma_(this),
+      mv_(this) {
+  if ((f & ::xml_schema::flags::base) == 0) {
+    ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
+    this->parse(p, f);
+  }
+}
+
+void membraneType::parse(::xsd::cxx::xml::dom::parser<char>& p,
+                         ::xml_schema::flags f) {
+  for (; p.more_content(); p.next_content(false)) {
+    const ::xercesc::DOMElement& i(p.cur_element());
+    const ::xsd::cxx::xml::qualified_name<char> n(
+        ::xsd::cxx::xml::dom::name<char>(i));
+
+    // velocity
+    //
+    if (n.name() == "velocity" && n.namespace_().empty()) {
+      ::std::auto_ptr<velocity_type> r(velocity_traits::create(i, f, this));
+
+      if (!velocity_.present()) {
+        this->velocity_.set(r);
+        continue;
+      }
+    }
+
+    // corner
+    //
+    if (n.name() == "corner" && n.namespace_().empty()) {
+      ::std::auto_ptr<corner_type> r(corner_traits::create(i, f, this));
+
+      if (!corner_.present()) {
+        this->corner_.set(r);
+        continue;
+      }
+    }
+
+    // dimensions
+    //
+    if (n.name() == "dimensions" && n.namespace_().empty()) {
+      ::std::auto_ptr<dimensions_type> r(dimensions_traits::create(i, f, this));
+
+      if (!dimensions_.present()) {
+        this->dimensions_.set(r);
+        continue;
+      }
+    }
+
+    // type
+    //
+    if (n.name() == "type" && n.namespace_().empty()) {
+      if (!type_.present()) {
+        this->type_.set(type_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    // h
+    //
+    if (n.name() == "h" && n.namespace_().empty()) {
+      if (!h_.present()) {
+        this->h_.set(h_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    // mass
+    //
+    if (n.name() == "mass" && n.namespace_().empty()) {
+      if (!mass_.present()) {
+        this->mass_.set(mass_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    // epsilon
+    //
+    if (n.name() == "epsilon" && n.namespace_().empty()) {
+      if (!epsilon_.present()) {
+        this->epsilon_.set(epsilon_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    // sigma
+    //
+    if (n.name() == "sigma" && n.namespace_().empty()) {
+      if (!sigma_.present()) {
+        this->sigma_.set(sigma_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    // mv
+    //
+    if (n.name() == "mv" && n.namespace_().empty()) {
+      if (!mv_.present()) {
+        this->mv_.set(mv_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    break;
+  }
+
+  if (!velocity_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("velocity", "");
+  }
+
+  if (!corner_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("corner", "");
+  }
+
+  if (!dimensions_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("dimensions", "");
+  }
+
+  if (!type_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("type", "");
+  }
+
+  if (!h_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("h", "");
+  }
+
+  if (!mass_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("mass", "");
+  }
+
+  if (!epsilon_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("epsilon", "");
+  }
+
+  if (!sigma_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("sigma", "");
+  }
+
+  if (!mv_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("mv", "");
+  }
+}
+
+membraneType* membraneType::_clone(::xml_schema::flags f,
+                                   ::xml_schema::container* c) const {
+  return new class membraneType(*this, f, c);
+}
+
+membraneType& membraneType::operator=(const membraneType& x) {
+  if (this != &x) {
+    static_cast< ::xml_schema::type&>(*this) = x;
+    this->velocity_ = x.velocity_;
+    this->corner_ = x.corner_;
+    this->dimensions_ = x.dimensions_;
+    this->type_ = x.type_;
+    this->h_ = x.h_;
+    this->mass_ = x.mass_;
+    this->epsilon_ = x.epsilon_;
+    this->sigma_ = x.sigma_;
+    this->mv_ = x.mv_;
+  }
+
+  return *this;
+}
+
+membraneType::~membraneType() {}
 
 // spheroidType
 //
@@ -2500,30 +2834,25 @@ HarmonicForceType::~HarmonicForceType() {}
 //
 
 IndexForceType::IndexForceType(const time_type& time,
-                               const force_values_type& force_values,
-                               const dimensions_type& dimensions)
+                               const force_values_type& force_values)
     : ::xml_schema::type(),
       index_(this),
       time_(time, this),
-      force_values_(force_values, this),
-      dimensions_(dimensions, this) {}
+      force_values_(force_values, this) {}
 
 IndexForceType::IndexForceType(const time_type& time,
-                               ::std::auto_ptr<force_values_type> force_values,
-                               ::std::auto_ptr<dimensions_type> dimensions)
+                               ::std::auto_ptr<force_values_type> force_values)
     : ::xml_schema::type(),
       index_(this),
       time_(time, this),
-      force_values_(force_values, this),
-      dimensions_(dimensions, this) {}
+      force_values_(force_values, this) {}
 
 IndexForceType::IndexForceType(const IndexForceType& x, ::xml_schema::flags f,
                                ::xml_schema::container* c)
     : ::xml_schema::type(x, f, c),
       index_(x.index_, f, this),
       time_(x.time_, f, this),
-      force_values_(x.force_values_, f, this),
-      dimensions_(x.dimensions_, f, this) {}
+      force_values_(x.force_values_, f, this) {}
 
 IndexForceType::IndexForceType(const ::xercesc::DOMElement& e,
                                ::xml_schema::flags f,
@@ -2531,8 +2860,7 @@ IndexForceType::IndexForceType(const ::xercesc::DOMElement& e,
     : ::xml_schema::type(e, f | ::xml_schema::flags::base, c),
       index_(this),
       time_(this),
-      force_values_(this),
-      dimensions_(this) {
+      force_values_(this) {
   if ((f & ::xml_schema::flags::base) == 0) {
     ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
     this->parse(p, f);
@@ -2576,17 +2904,6 @@ void IndexForceType::parse(::xsd::cxx::xml::dom::parser<char>& p,
       }
     }
 
-    // dimensions
-    //
-    if (n.name() == "dimensions" && n.namespace_().empty()) {
-      ::std::auto_ptr<dimensions_type> r(dimensions_traits::create(i, f, this));
-
-      if (!dimensions_.present()) {
-        this->dimensions_.set(r);
-        continue;
-      }
-    }
-
     break;
   }
 
@@ -2596,10 +2913,6 @@ void IndexForceType::parse(::xsd::cxx::xml::dom::parser<char>& p,
 
   if (!force_values_.present()) {
     throw ::xsd::cxx::tree::expected_element<char>("force_values", "");
-  }
-
-  if (!dimensions_.present()) {
-    throw ::xsd::cxx::tree::expected_element<char>("dimensions", "");
   }
 }
 
@@ -2614,7 +2927,6 @@ IndexForceType& IndexForceType::operator=(const IndexForceType& x) {
     this->index_ = x.index_;
     this->time_ = x.time_;
     this->force_values_ = x.force_values_;
-    this->dimensions_ = x.dimensions_;
   }
 
   return *this;
@@ -2737,6 +3049,7 @@ simulation::simulation(const metadata_type& metadata)
       metadata_(metadata, this),
       cuboids_(this),
       spheroids_(this),
+      membranes_(this),
       thermostat_(this) {}
 
 simulation::simulation(::std::auto_ptr<metadata_type> metadata)
@@ -2744,6 +3057,7 @@ simulation::simulation(::std::auto_ptr<metadata_type> metadata)
       metadata_(metadata, this),
       cuboids_(this),
       spheroids_(this),
+      membranes_(this),
       thermostat_(this) {}
 
 simulation::simulation(const simulation& x, ::xml_schema::flags f,
@@ -2752,6 +3066,7 @@ simulation::simulation(const simulation& x, ::xml_schema::flags f,
       metadata_(x.metadata_, f, this),
       cuboids_(x.cuboids_, f, this),
       spheroids_(x.spheroids_, f, this),
+      membranes_(x.membranes_, f, this),
       thermostat_(x.thermostat_, f, this) {}
 
 simulation::simulation(const ::xercesc::DOMElement& e, ::xml_schema::flags f,
@@ -2760,6 +3075,7 @@ simulation::simulation(const ::xercesc::DOMElement& e, ::xml_schema::flags f,
       metadata_(this),
       cuboids_(this),
       spheroids_(this),
+      membranes_(this),
       thermostat_(this) {
   if ((f & ::xml_schema::flags::base) == 0) {
     ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
@@ -2807,6 +3123,17 @@ void simulation::parse(::xsd::cxx::xml::dom::parser<char>& p,
       }
     }
 
+    // membranes
+    //
+    if (n.name() == "membranes" && n.namespace_().empty()) {
+      ::std::auto_ptr<membranes_type> r(membranes_traits::create(i, f, this));
+
+      if (!this->membranes_) {
+        this->membranes_.set(r);
+        continue;
+      }
+    }
+
     // thermostat
     //
     if (n.name() == "thermostat" && n.namespace_().empty()) {
@@ -2837,6 +3164,7 @@ simulation& simulation::operator=(const simulation& x) {
     this->metadata_ = x.metadata_;
     this->cuboids_ = x.cuboids_;
     this->spheroids_ = x.spheroids_;
+    this->membranes_ = x.membranes_;
     this->thermostat_ = x.thermostat_;
   }
 
@@ -2952,6 +3280,60 @@ spheroids& spheroids::operator=(const spheroids& x) {
 }
 
 spheroids::~spheroids() {}
+
+// membranes
+//
+
+membranes::membranes() : ::xml_schema::type(), membrane_(this) {}
+
+membranes::membranes(const membranes& x, ::xml_schema::flags f,
+                     ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c), membrane_(x.membrane_, f, this) {}
+
+membranes::membranes(const ::xercesc::DOMElement& e, ::xml_schema::flags f,
+                     ::xml_schema::container* c)
+    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c), membrane_(this) {
+  if ((f & ::xml_schema::flags::base) == 0) {
+    ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
+    this->parse(p, f);
+  }
+}
+
+void membranes::parse(::xsd::cxx::xml::dom::parser<char>& p,
+                      ::xml_schema::flags f) {
+  for (; p.more_content(); p.next_content(false)) {
+    const ::xercesc::DOMElement& i(p.cur_element());
+    const ::xsd::cxx::xml::qualified_name<char> n(
+        ::xsd::cxx::xml::dom::name<char>(i));
+
+    // membrane
+    //
+    if (n.name() == "membrane" && n.namespace_().empty()) {
+      ::std::auto_ptr<membrane_type> r(membrane_traits::create(i, f, this));
+
+      this->membrane_.push_back(r);
+      continue;
+    }
+
+    break;
+  }
+}
+
+membranes* membranes::_clone(::xml_schema::flags f,
+                             ::xml_schema::container* c) const {
+  return new class membranes(*this, f, c);
+}
+
+membranes& membranes::operator=(const membranes& x) {
+  if (this != &x) {
+    static_cast< ::xml_schema::type&>(*this) = x;
+    this->membrane_ = x.membrane_;
+  }
+
+  return *this;
+}
+
+membranes::~membranes() {}
 
 #include <istream>
 #include <xsd/cxx/tree/error-handler.hxx>
@@ -3326,6 +3708,85 @@ void operator<<(::xercesc::DOMElement& e, const MetadataType& i) {
 }
 
 void operator<<(::xercesc::DOMElement& e, const cuboidType& i) {
+  e << static_cast<const ::xml_schema::type&>(i);
+
+  // velocity
+  //
+  {
+    ::xercesc::DOMElement& s(
+        ::xsd::cxx::xml::dom::create_element("velocity", e));
+
+    s << i.velocity();
+  }
+
+  // corner
+  //
+  {
+    ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("corner", e));
+
+    s << i.corner();
+  }
+
+  // dimensions
+  //
+  {
+    ::xercesc::DOMElement& s(
+        ::xsd::cxx::xml::dom::create_element("dimensions", e));
+
+    s << i.dimensions();
+  }
+
+  // type
+  //
+  {
+    ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("type", e));
+
+    s << i.type();
+  }
+
+  // h
+  //
+  {
+    ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("h", e));
+
+    s << ::xml_schema::as_decimal(i.h());
+  }
+
+  // mass
+  //
+  {
+    ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("mass", e));
+
+    s << ::xml_schema::as_decimal(i.mass());
+  }
+
+  // epsilon
+  //
+  {
+    ::xercesc::DOMElement& s(
+        ::xsd::cxx::xml::dom::create_element("epsilon", e));
+
+    s << ::xml_schema::as_decimal(i.epsilon());
+  }
+
+  // sigma
+  //
+  {
+    ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("sigma", e));
+
+    s << ::xml_schema::as_decimal(i.sigma());
+  }
+
+  // mv
+  //
+  {
+    ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("mv", e));
+
+    s << ::xml_schema::as_decimal(i.mv());
+  }
+}
+
+void operator<<(::xercesc::DOMElement& e, const membraneType& i) {
   e << static_cast<const ::xml_schema::type&>(i);
 
   // velocity
@@ -3807,15 +4268,6 @@ void operator<<(::xercesc::DOMElement& e, const IndexForceType& i) {
 
     s << i.force_values();
   }
-
-  // dimensions
-  //
-  {
-    ::xercesc::DOMElement& s(
-        ::xsd::cxx::xml::dom::create_element("dimensions", e));
-
-    s << i.dimensions();
-  }
 }
 
 void operator<<(::xercesc::DOMElement& e, const ThermostatType& i) {
@@ -3886,6 +4338,15 @@ void operator<<(::xercesc::DOMElement& e, const simulation& i) {
     s << *i.spheroids();
   }
 
+  // membranes
+  //
+  if (i.membranes()) {
+    ::xercesc::DOMElement& s(
+        ::xsd::cxx::xml::dom::create_element("membranes", e));
+
+    s << *i.membranes();
+  }
+
   // thermostat
   //
   if (i.thermostat()) {
@@ -3920,6 +4381,21 @@ void operator<<(::xercesc::DOMElement& e, const spheroids& i) {
        b != n; ++b) {
     ::xercesc::DOMElement& s(
         ::xsd::cxx::xml::dom::create_element("spheroid", e));
+
+    s << *b;
+  }
+}
+
+void operator<<(::xercesc::DOMElement& e, const membranes& i) {
+  e << static_cast<const ::xml_schema::type&>(i);
+
+  // membrane
+  //
+  for (membranes::membrane_const_iterator b(i.membrane().begin()),
+       n(i.membrane().end());
+       b != n; ++b) {
+    ::xercesc::DOMElement& s(
+        ::xsd::cxx::xml::dom::create_element("membrane", e));
 
     s << *b;
   }

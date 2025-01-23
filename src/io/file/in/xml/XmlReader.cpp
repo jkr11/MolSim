@@ -8,6 +8,7 @@
 
 #include "debug/debug_print.h"
 #include "defs/Generators/CuboidGenerator.h"
+#include "defs/Generators/MembraneGenerator.h"
 #include "defs/Generators/SpheroidGenerator.h"
 #include "defs/types.h"
 #include "forces/Gravity.h"
@@ -150,15 +151,40 @@ void XmlReader::read(std::vector<Particle>& particles,
         } else {
           mv = cubes.mv();
         }
-        if (simulation_parameters.index_force_configs[0].indeces.empty()) {
-          throw std::runtime_error("Index force configuration indices are not initialized.");
-        }
-        CuboidGenerator cg(
-            corner, dimensions, cubes.h(), cubes.mass(), velocity, mv,
-            cubes.epsilon(), cubes.sigma(), cubes.type(), twoD,
-            simulation_parameters.index_force_configs[0].indeces);
+
+        CuboidGenerator cg(corner, dimensions, cubes.h(), cubes.mass(),
+                           velocity, mv, cubes.epsilon(), cubes.sigma(),
+                           cubes.type(), twoD);
         cg.generate(particles);
-        simulation_parameters.index_force_configs[0].ids = cg.getIndeces();
+      }
+    }
+
+    if (config->membranes() != nullptr) {
+      for (const auto& membranes : config->membranes()->membrane()) {
+        SpdWrapper::get()->info("Generating membranes");
+        const auto& _corner = membranes.corner();
+        const auto& _dimensions = membranes.dimensions();
+        const auto& _velocity = membranes.velocity();
+        dvec3 corner = unwrapVec<const Dvec3Type&, dvec3>(_corner, "corner");
+        ivec3 dimensions =
+            unwrapVec<const Ivec3Type&, ivec3>(_dimensions, "dimensions");
+        dvec3 velocity =
+            unwrapVec<const Dvec3Type&, dvec3>(_velocity, "velocity");
+        double mv;
+        if (config->thermostat().present() &&
+            velocity == dvec3{0.0, 0.0, 0.0}) {
+          mv = std::sqrt(simulation_parameters.thermostat_config.T_init /
+                         membranes.mass());
+        } else {
+          mv = membranes.mv();
+        }
+        MembraneGenerator mg(
+            corner, dimensions, membranes.h(), membranes.mass(), velocity, mv,
+            membranes.epsilon(), membranes.sigma(), membranes.type(), twoD,
+            simulation_parameters.index_force_configs[0].indeces);
+        mg.generate(particles);
+        std::vector<int> ids = mg.getIndeces();
+        simulation_parameters.index_force_configs[0].ids = ids;
       }
     }
 
