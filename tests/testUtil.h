@@ -16,6 +16,18 @@ inline void DVEC3_NEAR(const dvec3& a, const dvec3& b, const std::string& error,
   for (int i = 0; i < 3; ++i) EXPECT_NEAR(a[i], b[i], eps) << error;
 }
 
+
+/**
+ * @brief checks if vector a is equal to vector b
+ *
+ * @param a vector a
+ * @param b vector b
+ * @param error error message on failure
+ */
+inline void ASSERT_EQ_VEC3(const dvec3& a, const dvec3& b, const std::string& error) {
+  for (int i = 0; i < 3; ++i) EXPECT_EQ(a[i], b[i]) << error;
+}
+
 /**
  * @brief Check if two vectors are the same
  * @param list1 first list
