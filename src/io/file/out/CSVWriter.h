@@ -20,12 +20,10 @@ class CSVWriter {
   }
 
   ~CSVWriter() {
-    if (file.is_open()) {
-      file.close();
-    }
+    closeFile();
   }
 
-  void writeLine(const int iteration, const std::vector<std::string>& data) {
+  void writeLine(const double iteration, const std::vector<std::string>& data) {
     file << iteration << ",";
     for (size_t i = 0; i < data.size(); ++i) {
       file << data[i];
@@ -34,5 +32,9 @@ class CSVWriter {
       }
     }
     file << "\n";
+  }
+
+  void closeFile() {
+    file.close();
   }
 };

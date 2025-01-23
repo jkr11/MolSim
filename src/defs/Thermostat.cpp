@@ -57,7 +57,7 @@ dvec3 Thermostat::getAverageVelocity(ParticleContainer &particle_container) {
     }
   }
 
-  return {total_velocity[0] / c, total_velocity[1] / c, total_velocity[2 / c]};
+  return {total_velocity[0] / c, total_velocity[1] / c, total_velocity[2] / c};
 }
 
 double Thermostat::getThermalTemperature(ParticleContainer &particle_container,
@@ -65,6 +65,7 @@ double Thermostat::getThermalTemperature(ParticleContainer &particle_container,
   constexpr double D = 3;
   double E_kin = 0.0;
   particle_container.singleIterator([&E_kin, avg_velocity](const Particle &p) {
+    if (p.getType() < 0) return;  // exclude walls
     E_kin += p.getM() * ArrayUtils::L2InnerProduct(p.getV() - avg_velocity);
   });
 
@@ -74,66 +75,45 @@ double Thermostat::getThermalTemperature(ParticleContainer &particle_container,
 }
 
 void Thermostat::setTemperature(ParticleContainer &particle_container) const {
+  dvec3 average_velocity;
+  double current_temp = 0;
+
   if (use_thermal_motion) {
-    const dvec3 average_velocity = getAverageVelocity(particle_container);
-    const double current_temp =
-        getThermalTemperature(particle_container, average_velocity);
-#ifndef BENCHMARK
-    SpdWrapper::get()->info("current temperature is {}", current_temp);
-#endif
-    const double dT = T_target - current_temp;
-
-    double adjustment = 0;
-    if (std::abs(dT) > d_temp) {
-      adjustment = (dT / std::abs(dT)) * d_temp;
-    } else {
-      adjustment = dT;
-    }
-#ifndef BENCHMARK
-    SpdWrapper::get()->info("adjustment is {}", adjustment);
-#endif
-    const double new_temp = current_temp + adjustment;
-#ifndef BENCHMARK
-    SpdWrapper::get()->info("new_temp is {}", new_temp);
-#endif
-    const double beta = std::sqrt(new_temp / current_temp);
-#ifndef BENCHMARK
-    SpdWrapper::get()->info("beta is {}", beta);
-#endif
-    applyThermalBeta(particle_container, beta, average_velocity);
-#ifndef BENCHMARK
-    auto temp_after = getTemperature(particle_container);
-    SpdWrapper::get()->info("temp_after is {}", temp_after);
-#endif
-
+    average_velocity = getAverageVelocity(particle_container);
+    current_temp = getThermalTemperature(particle_container, average_velocity);
   } else {
-    const double current_temp = getTemperature(particle_container);
-#ifndef BENCHMARK
-    SpdWrapper::get()->info("current temperature is {}", current_temp);
-#endif
-    const double dT = T_target - current_temp;
-
-    double adjustment = 0;
-    if (std::abs(dT) > d_temp) {
-      adjustment = (dT / std::abs(dT)) * d_temp;
-    } else {
-      adjustment = dT;
-    }
-#ifndef BENCHMARK
-    SpdWrapper::get()->info("adjustment is {}", adjustment);
-#endif
-    const double new_temp = current_temp + adjustment;
-#ifndef BENCHMARK
-    SpdWrapper::get()->info("new_temp is {}", new_temp);
-#endif
-    const double beta = std::sqrt(new_temp / current_temp);
-#ifndef BENCHMARK
-    SpdWrapper::get()->info("beta is {}", beta);
-#endif
-    applyBeta(particle_container, beta);
-#ifndef BENCHMARK
-    auto temp_after = getTemperature(particle_container);
-    SpdWrapper::get()->info("temp_after is {}", temp_after);
-#endif
+    current_temp = getTemperature(particle_container);
   }
+#ifndef BENCHMARK
+  SpdWrapper::get()->info("current temperature is {}", current_temp);
+#endif
+  const double dT = T_target - current_temp;
+
+  double adjustment = 0;
+  if (std::abs(dT) > d_temp) {
+    adjustment = (dT / std::abs(dT)) * d_temp;
+  } else {
+    adjustment = dT;
+  }
+#ifndef BENCHMARK
+  SpdWrapper::get()->info("adjustment is {}", adjustment);
+#endif
+  const double new_temp = current_temp + adjustment;
+#ifndef BENCHMARK
+  SpdWrapper::get()->info("new_temp is {}", new_temp);
+#endif
+  const double beta = std::sqrt(new_temp / current_temp);
+#ifndef BENCHMARK
+  SpdWrapper::get()->info("beta is {}", beta);
+#endif
+  if (use_thermal_motion) {
+    applyThermalBeta(particle_container, beta, average_velocity);
+  } else {
+    applyBeta(particle_container, beta);
+  }
+#ifndef BENCHMARK
+  average_velocity = getAverageVelocity(particle_container);
+  auto temp_after = getThermalTemperature(particle_container, average_velocity);
+  SpdWrapper::get()->info("temp_after is {}", temp_after);
+#endif
 }

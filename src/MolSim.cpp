@@ -70,10 +70,10 @@ int main(const int argc, char* argv[]) {
   if (std::holds_alternative<LinkedCellsConfig>(arguments.container_data)) {
     auto& linked_cells_data =
         std::get<LinkedCellsConfig>(arguments.container_data);
-    linked_cells_data.particle_count = particles.size();
-    linked_cells_data.special_particle_count =
-        std::count_if(particles.begin(), particles.end(),
-                      [](const Particle& p) { return p.getType() < 0; });
+    // linked_cells_data.particle_count = particles.size();
+    // linked_cells_data.special_particle_count =
+    //     std::count_if(particles.begin(), particles.end(),
+    //                   [](const Particle& p) { return p.getType() < 0; });
     container = std::make_unique<LinkedCellsContainer>(linked_cells_data);
     container->addParticles(particles);
     container->imposeInvariant();
@@ -232,6 +232,7 @@ int main(const int argc, char* argv[]) {
   double mmups = iteration * static_cast<double>(number_of_particles) *
                  (1.0 / static_cast<double>(microseconds));
   std::cout << "MMUPS: " << mmups << std::endl;
+  statistics.closeFiles();
   SpdWrapper::get()->info("Output written. Terminating...");
 
   return 0;

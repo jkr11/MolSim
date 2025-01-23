@@ -23,7 +23,9 @@ if (BUILD_TESTS)
             PeriodicAndReflectiveCornerTest.cpp
             testUtil.h
             XmlReaderTest.cpp
-            ThermostatTest.cpp)
+            ThermostatTest.cpp
+            StatisticsTest.cpp
+    WallTest.cpp)
 
     target_link_libraries(MolSimTest MolSimLib GTest::gtest_main)
     include(GoogleTest)

@@ -20,8 +20,8 @@ const double LinkedCellsContainer::sigma_factor = std::pow(2.0, 1.0 / 6.0);
 LinkedCellsContainer::LinkedCellsContainer(
     const LinkedCellsConfig &linked_cells_config) {
   domain = linked_cells_config.domain;
-  particle_count = linked_cells_config.particle_count;
-  special_particle_count = linked_cells_config.special_particle_count;
+  particle_count = 0;
+  special_particle_count = 0;
 
   DEBUG_PRINT("LinkedCellsContainer instantiated");
   SpdWrapper::get()->info("domain size: ({}, {}, {})", domain[0], domain[1],
@@ -103,6 +103,12 @@ void LinkedCellsContainer::addParticle(const Particle &p) {
   }
   cells[index].emplace_back(p);
 
+  this->particle_count++;
+
+  if (p.getType() < 0) {
+    this->special_particle_count++;
+  }
+
   DEBUG_PRINT_FMT("Added particle with coords ({}, {}, {}) into cell index: {}",
                   p.getX()[0], p.getX()[1], p.getX()[2], index)
 }
@@ -121,6 +127,11 @@ void LinkedCellsContainer::removeParticle(const Particle &p) {
   particles.erase(std::remove_if(particles.begin(), particles.end(),
                                  [&p](const Particle &q) { return p == q; }),
                   particles.end());
+
+  this->particle_count--;
+  if (p.getType() < 0) {
+    this->special_particle_count--;
+  }
 
   DEBUG_PRINT_FMT(
       "Removed particle with coords ({}, {}, {}) from cell index: {}",

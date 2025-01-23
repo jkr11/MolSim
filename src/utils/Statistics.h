@@ -42,11 +42,15 @@ class Statistics {
   void writeStatistics(const double time) {
     std::vector<std::vector<Particle*>> bins(x_bins * y_bins);
     for (const auto p : container.getParticles()) {
+      if (p->getType() < 0)
+        continue;  // ignore walls, because their velocity is not strictly set
+                   // to 0 but rather ignored in other calculations
+
       dvec3 position = p->getX();
       const int x_bin = static_cast<int>(position[0] / x_bin_size);
       const int y_bin = static_cast<int>(position[1] / y_bin_size);
 
-      bins[x_bin + y_bin * x_bin].push_back(p);
+      bins[x_bin + y_bin * x_bins].push_back(p);
     }
 
     std::vector<std::string> density_data;
@@ -62,15 +66,30 @@ class Statistics {
 
       density_data.push_back(
           std::to_string(static_cast<double>(num_particles) / bin_volume));
-      velocity_data.push_back(
-          std::to_string(sum_velocity[0] / static_cast<double>(num_particles)) +
-          " " +
-          std::to_string(sum_velocity[1] / static_cast<double>(num_particles)) +
-          " " +
-          std::to_string(sum_velocity[2] / static_cast<double>(num_particles)));
+
+      if (num_particles == 0) {
+        velocity_data.push_back("0.0 0.0 0.0");
+      } else {
+        velocity_data.push_back(
+            std::to_string(sum_velocity[0] /
+                           static_cast<double>(num_particles)) +
+            " " +
+            std::to_string(sum_velocity[1] /
+                           static_cast<double>(num_particles)) +
+            " " +
+            std::to_string(sum_velocity[2] /
+                           static_cast<double>(num_particles)));
+      }
     }
 
     density_profile_writer.writeLine(time, density_data);
     velocity_profile_writer.writeLine(time, velocity_data);
+  }
+
+  void closeFiles() {
+    density_profile_writer.closeFile();
+    velocity_profile_writer.closeFile();
+
+    SpdWrapper::get()->info("Statistics were completed");
   }
 };
