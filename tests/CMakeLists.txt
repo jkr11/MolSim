@@ -25,7 +25,7 @@ if (BUILD_TESTS)
             XmlReaderTest.cpp
             ThermostatTest.cpp
             StatisticsTest.cpp
-            WallTest.cpp)
+            WallTest.cpp
             CheckpointTest.cpp)
 
     target_link_libraries(MolSimTest MolSimLib GTest::gtest_main)
