@@ -233,7 +233,10 @@ int main(const int argc, char* argv[]) {
   double mmups = iteration * static_cast<double>(number_of_particles) *
                  (1.0 / static_cast<double>(microseconds));
   std::cout << "MMUPS: " << mmups << std::endl;
+
+#ifndef BENCHMARK
   statistics.closeFiles();
+#endif
   SpdWrapper::get()->info("Output written. Terminating...");
 
   return 0;
