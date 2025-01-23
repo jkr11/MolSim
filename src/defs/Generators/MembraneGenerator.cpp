@@ -39,6 +39,11 @@ MembraneGenerator::MembraneGenerator(
   DEBUG_PRINT_FMT("type: {}", type);
   if (indeces.empty()) {
     SpdWrapper::get()->error("Indices are empty");
+  } else {
+    for (const auto &index : indeces) {
+      SpdWrapper::get()->info("Indeces index ({},{},{})", index[0], index[1],
+                              index[2]);
+    }
   }
   // indeces.push_back({-1, -1, -1});
   // ids.push_back(-1); // TODO
@@ -60,8 +65,11 @@ void MembraneGenerator::generate(std::vector<Particle> &particles) {
             initialVelocity +
             maxwellBoltzmannDistributedVelocity(mv, twoD ? 2 : 3);
         particles.emplace_back(position, V, m, epsilon, sigma, type);
+        // SpdWrapper::get()->info("{}, {}, {}", i, j, k);
         for (ivec3 vec : indeces) {
           if (ivec3{i, j, k} == vec) {
+            SpdWrapper::get()->info("{}, {}, {} matched index {}", i, j, k,
+                                    particles.back().getId());
             ids.push_back(particles.back().getId());
           }
         }

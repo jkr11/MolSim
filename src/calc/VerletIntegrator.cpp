@@ -28,7 +28,6 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
   // TODO: refactor in lower iterator? maybe pass time to all? just get the
   // global var?
   particle_container.singleIterator([this](Particle& p) {
-    SpdWrapper::get()->info("Current time: {}", current_time);
     for (const auto& index_force : index_forces) {
       for (const int id : index_force->getIndeces()) {
         if (p.getId() == id) {
@@ -53,6 +52,6 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
     p.setV(new_v);
   });
 
-  //TODO: remove
+  // TODO: remove
   particle_container.incrementTime();
 }

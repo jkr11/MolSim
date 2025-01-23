@@ -28,7 +28,8 @@ Particle::Particle(const Particle &other)
       m(other.m),
       type(other.type),
       epsilon(other.epsilon),
-      sigma(other.sigma) {}
+      sigma(other.sigma),
+      id(other.id) {}
 
 Particle::Particle(const std::array<double, 3> &x_arg,
                    const std::array<double, 3> &v_arg, const double m_arg,

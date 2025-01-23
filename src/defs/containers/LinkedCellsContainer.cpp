@@ -89,8 +89,9 @@ LinkedCellsContainer::LinkedCellsContainer(
   };
 
   // TODO
-  //const auto &[ids, time, force_values, dims] = linked_cells_config.index_force_config;
-  //index_force = IndexForce(ids, time, force_values);
+  // const auto &[ids, time, force_values, dims] =
+  // linked_cells_config.index_force_config; index_force = IndexForce(ids, time,
+  // force_values);
 
   SpdWrapper::get()->info("cell dim: {}, {}, {}; cell count: {}, {}, {}",
                           cell_dim[0], cell_dim[1], cell_dim[2], cell_count[0],
@@ -104,7 +105,7 @@ void LinkedCellsContainer::addParticle(const Particle &p) {
     exit(1);
   }
   cells[index].emplace_back(p);
-
+  SpdWrapper::get()->info("Added new particle {}", cells[index].back().getId());
   DEBUG_PRINT_FMT("Added particle with coords ({}, {}, {}) into cell index: {}",
                   p.getX()[0], p.getX()[1], p.getX()[2], index)
 }
@@ -112,11 +113,13 @@ void LinkedCellsContainer::addParticle(const Particle &p) {
 void LinkedCellsContainer::addParticles(
     const std::vector<Particle> &particles) {
   for (const Particle &p : particles) {
+    SpdWrapper::get()->info("Particle Id : {}", p.getId());
     addParticle(p);
   }
 }
 
 void LinkedCellsContainer::removeParticle(const Particle &p) {
+  SpdWrapper::get()->info("Particle Id remove: {}", p.getId());
   const std::size_t index = dvec3ToCellIndex(p.getX());
   std::vector<Particle> &particles = cells[index];
 
@@ -159,7 +162,7 @@ void LinkedCellsContainer::imposeInvariant() {
         ++it;
         continue;
       }
-
+      SpdWrapper::get()->info("Imposing on partice with id {}", it->getId());
       cells[shouldBeIndex].push_back(*it);
       it = cells[index].erase(it);
     }
@@ -286,8 +289,6 @@ void LinkedCellsContainer::singleIterator(
   }
 }
 
-
-
 void LinkedCellsContainer::setIndexForce(const IndexForce &index_force) {
   this->index_force = index_force;
 }
@@ -339,6 +340,8 @@ void LinkedCellsContainer::pairIterator(
             d[0] * d[0] + d[1] * d[1] + d[2] * d[2] > cutoff * cutoff)
           continue;
         f(cellParticles[i], cellParticles[j]);
+        //SpdWrapper::get()->info("Index pair {}/{}", cellParticles[i].getId(),
+         //                       cellParticles[j].getId());
         DEBUG_PRINT_FMT("Intra cell pair: ({}, {})", cellParticles[i].getType(),
                         cellParticles[j].getType());
       }

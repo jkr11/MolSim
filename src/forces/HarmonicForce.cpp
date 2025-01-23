@@ -5,8 +5,10 @@
 #include "HarmonicForce.h"
 
 #include "utils/ArrayUtils.h"
+#include "utils/SpdWrapper.h"
 
 dvec3 HarmonicForce::applyForce(const Particle& p) const {
+  SpdWrapper::get()->info("Applying harmonic force");
   dvec3 force_acc = {0.0, 0.0, 0.0};
   for (const auto& [fst, snd] : p.getNeighbours()) {
     dvec3 rv = snd.getX() - p.getX();

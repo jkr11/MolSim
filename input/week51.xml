@@ -40,15 +40,20 @@
             </HarmonicForce>
             <IndexForce>
                 <index>
-                    <x>14</x>
-                    <y>14</y>
-                    <z>1</z>
+                    <x>17</x>
+                    <y>24</y>
+                    <z>0</z>
                 </index>
-                <time>50</time>
+                <index>
+                    <x>17</x>
+                    <y>25</y>
+                    <z>0</z>
+                </index>
+                <time>150</time>
                 <force_values>
-                    <x>1</x>
-                    <y>1</y>
-                    <z>1</z>
+                    <x>0</x>
+                    <y>0</y>
+                    <z>0.8</z>
                 </force_values>
             </IndexForce>
         </force>

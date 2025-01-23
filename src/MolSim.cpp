@@ -6,6 +6,7 @@
 #include "defs/containers/DirectSumContainer.h"
 #include "defs/containers/LinkedCellsContainer.h"
 #include "forces/Gravity.h"
+#include "forces/HarmonicForce.h"
 #include "forces/IndexForce.h"
 #include "forces/LennardJones.h"
 #include "forces/SingularGravity.h"
@@ -62,6 +63,7 @@ int main(const int argc, char* argv[]) {
   std::vector<std::unique_ptr<IndexForce>> index_forces;
   for (const auto& config : arguments.index_force_configs) {
     const auto& [coords, ids, time, force_values] = config;
+    SpdWrapper::get()->info("Adding index force with indices {}", ids.size());
     index_forces.push_back(
         std::make_unique<IndexForce>(ids, time, force_values));
   }
@@ -99,6 +101,10 @@ int main(const int argc, char* argv[]) {
       const auto& [g] = std::get<SingularGravityConfig>(config);
       singular_forces.push_back(
           std::move(std::make_unique<SingularGravity>(g)));
+    } else if (std::holds_alternative<HarmonicForceConfig>(config)) {
+      const auto& [r, k] = std::get<HarmonicForceConfig>(config);
+      singular_forces.push_back(
+          std::move(std::make_unique<HarmonicForce>(r, k)));
     } else {
       SpdWrapper::get()->error("Unrecognized singular force");
     }

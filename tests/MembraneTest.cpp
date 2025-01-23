@@ -3,7 +3,7 @@
 //
 #include <gtest/gtest.h>
 
-#include "defs/Generators/CuboidGenerator.h"
+#include "defs/Generators/MembraneGenerator.h"
 
 /**
  * Tests that each particle has the correct number of neighbours for the full
@@ -11,9 +11,9 @@
  */
 TEST(Membrane, 3x3) {
   std::vector<Particle> particles;
-  CuboidGenerator cuboid_generator({0, 0, 0}, {3, 3, 3}, 1.1225, 1.0, {0, 0, 0},
-                                   0.0, 5.0, 1.0, 1, false);
-  cuboid_generator.generate(particles);
+  MembraneGenerator membrane_generator({0, 0, 0}, {3, 3, 3}, 1.1225, 1.0,
+                                       {0, 0, 0}, 0.0, 5.0, 1.0, 1, false, {});
+  membrane_generator.generate(particles);
 
   ASSERT_EQ(particles[13].getNeighbours().size(), 26);
   ASSERT_EQ(particles[13].getNeighbours()[0].first, true);
