@@ -11,6 +11,8 @@
 #include "utils/ArrayUtils.h"
 #include "utils/SpdWrapper.h"
 
+int Particle::global_id_counter = 0;
+
 Particle::Particle(int type_arg) {
   type = type_arg;
   // DEBUG_PRINT("Particle generated!");
@@ -128,5 +130,3 @@ std::ostream &operator<<(std::ostream &stream, const Particle &p) {
   stream << p.toString();
   return stream;
 }
-
-int Particle::global_id_counter = 0;

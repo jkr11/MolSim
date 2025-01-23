@@ -38,6 +38,19 @@
                 <r_0>2.2</r_0>
                 <k>300</k>
             </HarmonicForce>
+            <IndexForce>
+                <index>
+                    <x>14</x>
+                    <y>14</y>
+                    <z>1</z>
+                </index>
+                <time>50</time>
+                <force_values>
+                    <x>1</x>
+                    <y>1</y>
+                    <z>1</z>
+                </force_values>
+            </IndexForce>
         </force>
         <delta_t>0.01</delta_t>
         <t_end>500</t_end>

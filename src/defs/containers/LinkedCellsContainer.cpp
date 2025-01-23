@@ -88,9 +88,9 @@ LinkedCellsContainer::LinkedCellsContainer(
       linked_cells_config.boundary_config.z_high,
   };
 
-
-  const auto &[ids, time, force_values, dims] = linked_cells_config.index_force_config;
-  index_force = IndexForce(ids, time, force_values);
+  // TODO
+  //const auto &[ids, time, force_values, dims] = linked_cells_config.index_force_config;
+  //index_force = IndexForce(ids, time, force_values);
 
   SpdWrapper::get()->info("cell dim: {}, {}, {}; cell count: {}, {}, {}",
                           cell_dim[0], cell_dim[1], cell_dim[2], cell_count[0],

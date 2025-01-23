@@ -13,10 +13,10 @@
 #include "utils/SpdWrapper.h"
 
 struct IndexForceConfig {
-  std::vector<int> indeces{};
+  std::vector<ivec3> indeces{};
+  std::vector<int> ids{};
   double ent_time{};
   dvec3 force_values{};
-  ivec3 domain{};
 };
 
 /**
@@ -26,7 +26,6 @@ struct LinkedCellsConfig {
   ivec3 domain;  // size of the dimensions
   double cutoff_radius;
   enum BoundaryType { Outflow, Reflective, Periodic } boundary_type;
-  IndexForceConfig index_force_config;
   struct BoundaryConfig {
     BoundaryType x_high;
     BoundaryType x_low;
@@ -136,7 +135,7 @@ inline void printConfiguration(const Arguments& args) {
   if (std::holds_alternative<LinkedCellsConfig>(args.container_data)) {
     logger->info("Container Type: Linked Cells");
 
-    const auto& [domain, cutoff_radius, boundary_type, idf, boundary_config] =
+    const auto& [domain, cutoff_radius, boundary_type, boundary_config] =
         std::get<LinkedCellsConfig>(args.container_data);
     logger->info("-- Domain: ({}, {}, {})", domain[0], domain[1], domain[2]);
     logger->info("-- Cutoff Radius: {}", cutoff_radius);

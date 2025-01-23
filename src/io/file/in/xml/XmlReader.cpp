@@ -80,18 +80,20 @@ void XmlReader::read(std::vector<Particle>& particles,
     }
     if (auto& index_force = metadata.force();
         index_force.IndexForce().present()) {
-      std::vector<ivec3> indices{};
+      SpdWrapper::get()->info("Building index force");
+      std::vector<ivec3> indeces{};
       for (auto& i : index_force.IndexForce()->index()) {
-        indices.push_back(unwrapVec<const Ivec3Type&, ivec3>(i, "index"));
+        indeces.push_back(unwrapVec<const Ivec3Type&, ivec3>(i, "index"));
       }
-      simulation_parameters.index_force_configs.emplace_back(IndexForceConfig{
-          indices,
+      SpdWrapper::get()->info("indeces[0] {}", indeces[0][0]);
+      IndexForceConfig index_force_config{
+          indeces,
+          {},
           index_force.IndexForce()->time(),
           unwrapVec<const Dvec3Type&, dvec3>(
               index_force.IndexForce()->force_values(), "force_values"),
-          unwrapVec<const Ivec3Type&, ivec3>(
-              index_force.IndexForce()->dimensions(), "dimensions"),
-      });
+      };
+      simulation_parameters.index_force_configs.push_back(index_force_config);
     }
     if (metadata.checkpoint().present()) {
       loadCheckpoint(metadata.checkpoint().get(), particles);
@@ -131,6 +133,7 @@ void XmlReader::read(std::vector<Particle>& particles,
 
     if (config->cuboids() != nullptr) {
       for (const auto& cubes : config->cuboids()->cuboid()) {
+        SpdWrapper::get()->info("Generating cuboid");
         const auto& _corner = cubes.corner();
         const auto& _dimensions = cubes.dimensions();
         const auto& _velocity = cubes.velocity();
@@ -147,12 +150,15 @@ void XmlReader::read(std::vector<Particle>& particles,
         } else {
           mv = cubes.mv();
         }
-
-        CuboidGenerator cg(corner, dimensions, cubes.h(), cubes.mass(),
-                           velocity, mv, cubes.epsilon(), cubes.sigma(),
-                           cubes.type(), twoD);
-
+        if (simulation_parameters.index_force_configs[0].indeces.empty()) {
+          throw std::runtime_error("Index force configuration indices are not initialized.");
+        }
+        CuboidGenerator cg(
+            corner, dimensions, cubes.h(), cubes.mass(), velocity, mv,
+            cubes.epsilon(), cubes.sigma(), cubes.type(), twoD,
+            simulation_parameters.index_force_configs[0].indeces);
         cg.generate(particles);
+        simulation_parameters.index_force_configs[0].ids = cg.getIndeces();
       }
     }
 

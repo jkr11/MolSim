@@ -50,6 +50,7 @@ add_executable(MolSim MolSim.cpp
         io/file/out/checkpoint-schema.hxx
         io/file/out/checkpoint-schema.cxx
         io/file/out/XmlWriter.cpp
+        defs/Generators/MembraneGenerator.cpp
 )
 
 set(FILES_TO_DISABLE_WARNINGS

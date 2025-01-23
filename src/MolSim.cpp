@@ -61,7 +61,7 @@ int main(const int argc, char* argv[]) {
   // TODO: delte in config
   std::vector<std::unique_ptr<IndexForce>> index_forces;
   for (const auto& config : arguments.index_force_configs) {
-    const auto& [ids, time, force_values, dims] = config;
+    const auto& [coords, ids, time, force_values] = config;
     index_forces.push_back(
         std::make_unique<IndexForce>(ids, time, force_values));
   }

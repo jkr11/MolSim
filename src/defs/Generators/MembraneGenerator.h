@@ -2,8 +2,9 @@
 // Created by jkr on 10/31/24.
 //
 
-#ifndef CUBOIDGENERATOR_H
-#define CUBOIDGENERATOR_H
+#ifndef MEMBRANEGENERATOR_H
+#define MEMBRANEGENERATOR_H
+#pragma once
 #include "ParticleGenerator.h"
 #include "utils/SpdWrapper.h"
 
@@ -11,7 +12,7 @@
  * @brief Generates Particles to a container in the shape of a cuboid [dim1,
  * dim2, dim3]
  */
-class CuboidGenerator final : public ParticleGenerator {
+class MembraneGenerator final : public ParticleGenerator {
  private:
   dvec3 corner;
   ivec3 dimensions;
@@ -31,6 +32,8 @@ class CuboidGenerator final : public ParticleGenerator {
    * initialization
    */
   const bool twoD{};
+  std::vector<int> ids{};
+  std::vector<ivec3> indeces{};
 
  public:
   /**
@@ -46,11 +49,13 @@ class CuboidGenerator final : public ParticleGenerator {
    * @param mv temperature of our system
    * @param type type of the particle in the system
    * @param twoD dimension of velocity vector of brownian motion
+   * @param indeces
    */
-  CuboidGenerator(const dvec3 &corner, const std::array<int, 3> &dimensions,
-                  double h, double m,
-                  const std::array<double, 3> &initialVelocity, double mv,
-                  double epsilon, double sigma, int type, bool twoD);
+  MembraneGenerator(const dvec3 &corner, const std::array<int, 3> &dimensions,
+                    double h, double m,
+                    const std::array<double, 3> &initialVelocity, double mv,
+                    double epsilon, double sigma, int type, bool twoD,
+                    const std::vector<ivec3> &indeces);
 
   /**
    * @brief generates particles in the shape of a cuboid
@@ -58,6 +63,17 @@ class CuboidGenerator final : public ParticleGenerator {
    * this cuboid is saved in
    */
   void generate(std::vector<Particle> &particles) override;
+
+  /**
+   * @return particle ids
+   */
+  [[nodiscard]] std::vector<int> getIndeces() const;
+
+  void setTargetIndeces(const std::vector<ivec3> &_indeces) {
+    SpdWrapper::get()->info("Setting indeces");
+
+    this->indeces = _indeces;
+  }
 };
 
-#endif  // CUBOIDGENERATOR_H
+#endif  // MEMBRANEGENERATOR_H

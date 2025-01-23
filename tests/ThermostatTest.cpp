@@ -66,8 +66,10 @@ TEST(Thermostat, holding) {
     }
   }
 
+  std::vector<std::unique_ptr<IndexForce>> index_forces;
+
   VerletIntegrator verlet_integrator(interactive_forces, singular_forces,
-                                     arguments.delta_t);
+                                     index_forces, arguments.delta_t);
 
   std::unique_ptr<Thermostat> thermostat;
   if (arguments.use_thermostat) {
@@ -147,9 +149,10 @@ TEST(Thermostat, cooling) {
       SpdWrapper::get()->error("Unrecognized singular force");
     }
   }
+  std::vector<std::unique_ptr<IndexForce>> index_forces;
 
   VerletIntegrator verlet_integrator(interactive_forces, singular_forces,
-                                     arguments.delta_t);
+                                     index_forces, arguments.delta_t);
 
   std::unique_ptr<Thermostat> thermostat;
   if (arguments.use_thermostat) {
@@ -222,8 +225,10 @@ TEST(Thermostat, heating) {
     }
   }
 
+  std::vector<std::unique_ptr<IndexForce>> index_forces;
+
   VerletIntegrator verlet_integrator(interactive_forces, singular_forces,
-                                     arguments.delta_t);
+                                     index_forces, arguments.delta_t);
 
   std::unique_ptr<Thermostat> thermostat;
   if (arguments.use_thermostat) {
@@ -298,9 +303,10 @@ TEST(Thermostat, gradual) {
     }
   }
 
-  VerletIntegrator verlet_integrator(interactive_forces, singular_forces,
-                                     arguments.delta_t);
+  std::vector<std::unique_ptr<IndexForce>> index_forces;
 
+  VerletIntegrator verlet_integrator(interactive_forces, singular_forces,
+                                     index_forces, arguments.delta_t);
   std::unique_ptr<Thermostat> thermostat;
   if (arguments.use_thermostat) {
     thermostat = std::make_unique<Thermostat>(arguments.thermostat_config);
