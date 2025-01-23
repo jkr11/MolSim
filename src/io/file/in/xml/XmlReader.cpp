@@ -69,8 +69,12 @@ void XmlReader::read(std::vector<Particle>& particles,
     }
     if (auto& singular_force = metadata.force();
         singular_force.SingularGravity().present()) {
+      SpdWrapper::get()->info("Adding singular gravity on axis {}",
+                              singular_force.SingularGravity()->axis().get());
       simulation_parameters.singular_force_types.emplace_back(
-          SingularGravityConfig{singular_force.SingularGravity()->g().get()});
+          SingularGravityConfig{
+              singular_force.SingularGravity()->g().get(),
+              singular_force.SingularGravity()->axis().get()});
     }
     if (auto& singular_force = metadata.force();
         singular_force.HarmonicForce().present()) {

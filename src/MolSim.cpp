@@ -98,9 +98,9 @@ int main(const int argc, char* argv[]) {
   std::vector<std::unique_ptr<SingularForce>> singular_forces;
   for (auto config : arguments.singular_force_types) {
     if (std::holds_alternative<SingularGravityConfig>(config)) {
-      const auto& [g] = std::get<SingularGravityConfig>(config);
+      const auto& [g, ax] = std::get<SingularGravityConfig>(config);
       singular_forces.push_back(
-          std::move(std::make_unique<SingularGravity>(g)));
+          std::move(std::make_unique<SingularGravity>(g, ax)));
     } else if (std::holds_alternative<HarmonicForceConfig>(config)) {
       const auto& [r, k] = std::get<HarmonicForceConfig>(config);
       singular_forces.push_back(

@@ -21,15 +21,17 @@ Particle::Particle(int type_arg) {
 }
 
 Particle::Particle(const Particle &other)
-    : x(other.x),
-      v(other.v),
-      f(other.f),
-      old_f(other.old_f),
-      m(other.m),
-      type(other.type),
-      epsilon(other.epsilon),
-      sigma(other.sigma),
-      id(other.id) {}
+    /*    : x(other.x),
+          v(other.v),
+          f(other.f),
+          old_f(other.old_f),
+          m(other.m),
+          type(other.type),
+          epsilon(other.epsilon),
+          sigma(other.sigma),
+          id(other.id),
+          neighbours(other.neighbours) {} */
+    = default;
 
 Particle::Particle(const std::array<double, 3> &x_arg,
                    const std::array<double, 3> &v_arg, const double m_arg,

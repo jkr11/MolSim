@@ -779,6 +779,18 @@ void SingularGravityType::g(const g_type& x) { this->g_.set(x); }
 
 void SingularGravityType::g(const g_optional& x) { this->g_ = x; }
 
+const SingularGravityType::axis_optional& SingularGravityType::axis() const {
+  return this->axis_;
+}
+
+SingularGravityType::axis_optional& SingularGravityType::axis() {
+  return this->axis_;
+}
+
+void SingularGravityType::axis(const axis_type& x) { this->axis_.set(x); }
+
+void SingularGravityType::axis(const axis_optional& x) { this->axis_ = x; }
+
 // HarmonicForceType
 //
 
@@ -2705,17 +2717,20 @@ LennardJonesForce::~LennardJonesForce() {}
 // SingularGravityType
 //
 
-SingularGravityType::SingularGravityType() : ::xml_schema::type(), g_(this) {}
+SingularGravityType::SingularGravityType()
+    : ::xml_schema::type(), g_(this), axis_(this) {}
 
 SingularGravityType::SingularGravityType(const SingularGravityType& x,
                                          ::xml_schema::flags f,
                                          ::xml_schema::container* c)
-    : ::xml_schema::type(x, f, c), g_(x.g_, f, this) {}
+    : ::xml_schema::type(x, f, c), g_(x.g_, f, this), axis_(x.axis_, f, this) {}
 
 SingularGravityType::SingularGravityType(const ::xercesc::DOMElement& e,
                                          ::xml_schema::flags f,
                                          ::xml_schema::container* c)
-    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c), g_(this) {
+    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c),
+      g_(this),
+      axis_(this) {
   if ((f & ::xml_schema::flags::base) == 0) {
     ::xsd::cxx::xml::dom::parser<char> p(e, false, false, true);
     this->parse(p, f);
@@ -2733,6 +2748,11 @@ void SingularGravityType::parse(::xsd::cxx::xml::dom::parser<char>& p,
       this->g_.set(g_traits::create(i, f, this));
       continue;
     }
+
+    if (n.name() == "axis" && n.namespace_().empty()) {
+      this->axis_.set(axis_traits::create(i, f, this));
+      continue;
+    }
   }
 }
 
@@ -2746,6 +2766,7 @@ SingularGravityType& SingularGravityType::operator=(
   if (this != &x) {
     static_cast< ::xml_schema::type&>(*this) = x;
     this->g_ = x.g_;
+    this->axis_ = x.axis_;
   }
 
   return *this;
@@ -4216,6 +4237,14 @@ void operator<<(::xercesc::DOMElement& e, const SingularGravityType& i) {
     ::xercesc::DOMAttr& a(::xsd::cxx::xml::dom::create_attribute("g", e));
 
     a << ::xml_schema::as_decimal(*i.g());
+  }
+
+  // axis
+  //
+  if (i.axis()) {
+    ::xercesc::DOMAttr& a(::xsd::cxx::xml::dom::create_attribute("axis", e));
+
+    a << *i.axis();
   }
 }
 

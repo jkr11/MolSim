@@ -13,13 +13,14 @@
 class SingularGravity final : public SingularForce {
  private:
   double g{};
+  int axis{};
 
  public:
   /**
    *
    * @param g the gravitational coefficient
    */
-  explicit SingularGravity(double g);
+  explicit SingularGravity(double g, int axis);
 
   // TODO: do we need to do this modular over the axis? or is it only in y
   // direction?

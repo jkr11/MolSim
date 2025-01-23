@@ -45,6 +45,7 @@ struct DirectSumConfig {};
 
 struct SingularGravityConfig {
   double g{};
+  int axis{};
 };
 
 struct HarmonicForceConfig {

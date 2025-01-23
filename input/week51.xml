@@ -34,6 +34,7 @@
         </container>
         <force>
             <LennardJones/>
+            <SingularGravity g="-12.44" axis="2"/>
             <HarmonicForce>
                 <r_0>2.2</r_0>
                 <k>300</k>
@@ -46,6 +47,16 @@
                 </index>
                 <index>
                     <x>17</x>
+                    <y>25</y>
+                    <z>0</z>
+                </index>
+                <index>
+                    <x>18</x>
+                    <y>24</y>
+                    <z>0</z>
+                </index>
+                <index>
+                    <x>18</x>
                     <y>25</y>
                     <z>0</z>
                 </index>

@@ -1526,6 +1526,20 @@ class SingularGravityType : public ::xml_schema::type {
 
   void g(const g_optional& x);
 
+  // axis
+  //
+  typedef ::xml_schema::int_ axis_type;
+  typedef ::xsd::cxx::tree::optional<axis_type> axis_optional;
+  typedef ::xsd::cxx::tree::traits<axis_type, char> axis_traits;
+
+  const axis_optional& axis() const;
+
+  axis_optional& axis();
+
+  void axis(const axis_type& x);
+
+  void axis(const axis_optional& x);
+
   // Constructors.
   //
   SingularGravityType();
@@ -1550,6 +1564,7 @@ class SingularGravityType : public ::xml_schema::type {
 
  protected:
   g_optional g_;
+  axis_optional axis_;
 };
 
 class HarmonicForceType : public ::xml_schema::type {

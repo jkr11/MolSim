@@ -161,6 +161,7 @@
 
     <xs:complexType name="SingularGravityType">
         <xs:attribute name="g" type="xs:decimal"/>
+        <xs:attribute name="axis" type="xs:int"/>
     </xs:complexType>
 
     <xs:complexType name="HarmonicForceType">
