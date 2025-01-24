@@ -19,9 +19,13 @@ if (BUILD_TESTS)
             VerletIntegratorTest.cpp
             BoundaryConditionsTest.cpp
             PeriodicBoundaryTest.cpp
+            PeriodicBoundary3DTest.cpp
+            PeriodicAndReflectiveCornerTest.cpp
             testUtil.h
             XmlReaderTest.cpp
             ThermostatTest.cpp
+            StatisticsTest.cpp
+            WallTest.cpp
             CheckpointTest.cpp)
 
     target_link_libraries(MolSimTest MolSimLib GTest::gtest_main)

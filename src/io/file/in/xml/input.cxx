@@ -115,6 +115,62 @@ void MetadataType::checkpoint(::std::auto_ptr<checkpoint_type> x) {
   this->checkpoint_.set(x);
 }
 
+const MetadataType::statistics_optional& MetadataType::statistics() const {
+  return this->statistics_;
+}
+
+MetadataType::statistics_optional& MetadataType::statistics() {
+  return this->statistics_;
+}
+
+void MetadataType::statistics(const statistics_type& x) {
+  this->statistics_.set(x);
+}
+
+void MetadataType::statistics(const statistics_optional& x) {
+  this->statistics_ = x;
+}
+
+void MetadataType::statistics(::std::auto_ptr<statistics_type> x) {
+  this->statistics_.set(x);
+}
+
+// StatisticsType
+//
+
+const StatisticsType::x_bins_type& StatisticsType::x_bins() const {
+  return this->x_bins_.get();
+}
+
+StatisticsType::x_bins_type& StatisticsType::x_bins() {
+  return this->x_bins_.get();
+}
+
+void StatisticsType::x_bins(const x_bins_type& x) { this->x_bins_.set(x); }
+
+const StatisticsType::y_bins_type& StatisticsType::y_bins() const {
+  return this->y_bins_.get();
+}
+
+StatisticsType::y_bins_type& StatisticsType::y_bins() {
+  return this->y_bins_.get();
+}
+
+void StatisticsType::y_bins(const y_bins_type& x) { this->y_bins_.set(x); }
+
+const StatisticsType::output_interval_type& StatisticsType::output_interval()
+    const {
+  return this->output_interval_.get();
+}
+
+StatisticsType::output_interval_type& StatisticsType::output_interval() {
+  return this->output_interval_.get();
+}
+
+void StatisticsType::output_interval(const output_interval_type& x) {
+  this->output_interval_.set(x);
+}
+
 // cuboidType
 //
 
@@ -697,6 +753,24 @@ void ThermostatType::deltaT(const deltaT_type& x) { this->deltaT_.set(x); }
 
 void ThermostatType::deltaT(const deltaT_optional& x) { this->deltaT_ = x; }
 
+const ThermostatType::use_thermal_motion_optional&
+ThermostatType::use_thermal_motion() const {
+  return this->use_thermal_motion_;
+}
+
+ThermostatType::use_thermal_motion_optional&
+ThermostatType::use_thermal_motion() {
+  return this->use_thermal_motion_;
+}
+
+void ThermostatType::use_thermal_motion(const use_thermal_motion_type& x) {
+  this->use_thermal_motion_.set(x);
+}
+
+void ThermostatType::use_thermal_motion(const use_thermal_motion_optional& x) {
+  this->use_thermal_motion_ = x;
+}
+
 // simulation
 //
 
@@ -802,7 +876,8 @@ MetadataType::MetadataType(const container_type& container,
       delta_t_(delta_t, this),
       t_end_(t_end, this),
       twoD_(twoD, this),
-      checkpoint_(this) {}
+      checkpoint_(this),
+      statistics_(this) {}
 
 MetadataType::MetadataType(::std::auto_ptr<container_type> container,
                            ::std::auto_ptr<force_type> force,
@@ -814,7 +889,8 @@ MetadataType::MetadataType(::std::auto_ptr<container_type> container,
       delta_t_(delta_t, this),
       t_end_(t_end, this),
       twoD_(twoD, this),
-      checkpoint_(this) {}
+      checkpoint_(this),
+      statistics_(this) {}
 
 MetadataType::MetadataType(const MetadataType& x, ::xml_schema::flags f,
                            ::xml_schema::container* c)
@@ -824,7 +900,8 @@ MetadataType::MetadataType(const MetadataType& x, ::xml_schema::flags f,
       delta_t_(x.delta_t_, f, this),
       t_end_(x.t_end_, f, this),
       twoD_(x.twoD_, f, this),
-      checkpoint_(x.checkpoint_, f, this) {}
+      checkpoint_(x.checkpoint_, f, this),
+      statistics_(x.statistics_, f, this) {}
 
 MetadataType::MetadataType(const ::xercesc::DOMElement& e,
                            ::xml_schema::flags f, ::xml_schema::container* c)
@@ -834,7 +911,8 @@ MetadataType::MetadataType(const ::xercesc::DOMElement& e,
       delta_t_(this),
       t_end_(this),
       twoD_(this),
-      checkpoint_(this) {
+      checkpoint_(this),
+      statistics_(this) {
   if ((f & ::xml_schema::flags::base) == 0) {
     ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
     this->parse(p, f);
@@ -908,6 +986,17 @@ void MetadataType::parse(::xsd::cxx::xml::dom::parser<char>& p,
       }
     }
 
+    // statistics
+    //
+    if (n.name() == "statistics" && n.namespace_().empty()) {
+      ::std::auto_ptr<statistics_type> r(statistics_traits::create(i, f, this));
+
+      if (!this->statistics_) {
+        this->statistics_.set(r);
+        continue;
+      }
+    }
+
     break;
   }
 
@@ -946,12 +1035,112 @@ MetadataType& MetadataType::operator=(const MetadataType& x) {
     this->t_end_ = x.t_end_;
     this->twoD_ = x.twoD_;
     this->checkpoint_ = x.checkpoint_;
+    this->statistics_ = x.statistics_;
   }
 
   return *this;
 }
 
 MetadataType::~MetadataType() {}
+
+// StatisticsType
+//
+
+StatisticsType::StatisticsType(const x_bins_type& x_bins,
+                               const y_bins_type& y_bins,
+                               const output_interval_type& output_interval)
+    : ::xml_schema::type(),
+      x_bins_(x_bins, this),
+      y_bins_(y_bins, this),
+      output_interval_(output_interval, this) {}
+
+StatisticsType::StatisticsType(const StatisticsType& x, ::xml_schema::flags f,
+                               ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c),
+      x_bins_(x.x_bins_, f, this),
+      y_bins_(x.y_bins_, f, this),
+      output_interval_(x.output_interval_, f, this) {}
+
+StatisticsType::StatisticsType(const ::xercesc::DOMElement& e,
+                               ::xml_schema::flags f,
+                               ::xml_schema::container* c)
+    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c),
+      x_bins_(this),
+      y_bins_(this),
+      output_interval_(this) {
+  if ((f & ::xml_schema::flags::base) == 0) {
+    ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
+    this->parse(p, f);
+  }
+}
+
+void StatisticsType::parse(::xsd::cxx::xml::dom::parser<char>& p,
+                           ::xml_schema::flags f) {
+  for (; p.more_content(); p.next_content(false)) {
+    const ::xercesc::DOMElement& i(p.cur_element());
+    const ::xsd::cxx::xml::qualified_name<char> n(
+        ::xsd::cxx::xml::dom::name<char>(i));
+
+    // x_bins
+    //
+    if (n.name() == "x_bins" && n.namespace_().empty()) {
+      if (!x_bins_.present()) {
+        this->x_bins_.set(x_bins_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    // y_bins
+    //
+    if (n.name() == "y_bins" && n.namespace_().empty()) {
+      if (!y_bins_.present()) {
+        this->y_bins_.set(y_bins_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    // output_interval
+    //
+    if (n.name() == "output_interval" && n.namespace_().empty()) {
+      if (!output_interval_.present()) {
+        this->output_interval_.set(output_interval_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    break;
+  }
+
+  if (!x_bins_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("x_bins", "");
+  }
+
+  if (!y_bins_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("y_bins", "");
+  }
+
+  if (!output_interval_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("output_interval", "");
+  }
+}
+
+StatisticsType* StatisticsType::_clone(::xml_schema::flags f,
+                                       ::xml_schema::container* c) const {
+  return new class StatisticsType(*this, f, c);
+}
+
+StatisticsType& StatisticsType::operator=(const StatisticsType& x) {
+  if (this != &x) {
+    static_cast< ::xml_schema::type&>(*this) = x;
+    this->x_bins_ = x.x_bins_;
+    this->y_bins_ = x.y_bins_;
+    this->output_interval_ = x.output_interval_;
+  }
+
+  return *this;
+}
+
+StatisticsType::~StatisticsType() {}
 
 // cuboidType
 //
@@ -2285,7 +2474,8 @@ ThermostatType::ThermostatType(const T_init_type& T_init,
       T_init_(T_init, this),
       n_thermostat_(n_thermostat, this),
       T_target_(this),
-      deltaT_(this) {}
+      deltaT_(this),
+      use_thermal_motion_(this) {}
 
 ThermostatType::ThermostatType(const ThermostatType& x, ::xml_schema::flags f,
                                ::xml_schema::container* c)
@@ -2293,7 +2483,8 @@ ThermostatType::ThermostatType(const ThermostatType& x, ::xml_schema::flags f,
       T_init_(x.T_init_, f, this),
       n_thermostat_(x.n_thermostat_, f, this),
       T_target_(x.T_target_, f, this),
-      deltaT_(x.deltaT_, f, this) {}
+      deltaT_(x.deltaT_, f, this),
+      use_thermal_motion_(x.use_thermal_motion_, f, this) {}
 
 ThermostatType::ThermostatType(const ::xercesc::DOMElement& e,
                                ::xml_schema::flags f,
@@ -2302,7 +2493,8 @@ ThermostatType::ThermostatType(const ::xercesc::DOMElement& e,
       T_init_(this),
       n_thermostat_(this),
       T_target_(this),
-      deltaT_(this) {
+      deltaT_(this),
+      use_thermal_motion_(this) {
   if ((f & ::xml_schema::flags::base) == 0) {
     ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
     this->parse(p, f);
@@ -2352,6 +2544,16 @@ void ThermostatType::parse(::xsd::cxx::xml::dom::parser<char>& p,
       }
     }
 
+    // use_thermal_motion
+    //
+    if (n.name() == "use_thermal_motion" && n.namespace_().empty()) {
+      if (!this->use_thermal_motion_) {
+        this->use_thermal_motion_.set(
+            use_thermal_motion_traits::create(i, f, this));
+        continue;
+      }
+    }
+
     break;
   }
 
@@ -2376,6 +2578,7 @@ ThermostatType& ThermostatType::operator=(const ThermostatType& x) {
     this->n_thermostat_ = x.n_thermostat_;
     this->T_target_ = x.T_target_;
     this->deltaT_ = x.deltaT_;
+    this->use_thermal_motion_ = x.use_thermal_motion_;
   }
 
   return *this;
@@ -2977,6 +3180,44 @@ void operator<<(::xercesc::DOMElement& e, const MetadataType& i) {
 
     s << *i.checkpoint();
   }
+
+  // statistics
+  //
+  if (i.statistics()) {
+    ::xercesc::DOMElement& s(
+        ::xsd::cxx::xml::dom::create_element("statistics", e));
+
+    s << *i.statistics();
+  }
+}
+
+void operator<<(::xercesc::DOMElement& e, const StatisticsType& i) {
+  e << static_cast<const ::xml_schema::type&>(i);
+
+  // x_bins
+  //
+  {
+    ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("x_bins", e));
+
+    s << i.x_bins();
+  }
+
+  // y_bins
+  //
+  {
+    ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("y_bins", e));
+
+    s << i.y_bins();
+  }
+
+  // output_interval
+  //
+  {
+    ::xercesc::DOMElement& s(
+        ::xsd::cxx::xml::dom::create_element("output_interval", e));
+
+    s << i.output_interval();
+  }
 }
 
 void operator<<(::xercesc::DOMElement& e, const cuboidType& i) {
@@ -3429,6 +3670,15 @@ void operator<<(::xercesc::DOMElement& e, const ThermostatType& i) {
     ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("deltaT", e));
 
     s << ::xml_schema::as_decimal(*i.deltaT());
+  }
+
+  // use_thermal_motion
+  //
+  if (i.use_thermal_motion()) {
+    ::xercesc::DOMElement& s(
+        ::xsd::cxx::xml::dom::create_element("use_thermal_motion", e));
+
+    s << *i.use_thermal_motion();
   }
 }
 
