@@ -25,6 +25,16 @@ class LinkedCellsContainer final : public ParticleContainer {
   std::vector<std::vector<Particle>> cells;
 
   /**
+   * @brief current number of particles
+   */
+  size_t particle_count{};
+
+  /**
+   * @brief number of particles, that are immovable
+   */
+  size_t special_particle_count{};
+
+  /**
    * @brief
    * stores the indexes of all halo_cells for faster iteration in the
    * corresponding direction vector
@@ -173,6 +183,20 @@ class LinkedCellsContainer final : public ParticleContainer {
   [[nodiscard]] std::vector<Particle*> getParticles() override;
 
   /**
+   * @brief the exact number of current particles, updated accordingly
+   * @return the current count of particles left in the simulation
+   */
+  [[nodiscard]] size_t getParticleCount() const { return particle_count; }
+
+  /**
+   * @brief the exact number of current special particles, updated accordingly
+   * @return the current count of special particles left in the simulation
+   */
+  [[nodiscard]] size_t getSpecialParticleCount() const {
+    return special_particle_count;
+  }
+
+  /**
    * @brief Get a vector of all particles in the container
    * @return Vector of all particles
    */
@@ -185,6 +209,13 @@ class LinkedCellsContainer final : public ParticleContainer {
   [[nodiscard]] std::size_t size() const override;
 
   void setIndexForce(const IndexForce& index_force);
+
+  /**
+   * applies the periodic boundary conditions to the given dimension
+   * @param dimension the dimension that the periodic boundary should be applied
+   * to
+   */
+  inline void applyPeriodicBoundary(size_t dimension);
 
   /**
    * @brief Impose the invariant, that the particles are spatially sorted into
@@ -374,8 +405,40 @@ class LinkedCellsContainer final : public ParticleContainer {
   [[nodiscard]] std::tuple<bool, ivec3, dvec3> reflective_warp_around_testing(
       ivec3 cell_coordinate, std::size_t raw_dimension) const;
 
+  /**
+   * @brief calculates the kinetic energy in the container
+   * @return kinetic energy of all particles
+   */
   double getKineticEnergy() override;
 
+  /**
+   * @brief returns particle count of the container
+   * @return particle count
+   */
+  std::size_t getParticleCount() override { return particle_count; }
+
+  /**
+   * @brief returns the count of immovable particles
+   * @return count of immovable particles
+   */
+  std::size_t getSpecialParticleCount() override {
+    return special_particle_count;
+  }
+
+  /**
+   * @brief returns the domain of the container
+   * @return the domain of the container
+   */
+  ivec3 getDomain() override { return domain; }
+
+  /**
+   * @brief if true, this corner should not be evaluated because it was already
+   * done
+   * @param cell_coordinate the coordinate of the cell
+   * @param raw_dimension the evaluated dimension
+   * @return if cell should be ignored
+   */
+  inline bool isDoubleCorner(ivec3 cell_coordinate, std::size_t raw_dimension) const;
 };
 
 /**

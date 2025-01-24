@@ -7,7 +7,7 @@
 
 #include "Particle.h"
 
-#include "io/file/out/checkpoint-schema.hxx"
+#include "debug/debug_print.h"
 #include "utils/ArrayUtils.h"
 #include "utils/SpdWrapper.h"
 
@@ -68,53 +68,17 @@ Particle::Particle(const std::array<double, 3> &x_arg,
 
 Particle::~Particle() = default;
 
-const std::array<double, 3> &Particle::getX() const { return x; }
-
-const std::array<double, 3> &Particle::getV() const { return v; }
-
-const std::array<double, 3> &Particle::getF() const { return f; }
-
-const std::array<double, 3> &Particle::getOldF() const { return old_f; }
-
-double Particle::getM() const { return m; }
-
-int Particle::getType() const { return type; }
-
-double Particle::getEpsilon() const { return epsilon; }
-
-double Particle::getSigma() const { return sigma; }
 
 const std::vector<std::pair<bool, std::shared_ptr<Particle>>> &
 Particle::getNeighbours() const {
   return neighbours;
 }
 
-void Particle::setF(const std::array<double, 3> &F) { f = F; }
-
-void Particle::setV(const std::array<double, 3> &V) { v = V; }
-
-void Particle::setX(const std::array<double, 3> &X) { x = X; }
-
-void Particle::setOldF(const dvec3 &oF) { old_f = oF; }
-
-void Particle::setEpsilon(const double &_epsilon) { epsilon = _epsilon; }
-
-void Particle::setSigma(const double &_sigma) { sigma = _sigma; }
-
 void Particle::pushBackNeighbour(bool diag,
                                  const std::shared_ptr<Particle> &particle) {
   neighbours.push_back({diag, particle});
 }
 
-void Particle::addV(const dvec3 &V) { v = v + V; }
-
-void Particle::subV(const dvec3 &V) { v = v - V; }
-
-void Particle::mulV(const double &scalar) { v = scalar * v; }
-
-void Particle::addF(const dvec3 &F) { f = f + F; }
-
-void Particle::subF(const dvec3 &F) { f = f - F; }
 
 void Particle::updateForceInTime() {
   old_f = f;

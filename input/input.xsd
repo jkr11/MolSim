@@ -42,6 +42,15 @@
             <xs:element name="t_end" type="xs:double"/>
             <xs:element name="twoD" type="xs:boolean"/>
             <xs:element name="checkpoint" type="xs:string" minOccurs="0"/>
+            <xs:element name="statistics" type="StatisticsType" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="StatisticsType">
+        <xs:sequence>
+            <xs:element name="x_bins" type="xs:int"/>
+            <xs:element name="y_bins" type="xs:int"/>
+            <xs:element name="output_interval" type="xs:int"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -187,6 +196,7 @@
             <xs:element name="n_thermostat" type="xs:int"/>
             <xs:element name="T_target" type="xs:decimal" minOccurs="0"/>
             <xs:element name="deltaT" type="xs:decimal" minOccurs="0"/>
+            <xs:element name="use_thermal_motion" type="xs:boolean" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 </xs:schema>

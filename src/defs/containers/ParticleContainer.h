@@ -77,4 +77,23 @@ class ParticleContainer {
   virtual void incrementTime() { this->current_time++; }
 
   double current_time = 0;
+
+  /**
+   * @brief the exact number of current particles, updated accordingly
+   * @return the current count of particles left in the simulation
+   */
+  [[nodiscard]] virtual size_t getParticleCount() = 0;
+
+  /**
+   * @brief the exact number of current speical particles, updated accordingly
+   * @return the current count of special particles left in the simulation
+   */
+  [[nodiscard]] virtual size_t getSpecialParticleCount() = 0;
+
+
+  /**
+   * @brief returns the domain of the container
+   * @return the domain of the container
+   */
+  virtual ivec3 getDomain() = 0;
 };

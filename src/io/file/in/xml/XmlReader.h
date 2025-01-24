@@ -58,6 +58,21 @@ class XmlReader {
 };
 
 /**
+ * @brief validates that the number of bins are correct and not smaller than 1 and the output time is larger than 0
+ */
+inline void validateStatisticsInput(const StatisticsConfig& stats) {
+  if (stats.x_bins < 1 || stats.y_bins < 1) {
+    SpdWrapper::get()->error("Number of x-bins ({}) or y-bins ({}) is too small", stats.x_bins, stats.y_bins);
+    throw std::runtime_error("Number of x-bins or y-bins is too small");
+  }
+
+  if (stats.output_interval < 1) {
+    SpdWrapper::get()->error("Output interval for the statistics is too small ({})", stats.output_interval);
+    throw std::runtime_error("Output interval for the statistics is too small");
+  }
+}
+
+/**
  * @brief ensures the input files are valid (not empty, extension, path)
  * @param path the path pointing to the file
  * @param extension the desired file extension
