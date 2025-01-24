@@ -67,7 +67,7 @@ class Particle final {
   /**
    * neighbouring cells for the membranes
    */
-  std::vector<std::pair<bool, std::weak_ptr<Particle>>> neighbours;
+  std::vector<std::pair<bool, std::shared_ptr<Particle>>> neighbours;
 
  public:
   explicit Particle(int type = 0);
@@ -87,9 +87,10 @@ class Particle final {
                     const std::array<double, 3> &f_arg,
                     const std::array<double, 3> &old_f_arg, double m_arg,
                     int type_arg, double epsilon_arg, double sigma_arg);
-
-  Particle()
-      : neighbours(std::vector<std::pair<bool, std::weak_ptr<Particle>>>()) {}
+  // ambiguous overload?
+  // Particle()
+  //    : neighbours(std::vector<std::pair<bool, std::shared_ptr<Particle>>>())
+  //    {}
 
   ~Particle();
 
@@ -109,7 +110,7 @@ class Particle final {
 
   [[nodiscard]] double getSigma() const;
 
-  [[nodiscard]] const std::vector<std::pair<bool, std::weak_ptr<Particle>>> &
+  [[nodiscard]] const std::vector<std::pair<bool, std::shared_ptr<Particle>>> &
   getNeighbours() const;
 
   void setF(const std::array<double, 3> &F);
@@ -124,7 +125,7 @@ class Particle final {
 
   void setSigma(const double &sigma);
 
-  void pushBackNeighbour(bool diag, Particle &particle);
+  void pushBackNeighbour(bool diag, const std::shared_ptr<Particle> &particle);
 
   void updateForceInTime();
 

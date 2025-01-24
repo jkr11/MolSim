@@ -35,7 +35,7 @@
         <force>
             <LennardJones/>
             <SingularGravity>
-                <g>-12.44</g>
+                <g>-0.001</g>
                 <axis>2</axis>
             </SingularGravity>
             <HarmonicForce>
@@ -85,7 +85,7 @@
             <corner>
                 <x>15</x>
                 <y>15</y>
-                <z>1.5</z>
+                <z>15</z>
             </corner>
             <dimensions>
                 <x>50</x>

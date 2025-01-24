@@ -5,6 +5,7 @@
 #include "LennardJonesCutoff.h"
 
 #include "utils/ArrayUtils.h"
+
 dvec3 LennardJonesCutoff::directionalForce(Particle& p1, Particle& p2) const {
   const dvec3 rv = p2.getX() - p1.getX();
   const double r = ArrayUtils::L2Norm(rv);

@@ -64,8 +64,13 @@ void MembraneGenerator::generate(std::vector<Particle> &particles) {
         std::array<double, 3> V =
             initialVelocity +
             maxwellBoltzmannDistributedVelocity(mv, twoD ? 2 : 3);
-        particles.emplace_back(position, V, m, epsilon, sigma, type);
-        // SpdWrapper::get()->info("{}, {}, {}", i, j, k);
+        // So we cant directly emplace here beceause for molecules we need
+        // ownership of the neighbour and therefore the particle later on
+        Particle particle(position, V, m, epsilon, sigma, type);
+        // particles.emplace_back(position, V, m, epsilon, sigma, type);
+        // and then we transfer ownership to the particles vector
+        particles.push_back(std::move(particle));
+        //  SpdWrapper::get()->info("{}, {}, {}", i, j, k);
         for (ivec3 vec : indeces) {
           if (ivec3{i, j, k} == vec) {
             SpdWrapper::get()->info("{}, {}, {} matched index {}", i, j, k,
@@ -76,8 +81,13 @@ void MembraneGenerator::generate(std::vector<Particle> &particles) {
       }
     }
   }
-#define MEM
-#ifdef MEM
+
+  // Create shared_ptr for each particle for ownershipp
+  // std::vector<std::shared_ptr<Particle>> shared_particles;
+  // for (auto &particle : particles) {
+  //  shared_particles.push_back(std::make_shared<Particle>(particle));
+  // }
+
   for (int i = 0; i < dimensions[0]; i++) {
     for (int j = 0; j < dimensions[1]; j++) {
       for (int k = 0; k < dimensions[2]; k++) {
@@ -101,8 +111,9 @@ void MembraneGenerator::generate(std::vector<Particle> &particles) {
                 const long neighborIndex = ni * dimensions[1] * dimensions[2] +
                                            nj * dimensions[2] + nk;
                 const bool isDiagonal = (di != 0) + (dj != 0) + (dk != 0) > 1;
+                const auto &neighbor_particle = particles[neighborIndex];
                 particles[currentIndex].pushBackNeighbour(
-                    isDiagonal, particles[neighborIndex]);
+                    isDiagonal, std::make_shared<Particle>(neighbor_particle));
               }
             }
           }
@@ -110,9 +121,19 @@ void MembraneGenerator::generate(std::vector<Particle> &particles) {
       }
     }
   }
-#endif
-
   DEBUG_PRINT("particles: " + std::to_string(particles.size()));
+
+  for (Particle &particle : particles) {
+    SpdWrapper::get()->info("Number of neighbours {}",
+                            particle.getNeighbours().size());
+    for (auto &n : particle.getNeighbours()) {
+      if (!n.second) {
+        SpdWrapper::get()->info("Expired pointer ---------");
+      } else {
+        SpdWrapper::get()->info("+++++++++++++++++++++++++++");
+      }
+    }
+  }
 }
 
 std::vector<int> MembraneGenerator::getIndeces() const { return ids; }

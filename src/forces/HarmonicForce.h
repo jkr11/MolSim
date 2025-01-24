@@ -8,14 +8,16 @@
 
 #include "SingularForce.h"
 
-class HarmonicForce : public SingularForce {
+class HarmonicForce final : public SingularForce {
  private:
   double k{};
   double r_0{};
-  double sr_0 = std::sqrt(2) * r_0;
+  double sr_0{};
 
  public:
-  explicit HarmonicForce(const double k, const double r_0) : k(k), r_0(r_0) {}
+  explicit HarmonicForce(const double k, const double r_0) : k(k), r_0(r_0) {
+    sr_0 = std::sqrt(2) * r_0;
+  }
 
   [[nodiscard]] dvec3 applyForce(const Particle& p) const override;
 };
