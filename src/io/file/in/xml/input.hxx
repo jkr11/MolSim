@@ -255,6 +255,7 @@ class BoundaryConfigType;
 class ForceType;
 class GravityType;
 class LennardJonesForce;
+class TruncatedLennardJonesForceType;
 class SingularGravityType;
 class HarmonicForceType;
 class IndexForceType;
@@ -1513,6 +1514,25 @@ class ForceType : public ::xml_schema::type {
 
   void IndexForce(::std::auto_ptr<IndexForce_type> p);
 
+  // TruncatedLennardJonesForce
+  //
+  typedef ::TruncatedLennardJonesForceType TruncatedLennardJonesForce_type;
+  typedef ::xsd::cxx::tree::optional<TruncatedLennardJonesForce_type>
+      TruncatedLennardJonesForce_optional;
+  typedef ::xsd::cxx::tree::traits<TruncatedLennardJonesForce_type, char>
+      TruncatedLennardJonesForce_traits;
+
+  const TruncatedLennardJonesForce_optional& TruncatedLennardJonesForce() const;
+
+  TruncatedLennardJonesForce_optional& TruncatedLennardJonesForce();
+
+  void TruncatedLennardJonesForce(const TruncatedLennardJonesForce_type& x);
+
+  void TruncatedLennardJonesForce(const TruncatedLennardJonesForce_optional& x);
+
+  void TruncatedLennardJonesForce(
+      ::std::auto_ptr<TruncatedLennardJonesForce_type> p);
+
   // Constructors.
   //
   ForceType();
@@ -1541,6 +1561,7 @@ class ForceType : public ::xml_schema::type {
   SingularGravity_optional SingularGravity_;
   HarmonicForce_optional HarmonicForce_;
   IndexForce_optional IndexForce_;
+  TruncatedLennardJonesForce_optional TruncatedLennardJonesForce_;
 };
 
 class GravityType : public ::xml_schema::type {
@@ -1589,6 +1610,35 @@ class LennardJonesForce : public ::xml_schema::type {
                                     ::xml_schema::container* c = 0) const;
 
   virtual ~LennardJonesForce();
+};
+
+class TruncatedLennardJonesForceType : public ::xml_schema::type {
+ public:
+  // Constructors.
+  //
+  TruncatedLennardJonesForceType();
+
+  TruncatedLennardJonesForceType(const ::xercesc::DOMElement& e,
+                                 ::xml_schema::flags f = 0,
+                                 ::xml_schema::container* c = 0);
+
+  TruncatedLennardJonesForceType(const ::xercesc::DOMAttr& a,
+                                 ::xml_schema::flags f = 0,
+                                 ::xml_schema::container* c = 0);
+
+  TruncatedLennardJonesForceType(const ::std::string& s,
+                                 const ::xercesc::DOMElement* e,
+                                 ::xml_schema::flags f = 0,
+                                 ::xml_schema::container* c = 0);
+
+  TruncatedLennardJonesForceType(const TruncatedLennardJonesForceType& x,
+                                 ::xml_schema::flags f = 0,
+                                 ::xml_schema::container* c = 0);
+
+  virtual TruncatedLennardJonesForceType* _clone(
+      ::xml_schema::flags f = 0, ::xml_schema::container* c = 0) const;
+
+  virtual ~TruncatedLennardJonesForceType();
 };
 
 class SingularGravityType : public ::xml_schema::type {
@@ -2296,6 +2346,13 @@ void operator<<(::xercesc::DOMElement&, const LennardJonesForce&);
 void operator<<(::xercesc::DOMAttr&, const LennardJonesForce&);
 
 void operator<<(::xml_schema::list_stream&, const LennardJonesForce&);
+
+void operator<<(::xercesc::DOMElement&, const TruncatedLennardJonesForceType&);
+
+void operator<<(::xercesc::DOMAttr&, const TruncatedLennardJonesForceType&);
+
+void operator<<(::xml_schema::list_stream&,
+                const TruncatedLennardJonesForceType&);
 
 void operator<<(::xercesc::DOMElement&, const SingularGravityType&);
 

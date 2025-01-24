@@ -55,6 +55,8 @@ struct HarmonicForceConfig {
 
 struct LennardJonesConfig {};
 
+struct TruncatedLennardJonesConfig {};
+
 struct GravityConfig {};
 
 /**
@@ -84,7 +86,8 @@ struct StatisticsConfig {
 struct Arguments {
   using SingularForceTypes =
       std::variant<SingularGravityConfig, HarmonicForceConfig>;
-  using InteractiveForceTypes = std::variant<LennardJonesConfig, GravityConfig>;
+  using InteractiveForceTypes = std::variant<LennardJonesConfig, GravityConfig,
+                                             TruncatedLennardJonesConfig>;
   double t_end;
   double delta_t;
   ThermostatConfig thermostat_config;

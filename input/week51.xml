@@ -33,7 +33,7 @@
             </linkedCells>
         </container>
         <force>
-            <LennardJones/>
+            <TruncatedLennardJonesForce/>
             <SingularGravity>
                 <g>-0.001</g>
                 <axis>2</axis>

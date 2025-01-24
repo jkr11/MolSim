@@ -13,8 +13,8 @@ add_library(MolSimLib
         ${MY_SRC}
         forces/HarmonicForce.cpp
         forces/HarmonicForce.h
-        forces/LennardJonesCutoff.cpp
-        forces/LennardJonesCutoff.h
+        forces/TruncatedLennardJones.cpp
+        forces/TruncatedLennardJones.h
         forces/IndexForce.cpp
         forces/IndexForce.h
 )

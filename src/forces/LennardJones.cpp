@@ -9,9 +9,6 @@
 dvec3 LennardJones::directionalForce(Particle& p1, Particle& p2) const {
   const dvec3 r = p2.getX() - p1.getX();
   const double rsquared = r[0] * r[0] + r[1] * r[1] + r[2] * r[2];
-  if (rsquared > sigma * 1.1225) {
-    return {0, 0, 0};  // TODO remove
-  }
   const double sigmasquareddivrsquared =
       std::pow(p1.getSigma() + p2.getSigma(), 2) / (4 * rsquared);
   const double epsilon = std::sqrt(p1.getEpsilon() * p2.getEpsilon());

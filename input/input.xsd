@@ -159,6 +159,7 @@
             <xs:element name="SingularGravity" type="SingularGravityType" minOccurs="0"/>
             <xs:element name="HarmonicForce" type="HarmonicForceType" minOccurs="0"/>
             <xs:element name="IndexForce" type="IndexForceType" minOccurs="0"/>
+            <xs:element name="TruncatedLennardJonesForce" type="TruncatedLennardJonesForceType" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -166,6 +167,9 @@
     </xs:complexType>
 
     <xs:complexType name="LennardJonesForce">
+    </xs:complexType>
+
+    <xs:complexType name="TruncatedLennardJonesForceType">
     </xs:complexType>
 
     <xs:complexType name="SingularGravityType">

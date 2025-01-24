@@ -10,6 +10,7 @@
 #include "forces/IndexForce.h"
 #include "forces/LennardJones.h"
 #include "forces/SingularGravity.h"
+#include "forces/TruncatedLennardJones.h"
 #include "io/CLArgumentParser.h"
 #include "io/file/in/xml/XmlReader.h"
 #include "io/file/out/OutputHelper.h"
@@ -102,7 +103,11 @@ int main(const int argc, char* argv[]) {
       interactive_forces.push_back(std::make_unique<LennardJones>());
     } else if (std::holds_alternative<GravityConfig>(config)) {
       interactive_forces.push_back(std::make_unique<Gravity>());
-    } else {
+    } else if (std::holds_alternative<TruncatedLennardJonesConfig>(config)) {
+      interactive_forces.push_back(std::make_unique<TruncatedLennardJones>());
+    }
+
+    else {
       SpdWrapper::get()->error("Unrecognized interactive_force_type");
     }
   }
@@ -110,9 +115,9 @@ int main(const int argc, char* argv[]) {
   std::vector<std::unique_ptr<SingularForce>> singular_forces;
   for (auto config : arguments.singular_force_types) {
     if (std::holds_alternative<SingularGravityConfig>(config)) {
-      const auto& [g,a] = std::get<SingularGravityConfig>(config);
+      const auto& [g, a] = std::get<SingularGravityConfig>(config);
       singular_forces.push_back(
-          std::move(std::make_unique<SingularGravity>(g,a)));
+          std::move(std::make_unique<SingularGravity>(g, a)));
     } else if (std::holds_alternative<HarmonicForceConfig>(config)) {
       const auto& [r, k] = std::get<HarmonicForceConfig>(config);
       singular_forces.push_back(
@@ -147,8 +152,10 @@ int main(const int argc, char* argv[]) {
   Statistics statistics(
       arguments.statistics_config.x_bins, arguments.statistics_config.y_bins,
       *container,
-      outputDirectory + "/" + arguments.statistics_config.density_output_location,
-      outputDirectory + "/" + arguments.statistics_config.velocity_output_location);
+      outputDirectory + "/" +
+          arguments.statistics_config.density_output_location,
+      outputDirectory + "/" +
+          arguments.statistics_config.velocity_output_location);
 
 #endif
 
@@ -156,7 +163,8 @@ int main(const int argc, char* argv[]) {
     verlet_integrator.step(*container);
     if (arguments.use_thermostat) {
       if (iteration % thermostat->n_thermostat == 0 && iteration > 0) {
-        //SpdWrapper::get()->info("Applying thermostat in iteration [{}] / time [{:.4}/{}]", iteration, current_time, arguments.t_end);
+        // SpdWrapper::get()->info("Applying thermostat in iteration [{}] / time
+        // [{:.4}/{}]", iteration, current_time, arguments.t_end);
         thermostat->setTemperature(*container);
       }
     }
@@ -202,8 +210,8 @@ int main(const int argc, char* argv[]) {
             std::chrono::duration_cast<std::chrono::microseconds>(
                 current_time_hrc - time_of_last_mups)
                 .count();
-        double mmups = particle_updates *
-                       (1.0 / static_cast<double>(microseconds));
+        double mmups =
+            particle_updates * (1.0 / static_cast<double>(microseconds));
         time_of_last_mups = current_time_hrc;
         particle_updates = 0;
 

@@ -816,10 +816,38 @@ void ForceType::IndexForce(::std::auto_ptr<IndexForce_type> x) {
   this->IndexForce_.set(x);
 }
 
+const ForceType::TruncatedLennardJonesForce_optional&
+ForceType::TruncatedLennardJonesForce() const {
+  return this->TruncatedLennardJonesForce_;
+}
+
+ForceType::TruncatedLennardJonesForce_optional&
+ForceType::TruncatedLennardJonesForce() {
+  return this->TruncatedLennardJonesForce_;
+}
+
+void ForceType::TruncatedLennardJonesForce(
+    const TruncatedLennardJonesForce_type& x) {
+  this->TruncatedLennardJonesForce_.set(x);
+}
+
+void ForceType::TruncatedLennardJonesForce(
+    const TruncatedLennardJonesForce_optional& x) {
+  this->TruncatedLennardJonesForce_ = x;
+}
+
+void ForceType::TruncatedLennardJonesForce(
+    ::std::auto_ptr<TruncatedLennardJonesForce_type> x) {
+  this->TruncatedLennardJonesForce_.set(x);
+}
+
 // GravityType
 //
 
 // LennardJonesForce
+//
+
+// TruncatedLennardJonesForceType
 //
 
 // SingularGravityType
@@ -2724,7 +2752,8 @@ ForceType::ForceType()
       LennardJones_(this),
       SingularGravity_(this),
       HarmonicForce_(this),
-      IndexForce_(this) {}
+      IndexForce_(this),
+      TruncatedLennardJonesForce_(this) {}
 
 ForceType::ForceType(const ForceType& x, ::xml_schema::flags f,
                      ::xml_schema::container* c)
@@ -2733,7 +2762,8 @@ ForceType::ForceType(const ForceType& x, ::xml_schema::flags f,
       LennardJones_(x.LennardJones_, f, this),
       SingularGravity_(x.SingularGravity_, f, this),
       HarmonicForce_(x.HarmonicForce_, f, this),
-      IndexForce_(x.IndexForce_, f, this) {}
+      IndexForce_(x.IndexForce_, f, this),
+      TruncatedLennardJonesForce_(x.TruncatedLennardJonesForce_, f, this) {}
 
 ForceType::ForceType(const ::xercesc::DOMElement& e, ::xml_schema::flags f,
                      ::xml_schema::container* c)
@@ -2742,7 +2772,8 @@ ForceType::ForceType(const ::xercesc::DOMElement& e, ::xml_schema::flags f,
       LennardJones_(this),
       SingularGravity_(this),
       HarmonicForce_(this),
-      IndexForce_(this) {
+      IndexForce_(this),
+      TruncatedLennardJonesForce_(this) {
   if ((f & ::xml_schema::flags::base) == 0) {
     ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
     this->parse(p, f);
@@ -2814,6 +2845,18 @@ void ForceType::parse(::xsd::cxx::xml::dom::parser<char>& p,
       }
     }
 
+    // TruncatedLennardJonesForce
+    //
+    if (n.name() == "TruncatedLennardJonesForce" && n.namespace_().empty()) {
+      ::std::auto_ptr<TruncatedLennardJonesForce_type> r(
+          TruncatedLennardJonesForce_traits::create(i, f, this));
+
+      if (!this->TruncatedLennardJonesForce_) {
+        this->TruncatedLennardJonesForce_.set(r);
+        continue;
+      }
+    }
+
     break;
   }
 }
@@ -2831,6 +2874,7 @@ ForceType& ForceType::operator=(const ForceType& x) {
     this->SingularGravity_ = x.SingularGravity_;
     this->HarmonicForce_ = x.HarmonicForce_;
     this->IndexForce_ = x.IndexForce_;
+    this->TruncatedLennardJonesForce_ = x.TruncatedLennardJonesForce_;
   }
 
   return *this;
@@ -2898,6 +2942,39 @@ LennardJonesForce* LennardJonesForce::_clone(::xml_schema::flags f,
 }
 
 LennardJonesForce::~LennardJonesForce() {}
+
+// TruncatedLennardJonesForceType
+//
+
+TruncatedLennardJonesForceType::TruncatedLennardJonesForceType()
+    : ::xml_schema::type() {}
+
+TruncatedLennardJonesForceType::TruncatedLennardJonesForceType(
+    const TruncatedLennardJonesForceType& x, ::xml_schema::flags f,
+    ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c) {}
+
+TruncatedLennardJonesForceType::TruncatedLennardJonesForceType(
+    const ::xercesc::DOMElement& e, ::xml_schema::flags f,
+    ::xml_schema::container* c)
+    : ::xml_schema::type(e, f, c) {}
+
+TruncatedLennardJonesForceType::TruncatedLennardJonesForceType(
+    const ::xercesc::DOMAttr& a, ::xml_schema::flags f,
+    ::xml_schema::container* c)
+    : ::xml_schema::type(a, f, c) {}
+
+TruncatedLennardJonesForceType::TruncatedLennardJonesForceType(
+    const ::std::string& s, const ::xercesc::DOMElement* e,
+    ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::type(s, e, f, c) {}
+
+TruncatedLennardJonesForceType* TruncatedLennardJonesForceType::_clone(
+    ::xml_schema::flags f, ::xml_schema::container* c) const {
+  return new class TruncatedLennardJonesForceType(*this, f, c);
+}
+
+TruncatedLennardJonesForceType::~TruncatedLennardJonesForceType() {}
 
 // SingularGravityType
 //
@@ -4465,6 +4542,15 @@ void operator<<(::xercesc::DOMElement& e, const ForceType& i) {
 
     s << *i.IndexForce();
   }
+
+  // TruncatedLennardJonesForce
+  //
+  if (i.TruncatedLennardJonesForce()) {
+    ::xercesc::DOMElement& s(
+        ::xsd::cxx::xml::dom::create_element("TruncatedLennardJonesForce", e));
+
+    s << *i.TruncatedLennardJonesForce();
+  }
 }
 
 void operator<<(::xercesc::DOMElement& e, const GravityType& i) {
@@ -4482,6 +4568,16 @@ void operator<<(::xercesc::DOMElement& e, const LennardJonesForce& i) {
 void operator<<(::xercesc::DOMAttr&, const LennardJonesForce&) {}
 
 void operator<<(::xml_schema::list_stream&, const LennardJonesForce&) {}
+
+void operator<<(::xercesc::DOMElement& e,
+                const TruncatedLennardJonesForceType& i) {
+  e << static_cast<const ::xml_schema::type&>(i);
+}
+
+void operator<<(::xercesc::DOMAttr&, const TruncatedLennardJonesForceType&) {}
+
+void operator<<(::xml_schema::list_stream&,
+                const TruncatedLennardJonesForceType&) {}
 
 void operator<<(::xercesc::DOMElement& e, const SingularGravityType& i) {
   e << static_cast<const ::xml_schema::type&>(i);
