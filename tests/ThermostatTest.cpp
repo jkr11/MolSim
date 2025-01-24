@@ -58,9 +58,9 @@ TEST(Thermostat, holding) {
   std::vector<std::unique_ptr<SingularForce>> singular_forces;
   for (auto config : arguments.singular_force_types) {
     if (std::holds_alternative<SingularGravityConfig>(config)) {
-      const auto& [g] = std::get<SingularGravityConfig>(config);
+      const auto& [g, a] = std::get<SingularGravityConfig>(config);
       singular_forces.push_back(
-          std::move(std::make_unique<SingularGravity>(g)));
+          std::move(std::make_unique<SingularGravity>(g, a)));
     } else {
       SpdWrapper::get()->error("Unrecognized singular force");
     }
@@ -142,9 +142,9 @@ TEST(Thermostat, cooling) {
   std::vector<std::unique_ptr<SingularForce>> singular_forces;
   for (auto config : arguments.singular_force_types) {
     if (std::holds_alternative<SingularGravityConfig>(config)) {
-      const auto& [g] = std::get<SingularGravityConfig>(config);
+      const auto& [g, a] = std::get<SingularGravityConfig>(config);
       singular_forces.push_back(
-          std::move(std::make_unique<SingularGravity>(g)));
+          std::move(std::make_unique<SingularGravity>(g, a)));
     } else {
       SpdWrapper::get()->error("Unrecognized singular force");
     }
@@ -217,9 +217,9 @@ TEST(Thermostat, heating) {
   std::vector<std::unique_ptr<SingularForce>> singular_forces;
   for (auto config : arguments.singular_force_types) {
     if (std::holds_alternative<SingularGravityConfig>(config)) {
-      const auto& [g] = std::get<SingularGravityConfig>(config);
+      const auto& [g, a] = std::get<SingularGravityConfig>(config);
       singular_forces.push_back(
-          std::move(std::make_unique<SingularGravity>(g)));
+          std::move(std::make_unique<SingularGravity>(g, a)));
     } else {
       SpdWrapper::get()->error("Unrecognized singular force");
     }
@@ -295,9 +295,9 @@ TEST(Thermostat, gradual) {
   std::vector<std::unique_ptr<SingularForce>> singular_forces;
   for (auto config : arguments.singular_force_types) {
     if (std::holds_alternative<SingularGravityConfig>(config)) {
-      const auto& [g] = std::get<SingularGravityConfig>(config);
+      const auto& [g, a] = std::get<SingularGravityConfig>(config);
       singular_forces.push_back(
-          std::move(std::make_unique<SingularGravity>(g)));
+          std::move(std::make_unique<SingularGravity>(g, a)));
     } else {
       SpdWrapper::get()->error("Unrecognized singular force");
     }

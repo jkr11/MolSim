@@ -3,14 +3,12 @@
 #include <fstream>
 
 #include "../src/io/file/in/xml/XmlReader.h"
-#if 1
-#include "../src/io/file/in/xml/input.cxx"  // It wants this idk why
-#include "../src/io/file/in/xml/input.hxx"
 
+#include "../src/io/file/in/xml/input.hxx"
+#include "io/file/out/checkpoint-schema.cxx"
+#include "io/file/out/checkpoint-schema.hxx"
 #include "spdlog/fmt/bundled/os.h"
 #include "testUtil.h"
-#include "io/file/out/checkpoint-schema.hxx"
-#include "io/file/out/checkpoint-schema.cxx"
 
 Arguments arguments = {
     .t_end = 5,
@@ -44,32 +42,36 @@ TEST(XmlReader, failOnNonXml) {
 
 /**
  *  @brief checks if cuboids and DirectSum containers are read correctly
- *  this test will only pass if it is executed via our build script due to hardcoded file paths
+ *  this test will only pass if it is executed via our build script due to
+ * hardcoded file paths
  */
 TEST(XmlReader, testCuboid) {
-
   std::vector<Particle> particles;
   XmlReader::read(particles, "../../../tests/test_cuboid.xml", arguments);
 
   EXPECT_EQ(particles.size(), 20);
   EXPECT_EQ(arguments.t_end, 15);
   EXPECT_EQ(arguments.delta_t, 0.015);
-  EXPECT_EQ(arguments.force_type, Arguments::LennardJones);
+  EXPECT_TRUE(std::holds_alternative<LennardJonesConfig>(
+      arguments.interactive_force_types[0]));
   EXPECT_TRUE(
       std::holds_alternative<DirectSumConfig>(arguments.container_data));
 }
 
 /**
  * @brief checks if both cuboids and spheroids are correct, LinkedCellsConfig
- * this test will only pass if it is executed via our build script due to hardcoded file paths
+ * this test will only pass if it is executed via our build script due to
+ * hardcoded file paths
  */
 TEST(XmlReader, testCuboidSpheroidLinkedCells) {
   std::vector<Particle> particles;
-  XmlReader::read(particles, "../../../tests/test_cuboid_spheroid.xml", arguments);
+  XmlReader::read(particles, "../../../tests/test_cuboid_spheroid.xml",
+                  arguments);
   EXPECT_EQ(particles.size(), 1257);
   EXPECT_EQ(arguments.t_end, 15);
   EXPECT_EQ(arguments.delta_t, 0.015);
-  EXPECT_EQ(arguments.force_type, Arguments::LennardJones);
+  EXPECT_TRUE(std::holds_alternative<LennardJonesConfig>(
+      arguments.interactive_force_types[0]));
   EXPECT_TRUE(
       std::holds_alternative<LinkedCellsConfig>(arguments.container_data));
   const auto &config = std::get<LinkedCellsConfig>(arguments.container_data);
@@ -83,4 +85,3 @@ TEST(XmlReader, testCuboidSpheroidLinkedCells) {
   EXPECT_EQ(config.boundary_config.z_high, LinkedCellsConfig::Outflow);
   EXPECT_EQ(config.boundary_config.z_low, LinkedCellsConfig::Outflow);
 }
-#endif
