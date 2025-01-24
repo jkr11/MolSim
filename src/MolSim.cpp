@@ -85,7 +85,7 @@ int main(const int argc, char* argv[]) {
     SpdWrapper::get()->error("Unrecognized container type");
     throw std::runtime_error("Unrecognized container type");
   }
-  std::cout << particles.size() << " particles" << std::endl;
+  SpdWrapper::get()->info("{} particles", particles.size());
   std::vector<std::unique_ptr<InteractiveForce>> interactive_forces;
   for (auto& config : arguments.interactive_force_types) {
     if (std::holds_alternative<LennardJonesConfig>(config)) {
