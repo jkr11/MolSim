@@ -130,7 +130,6 @@ int main(const int argc, char* argv[]) {
   double next_output_time = 0;
   spdlog::stopwatch stopwatch;
   auto time_of_last_mups = start_time;
-  auto iteration_of_last_mups = 0;
   Statistics statistics(
       arguments.statistics_config.x_bins, arguments.statistics_config.y_bins,
       *container,
@@ -143,7 +142,7 @@ int main(const int argc, char* argv[]) {
     verlet_integrator.step(*container);
     if (arguments.use_thermostat) {
       if (iteration % thermostat->n_thermostat == 0 && iteration > 0) {
-        SpdWrapper::get()->info("Applying thermostat in iteration [{}] / time [{:.4}/{}]", iteration, current_time, arguments.t_end);
+        //SpdWrapper::get()->info("Applying thermostat in iteration [{}] / time [{:.4}/{}]", iteration, current_time, arguments.t_end);
         thermostat->setTemperature(*container);
       }
     }
@@ -191,7 +190,6 @@ int main(const int argc, char* argv[]) {
                 .count();
         double mmups = particle_updates *
                        (1.0 / static_cast<double>(microseconds));
-        iteration_of_last_mups = iteration;
         time_of_last_mups = current_time_hrc;
         particle_updates = 0;
 
