@@ -15,7 +15,6 @@
 Arguments arguments = {
     .t_end = 5,
     .delta_t = 0.0002,
-    .force_type = Arguments::LennardJones,
     .container_data =
         LinkedCellsConfig{.domain = {100, 100, 100},
                           .cutoff_radius = 3.0,

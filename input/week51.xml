@@ -34,7 +34,10 @@
         </container>
         <force>
             <LennardJones/>
-            <SingularGravity g="-12.44" axis="2"/>
+            <SingularGravity>
+                <g>-12.44</g>
+                <axis>2</axis>
+            </SingularGravity>
             <HarmonicForce>
                 <r_0>2.2</r_0>
                 <k>300</k>

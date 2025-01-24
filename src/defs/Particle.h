@@ -8,6 +8,7 @@
 #pragma once
 
 #include <array>
+#include <memory>
 #include <string>
 
 #include "defs/types.h"
@@ -66,7 +67,7 @@ class Particle final {
   /**
    * neighbouring cells for the membranes
    */
-  std::vector<std::pair<bool, Particle>> neighbours{};
+  std::vector<std::pair<bool, std::weak_ptr<Particle>>> neighbours;
 
  public:
   explicit Particle(int type = 0);
@@ -79,11 +80,16 @@ class Particle final {
       const std::array<double, 3> &x_arg, const std::array<double, 3> &v_arg,
       double m_arg, double _epsilon, double _sigma, int type = 0);
 
+  Particle(Particle &&other) noexcept;  // Move constructor? cancer
+
   explicit Particle(const std::array<double, 3> &x_arg,
                     const std::array<double, 3> &v_arg,
                     const std::array<double, 3> &f_arg,
                     const std::array<double, 3> &old_f_arg, double m_arg,
                     int type_arg, double epsilon_arg, double sigma_arg);
+
+  Particle()
+      : neighbours(std::vector<std::pair<bool, std::weak_ptr<Particle>>>()) {}
 
   ~Particle();
 
@@ -103,8 +109,8 @@ class Particle final {
 
   [[nodiscard]] double getSigma() const;
 
-  [[nodiscard]] const std::vector<std::pair<bool, Particle>> &getNeighbours()
-      const;
+  [[nodiscard]] const std::vector<std::pair<bool, std::weak_ptr<Particle>>> &
+  getNeighbours() const;
 
   void setF(const std::array<double, 3> &F);
 
@@ -137,6 +143,40 @@ class Particle final {
   bool operator==(const Particle &other) const;
 
   [[nodiscard]] std::string toString() const;
+
+  Particle &operator=(const Particle &other) {
+    if (this != &other) {
+      x = other.x;
+      v = other.v;
+      f = other.f;
+      old_f = other.old_f;
+      m = other.m;
+      type = other.type;
+      id = other.id;
+      epsilon = other.epsilon;
+      sigma = other.sigma;
+      neighbours = other.neighbours;  // Shallow copy of shared_ptr
+    }
+    return *this;
+  }
+
+  // Move assignment operator
+  Particle &operator=(Particle &&other) noexcept {
+    if (this != &other) {
+      x = other.x;
+      v = other.v;
+      f = other.f;
+      old_f = other.old_f;
+      m = other.m;
+      type = other.type;
+      id = other.id;
+      epsilon = other.epsilon;
+      sigma = other.sigma;
+      neighbours =
+          std::move(other.neighbours);  // Transfer ownership of shared_ptr
+    }
+    return *this;
+  }
 };
 
 std::ostream &operator<<(std::ostream &stream, const Particle &p);

@@ -20,18 +20,22 @@ Particle::Particle(int type_arg) {
   old_f = {0., 0., 0.};
 }
 
-Particle::Particle(const Particle &other)
-    /*    : x(other.x),
-          v(other.v),
-          f(other.f),
-          old_f(other.old_f),
-          m(other.m),
-          type(other.type),
-          epsilon(other.epsilon),
-          sigma(other.sigma),
-          id(other.id),
-          neighbours(other.neighbours) {} */
-    = default;
+Particle::Particle(const Particle &other) = default;
+
+// Move constructor?
+Particle::Particle(Particle &&other) noexcept
+    : x(other.x),
+      v(other.v),
+      f(other.f),
+      old_f(other.old_f),
+      m(other.m),
+      type(other.type),
+      epsilon(other.epsilon),
+      sigma(other.sigma),
+      id(other.id),
+      neighbours(
+          std::move(other.neighbours)) {  // Transfer ownership of shared_ptr
+}
 
 Particle::Particle(const std::array<double, 3> &x_arg,
                    const std::array<double, 3> &v_arg, const double m_arg,
@@ -80,7 +84,8 @@ double Particle::getEpsilon() const { return epsilon; }
 
 double Particle::getSigma() const { return sigma; }
 
-const std::vector<std::pair<bool, Particle>> &Particle::getNeighbours() const {
+const std::vector<std::pair<bool, std::weak_ptr<Particle>>> &
+Particle::getNeighbours() const {
   return neighbours;
 }
 
@@ -97,7 +102,8 @@ void Particle::setEpsilon(const double &_epsilon) { epsilon = _epsilon; }
 void Particle::setSigma(const double &_sigma) { sigma = _sigma; }
 
 void Particle::pushBackNeighbour(bool diag, Particle &particle) {
-  neighbours.emplace_back(diag, particle);
+  auto nptr = std::make_shared<Particle>(particle);
+  neighbours.emplace_back(diag, nptr);
 }
 
 void Particle::addV(const dvec3 &V) { v = v + V; }

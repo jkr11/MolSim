@@ -1513,36 +1513,30 @@ class SingularGravityType : public ::xml_schema::type {
   // g
   //
   typedef ::xml_schema::decimal g_type;
-  typedef ::xsd::cxx::tree::optional<g_type> g_optional;
   typedef ::xsd::cxx::tree::traits<g_type, char,
                                    ::xsd::cxx::tree::schema_type::decimal>
       g_traits;
 
-  const g_optional& g() const;
+  const g_type& g() const;
 
-  g_optional& g();
+  g_type& g();
 
   void g(const g_type& x);
-
-  void g(const g_optional& x);
 
   // axis
   //
   typedef ::xml_schema::int_ axis_type;
-  typedef ::xsd::cxx::tree::optional<axis_type> axis_optional;
   typedef ::xsd::cxx::tree::traits<axis_type, char> axis_traits;
 
-  const axis_optional& axis() const;
+  const axis_type& axis() const;
 
-  axis_optional& axis();
+  axis_type& axis();
 
   void axis(const axis_type& x);
 
-  void axis(const axis_optional& x);
-
   // Constructors.
   //
-  SingularGravityType();
+  SingularGravityType(const g_type&, const axis_type&);
 
   SingularGravityType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
                       ::xml_schema::container* c = 0);
@@ -1563,8 +1557,8 @@ class SingularGravityType : public ::xml_schema::type {
   void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
 
  protected:
-  g_optional g_;
-  axis_optional axis_;
+  ::xsd::cxx::tree::one<g_type> g_;
+  ::xsd::cxx::tree::one<axis_type> axis_;
 };
 
 class HarmonicForceType : public ::xml_schema::type {

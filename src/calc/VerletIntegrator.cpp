@@ -28,13 +28,15 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
   // TODO: refactor in lower iterator? maybe pass time to all? just get the
   // global var?
   particle_container.singleIterator([this](Particle& p) {
+    dvec3 f = {0, 0, 0};
     for (const auto& index_force : index_forces) {
       for (const int id : index_force->getIndeces()) {
         if (p.getId() == id) {
-          index_force->applyForce(p, current_time);
+          f = f + index_force->applyForce(p, current_time);
         }
       }
     }
+    p.addF(f);
   });
 
   particle_container.pairIterator([this](Particle& p1, Particle& p2) {

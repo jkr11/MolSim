@@ -78,8 +78,6 @@ struct Arguments {
   using InteractiveForceTypes = std::variant<LennardJonesConfig, GravityConfig>;
   double t_end;
   double delta_t;
-  enum ForceType { LennardJones, Gravity } force_type;
-  enum SingularForceType { SingularGravity } singular_force_type;
   ThermostatConfig thermostat_config;
   bool use_thermostat;
   std::variant<LinkedCellsConfig, DirectSumConfig> container_data;

@@ -19,6 +19,7 @@ class SingularGravity final : public SingularForce {
   /**
    *
    * @param g the gravitational coefficient
+   * @param axis the axis 0 - 2 x - z on which gravity acts
    */
   explicit SingularGravity(double g, int axis);
 

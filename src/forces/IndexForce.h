@@ -20,7 +20,7 @@ class IndexForce {
       : indeces(ids), time(time), force_values(force_values) {}
   IndexForce() = default;
 
-  void applyForce(Particle& p, double sim_time) const;
+  dvec3 applyForce(Particle& p, double sim_time) const;
 
   [[nodiscard]] std::vector<int> getIndeces() const { return indeces; }
 };
