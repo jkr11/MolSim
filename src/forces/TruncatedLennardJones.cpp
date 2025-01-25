@@ -8,10 +8,15 @@
 
 dvec3 TruncatedLennardJones::directionalForce(Particle& p1,
                                               Particle& p2) const {
+  for (auto [diag, ppt] : p1.getNeighbours()) {
+    if (ppt->getId() == p2.getId()) {
+      return {0, 0, 0};
+    }
+  }
   const dvec3 rv = p2.getX() - p1.getX();
   const double r = ArrayUtils::L2Norm(rv);
   const double sigma = (p1.getSigma() + p2.getSigma()) / 2;
-  if (r >= sigma * 1.1225) {
+  if (r >= sigma * 1.22462048309) {
     return {0, 0, 0};
   }
   const double epsilon = std::sqrt(p1.getEpsilon() * p2.getEpsilon());

@@ -10,7 +10,7 @@
 
 class HarmonicForce final : public SingularForce {
  private:
-  double k{};
+  int k{};
   double r_0{};
   double sr_0{};
 

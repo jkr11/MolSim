@@ -107,8 +107,9 @@ void LinkedCellsContainer::addParticle(const Particle &p) {
     SpdWrapper::get()->error("Tried to add particle out of bounds");
     exit(1);
   }
-  cells[index].emplace_back(p);
-  SpdWrapper::get()->info("Added new particle {}", cells[index].back().getId());
+  cells[index].push_back(p);
+  // SpdWrapper::get()->info("Added new particle {}",
+  // cells[index].back().getId());
 
   this->particle_count++;
 
@@ -177,7 +178,7 @@ void LinkedCellsContainer::imposeInvariant() {
         ++it;
         continue;
       }
-      SpdWrapper::get()->info("Imposing on partice with id {}", it->getId());
+      // SpdWrapper::get()->info("Imposing on partice with id {}", it->getId());
       cells[shouldBeIndex].push_back(*it);
       it = cells[index].erase(it);
     }
@@ -277,8 +278,8 @@ void LinkedCellsContainer::pairIterator(
             d[0] * d[0] + d[1] * d[1] + d[2] * d[2] > cutoff * cutoff)
           continue;
         f(cellParticles[i], cellParticles[j]);
-        //SpdWrapper::get()->info("Index pair {}/{}", cellParticles[i].getId(),
-         //                       cellParticles[j].getId());
+        // SpdWrapper::get()->info("Index pair {}/{}", cellParticles[i].getId(),
+        //                        cellParticles[j].getId());
         DEBUG_PRINT_FMT("Intra cell pair: ({}, {})", cellParticles[i].getType(),
                         cellParticles[j].getType());
       }
@@ -661,7 +662,8 @@ bool LinkedCellsContainer::isDoubleCorner(
   }
 
   if (edge_of_x_dimensions_counter < 2) {
-    // SpdWrapper::get()->info("[{}, {}, {}] is not a corner!", cell_coordinate[0],
+    // SpdWrapper::get()->info("[{}, {}, {}] is not a corner!",
+    // cell_coordinate[0],
     //                       cell_coordinate[1], cell_coordinate[2]);
     return false;
   }

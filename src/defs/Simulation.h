@@ -15,7 +15,7 @@
 struct IndexForceConfig {
   std::vector<ivec3> indeces{};
   std::vector<int> ids{};
-  double ent_time{};
+  double end_time{};
   dvec3 force_values{};
 };
 

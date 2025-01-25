@@ -3,34 +3,7 @@
             xsi:noNamespaceSchemaLocation="input.xsd">
     <metadata>
         <container>
-            <linkedCells>
-                <domain>
-                    <x>148</x>
-                    <y>148</y>
-                    <z>148</z>
-                </domain>
-                <r_cutoff>4.0</r_cutoff>
-                <boundary>
-                    <x_high>
-                        <Outflow/>
-                    </x_high>
-                    <x_low>
-                        <Outflow/>
-                    </x_low>
-                    <y_high>
-                        <Outflow/>
-                    </y_high>
-                    <y_low>
-                        <Outflow/>
-                    </y_low>
-                    <z_high>
-                        <Reflective/>
-                    </z_high>
-                    <z_low>
-                        <Reflective/>
-                    </z_low>
-                </boundary>
-            </linkedCells>
+            <directSum/>
         </container>
         <force>
             <SingularGravity>

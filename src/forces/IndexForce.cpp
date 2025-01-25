@@ -4,9 +4,15 @@
 
 #include "IndexForce.h"
 
+#include "debug/debug_print.h"
 
 // TODO: time
 // Disgusting O(n * k * l) search
 dvec3 IndexForce::applyForce(Particle &p, double sim_time) const {
-  return force_values;
+  InfoVec("Force vals", force_values);
+  if (sim_time < time) {
+    return force_values;
+  }
+
+  return {0.0, 0.0, 0.0};
 }

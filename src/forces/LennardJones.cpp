@@ -7,6 +7,7 @@
 #include "utils/SpdWrapper.h"
 
 dvec3 LennardJones::directionalForce(Particle& p1, Particle& p2) const {
+  //SpdWrapper::get()->error("huhu");
   const dvec3 r = p2.getX() - p1.getX();
   const double rsquared = r[0] * r[0] + r[1] * r[1] + r[2] * r[2];
   const double sigmasquareddivrsquared =

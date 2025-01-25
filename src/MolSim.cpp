@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "calc/VerletIntegrator.h"
+#include "debug/debug_print.h"
 #include "defs/Thermostat.h"
 #include "defs/containers/DirectSumContainer.h"
 #include "defs/containers/LinkedCellsContainer.h"
@@ -27,39 +28,7 @@ int main(const int argc, char* argv[]) {
 #ifndef BENCHMARK
   SpdWrapper::get()->info("Application started");
 #endif
-  Arguments arguments = {
-      .t_end = 5,
-      .delta_t = 0.0002,
-      .thermostat_config =
-          {
-              .T_init = 0.5,
-              .T_target = 0.5,
-              .deltaT = 0.5,
-              .n_thermostat = 1000,
-              .use_relative = false,
-          },
-      .container_data =
-          LinkedCellsConfig{.domain = {100, 100, 100},
-                            .cutoff_radius = 3.0,
-                            .boundary_config =
-                                {
-                                    .x_high = LinkedCellsConfig::Outflow,
-                                    .x_low = LinkedCellsConfig::Outflow,
-                                    .y_high = LinkedCellsConfig::Outflow,
-                                    .y_low = LinkedCellsConfig::Outflow,
-                                    .z_high = LinkedCellsConfig::Outflow,
-                                    .z_low = LinkedCellsConfig::Outflow,
-                                }},
-      .statistics_config =
-          StatisticsConfig{
-              .calc_stats = false,
-              .x_bins = 0,
-              .y_bins = 0,
-              .output_interval = 0,
-              .velocity_output_location = "",
-              .density_output_location = "",
-          },
-  };
+  Arguments arguments = {};
   auto [input_file, step_size, write_checkpoint] =
       CLArgumentParser::parse(argc, argv);
 
@@ -124,7 +93,7 @@ int main(const int argc, char* argv[]) {
     } else if (std::holds_alternative<HarmonicForceConfig>(config)) {
       const auto& [r, k] = std::get<HarmonicForceConfig>(config);
       singular_forces.push_back(
-          std::move(std::make_unique<HarmonicForce>(r, k)));
+          std::move(std::make_unique<HarmonicForce>(k, r)));
     } else {
       SpdWrapper::get()->error("Unrecognized singular force");
     }
@@ -187,7 +156,28 @@ int main(const int argc, char* argv[]) {
 #endif
 
     particle_updates += container->getParticleCount();
+    if (iteration % 100 == 0) {
+      container->singleIterator([](Particle& p) {
+        if (p.getId() == 0) {
+          InfoVec("0 Position", p.getX());
+          InfoVec("0 Velocity", p.getV());
+          InfoVec("0 Force", p.getF());
+        }
+        if (p.getId() == 823) {
+          InfoVec("823 Position", p.getX());
+          InfoVec("823 Velocity", p.getV());
+          InfoVec("823 Force", p.getF());
+        }
 
+        if (p.getId() == 874) {
+          InfoVec("874 Position", p.getX());
+          InfoVec("874 Velocity", p.getV());
+          InfoVec("874 Force", p.getF());
+          SpdWrapper::get()->info(
+              "---------------------------------------------");
+        }
+      });
+    }
 #ifndef BENCHMARK
     if (current_time >= next_output_time) {
       plotParticles(outputDirectory, iteration, writer, *container);
