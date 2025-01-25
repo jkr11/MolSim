@@ -35,9 +35,11 @@ TEST(Wall, immovable) {
   interactive_forces.push_back(std::make_unique<LennardJones>());
 
   std::vector<std::unique_ptr<SingularForce>> singular_forces;
-  singular_forces.push_back(std::make_unique<SingularGravity>(1));
+  singular_forces.push_back(std::make_unique<SingularGravity>(1,1));
 
-  VerletIntegrator v(interactive_forces, singular_forces, 0.005);
+  std::vector<std::unique_ptr<IndexForce>> index_forces;
+
+  VerletIntegrator v(interactive_forces, singular_forces, index_forces, 0.005);
   for (int i = 0; i < 3; i++) {
     v.step(container);
   }

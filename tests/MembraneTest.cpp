@@ -6,11 +6,14 @@
 #include <io/file/in/xml/input.cxx>
 #include <io/file/in/xml/input.hxx>
 
+#include "debug/debug_print.h"
 #include "defs/Generators/MembraneGenerator.h"
 #include "defs/containers/LinkedCellsContainer.h"
 #include "forces/HarmonicForce.h"
+#include "forces/InteractiveForce.h"
+#include "forces/SingularGravity.h"
+#include "forces/TruncatedLennardJones.h"
 #include "utils/ArrayUtils.h"
-
 /**
  * Tests that each particle has the correct number of neighbours for the full
  * 3x3 case
@@ -55,7 +58,7 @@ TEST(Membrane, LC3x3x3) {
   std::vector<Particle> particles;
 
   std::vector<std::unique_ptr<SingularForce>> forces;
-  forces.push_back(std::make_unique<HarmonicForce>(300, 2.2));
+  forces.push_back(std::make_unique<HarmonicForce>(3, 2.2));
 
   MembraneGenerator membrane_generator({0, 0, 0}, {3, 3, 3}, 1.1225, 1.0,
                                        {0, 0, 0}, 0.0, 5.0, 1.0, 1, false, {});
@@ -97,7 +100,6 @@ TEST(Membrane, LC3x3x3) {
   });
 }
 
-
 /**
  * Test that neighbours get correctly translated to the linkedcellscontainer
  * (Technically this is fixed by default constructor)
@@ -119,20 +121,21 @@ TEST(Membrane, LC3x3) {
   };
   std::vector<Particle> particles;
 
-  std::vector<std::unique_ptr<SingularForce>> forces;
-  forces.push_back(std::make_unique<HarmonicForce>(300, 2.2));
+  std::vector<std::unique_ptr<SingularForce>> singular_forces;
+  singular_forces.push_back(std::make_unique<SingularGravity>(-0.001, 2));
+  singular_forces.push_back(std::make_unique<HarmonicForce>(3, 2.2));
 
-  MembraneGenerator membrane_generator({0, 0, 0}, {3, 3, 1}, 1.1225, 1.0,
-                                       {0, 0, 0}, 0.0, 5.0, 1.0, 1, true, {});
+  std::vector<std::unique_ptr<InteractiveForce>> interactive_forces;
+  interactive_forces.push_back(std::make_unique<TruncatedLennardJones>());
+
+  MembraneGenerator membrane_generator({0, 0, 0}, {3, 3, 1}, 2.2, 1.0,
+                                       {0, 0, 0}, 0.0, 1.0, 1.0, 1, true, {});
   membrane_generator.generate(particles);
   for (Particle& p : particles) {
     SpdWrapper::get()->info("Neighbours: {}", p.getNeighbours().size());
-    for (auto& n : p.getNeighbours()) {
-      if (!n.second) {
-        SpdWrapper::get()->info("11111111111111 Expired pointer ---------");
-      } else {
-        SpdWrapper::get()->info("+++++++++++++++++++++++++++");
-      }
+    for (const auto& [fst, snd] : p.getNeighbours()) {
+      // check for expired pointer (legacy from weak_ptr impl, maybe we go back
+      ASSERT_TRUE(snd);
     }
   }
   LinkedCellsContainer linked_cells(linked_cells_config);
@@ -142,22 +145,21 @@ TEST(Membrane, LC3x3) {
     for (Particle& particle : cell) {
       SpdWrapper::get()->info("Number of neighbours {}",
                               particle.getNeighbours().size());
-      for (auto& n : particle.getNeighbours()) {
-        if (!n.second) {
-          SpdWrapper::get()->info("Expired pointer ---------");
-        } else {
-          SpdWrapper::get()->info("+++++++++++++++++++++++++++");
-        }
+      for (const auto& [fst, snd] : particle.getNeighbours()) {
+        ASSERT_TRUE(snd);
       }
     }
   }
   double t = 0;
-  linked_cells.singleIterator([&](Particle& p) {
-    dvec3 f = {0, 0, 0};
-    for (auto& force : forces) {
-      SpdWrapper::get()->info("Apply force");
-      f = f + force->applyForce(p);
-    }
-    p.addF(f);
-  });
+  for (int i = 0; i < 5; i++) {
+    linked_cells.singleIterator([&](Particle& p) {
+      dvec3 f = {0, 0, 0};
+      for (const auto& force : singular_forces) {
+        SpdWrapper::get()->info("Apply force");
+        f = f + force->applyForce(p);
+      }
+      InfoVec("total singular forces {}", f);
+      p.addF(f);
+    });
+  }
 }

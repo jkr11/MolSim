@@ -17,11 +17,13 @@
 #include "io/file/out/VTKWriter.h"
 #include "io/file/out/XmlWriter.h"
 #include "spdlog/stopwatch.h"
-#include "utils/ArrayUtils.h"
 #include "utils/SpdWrapper.h"
 #include "utils/Statistics.h"
 
 int main(const int argc, char* argv[]) {
+#ifdef BENCHMARK  // TODO for clion cant run currently
+#undef BENCHMARK
+#endif
 #ifndef BENCHMARK
   SpdWrapper::get()->info("Application started");
 #endif
@@ -98,6 +100,7 @@ int main(const int argc, char* argv[]) {
   }
   SpdWrapper::get()->info("{} particles", particles.size());
   std::vector<std::unique_ptr<InteractiveForce>> interactive_forces;
+
   for (auto& config : arguments.interactive_force_types) {
     if (std::holds_alternative<LennardJonesConfig>(config)) {
       interactive_forces.push_back(std::make_unique<LennardJones>());
@@ -149,6 +152,8 @@ int main(const int argc, char* argv[]) {
   double next_output_time = 0;
   spdlog::stopwatch stopwatch;
   auto time_of_last_mups = start_time;
+  // TODO breaks sometimes i think it has to do with paths?
+  /*
   Statistics statistics(
       arguments.statistics_config.x_bins, arguments.statistics_config.y_bins,
       *container,
@@ -156,7 +161,7 @@ int main(const int argc, char* argv[]) {
           arguments.statistics_config.density_output_location,
       outputDirectory + "/" +
           arguments.statistics_config.velocity_output_location);
-
+  */
 #endif
 
   while (current_time <= arguments.t_end) {
@@ -225,11 +230,12 @@ int main(const int argc, char* argv[]) {
         percentage++;
       }
     }
-
+    // TODO breaks on membrane branch idk why
+    /*
     if (arguments.statistics_config.calc_stats &&
         iteration % arguments.statistics_config.output_interval == 0) {
       statistics.writeStatistics(current_time);
-    }
+    }*/
 #endif
     iteration++;
     current_time = arguments.delta_t * iteration;
@@ -255,7 +261,8 @@ int main(const int argc, char* argv[]) {
   std::cout << "MMUPS: " << mmups << std::endl;
 
 #ifndef BENCHMARK
-  statistics.closeFiles();
+  // TODO
+  // statistics.closeFiles();
 #endif
   SpdWrapper::get()->info("Output written. Terminating...");
 

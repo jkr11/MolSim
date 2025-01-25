@@ -33,7 +33,6 @@
             </linkedCells>
         </container>
         <force>
-            <TruncatedLennardJonesForce/>
             <SingularGravity>
                 <g>-0.001</g>
                 <axis>2</axis>
@@ -70,6 +69,7 @@
                     <z>0.8</z>
                 </force_values>
             </IndexForce>
+            <TruncatedLennardJonesForce/>
         </force>
         <delta_t>0.01</delta_t>
         <t_end>500</t_end>
@@ -85,7 +85,7 @@
             <corner>
                 <x>15</x>
                 <y>15</y>
-                <z>15</z>
+                <z>40</z>
             </corner>
             <dimensions>
                 <x>50</x>

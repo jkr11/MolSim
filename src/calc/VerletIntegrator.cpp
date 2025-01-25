@@ -18,14 +18,6 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
 
   particle_container.imposeInvariant();
 
-  particle_container.singleIterator([this](Particle& p) {
-    dvec3 f = {0, 0, 0};
-    for (const auto& force : singular_forces) {
-      f = f + force->applyForce(p);
-    }
-    p.addF(f);
-  });
-
   // TODO: refactor in lower iterator? maybe pass time to all? just get the
   // global var?
   particle_container.singleIterator([this](Particle& p) {
@@ -47,6 +39,14 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
     }
     p1.addF(f12);
     p2.subF(f12);
+  });
+
+  particle_container.singleIterator([this](Particle& p) {
+    dvec3 f = {0, 0, 0};
+    for (const auto& force : singular_forces) {
+      f = f + force->applyForce(p);
+    }
+    p.addF(f);
   });
 
   particle_container.singleIterator([this](Particle& p) {

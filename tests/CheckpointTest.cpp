@@ -8,10 +8,8 @@
 #include "calc/VerletIntegrator.h"
 #include "defs/Simulation.h"
 #include "defs/containers/DirectSumContainer.h"
-// #include "defs/containers/LinkedCellsContainer.cpp"
 #include "defs/containers/LinkedCellsContainer.h"
 #include "defs/containers/ParticleContainer.h"
-#include "defs/types.h"
 #include "forces/Gravity.h"
 #include "forces/LennardJones.h"
 #include "io/file/in/xml/XmlReader.h"
@@ -56,8 +54,10 @@ TEST(Checkpoint, cuboid) {
   interactive_forces.push_back(std::make_unique<LennardJones>());
 
   std::vector<std::unique_ptr<SingularForce>> singular_forces;
+  std::vector<std::unique_ptr<IndexForce>> index_forces;
 
-  VerletIntegrator verlet_integrator(interactive_forces, singular_forces, 0.1);
+  VerletIntegrator verlet_integrator(interactive_forces, singular_forces,
+                                     index_forces, 0.1);
 
   if constexpr (true) {
     XmlWriter::writeFile(*container, "../../../input/checkpoint_test.xml");

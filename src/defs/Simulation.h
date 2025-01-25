@@ -83,11 +83,11 @@ struct StatisticsConfig {
 /**
  * @brief struct to hold command line arguments
  */
+using SingularForceTypes =
+    std::variant<SingularGravityConfig, HarmonicForceConfig>;
+using InteractiveForceTypes = std::variant<LennardJonesConfig, GravityConfig,
+                                           TruncatedLennardJonesConfig>;
 struct Arguments {
-  using SingularForceTypes =
-      std::variant<SingularGravityConfig, HarmonicForceConfig>;
-  using InteractiveForceTypes = std::variant<LennardJonesConfig, GravityConfig,
-                                             TruncatedLennardJonesConfig>;
   double t_end;
   double delta_t;
   ThermostatConfig thermostat_config;
