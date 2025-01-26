@@ -521,7 +521,7 @@ void LinkedCellsContainer::applyPeriodicBoundary(const size_t dimension) {
 
       std::tie(is_adjacent_cell, adjacent_cell_coordinates,
                particle_distance_offset) =
-          reflective_warp_around(cell_to_check, dimension);
+          reflectiveWarpAround(cell_to_check, dimension);
 
       if (!is_adjacent_cell) {
         continue;
@@ -557,7 +557,7 @@ void LinkedCellsContainer::applyPeriodicBoundary(const size_t dimension) {
   }
 }
 
-std::tuple<bool, ivec3, dvec3> LinkedCellsContainer::reflective_warp_around(
+std::tuple<bool, ivec3, dvec3> LinkedCellsContainer::reflectiveWarpAround(
     const ivec3 cell_coordinate, const std::size_t raw_dimension) const {
   dvec3 offset = {0, 0, 0};
 

@@ -382,7 +382,7 @@ TEST(PeriodicBoundaryForce, offsetZ) {
   const auto test = new Particle({1, 1, -1}, {0, 0, 0}, 1, 5.0, 1);
 
   auto [is_adjacent, new_coordinates, particle_offset] =
-      container.reflective_warp_around_testing({0, 0, 3}, zhigh);
+      container.reflectiveWarpAroundTesting({0, 0, 3}, zhigh);
   constexpr dvec3 expected_offset = {0, 0, 9};
 
   SpdWrapper::get()->info("{}, [{}, {}, {}], [{}, {}, {}]", is_adjacent,
@@ -519,7 +519,7 @@ TEST(PeriodicBoundaryForce, offsetXYZ) {
   const auto test = new Particle({-1, -1, -1}, {0, 0, 0}, 1, 5.0, 1);
 
   auto [is_adjacent, new_coordinates, particle_offset] =
-      container.reflective_warp_around_testing(
+      container.reflectiveWarpAroundTesting(
           {3, 3, 3},
           xhigh);  // xhigh and not yhigh or zhigh because corners are invalid
                    // for yhigh and zhigh
@@ -1211,9 +1211,9 @@ TEST(PeriodicBoundaryMoving, moveZForward) {
 
   // test that particle is registered in its true cell
   const auto old_cell =
-      container.getCells()[container.cellCoordToIndex_testing({0, 0, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({0, 0, 0})];
   const auto new_cell =
-      container.getCells()[container.cellCoordToIndex_testing({0, 0, 2})];
+      container.getCells()[container.cellCoordToIndexTesting({0, 0, 2})];
 
   EXPECT_EQ(old_cell.size(), 0);
   EXPECT_EQ(new_cell.size(), 1);
@@ -1266,9 +1266,9 @@ TEST(PeriodicBoundaryMoving, moveZBackward) {
 
   // test that particle is registered in its true cell
   const auto old_cell =
-      container.getCells()[container.cellCoordToIndex_testing({0, 0, 2})];
+      container.getCells()[container.cellCoordToIndexTesting({0, 0, 2})];
   const auto new_cell =
-      container.getCells()[container.cellCoordToIndex_testing({0, 0, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({0, 0, 0})];
 
   EXPECT_EQ(old_cell.size(), 0);
   EXPECT_EQ(new_cell.size(), 1);
@@ -1321,9 +1321,9 @@ TEST(PeriodicBoundaryMoving, moveXYZDiagonal) {
 
   // test that particle is registered in its true cell
   const auto old_cell =
-      container.getCells()[container.cellCoordToIndex_testing({2, 2, 2})];
+      container.getCells()[container.cellCoordToIndexTesting({2, 2, 2})];
   const auto new_cell =
-      container.getCells()[container.cellCoordToIndex_testing({0, 0, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({0, 0, 0})];
 
   EXPECT_EQ(old_cell.size(), 0);
   EXPECT_EQ(new_cell.size(), 1);

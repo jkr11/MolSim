@@ -433,7 +433,7 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @param raw_dimension the evaluated dimension
    * @return if cell should be ignored
    */
-  inline bool isDoubleCorner(ivec3 cell_coordinate, std::size_t raw_dimension) const;
+  [[nodiscard]] inline bool isDoubleCorner(ivec3 cell_coordinate, std::size_t raw_dimension) const;
 };
 
 /**
