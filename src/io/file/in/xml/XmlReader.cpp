@@ -102,12 +102,12 @@ void XmlReader::read(std::vector<Particle>& particles,
     if (config->thermostat().present()) {
       auto thermostat = config->thermostat();
       ThermostatConfig thermostat_config = {
-          .T_init = thermostat->T_init(),
-          .T_target =
+          .t_init = thermostat->T_init(),
+          .t_target =
               thermostat->T_init(),  // we initialize both this and deltaT to
                                      // its defaults first and then check if the
                                      // actual values are present
-          .deltaT =
+          .delta_t =
               std::numeric_limits<double>::max(),  // Default to infinity, dont
                                                    // use infinity() limit
                                                    // because of -ffast-math
@@ -117,10 +117,10 @@ void XmlReader::read(std::vector<Particle>& particles,
       };
 
       if (thermostat->deltaT().present()) {
-        thermostat_config.deltaT = thermostat->deltaT().get();
+        thermostat_config.delta_t = thermostat->deltaT().get();
       }
       if (thermostat->T_target().present()) {
-        thermostat_config.T_target = thermostat->T_target().get();
+        thermostat_config.t_target = thermostat->T_target().get();
       }
 
       simulation_parameters.thermostat_config = thermostat_config;
@@ -147,7 +147,7 @@ void XmlReader::read(std::vector<Particle>& particles,
         double mv;
         if (config->thermostat().present() &&
             velocity == dvec3{0.0, 0.0, 0.0}) {
-          mv = std::sqrt(simulation_parameters.thermostat_config.T_init /
+          mv = std::sqrt(simulation_parameters.thermostat_config.t_init /
                          cubes.mass());
         } else {
           mv = cubes.mv();
@@ -169,7 +169,7 @@ void XmlReader::read(std::vector<Particle>& particles,
         double mv;
         if (config->thermostat().present() &&
             velocity == dvec3{0.0, 0.0, 0.0}) {
-          mv = std::sqrt(simulation_parameters.thermostat_config.T_init /
+          mv = std::sqrt(simulation_parameters.thermostat_config.t_init /
                          spheres.mass());
         } else {
           mv = spheres.mv();

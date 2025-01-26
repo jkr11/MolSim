@@ -19,31 +19,31 @@ const double LinkedCellsContainer::sigma_factor = std::pow(2.0, 1.0 / 6.0);
 
 LinkedCellsContainer::LinkedCellsContainer(
     const LinkedCellsConfig &linked_cells_config) {
-  domain = linked_cells_config.domain;
-  particle_count = 0;
-  special_particle_count = 0;
+  domain_ = linked_cells_config.domain;
+  particle_count_ = 0;
+  special_particle_count_ = 0;
 
   DEBUG_PRINT("LinkedCellsContainer instantiated");
-  SpdWrapper::get()->info("domain size: ({}, {}, {})", domain[0], domain[1],
-                          domain[2]);
+  SpdWrapper::get()->info("domain size: ({}, {}, {})", domain_[0], domain_[1],
+                          domain_[2]);
 
-  cells = {};
-  this->cutoff = linked_cells_config.cutoff_radius;
+  cells_ = {};
+  this->cutoff_ = linked_cells_config.cutoff_radius;
 
-  cell_count = {std::max(static_cast<int>(std::floor(domain[0] / cutoff)), 1),
-                std::max(static_cast<int>(std::floor(domain[1] / cutoff)), 1),
-                std::max(static_cast<int>(std::floor(domain[2] / cutoff)), 1)};
+  cell_count_ = {std::max(static_cast<int>(std::floor(domain_[0] / cutoff_)), 1),
+                std::max(static_cast<int>(std::floor(domain_[1] / cutoff_)), 1),
+                std::max(static_cast<int>(std::floor(domain_[2] / cutoff_)), 1)};
 
-  cell_dim = {static_cast<double>(domain[0]) / cell_count[0],
-              static_cast<double>(domain[1]) / cell_count[1],
-              static_cast<double>(domain[2]) / cell_count[2]};
+  cell_dim_ = {static_cast<double>(domain_[0]) / cell_count_[0],
+              static_cast<double>(domain_[1]) / cell_count_[1],
+              static_cast<double>(domain_[2]) / cell_count_[2]};
 
   // safety check that minimum cell count is satisfied so the boundaries work as
   // expected:
   // could be ok, but then reflective calculation has to be disabled, since all
   // possible pairs are already iterated over
   for (std::size_t i = 0; i < 2; i++) {
-    if (cell_count[i] < 3) {
+    if (cell_count_[i] < 3) {
       SpdWrapper::get()->error(
           "Cell count is too small if reflective boundaries are used! If this "
           "is not a testing instance, please exit the simulation");
@@ -51,18 +51,18 @@ LinkedCellsContainer::LinkedCellsContainer(
   }
 
   // add 2 for halo
-  cell_count = {cell_count[0] + 2, cell_count[1] + 2, cell_count[2] + 2};
+  cell_count_ = {cell_count_[0] + 2, cell_count_[1] + 2, cell_count_[2] + 2};
 
-  cells.resize(cell_count[0] * cell_count[1] * cell_count[2]);
+  cells_.resize(cell_count_[0] * cell_count_[1] * cell_count_[2]);
 
-  this->boundary_config = linked_cells_config.boundary_config;
+  this->boundary_config_ = linked_cells_config.boundary_config;
 
   DEBUG_PRINT_FMT("Num Cells: {}", cells.size());
 
-  halo_direction_cells = {};
-  boundary_direction_cells = {};
+  halo_direction_cells_ = {};
+  boundary_direction_cells_ = {};
   // precalculate special cells
-  for (std::size_t cell_index = 0; cell_index < cells.size(); ++cell_index) {
+  for (std::size_t cell_index = 0; cell_index < cells_.size(); ++cell_index) {
     auto halo_directions = specialCellDirection(
         cell_index, [this](const std::size_t index) { return isHalo(index); },
         -1, 2);
@@ -72,17 +72,17 @@ LinkedCellsContainer::LinkedCellsContainer(
 
     if (!halo_directions.empty()) {
       for (const unsigned long halo_direction : halo_directions) {
-        halo_direction_cells[halo_direction].push_back(cell_index);
+        halo_direction_cells_[halo_direction].push_back(cell_index);
       }
     }
     if (!boundary_directions.empty()) {
       for (const unsigned long boundary_direction : boundary_directions) {
-        boundary_direction_cells[boundary_direction].push_back(cell_index);
+        boundary_direction_cells_[boundary_direction].push_back(cell_index);
       }
     }
   }
 
-  this->boundaries = {
+  this->boundaries_ = {
       linked_cells_config.boundary_config.x_low,
       linked_cells_config.boundary_config.x_high,
       linked_cells_config.boundary_config.y_low,
@@ -91,8 +91,8 @@ LinkedCellsContainer::LinkedCellsContainer(
       linked_cells_config.boundary_config.z_high,
   };
   SpdWrapper::get()->info("cell dim: {}, {}, {}; cell count: {}, {}, {}",
-                          cell_dim[0], cell_dim[1], cell_dim[2], cell_count[0],
-                          cell_count[1], cell_count[2]);
+                          cell_dim_[0], cell_dim_[1], cell_dim_[2], cell_count_[0],
+                          cell_count_[1], cell_count_[2]);
 }
 
 void LinkedCellsContainer::addParticle(const Particle &p) {
@@ -101,12 +101,12 @@ void LinkedCellsContainer::addParticle(const Particle &p) {
     SpdWrapper::get()->error("Tried to add particle out of bounds");
     exit(1);
   }
-  cells[index].emplace_back(p);
+  cells_[index].emplace_back(p);
 
-  this->particle_count++;
+  this->particle_count_++;
 
   if (p.getType() < 0) {
-    this->special_particle_count++;
+    this->special_particle_count_++;
   }
 
   DEBUG_PRINT_FMT("Added particle with coords ({}, {}, {}) into cell index: {}",
@@ -122,15 +122,15 @@ void LinkedCellsContainer::addParticles(
 
 void LinkedCellsContainer::removeParticle(const Particle &p) {
   const std::size_t index = dvec3ToCellIndex(p.getX());
-  std::vector<Particle> &particles = cells[index];
+  std::vector<Particle> &particles = cells_[index];
 
   particles.erase(std::remove_if(particles.begin(), particles.end(),
                                  [&p](const Particle &q) { return p == q; }),
                   particles.end());
 
-  this->particle_count--;
+  this->particle_count_--;
   if (p.getType() < 0) {
-    this->special_particle_count--;
+    this->special_particle_count_--;
   }
 
   DEBUG_PRINT_FMT(
@@ -153,7 +153,7 @@ std::vector<Particle> LinkedCellsContainer::getParticlesObjects() {
 
 [[nodiscard]] std::size_t LinkedCellsContainer::size() const {
   std::size_t count = 0;
-  for (auto &c : cells) {
+  for (auto &c : cells_) {
     count += c.size();
   }
   return count;
@@ -161,16 +161,16 @@ std::vector<Particle> LinkedCellsContainer::getParticlesObjects() {
 
 void LinkedCellsContainer::imposeInvariant() {
   // register in corresponding cell
-  for (std::size_t index = 0; index < cells.size(); index++) {
-    for (auto it = cells[index].begin(); it < cells[index].end();) {
+  for (std::size_t index = 0; index < cells_.size(); index++) {
+    for (auto it = cells_[index].begin(); it < cells_[index].end();) {
       const std::size_t should_be_index = dvec3ToCellIndex(it->getX());
       if (should_be_index == index) {
         ++it;
         continue;
       }
 
-      cells[should_be_index].push_back(*it);
-      it = cells[index].erase(it);
+      cells_[should_be_index].push_back(*it);
+      it = cells_[index].erase(it);
     }
   }
 
@@ -179,15 +179,15 @@ void LinkedCellsContainer::imposeInvariant() {
   // to iterate over the halo cells of Reflective Boundaries
 
   for (size_t dimension = 0; dimension < 6; ++dimension) {
-    switch (boundaries[dimension]) {
+    switch (boundaries_[dimension]) {
       case LinkedCellsConfig::BoundaryType::Outflow: {
         // clear halo
-        for (const size_t cell_index : halo_direction_cells[dimension]) {
-          particle_count -=
-              cells[cell_index].size();  // update particle count, only place
+        for (const size_t cell_index : halo_direction_cells_[dimension]) {
+          particle_count_ -=
+              cells_[cell_index].size();  // update particle count, only place
                                          // where particles are deleted
-          cells[cell_index].clear();
-          cells[cell_index].shrink_to_fit();
+          cells_[cell_index].clear();
+          cells_[cell_index].shrink_to_fit();
         }
         break;
       }
@@ -210,7 +210,7 @@ void LinkedCellsContainer::imposeInvariant() {
 
 void LinkedCellsContainer::singleIterator(
     const std::function<void(Particle &)> &f) {
-  for (auto &c : cells) {
+  for (auto &c : cells_) {
     for (auto &p : c) {
       f(p);
     }
@@ -244,8 +244,8 @@ void LinkedCellsContainer::pairIterator(
   }};
 
   // go over all cell indices
-  for (std::size_t cell_index = 0; cell_index < cells.size(); cell_index++) {
-    std::vector<Particle> &cell_particles = cells[cell_index];
+  for (std::size_t cell_index = 0; cell_index < cells_.size(); cell_index++) {
+    std::vector<Particle> &cell_particles = cells_[cell_index];
 
     if (cell_particles.empty()) continue;
 
@@ -260,7 +260,7 @@ void LinkedCellsContainer::pairIterator(
         const dvec3 p = cell_particles[i].getX();
         const dvec3 q = cell_particles[j].getX();
         if (dvec3 d = {p[0] - q[0], p[1] - q[1], p[2] - q[2]};
-            d[0] * d[0] + d[1] * d[1] + d[2] * d[2] > cutoff * cutoff)
+            d[0] * d[0] + d[1] * d[1] + d[2] * d[2] > cutoff_ * cutoff_)
           continue;
         f(cell_particles[i], cell_particles[j]);
         DEBUG_PRINT_FMT("Intra cell pair: ({}, {})", cellParticles[i].getType(),
@@ -289,7 +289,7 @@ void LinkedCellsContainer::pairIterator(
           neighbourCoord[2], offset[0], offset[1], offset[2]);
 
       // go over all pairs with neighbour particles
-      std::vector<Particle> &neighbour_particles = cells[neighbour_index];
+      std::vector<Particle> &neighbour_particles = cells_[neighbour_index];
       if (neighbour_particles.empty()) continue;
 
       for (auto &cell_particle : cell_particles) {
@@ -298,7 +298,7 @@ void LinkedCellsContainer::pairIterator(
           auto q = neighbour_particle.getX();
 
           if (dvec3 d = {p[0] - q[0], p[1] - q[1], p[2] - q[2]};
-              d[0] * d[0] + d[1] * d[1] + d[2] * d[2] > cutoff * cutoff)
+              d[0] * d[0] + d[1] * d[1] + d[2] * d[2] > cutoff_ * cutoff_)
             continue;
 
           f(cell_particle, neighbour_particle);
@@ -312,10 +312,10 @@ void LinkedCellsContainer::pairIterator(
 
 void LinkedCellsContainer::boundaryIterator(
     const std::function<void(Particle &)> &f) {
-  for (std::size_t index = 0; index < cells.size(); index++) {
+  for (std::size_t index = 0; index < cells_.size(); index++) {
     if (!isBoundary(index)) continue;
 
-    for (auto &p : cells[index]) {
+    for (auto &p : cells_[index]) {
       f(p);
     }
   }
@@ -323,10 +323,10 @@ void LinkedCellsContainer::boundaryIterator(
 
 void LinkedCellsContainer::haloIterator(
     const std::function<void(Particle &)> &f) {
-  for (std::size_t index = 0; index < cells.size(); index++) {
+  for (std::size_t index = 0; index < cells_.size(); index++) {
     if (!isHalo(index)) continue;
 
-    for (auto &p : cells[index]) {
+    for (auto &p : cells_[index]) {
       f(p);
     }
   }
@@ -335,42 +335,42 @@ void LinkedCellsContainer::haloIterator(
 inline std::size_t LinkedCellsContainer::dvec3ToCellIndex(
     const dvec3 &position) const {
   const std::array<int, 3> cell_coords = {
-      static_cast<int>(std::floor(position[0] / cell_dim[0])),
-      static_cast<int>(std::floor(position[1] / cell_dim[1])),
-      static_cast<int>(std::floor(position[2] / cell_dim[2]))};
+      static_cast<int>(std::floor(position[0] / cell_dim_[0])),
+      static_cast<int>(std::floor(position[1] / cell_dim_[1])),
+      static_cast<int>(std::floor(position[2] / cell_dim_[2]))};
 
   return cellCoordToIndex(cell_coords);
 }
 
 inline std::size_t LinkedCellsContainer::cellCoordToIndex(
     const ivec3 position) const {
-  return (position[0] + 1) * (cell_count[1] * cell_count[2]) +
-         (position[1] + 1) * (cell_count[2]) + (position[2] + 1);
+  return (position[0] + 1) * (cell_count_[1] * cell_count_[2]) +
+         (position[1] + 1) * (cell_count_[2]) + (position[2] + 1);
 }
 
 inline ivec3 LinkedCellsContainer::cellIndexToCoord(
     std::size_t cell_index) const {
-  const int x = static_cast<int>(cell_index / (cell_count[1] * cell_count[2]));
-  cell_index = cell_index - (x * cell_count[1] * cell_count[2]);
+  const int x = static_cast<int>(cell_index / (cell_count_[1] * cell_count_[2]));
+  cell_index = cell_index - (x * cell_count_[1] * cell_count_[2]);
 
-  const int y = static_cast<int>(cell_index / cell_count[2]);
-  const int z = static_cast<int>(cell_index - (y * cell_count[2]));
+  const int y = static_cast<int>(cell_index / cell_count_[2]);
+  const int z = static_cast<int>(cell_index - (y * cell_count_[2]));
 
   return {x - 1, y - 1, z - 1};
 }
 
 inline bool LinkedCellsContainer::isValidCellCoordinate(
     const ivec3 coordinate) const {
-  return (-1 <= coordinate[0] && coordinate[0] <= (cell_count[0] - 2)) &&
-         (-1 <= coordinate[1] && coordinate[1] <= (cell_count[1] - 2)) &&
-         (-1 <= coordinate[2] && coordinate[2] <= (cell_count[2] - 2));
+  return (-1 <= coordinate[0] && coordinate[0] <= (cell_count_[0] - 2)) &&
+         (-1 <= coordinate[1] && coordinate[1] <= (cell_count_[1] - 2)) &&
+         (-1 <= coordinate[2] && coordinate[2] <= (cell_count_[2] - 2));
 }
 
 inline bool LinkedCellsContainer::isHalo(const ivec3 cell_coord) const {
   return cell_coord[0] == -1 || cell_coord[1] == -1 || cell_coord[2] == -1 ||
-         cell_coord[0] == (cell_count[0] - 2) ||
-         cell_coord[1] == (cell_count[1] - 2) ||
-         cell_coord[2] == (cell_count[2] - 2);
+         cell_coord[0] == (cell_count_[0] - 2) ||
+         cell_coord[1] == (cell_count_[1] - 2) ||
+         cell_coord[2] == (cell_count_[2] - 2);
 }
 
 inline bool LinkedCellsContainer::isHalo(const std::size_t cell_index) const {
@@ -380,9 +380,9 @@ inline bool LinkedCellsContainer::isHalo(const std::size_t cell_index) const {
 
 inline bool LinkedCellsContainer::isBoundary(const ivec3 cell_coord) const {
   return (cell_coord[0] == 0 || cell_coord[1] == 0 || cell_coord[2] == 0 ||
-          cell_coord[0] == (cell_count[0] - 3) ||
-          cell_coord[1] == (cell_count[1] - 3) ||
-          cell_coord[2] == (cell_count[2] - 3)) &&
+          cell_coord[0] == (cell_count_[0] - 3) ||
+          cell_coord[1] == (cell_count_[1] - 3) ||
+          cell_coord[2] == (cell_count_[2] - 3)) &&
          !isHalo(cell_coord);
 }
 
@@ -403,19 +403,19 @@ std::vector<std::size_t> LinkedCellsContainer::specialCellDirection(
   if (cell_coord[0] == lower_magic_number) {
     directions.push_back(xlow);  // west
   }
-  if (cell_coord[0] == (cell_count[0] - upper_magic_number)) {
+  if (cell_coord[0] == (cell_count_[0] - upper_magic_number)) {
     directions.push_back(xhigh);  // east
   }
   if (cell_coord[1] == lower_magic_number) {
     directions.push_back(ylow);  // down
   }
-  if (cell_coord[1] == (cell_count[1] - upper_magic_number)) {
+  if (cell_coord[1] == (cell_count_[1] - upper_magic_number)) {
     directions.push_back(yhigh);  // up
   }
   if (cell_coord[2] == lower_magic_number) {
     directions.push_back(zlow);  // south
   }
-  if (cell_coord[2] == (cell_count[2] - upper_magic_number)) {
+  if (cell_coord[2] == (cell_count_[2] - upper_magic_number)) {
     directions.push_back(zhigh);  // north
   }
 
@@ -442,11 +442,11 @@ void LinkedCellsContainer::applyReflectiveBoundary(const size_t dimension) {
   // ensure that GhostParticle only interacts with specific particle
   // assumed: epsilon and sigma are the same as of the problematic
   // Particle, the cutoff is larger than half of sigma_factor * sigma
-  for (const std::size_t cell_index : boundary_direction_cells[dimension]) {
-    for (Particle &p : cells[cell_index]) {
+  for (const std::size_t cell_index : boundary_direction_cells_[dimension]) {
+    for (Particle &p : cells_[cell_index]) {
       // check if it is too close
       double pos = p.getX()[problematic_dimension];
-      const double boundary_position = domain[problematic_dimension];
+      const double boundary_position = domain_[problematic_dimension];
       const double double_dist_to_boundary =
           2 * std::min(pos, boundary_position -
                                 pos);  // if both of them are so small that
@@ -483,23 +483,23 @@ void LinkedCellsContainer::applyPeriodicBoundary(const size_t dimension) {
   const std::size_t problematic_dimension = dimension / 2;
   const std::size_t problematic_dimension_direction = dimension % 2;
 
-  for (const std::size_t cell_index : halo_direction_cells[dimension]) {
+  for (const std::size_t cell_index : halo_direction_cells_[dimension]) {
     int counter = 0;
-    for (auto it = cells[cell_index].begin(); it < cells[cell_index].end();
+    for (auto it = cells_[cell_index].begin(); it < cells_[cell_index].end();
          ++it) {
       counter++;
       dvec3 new_pos = it->getX();
       new_pos[problematic_dimension] +=
-          domain[problematic_dimension] *
+          domain_[problematic_dimension] *
           (problematic_dimension_direction % 2 == 0 ? 1 : -1);
       const std::size_t shouldBeIndex = dvec3ToCellIndex(new_pos);
 
       it->setX(new_pos);
-      cells[shouldBeIndex].push_back(*it);
+      cells_[shouldBeIndex].push_back(*it);
     }
 
-    cells[cell_index].clear();
-    cells[cell_index].shrink_to_fit();
+    cells_[cell_index].clear();
+    cells_[cell_index].shrink_to_fit();
   }
 
   // skip force calculation for lower side of the axis
@@ -508,12 +508,12 @@ void LinkedCellsContainer::applyPeriodicBoundary(const size_t dimension) {
   }
 
   // iterate over all 9 / 3 cells on the other end
-  for (const std::size_t cell_index : boundary_direction_cells[dimension]) {
+  for (const std::size_t cell_index : boundary_direction_cells_[dimension]) {
     ivec3 cell_coordinates = cellIndexToCoord(cell_index);
 
     // change 3 to 9 for 3D
     for (std::size_t i = 0; i < 9; ++i) {
-      ivec3 offset = index_offsets[problematic_dimension][i];
+      ivec3 offset = index_offsets_[problematic_dimension][i];
       const ivec3 cell_to_check = cell_coordinates + offset;
       bool is_adjacent_cell;
       ivec3 adjacent_cell_coordinates;
@@ -536,14 +536,14 @@ void LinkedCellsContainer::applyPeriodicBoundary(const size_t dimension) {
 
       // iterate over all pairs and calculate force
 
-      for (Particle &p : cells[cell_index]) {
-        for (Particle &q : cells[adjacent_cell_index]) {
+      for (Particle &p : cells_[cell_index]) {
+        for (Particle &q : cells_[adjacent_cell_index]) {
           // distance check
           const dvec3 accounted_particle_distance =
               q.getX() - p.getX() + particle_distance_offset;
 
           if (ArrayUtils::L2InnerProduct(accounted_particle_distance) >=
-              cutoff * cutoff) {
+              cutoff_ * cutoff_) {
             continue;
           }
 
@@ -584,12 +584,12 @@ std::tuple<bool, ivec3, dvec3> LinkedCellsContainer::reflectiveWarpAround(
   for (std::size_t dimension = 0; dimension < 3; dimension++) {
     if (cell_coordinate[dimension] == -1) {
       // low wrap around to high cell
-      new_cell_coordinate[dimension] = cell_count[dimension] - 3;  // top cell
-      offset[dimension] = -domain[dimension];
-    } else if (cell_coordinate[dimension] == cell_count[dimension] - 2) {
+      new_cell_coordinate[dimension] = cell_count_[dimension] - 3;  // top cell
+      offset[dimension] = -domain_[dimension];
+    } else if (cell_coordinate[dimension] == cell_count_[dimension] - 2) {
       // high warp around to low cell
       new_cell_coordinate[dimension] = 0;  // bottom cell
-      offset[dimension] = domain[dimension];
+      offset[dimension] = domain_[dimension];
     } else {
       // no warp around, nothing can go wrong
       continue;
@@ -597,7 +597,7 @@ std::tuple<bool, ivec3, dvec3> LinkedCellsContainer::reflectiveWarpAround(
 
     // if it is wrapped around but dimension is not periodic, this cell is not
     // adjacent
-    if (boundaries[2 * dimension] != LinkedCellsConfig::Periodic) {
+    if (boundaries_[2 * dimension] != LinkedCellsConfig::Periodic) {
       return std::make_tuple(false, cell_coordinate, offset);
     }
   }
@@ -639,7 +639,7 @@ bool LinkedCellsContainer::isDoubleCorner(
   int edge_of_x_dimensions_counter = 0;
   for (std::size_t dimension = 0; dimension < 3; dimension++) {
     if (cell_coordinate[dimension] == -1 ||
-        cell_coordinate[dimension] == cell_count[dimension] - 2) {
+        cell_coordinate[dimension] == cell_count_[dimension] - 2) {
       edge_of_x_dimensions_counter++;
     }
   }
@@ -655,54 +655,54 @@ bool LinkedCellsContainer::isDoubleCorner(
   // TODO: make beautiful
   // lookup table via some if statements
   // ugly, but best I could think of
-  if (boundaries[xlow] == LinkedCellsConfig::Periodic &&
-      boundaries[ylow] == LinkedCellsConfig::Periodic &&
-      boundaries[zlow] != LinkedCellsConfig::Periodic) {
+  if (boundaries_[xlow] == LinkedCellsConfig::Periodic &&
+      boundaries_[ylow] == LinkedCellsConfig::Periodic &&
+      boundaries_[zlow] != LinkedCellsConfig::Periodic) {
     // 110
     // SpdWrapper::get()->info("isDoubleCorner - xlow ylow !zlow");
     if (raw_dimension == yhigh &&
-        (cell_coordinate[0] == -1 || cell_coordinate[0] == cell_count[0] - 2)) {
+        (cell_coordinate[0] == -1 || cell_coordinate[0] == cell_count_[0] - 2)) {
       return true;
     }
     return false;
   }
-  if (boundaries[xlow] == LinkedCellsConfig::Periodic &&
-      boundaries[ylow] != LinkedCellsConfig::Periodic &&
-      boundaries[zlow] == LinkedCellsConfig::Periodic) {
+  if (boundaries_[xlow] == LinkedCellsConfig::Periodic &&
+      boundaries_[ylow] != LinkedCellsConfig::Periodic &&
+      boundaries_[zlow] == LinkedCellsConfig::Periodic) {
     // 101
     // SpdWrapper::get()->info("isDoubleCorner - xlow !ylow zlow");
     if (raw_dimension == zhigh &&
-        (cell_coordinate[0] == -1 || cell_coordinate[0] == cell_count[0] - 2)) {
+        (cell_coordinate[0] == -1 || cell_coordinate[0] == cell_count_[0] - 2)) {
       return true;
     }
     return false;
   }
-  if (boundaries[xlow] != LinkedCellsConfig::Periodic &&
-      boundaries[ylow] == LinkedCellsConfig::Periodic &&
-      boundaries[zlow] == LinkedCellsConfig::Periodic) {
+  if (boundaries_[xlow] != LinkedCellsConfig::Periodic &&
+      boundaries_[ylow] == LinkedCellsConfig::Periodic &&
+      boundaries_[zlow] == LinkedCellsConfig::Periodic) {
     // 011
     // SpdWrapper::get()->info("isDoubleCorner - !xlow ylow zlow");
     if (raw_dimension == zhigh &&
-        (cell_coordinate[1] == -1 || cell_coordinate[1] == cell_count[1] - 2)) {
+        (cell_coordinate[1] == -1 || cell_coordinate[1] == cell_count_[1] - 2)) {
       return true;
     }
     return false;
   }
-  if (boundaries[xlow] == LinkedCellsConfig::Periodic &&
-      boundaries[ylow] == LinkedCellsConfig::Periodic &&
-      boundaries[zlow] == LinkedCellsConfig::Periodic) {
+  if (boundaries_[xlow] == LinkedCellsConfig::Periodic &&
+      boundaries_[ylow] == LinkedCellsConfig::Periodic &&
+      boundaries_[zlow] == LinkedCellsConfig::Periodic) {
     // 111
     // SpdWrapper::get()->info("isDoubleCorner - xlow ylow zlow");
     if (raw_dimension == yhigh &&
-        (cell_coordinate[0] == -1 || cell_coordinate[0] == cell_count[0] - 2)) {
+        (cell_coordinate[0] == -1 || cell_coordinate[0] == cell_count_[0] - 2)) {
       return true;
     }
     if (raw_dimension == zhigh &&
-        (cell_coordinate[0] == -1 || cell_coordinate[0] == cell_count[0] - 2)) {
+        (cell_coordinate[0] == -1 || cell_coordinate[0] == cell_count_[0] - 2)) {
       return true;
     }
     if (raw_dimension == zhigh &&
-        (cell_coordinate[1] == -1 || cell_coordinate[1] == cell_count[1] - 2)) {
+        (cell_coordinate[1] == -1 || cell_coordinate[1] == cell_count_[1] - 2)) {
       return true;
     }
     return false;

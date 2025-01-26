@@ -21,67 +21,67 @@ class LinkedCellsContainer final : public ParticleContainer {
    *
    * position = x * (cellsY * cellsZ) + y * (cellsZ) + z
    */
-  std::vector<std::vector<Particle>> cells;
+  std::vector<std::vector<Particle>> cells_;
 
   /**
    * @brief current number of particles
    */
-  size_t particle_count{};
+  size_t particle_count_{};
 
   /**
    * @brief number of particles, that are immovable
    */
-  size_t special_particle_count{};
+  size_t special_particle_count_{};
 
   /**
    * @brief
    * stores the indexes of all halo_cells for faster iteration in the
    * corresponding direction vector
    */
-  std::array<std::vector<std::size_t>, 6> halo_direction_cells;
+  std::array<std::vector<std::size_t>, 6> halo_direction_cells_;
 
   /**
    * @brief
    * stores the indexes of all halo_cells for faster iteration in the
    * corresponding direction vector
    */
-  std::array<std::vector<std::size_t>, 6> boundary_direction_cells;
+  std::array<std::vector<std::size_t>, 6> boundary_direction_cells_;
 
   /**
    * @brief
    * a more processing friendly storage of LinkedCellsConfig::BoundaryConfig
    */
-  std::array<LinkedCellsConfig::BoundaryType, 6> boundaries{};
+  std::array<LinkedCellsConfig::BoundaryType, 6> boundaries_{};
 
   /**
    * @brief
    * number of cells per direction for domain + 2 halo cells
    */
-  ivec3 cell_count{};
+  ivec3 cell_count_{};
 
   /**
    * @brief
    * cell dimensions
    */
-  dvec3 cell_dim{};
+  dvec3 cell_dim_{};
 
   /**
    * @brief
    * cutoff radius
    */
-  double cutoff{};
+  double cutoff_{};
 
   /**
    * @brief
    * the domain of the container
    */
-  ivec3 domain{};
+  ivec3 domain_{};
 
   /**
    * @brief
    * the boundary config of each direction of the simulation
    */
-  LinkedCellsConfig::BoundaryConfig boundary_config{};
+  LinkedCellsConfig::BoundaryConfig boundary_config_{};
 
   /**
    * @brief apply reflective boundary condition to a dimension
@@ -94,7 +94,7 @@ class LinkedCellsContainer final : public ParticleContainer {
    *2D simulations
    *
    */
-  std::array<std::array<ivec3, 9>, 3> index_offsets = {{
+  std::array<std::array<ivec3, 9>, 3> index_offsets_ = {{
       // x
       {{{1, 1, 0},
         {1, 0, 0},
@@ -183,14 +183,14 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @brief the exact number of current particles, updated accordingly
    * @return the current count of particles left in the simulation
    */
-  [[nodiscard]] size_t getParticleCount() const { return particle_count; }
+  [[nodiscard]] size_t getParticleCount() const { return particle_count_; }
 
   /**
    * @brief the exact number of current special particles, updated accordingly
    * @return the current count of special particles left in the simulation
    */
   [[nodiscard]] size_t getSpecialParticleCount() const {
-    return special_particle_count;
+    return special_particle_count_;
   }
 
   /**
@@ -252,13 +252,13 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @brief Get the amount of cells in each dimension
    * @return ivec3 of cells in each dimension
    */
-  [[nodiscard]] std::array<int, 3> getCellCount() const { return cell_count; }
+  [[nodiscard]] std::array<int, 3> getCellCount() const { return cell_count_; }
 
   /**
    * @brief Get the dimensions of a all cells in the container
    * @return dvec3 of the dimensions of all cells
    */
-  [[nodiscard]] dvec3 getCellDim() const { return cell_dim; }
+  [[nodiscard]] dvec3 getCellDim() const { return cell_dim_; }
 
   /**
    * @brief Gets the cell index of a position
@@ -377,7 +377,7 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @brief Debug method to get direct access to the cells vector
    * @return Reference to the cell vector
    */
-  std::vector<std::vector<Particle>>& getCells() { return cells; }
+  std::vector<std::vector<Particle>>& getCells() { return cells_; }
 
   /**
    * @brief warp negative cell index to maximum cell coordinate to enable
@@ -410,21 +410,21 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @brief returns particle count of the container
    * @return particle count
    */
-  std::size_t getParticleCount() override { return particle_count; }
+  std::size_t getParticleCount() override { return particle_count_; }
 
   /**
    * @brief returns the count of immovable particles
    * @return count of immovable particles
    */
   std::size_t getSpecialParticleCount() override {
-    return special_particle_count;
+    return special_particle_count_;
   }
 
   /**
    * @brief returns the domain of the container
    * @return the domain of the container
    */
-  ivec3 getDomain() override { return domain; }
+  ivec3 getDomain() override { return domain_; }
 
   /**
    * @brief if true, this corner should not be evaluated because it was already

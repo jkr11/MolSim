@@ -16,8 +16,8 @@ XmlWriter::~XmlWriter() = default;
 
 template <typename VecType, typename XmlType>
 inline XmlType wrapVec(const VecType& vec) {
-  XmlType xmlVec{vec[0], vec[1], vec[2]};
-  return xmlVec;
+  XmlType xml_vec{vec[0], vec[1], vec[2]};
+  return xml_vec;
 }
 
 ParticleType wrapParticle(const Particle& particle) {
@@ -52,7 +52,7 @@ void XmlWriter::writeFile(ParticleContainer& particle_container,
     map[""].schema = "../src/io/file/out/checkpoint-schema.xsd";
 
 
-    std::ostringstream fileName;
+    std::ostringstream file_name;
     CheckpointType checkpoint{xml_particles};
 
     std::ofstream checkpoint_file(filepath);

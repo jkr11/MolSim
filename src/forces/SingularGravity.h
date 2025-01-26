@@ -12,7 +12,7 @@
  */
 class SingularGravity final : public SingularForce {
  private:
-  double g{};
+  double g_{};
 
  public:
   /**

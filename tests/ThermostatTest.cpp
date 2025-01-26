@@ -89,7 +89,7 @@ TEST(Thermostat, holding) {
   for (std::size_t i = 0; i < 10000; i++) {
     if (i != 0 && i % thermostat->n_thermostat) {
       thermostat->setTemperature(*container);
-      EXPECT_NEAR(thermostat->getTemperature(*container), thermostat->T_target,
+      EXPECT_NEAR(thermostat->getTemperature(*container), thermostat->t_target,
                   1e-6);
     }
   }
@@ -316,9 +316,9 @@ TEST(Thermostat, gradual) {
       double temp = Thermostat::getTemperature(*container);
       thermostat->setTemperature(*container);
       EXPECT_NEAR(thermostat->getTemperature(*container),
-                  temp + thermostat->d_temp, thermostat->d_temp);
+                  temp + thermostat->delta_temp, thermostat->delta_temp);
     }
   }
 
-  EXPECT_NEAR(thermostat->getTemperature(*container), thermostat->T_target, 1);
+  EXPECT_NEAR(thermostat->getTemperature(*container), thermostat->t_target, 1);
 }

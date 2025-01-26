@@ -3,34 +3,36 @@
 //
 #pragma once
 
-#include "defs/containers/LinkedCellsContainer.h"
+
+#include <defs/containers/ParticleContainer.h>
+
 #include "io/file/out/CSVWriter.h"
 #include "utils/ArrayUtils.h"
 
 class Statistics {
  private:
-  int x_bins;
-  int y_bins;
-  CSVWriter density_profile_writer;
-  CSVWriter velocity_profile_writer;
-  ParticleContainer& container;
-  double x_bin_size;
-  double y_bin_size;
-  double bin_volume;
+  int x_bins_;
+  int y_bins_;
+  CSVWriter density_profile_writer_;
+  CSVWriter velocity_profile_writer_;
+  ParticleContainer& container_;
+  double x_bin_size_;
+  double y_bin_size_;
+  double bin_volume_;
 
  public:
   Statistics(const int x_bins, const int y_bins, ParticleContainer& container,
              const std::string& density_profile_output_location,
              const std::string& velocity_profile_output_location)
-      : x_bins(x_bins),
-        y_bins(y_bins),
-        density_profile_writer(density_profile_output_location),
-        velocity_profile_writer(velocity_profile_output_location),
-        container(container) {
+      : x_bins_(x_bins),
+        y_bins_(y_bins),
+        density_profile_writer_(density_profile_output_location),
+        velocity_profile_writer_(velocity_profile_output_location),
+        container_(container) {
     const ivec3 domain = container.getDomain();
-    x_bin_size = 1.0 * domain[0] / x_bins;
-    y_bin_size = 1.0 * domain[1] / y_bins;
-    bin_volume = x_bin_size * y_bin_size * domain[2];
+    x_bin_size_ = 1.0 * domain[0] / x_bins;
+    y_bin_size_ = 1.0 * domain[1] / y_bins;
+    bin_volume_ = x_bin_size_ * y_bin_size_ * domain[2];
   }
 
   /**
@@ -40,17 +42,17 @@ class Statistics {
    * down to up (y-axis)
    */
   void writeStatistics(const double time) {
-    std::vector<std::vector<Particle*>> bins(x_bins * y_bins);
-    for (const auto p : container.getParticles()) {
+    std::vector<std::vector<Particle*>> bins(x_bins_ * y_bins_);
+    for (const auto p : container_.getParticles()) {
       if (p->getType() < 0)
         continue;  // ignore walls, because their velocity is not strictly set
                    // to 0 but rather ignored in other calculations
 
       dvec3 position = p->getX();
-      const int x_bin = static_cast<int>(position[0] / x_bin_size);
-      const int y_bin = static_cast<int>(position[1] / y_bin_size);
+      const int x_bin = static_cast<int>(position[0] / x_bin_size_);
+      const int y_bin = static_cast<int>(position[1] / y_bin_size_);
 
-      bins[x_bin + y_bin * x_bins].push_back(p);
+      bins[x_bin + y_bin * x_bins_].push_back(p);
     }
 
     std::vector<std::string> density_data;
@@ -65,10 +67,10 @@ class Statistics {
       }
 
       density_data.push_back(
-          std::to_string(static_cast<double>(num_particles) / bin_volume));
+          std::to_string(static_cast<double>(num_particles) / bin_volume_));
 
       if (num_particles == 0) {
-        velocity_data.push_back("0.0 0.0 0.0");
+        velocity_data.emplace_back("0.0 0.0 0.0");
       } else {
         velocity_data.push_back(
             std::to_string(sum_velocity[0] /
@@ -82,13 +84,13 @@ class Statistics {
       }
     }
 
-    density_profile_writer.writeLine(time, density_data);
-    velocity_profile_writer.writeLine(time, velocity_data);
+    density_profile_writer_.writeLine(time, density_data);
+    velocity_profile_writer_.writeLine(time, velocity_data);
   }
 
   void closeFiles() {
-    density_profile_writer.closeFile();
-    velocity_profile_writer.closeFile();
+    density_profile_writer_.closeFile();
+    velocity_profile_writer_.closeFile();
 
     SpdWrapper::get()->info("Statistics were completed");
   }

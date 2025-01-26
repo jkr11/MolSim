@@ -11,7 +11,7 @@
  */
 class DirectSumContainer final : public ParticleContainer {
  private:
-  std::vector<Particle> particles;
+  std::vector<Particle> particles_;
 
  public:
   /**
@@ -89,7 +89,7 @@ class DirectSumContainer final : public ParticleContainer {
 
   double getKineticEnergy() override;
 
-  size_t getParticleCount() override { return particles.size(); }
+  size_t getParticleCount() override { return particles_.size(); }
 
   size_t getSpecialParticleCount() override { return 0; };
 
