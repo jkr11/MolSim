@@ -10,7 +10,7 @@
  */
 TEST(DirectSumContainer, addParticleAndSize) {
   DirectSumContainer container;
-  Particle particle;
+  const Particle particle;
 
   ASSERT_EQ(container.size(), 0)
       << "ParticleContainer particle count not 0 after init.";

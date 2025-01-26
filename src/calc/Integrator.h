@@ -18,6 +18,7 @@ class Integrator {
   double delta_t;
   double current_time;
 
+
  public:
   /**
    * @brief Create Integrator object
@@ -37,6 +38,7 @@ class Integrator {
         index_forces(std::move(index_forces)),
         delta_t(delta_t),
         current_time(0) {};
+
 
   /**
    * @brief Virtual destructor for all Integrator inheritors

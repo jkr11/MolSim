@@ -8,12 +8,12 @@
 #include "utils/SpdWrapper.h"
 
 class CSVWriter {
-  std::ofstream file;
+  std::ofstream file_;
 
  public:
-  explicit CSVWriter(const std::string& fileName) {
-    file.open(fileName);
-    if (!file.is_open()) {
+  explicit CSVWriter(const std::string& file_name) {
+    file_.open(file_name);
+    if (!file_.is_open()) {
       SpdWrapper::get()->error("Failed to open CSV output file");
       throw std::ios_base::failure("Failed to open file");
     }
@@ -24,18 +24,18 @@ class CSVWriter {
   }
 
   void writeLine(const double time, const std::vector<std::string>& data) {
-    file << time << ",";
+    file_ << time << ",";
     for (size_t i = 0; i < data.size(); ++i) {
-      file << data[i];
+      file_ << data[i];
       if (i < data.size() - 1) {
-        file << ",";
+        file_ << ",";
       }
     }
-    file << "\n";
-    file.flush();
+    file_ << "\n";
+    file_.flush();
   }
 
   void closeFile() {
-    file.close();
+    file_.close();
   }
 };

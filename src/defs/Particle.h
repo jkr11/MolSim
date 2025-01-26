@@ -20,46 +20,46 @@ class Particle final {
   /**
    * Position of the particle
    */
-  std::array<double, 3> x{};
+  std::array<double, 3> x_{};
 
   /**
    * Velocity of the particle
    */
-  std::array<double, 3> v{};
+  std::array<double, 3> v_{};
 
   /**
    * Force effective on this particle
    */
-  std::array<double, 3> f{};
+  std::array<double, 3> f_{};
 
   /**
    * Force which was effective on this particle
    */
-  std::array<double, 3> old_f{};
+  std::array<double, 3> old_f_{};
 
   /**
    * Mass of this particle
    */
-  double m{};
+  double m_{};
 
   /**
    * Type of the particle. Use it for whatever you want (e.g. to separate
    * molecules belonging to different bodies, matters, and so on)
    * negative types are immovable and are being ignored by some calculations
    */
-  int type{};
+  int type_{};
 
   /**
    * depth of the potential well
    * used in the caluclation of lennard-jones force
    */
-  double epsilon{};
+  double epsilon_{};
 
   /**
    * distance from the particle at which the potential is zero \n
    * used in the calculation of lennard-jones force
    */
-  double sigma{};
+  double sigma_{};
 
   /**
    * unique identifier for every particle
@@ -80,7 +80,7 @@ class Particle final {
       // for visualization, we need always 3 coordinates
       // -> in case of 2d, we use only the first and the second
       const std::array<double, 3> &x_arg, const std::array<double, 3> &v_arg,
-      double m_arg, double _epsilon, double _sigma, int type = 0);
+      double m_arg, double epsilon, double sigma, int type = 0);
 
   Particle(Particle &&other) noexcept;  // Move constructor? cancer
 
@@ -96,50 +96,50 @@ class Particle final {
 
   ~Particle();
 
-  [[nodiscard]] const std::array<double, 3> &getX() const { return x; }
+  [[nodiscard]] const std::array<double, 3> &getX() const { return x_; }
 
-  [[nodiscard]] const std::array<double, 3> &getV() const { return v; }
+  [[nodiscard]] const std::array<double, 3> &getV() const { return v_; }
 
-  [[nodiscard]] const std::array<double, 3> &getF() const { return f; }
+  [[nodiscard]] const std::array<double, 3> &getF() const { return f_; }
 
-  [[nodiscard]] const std::array<double, 3> &getOldF() const { return old_f; }
+  [[nodiscard]] const std::array<double, 3> &getOldF() const { return old_f_; }
 
-  [[nodiscard]] double getM() const { return m; }
+  [[nodiscard]] double getM() const { return m_; }
 
-  [[nodiscard]] int getType() const { return type; }
+  [[nodiscard]] int getType() const { return type_; }
 
-  [[nodiscard]] double getEpsilon() const { return epsilon; }
+  [[nodiscard]] double getEpsilon() const { return epsilon_; }
 
-  [[nodiscard]] double getSigma() const { return sigma; }
+  [[nodiscard]] double getSigma() const { return sigma_; }
 
   [[nodiscard]] const std::vector<std::pair<bool,size_t>> &getNeighbours()
       const;
 
-  void setF(const std::array<double, 3> &F) { f = F; }
+  void setF(const std::array<double, 3> &f) { f_ = f; }
 
-  void setX(const std::array<double, 3> &X) { x = X; }
+  void setX(const std::array<double, 3> &x) { x_ = x; }
 
-  void setV(const std::array<double, 3> &V) { v = V; }
+  void setV(const std::array<double, 3> &v) { v_ = v; }
 
-  void setOldF(const dvec3 &oF) { old_f = oF; }
+  void setOldF(const dvec3 &old_f) { old_f_ = old_f; }
 
-  void setEpsilon(const double &new_epsilon) { epsilon = new_epsilon; }
+  void setEpsilon(const double &epsilon) { epsilon_ = epsilon; }
 
-  void setSigma(const double &new_sigma) { sigma = new_sigma; }
+  void setSigma(const double &sigma) { sigma_ = sigma; }
 
   void pushBackNeighbour(bool diag, long particle);
 
   void updateForceInTime();
 
-  void subV(const dvec3 &V) { v = v - V; }
+  void subV(const dvec3 &v) { v_ = v_ - v; }
 
-  void addV(const dvec3 &V) { v = v + V; }
+  void addV(const dvec3 &v) { v_ = v_ + v; }
 
-  void mulV(const double &scalar) { v = scalar * v; }
+  void mulV(const double &scalar) { v_ = scalar * v_; }
 
-  void addF(const dvec3 &F) { f = f + F; }
+  void addF(const dvec3 &f) { f_ = f_ + f; }
 
-  void subF(const dvec3 &F) { f = f - F; }
+  void subF(const dvec3 &f) { f_ = f_ - f; }
 
   void setNeighbours(
       const std::vector<std::pair<bool, size_t>> &new_neighbours) {

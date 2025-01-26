@@ -43,29 +43,43 @@ struct LinkedCellsConfig {
  */
 struct DirectSumConfig {};
 
+/**
+ * @brief holds the specification for the SingularGravity force
+ */
 struct SingularGravityConfig {
   double g{};
   int axis{};
 };
 
+
+
+/**
+ * @brief holds the harmonic force parameters
+ */
 struct HarmonicForceConfig {
   double r_0{};
   double k{};
 };
 
+/**
+ * @brief holds the LennardJones force parameters
+ */
 struct LennardJonesConfig {};
 
 struct TruncatedLennardJonesConfig {};
 
+/**
+ * @brief holds the interactive gravity parameters
+ */
 struct GravityConfig {};
 
 /**
  * @brief holds instance data for Thermostat
  */
 struct ThermostatConfig {
-  double T_init{};
-  double T_target{};
-  double deltaT{};
+  double t_init{};
+  double t_target{};
+  double delta_t{};
   int n_thermostat{};
   bool use_relative{};
   bool use_thermal_motion{};
@@ -188,9 +202,9 @@ inline void printConfiguration(const Arguments& args) {
   logger->info("delta_t: {}", args.delta_t);
   logger->info("Singular Forces:");
   if (args.use_thermostat) {
-    logger->info("Thermostat: T_init {}", args.thermostat_config.T_init);
-    logger->info("--- T_target: {}", args.thermostat_config.T_target);
-    logger->info("--- deltaT: {}", args.thermostat_config.deltaT);
+    logger->info("Thermostat: T_init {}", args.thermostat_config.t_init);
+    logger->info("--- T_target: {}", args.thermostat_config.t_target);
+    logger->info("--- deltaT: {}", args.thermostat_config.delta_t);
   }
 
   if (std::holds_alternative<LinkedCellsConfig>(args.container_data)) {

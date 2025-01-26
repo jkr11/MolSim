@@ -22,14 +22,10 @@
 #include "utils/Statistics.h"
 
 int main(const int argc, char* argv[]) {
-#ifdef BENCHMARK  // TODO for clion cant run currently
-#undef BENCHMARK
-#endif
-#ifndef BENCHMARK
-  SpdWrapper::get()->info("Application started");
-#endif
-  Arguments arguments = {};
-  auto [input_file, step_size, write_checkpoint] =
+
+ Arguments arguments = {};
+
+ auto [input_file, step_size, write_checkpoint] =
       CLArgumentParser::parse(argc, argv);
 
   std::vector<Particle> particles;
@@ -52,6 +48,7 @@ int main(const int argc, char* argv[]) {
   if (std::holds_alternative<LinkedCellsConfig>(arguments.container_data)) {
     auto& linked_cells_data =
         std::get<LinkedCellsConfig>(arguments.container_data);
+    // TODO what is this is it necessary?
     // linked_cells_data.particle_count = particles.size();
     // linked_cells_data.special_particle_count =
     //     std::count_if(particles.begin(), particles.end(),
@@ -73,9 +70,15 @@ int main(const int argc, char* argv[]) {
     SpdWrapper::get()->error("Unrecognized container type");
     throw std::runtime_error("Unrecognized container type");
   }
-  SpdWrapper::get()->info("{} particles", particles.size());
+  INFO_FMT("Simulation is using {} particles", particles.size());
+
+  // assign all forces from the configs
+
   std::vector<std::unique_ptr<InteractiveForce>> interactive_forces;
 
+  std::vector<std::unique_ptr<SingularForce>> singular_forces;
+
+  // Assign interactive forces
   for (auto& config : arguments.interactive_force_types) {
     if (std::holds_alternative<LennardJonesConfig>(config)) {
       interactive_forces.push_back(std::make_unique<LennardJones>());
@@ -90,7 +93,8 @@ int main(const int argc, char* argv[]) {
     }
   }
 
-  std::vector<std::unique_ptr<SingularForce>> singular_forces;
+  // Assign singular forces
+
   for (auto config : arguments.singular_force_types) {
     if (std::holds_alternative<SingularGravityConfig>(config)) {
       const auto& [g, a] = std::get<SingularGravityConfig>(config);
@@ -100,6 +104,7 @@ int main(const int argc, char* argv[]) {
       const auto& [r, k] = std::get<HarmonicForceConfig>(config);
       singular_forces.push_back(
           std::move(std::make_unique<HarmonicForce>(k, r)));
+
     } else {
       SpdWrapper::get()->error("Unrecognized singular force");
     }
@@ -109,11 +114,12 @@ int main(const int argc, char* argv[]) {
                                      index_forces, arguments.delta_t);
   outputWriter::VTKWriter writer;
   std::unique_ptr<Thermostat> thermostat;
-  const std::string outputDirectory =
-      createOutputDirectory("./output/", argc, argv);
   if (arguments.use_thermostat) {
     thermostat = std::make_unique<Thermostat>(arguments.thermostat_config);
   }
+
+  const std::string output_directory =
+      createOutputDirectory("./output/", argc, argv);
 
   double current_time = 0;
   int iteration = 0;
@@ -125,18 +131,17 @@ int main(const int argc, char* argv[]) {
   int writes = 0;
   int percentage = 0;
   double next_output_time = 0;
-  spdlog::stopwatch stopwatch;
+  spdlog::stopwatch stopwatch;  // TODO whats up with this?
   auto time_of_last_mups = start_time;
   // TODO breaks sometimes i think it has to do with paths?
-  /*
+  
   Statistics statistics(
       arguments.statistics_config.x_bins, arguments.statistics_config.y_bins,
       *container,
-      outputDirectory + "/" +
+      output_directory + "/" +
           arguments.statistics_config.density_output_location,
-      outputDirectory + "/" +
+      output_directory + "/" +
           arguments.statistics_config.velocity_output_location);
-  */
 #endif
   auto p2 = container->getParticles()[1];
   for (auto [diag, ref] : p2->getNeighbours()) {
@@ -160,15 +165,13 @@ int main(const int argc, char* argv[]) {
     verlet_integrator.step(*container);
     if (arguments.use_thermostat) {
       if (iteration % thermostat->n_thermostat == 0 && iteration > 0) {
-        // SpdWrapper::get()->info("Applying thermostat in iteration [{}] / time
-        // [{:.4}/{}]", iteration, current_time, arguments.t_end);
         thermostat->setTemperature(*container);
       }
     }
 #ifdef BENCHMARK  // these are the first 1000 iterations for the contest
     if (iteration == 1000) {
-      const auto first_1k = std::chrono::high_resolution_clock::now();
-      const std::chrono::duration<double> elapsed = first_1k - start_time;
+      const auto first_1_k = std::chrono::high_resolution_clock::now();
+      const std::chrono::duration<double> elapsed = first_1_k - start_time;
       std::cout << "First 1k iterations took: " << elapsed.count() << " seconds"
                 << std::endl;
       const auto mups = static_cast<double>(number_of_particles) * 1000 *
@@ -179,6 +182,7 @@ int main(const int argc, char* argv[]) {
 #endif
 
     particle_updates += container->getParticleCount();
+    /*
     if (iteration % 100 == 0) {
       container->singleIterator([](Particle& p) {
         if (p.getId() == 0) {
@@ -201,9 +205,11 @@ int main(const int argc, char* argv[]) {
         }
       });
     }
+    */
+
 #ifndef BENCHMARK
     if (current_time >= next_output_time) {
-      plotParticles(outputDirectory, iteration, writer, *container);
+      plotParticles(output_directory, iteration, writer, *container);
       writes++;
       next_output_time = writes * step_size;
       // check if next percentage complete
@@ -228,6 +234,8 @@ int main(const int argc, char* argv[]) {
             std::chrono::duration_cast<std::chrono::microseconds>(
                 current_time_hrc - time_of_last_mups)
                 .count();
+
+        // TODO can we solve narrowing conversion? i dont think so
         double mmups =
             particle_updates * (1.0 / static_cast<double>(microseconds));
         time_of_last_mups = current_time_hrc;

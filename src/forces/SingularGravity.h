@@ -12,8 +12,9 @@
  */
 class SingularGravity final : public SingularForce {
  private:
-  double g{};
-  int axis{};
+  double g_{};
+  int axis_{};
+
 
  public:
   /**

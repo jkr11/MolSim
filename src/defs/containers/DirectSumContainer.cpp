@@ -16,20 +16,21 @@
 DirectSumContainer::DirectSumContainer() : ParticleContainer() {
   DEBUG_PRINT("DirectSumContainer::DirectSumContainer()");
 
-  this->particles = {};
+  this->particles_ = {};
 }
 
 DirectSumContainer::DirectSumContainer(const std::vector<Particle>& particles)
     : ParticleContainer() {
   DEBUG_PRINT("explicit DirectSumContainer::DirectSumContainer()");
   for (const auto& particle : particles) {
-    this->particles.push_back(particle);
+    this->particles_.push_back(particle);
   }
 }
 
 // DirectSumContainer::~DirectSumContainer();
 
-void DirectSumContainer::addParticle(Particle& p) { particles.push_back(p); }
+void DirectSumContainer::addParticle(Particle& p) { particles_.push_back(p); }
+
 
 void DirectSumContainer::addParticles(const std::vector<Particle>& particles) {
   for (Particle p : particles) {
@@ -38,15 +39,15 @@ void DirectSumContainer::addParticles(const std::vector<Particle>& particles) {
 }
 
 void DirectSumContainer::removeParticle(const Particle& p) {
-  particles.erase(std::remove_if(particles.begin(), particles.end(),
+  particles_.erase(std::remove_if(particles_.begin(), particles_.end(),
                                  [&p](const Particle& q) { return p == q; }),
-                  particles.end());
+                  particles_.end());
 }
 
 std::vector<Particle*> DirectSumContainer::getParticles() {
   std::vector<Particle*> refs;
-  refs.reserve(particles.size());
-  for (auto& p : particles) {
+  refs.reserve(particles_.size());
+  for (auto& p : particles_) {
     refs.push_back(&p);
   }
 
@@ -55,20 +56,20 @@ std::vector<Particle*> DirectSumContainer::getParticles() {
 
 std::vector<Particle> DirectSumContainer::getParticlesObjects() {
   std::vector<Particle> refs;
-  refs.reserve(particles.size());
-  for (auto& p : particles) {
+  refs.reserve(particles_.size());
+  for (auto& p : particles_) {
     refs.push_back(p);
   }
   return refs;
 }
 
 [[nodiscard]] std::size_t DirectSumContainer::size() const {
-  return particles.size();
+  return particles_.size();
 }
 
 void DirectSumContainer::singleIterator(
     const std::function<void(Particle&)>& f) {
-  for (auto& p : particles) {
+  for (auto& p : particles_) {
     f(p);
   }
 }
@@ -76,19 +77,19 @@ void DirectSumContainer::singleIterator(
 void DirectSumContainer::pairIterator(
     const std::function<void(Particle&, Particle&)>& f) {
   // note that the upper tri-diag matrix is iterated over
-  for (size_t i = 0; i < particles.size(); ++i) {
-    for (size_t j = i + 1; j < particles.size(); ++j) {
-      f(particles[i], particles[j]);
+  for (size_t i = 0; i < particles_.size(); ++i) {
+    for (size_t j = i + 1; j < particles_.size(); ++j) {
+      f(particles_[i], particles_[j]);
     }
   }
 }
 
 double DirectSumContainer::getKineticEnergy() {
-  double E_kin = 0.0;
-  singleIterator([&E_kin](const Particle& p) {
-    E_kin += 0.5 * p.getM() * ArrayUtils::L2InnerProduct(p.getV());
+  double e_kin = 0.0;
+  singleIterator([&e_kin](const Particle& p) {
+    e_kin += 0.5 * p.getM() * ArrayUtils::L2InnerProduct(p.getV());
   });
-  return E_kin;
+  return e_kin;
 }
 
 void DirectSumContainer::imposeInvariant() {

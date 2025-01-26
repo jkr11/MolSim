@@ -44,67 +44,67 @@ TEST(BoundaryConditions, Precalculations) {
   dvec3 left_center = {-2, -2, 1};
   dvec3 left_bottom = {-2, -2, 1};
 
-  EXPECT_EQ(container.isBoundary_testing(
+  EXPECT_EQ(container.isBoundaryTesting(
                 container.dvec3ToCellIndex_testing(center_center)),
             true);
-  EXPECT_EQ(container.isHalo_testing(
+  EXPECT_EQ(container.isHaloTesting(
                 container.dvec3ToCellIndex_testing(center_center)),
             false);
 
-  EXPECT_EQ(container.isBoundary_testing(
+  EXPECT_EQ(container.isBoundaryTesting(
                 container.dvec3ToCellIndex_testing(center_top)),
             false);
   EXPECT_EQ(
-      container.isHalo_testing(container.dvec3ToCellIndex_testing(center_top)),
+      container.isHaloTesting(container.dvec3ToCellIndex_testing(center_top)),
       true);
 
-  EXPECT_EQ(container.isBoundary_testing(
+  EXPECT_EQ(container.isBoundaryTesting(
                 container.dvec3ToCellIndex_testing(center_bottom)),
             false);
-  EXPECT_EQ(container.isHalo_testing(
+  EXPECT_EQ(container.isHaloTesting(
                 container.dvec3ToCellIndex_testing(center_bottom)),
             true);
 
-  EXPECT_EQ(container.isBoundary_testing(
+  EXPECT_EQ(container.isBoundaryTesting(
                 container.dvec3ToCellIndex_testing(right_top)),
             false);
   EXPECT_EQ(
-      container.isHalo_testing(container.dvec3ToCellIndex_testing(right_top)),
+      container.isHaloTesting(container.dvec3ToCellIndex_testing(right_top)),
       true);
 
-  EXPECT_EQ(container.isBoundary_testing(
+  EXPECT_EQ(container.isBoundaryTesting(
                 container.dvec3ToCellIndex_testing(right_center)),
             false);
-  EXPECT_EQ(container.isHalo_testing(
+  EXPECT_EQ(container.isHaloTesting(
                 container.dvec3ToCellIndex_testing(right_center)),
             true);
 
-  EXPECT_EQ(container.isBoundary_testing(
+  EXPECT_EQ(container.isBoundaryTesting(
                 container.dvec3ToCellIndex_testing(right_bottom)),
             false);
-  EXPECT_EQ(container.isHalo_testing(
+  EXPECT_EQ(container.isHaloTesting(
                 container.dvec3ToCellIndex_testing(right_bottom)),
             true);
 
-  EXPECT_EQ(container.isBoundary_testing(
+  EXPECT_EQ(container.isBoundaryTesting(
                 container.dvec3ToCellIndex_testing(left_top)),
             false);
   EXPECT_EQ(
-      container.isHalo_testing(container.dvec3ToCellIndex_testing(left_top)),
+      container.isHaloTesting(container.dvec3ToCellIndex_testing(left_top)),
       true);
 
-  EXPECT_EQ(container.isBoundary_testing(
+  EXPECT_EQ(container.isBoundaryTesting(
                 container.dvec3ToCellIndex_testing(left_center)),
             false);
   EXPECT_EQ(
-      container.isHalo_testing(container.dvec3ToCellIndex_testing(left_center)),
+      container.isHaloTesting(container.dvec3ToCellIndex_testing(left_center)),
       true);
 
-  EXPECT_EQ(container.isBoundary_testing(
+  EXPECT_EQ(container.isBoundaryTesting(
                 container.dvec3ToCellIndex_testing(left_bottom)),
             false);
   EXPECT_EQ(
-      container.isHalo_testing(container.dvec3ToCellIndex_testing(left_bottom)),
+      container.isHaloTesting(container.dvec3ToCellIndex_testing(left_bottom)),
       true);
 }
 

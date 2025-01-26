@@ -5,13 +5,11 @@
 
 #include <filesystem>
 #include <fstream>
-#include <iostream>
 #include <string>
 
 #include "defs/Particle.h"
 #include "defs/Thermostat.h"
 #include "defs/containers/LinkedCellsContainer.h"
-#include "forces/LennardJones.h"
 #include "testUtil.h"
 #include "utils/ArrayUtils.h"
 #include "utils/Statistics.h"
@@ -33,9 +31,9 @@ TEST(Statistics, WallThermostat) {
        }});
 
   constexpr ThermostatConfig config = {
-    .T_init = 0,
-    .T_target = 1,
-    .deltaT = 1,
+    .t_init = 0,
+    .t_target = 1,
+    .delta_t = 1,
     .n_thermostat = 1,
     .use_relative = false,
     .use_thermal_motion = true,
@@ -54,7 +52,7 @@ TEST(Statistics, WallThermostat) {
   EXPECT_EQ(container.getSpecialParticleCount(), 1) << "Special Particle Count wrong";
   EXPECT_EQ(container.size(), 3) << "Number of Particles is not 0";
 
-  DVEC3_NEAR(thermostat.getAverageVelocity(container), {2.5, 2.5, 2.5}, "average velocity wrong", 1e-5);
+  DVEC3_NEAR(Thermostat::getAverageVelocity(container), {2.5, 2.5, 2.5}, "average velocity wrong", 1e-5);
 }
 
 /**
@@ -74,9 +72,9 @@ TEST(Statistics, ThermalTemperature) {
        }});
 
   constexpr ThermostatConfig config = {
-    .T_init = 0,
-    .T_target = 1,
-    .deltaT = 1,
+    .t_init = 0,
+    .t_target = 1,
+    .delta_t = 1,
     .n_thermostat = 1,
     .use_relative = false,
     .use_thermal_motion = true,
@@ -95,10 +93,10 @@ TEST(Statistics, ThermalTemperature) {
   EXPECT_EQ(container.getSpecialParticleCount(), 1) << "Special Particle Count wrong";
   EXPECT_EQ(container.size(), 3) << "Number of Particles is not 0";
 
-  dvec3 averageVelocity = thermostat.getAverageVelocity(container);
-  DVEC3_NEAR(averageVelocity, {2.5, 2.5, 2.5}, "average velocity wrong", 1e-5);
+  dvec3 average_velocity = Thermostat::getAverageVelocity(container);
+  DVEC3_NEAR(average_velocity, {2.5, 2.5, 2.5}, "average velocity wrong", 1e-5);
 
-  EXPECT_EQ(thermostat.getThermalTemperature(container, averageVelocity), 0.375);
+  EXPECT_EQ(thermostat.getThermalTemperature(container, average_velocity), 0.375);
 }
 
 /**

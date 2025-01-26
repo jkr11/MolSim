@@ -19,7 +19,7 @@
 TEST(Thermostat, holding) {
   char arg0[] = "MolSim";
   char arg1[] = "-f";
-  char arg2[] = "../../../tests/test_cuboid.xml";
+  char arg2[] = "../../tests/test_cuboid.xml";
   char* argv[] = {arg0, arg1, arg2};
   auto [name, step, checkpoint] = CLArgumentParser::parse(3, argv);
 
@@ -91,7 +91,7 @@ TEST(Thermostat, holding) {
   for (std::size_t i = 0; i < 10000; i++) {
     if (i != 0 && i % thermostat->n_thermostat) {
       thermostat->setTemperature(*container);
-      EXPECT_NEAR(thermostat->getTemperature(*container), thermostat->T_target,
+      EXPECT_NEAR(thermostat->getTemperature(*container), thermostat->t_target,
                   1e-6);
     }
   }
@@ -103,7 +103,7 @@ TEST(Thermostat, holding) {
 TEST(Thermostat, cooling) {
   char arg0[] = "MolSim";
   char arg1[] = "-f";
-  char arg2[] = "../../../tests/test_cuboid_cooling.xml";
+  char arg2[] = "../../tests/test_cuboid_cooling.xml";
   char* argv[] = {arg0, arg1, arg2};
   auto [name, step, checkpoint] = CLArgumentParser::parse(3, argv);
 
@@ -178,7 +178,7 @@ TEST(Thermostat, cooling) {
 TEST(Thermostat, heating) {
   char arg0[] = "MolSim";
   char arg1[] = "-f";
-  char arg2[] = "../../../tests/test_cuboid_heating.xml";
+  char arg2[] = "../../tests/test_cuboid_heating.xml";
   char* argv[] = {arg0, arg1, arg2};
   auto [name, step, checkpoint] = CLArgumentParser::parse(3, argv);
 
@@ -256,7 +256,7 @@ TEST(Thermostat, heating) {
 TEST(Thermostat, gradual) {
   char arg0[] = "MolSim";
   char arg1[] = "-f";
-  char arg2[] = "../../../tests/test_cuboid_gradual.xml";
+  char arg2[] = "../../tests/test_cuboid_gradual.xml";
   char* argv[] = {arg0, arg1, arg2};
   auto [name, step, checkpoint] = CLArgumentParser::parse(3, argv);
 
@@ -322,9 +322,9 @@ TEST(Thermostat, gradual) {
       double temp = Thermostat::getTemperature(*container);
       thermostat->setTemperature(*container);
       EXPECT_NEAR(thermostat->getTemperature(*container),
-                  temp + thermostat->d_temp, thermostat->d_temp);
+                  temp + thermostat->delta_temp, thermostat->delta_temp);
     }
   }
 
-  EXPECT_NEAR(thermostat->getTemperature(*container), thermostat->T_target, 1);
+  EXPECT_NEAR(thermostat->getTemperature(*container), thermostat->t_target, 1);
 }

@@ -31,6 +31,7 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
     dvec3 oldx = p.getX();
     const dvec3 new_x = p.getX() + delta_t * p.getV() +
                         (delta_t * delta_t / (2 * p.getM())) * (p.getF());
+
     p.setX(new_x);
 
     if (p.getId() == 874) {
@@ -62,6 +63,7 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
           // p.getId(), f[0], f[1], f[2]);
         }
       }
+
     }
     p.addF(f);
   });
@@ -71,7 +73,7 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
   // Lennard Jones (or truncated)
   particle_container.pairIterator([this](Particle& p1, Particle& p2) {
     dvec3 f12 = {0.0, 0.0, 0.0};
-    for (const auto& force : interactive_forces) {
+    for (const auto& force : interactive_forces_) {
       f12 = f12 + force->directionalForce(p1, p2);
     }
     p1.addF(f12);
@@ -108,7 +110,7 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
     }
 
     const dvec3 new_v =
-        p.getV() + (delta_t / (2 * p.getM()) * (p.getOldF() + p.getF()));
+        p.getV() + (delta_t_ / (2 * p.getM()) * (p.getOldF() + p.getF()));
     p.setV(new_v);
   });
 

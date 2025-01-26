@@ -22,75 +22,76 @@ class LinkedCellsContainer final : public ParticleContainer {
    *
    * position = x * (cellsY * cellsZ) + y * (cellsZ) + z
    */
-  std::vector<std::vector<Particle*>> cells;
 
   std::vector<Particle> particles_;
+
+  std::vector<std::vector<Particle*>> cells_;
 
   /**
    * @brief current number of particles
    */
-  size_t particle_count{};
+  size_t particle_count_{};
 
   /**
    * @brief number of particles, that are immovable
    */
-  size_t special_particle_count{};
+  size_t special_particle_count_{};
 
   /**
    * @brief
    * stores the indexes of all halo_cells for faster iteration in the
    * corresponding direction vector
    */
-  std::array<std::vector<std::size_t>, 6> halo_direction_cells;
+  std::array<std::vector<std::size_t>, 6> halo_direction_cells_;
 
   /**
    * @brief
    * stores the indexes of all halo_cells for faster iteration in the
    * corresponding direction vector
    */
-  std::array<std::vector<std::size_t>, 6> boundary_direction_cells;
+  std::array<std::vector<std::size_t>, 6> boundary_direction_cells_;
 
   /**
    * @brief
    * a more processing friendly storage of LinkedCellsConfig::BoundaryConfig
    */
-  std::array<LinkedCellsConfig::BoundaryType, 6> boundaries{};
+  std::array<LinkedCellsConfig::BoundaryType, 6> boundaries_{};
 
   /**
    * @brief
    * number of cells per direction for domain + 2 halo cells
    */
-  ivec3 cell_count{};
+  ivec3 cell_count_{};
 
   /**
    * @brief
    * cell dimensions
    */
-  dvec3 cell_dim{};
+  dvec3 cell_dim_{};
 
   /**
    * @brief
    * cutoff radius
    */
-  double cutoff{};
+  double cutoff_{};
 
   /**
    * @brief
    * the domain of the container
    */
-  ivec3 domain{};
+  ivec3 domain_{};
 
   /**
    * @brief
    * the boundary config of each direction of the simulation
    */
-  LinkedCellsConfig::BoundaryConfig boundary_config{};
+  LinkedCellsConfig::BoundaryConfig boundary_config_{};
 
   /**
    * @brief apply reflective boundary condition to a dimension
    * @param dimension the problematic dimension
    */
-  inline void apply_reflective_boundary(size_t dimension);
+  inline void applyReflectiveBoundary(size_t dimension);
 
   IndexForce index_force{};
 
@@ -99,7 +100,7 @@ class LinkedCellsContainer final : public ParticleContainer {
    *2D simulations
    *
    */
-  std::array<std::array<ivec3, 9>, 3> index_offsets = {{
+  std::array<std::array<ivec3, 9>, 3> index_offsets_ = {{
       // x
       {{{1, 1, 0},
         {1, 0, 0},
@@ -188,14 +189,14 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @brief the exact number of current particles, updated accordingly
    * @return the current count of particles left in the simulation
    */
-  [[nodiscard]] size_t getParticleCount() const { return particle_count; }
+  [[nodiscard]] size_t getParticleCount() const { return particle_count_; }
 
   /**
    * @brief the exact number of current special particles, updated accordingly
    * @return the current count of special particles left in the simulation
    */
   [[nodiscard]] size_t getSpecialParticleCount() const {
-    return special_particle_count;
+    return special_particle_count_;
   }
 
   /**
@@ -259,13 +260,13 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @brief Get the amount of cells in each dimension
    * @return ivec3 of cells in each dimension
    */
-  [[nodiscard]] std::array<int, 3> getCellCount() const { return cell_count; }
+  [[nodiscard]] std::array<int, 3> getCellCount() const { return cell_count_; }
 
   /**
    * @brief Get the dimensions of a all cells in the container
    * @return dvec3 of the dimensions of all cells
    */
-  [[nodiscard]] dvec3 getCellDim() const { return cell_dim; }
+  [[nodiscard]] dvec3 getCellDim() const { return cell_dim_; }
 
   /**
    * @brief Gets the cell index of a position
@@ -295,21 +296,21 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @param position Cell coordinate in 3 dimensions
    * @return Associated cell index
    */
-  [[nodiscard]] std::size_t cellCoordToIndex_testing(ivec3 position) const;
+  [[nodiscard]] std::size_t cellCoordToIndexTesting(ivec3 position) const;
 
   /**
    * @brief Gets the cell coordinate from the cell index
-   * @param cellIndex Index of the cell
+   * @param cell_index Index of the cell
    * @return Cell coodinate in 3 dimensions
    */
-  [[nodiscard]] inline ivec3 cellIndexToCoord(std::size_t cellIndex) const;
+  [[nodiscard]] inline ivec3 cellIndexToCoord(std::size_t cell_index) const;
 
   /**
    * @brief API for testing
-   * @param cellIndex Index of the cell
+   * @param cell_index Index of the cell
    * @return Cell coodinate in 3 dimensions
    */
-  [[nodiscard]] ivec3 cellIndexToCoord_testing(std::size_t cellIndex) const;
+  [[nodiscard]] ivec3 cellIndexToCoordTesting(std::size_t cell_index) const;
 
   /**
    * @brief Checks if a cell coordinate exists in the container
@@ -320,45 +321,45 @@ class LinkedCellsContainer final : public ParticleContainer {
 
   /**
    * @brief Checks if a cell coordinate is in the halo of the container
-   * @param cellCoord Cell coordinate to be checked
+   * @param cell_coord Cell coordinate to be checked
    * @return If cell is part of the halo
    */
-  [[nodiscard]] inline bool isHalo(ivec3 cellCoord) const;
+  [[nodiscard]] inline bool isHalo(ivec3 cell_coord) const;
 
   /**
    * @brief Checks if a cell index is in the halo of the container
-   * @param cellIndex cell index to be checked
+   * @param cell_index cell index to be checked
    * @return If cell is part of the halo
    */
-  [[nodiscard]] inline bool isHalo(std::size_t cellIndex) const;
+  [[nodiscard]] inline bool isHalo(std::size_t cell_index) const;
 
   /**
    * @brief API for testing
-   * @param cellIndex cell index to be checked
+   * @param cell_index cell index to be checked
    * @return If cell is part of the halo
    */
-  [[nodiscard]] bool isHalo_testing(std::size_t cellIndex) const;
+  [[nodiscard]] bool isHaloTesting(std::size_t cell_index) const;
 
   /**
    * @brief Checks if a cell coordinate is in the boundary of the container
-   * @param cellCoord Cell coordinate to be checked
+   * @param cell_coord Cell coordinate to be checked
    * @return cell is part of the boundary
    */
-  [[nodiscard]] inline bool isBoundary(ivec3 cellCoord) const;
+  [[nodiscard]] inline bool isBoundary(ivec3 cell_coord) const;
 
   /**
    * @brief Checks if a cell index is in the boundary of the container
-   * @param cellIndex cell index to be checked
+   * @param cell_index cell index to be checked
    * @return If cell is part of the boundary
    */
-  [[nodiscard]] inline bool isBoundary(std::size_t cellIndex) const;
+  [[nodiscard]] inline bool isBoundary(std::size_t cell_index) const;
 
   /**
    * @brief API for testing, because gtest does not like inline
-   * @param cellIndex cell index to be checked
+   * @param cell_index cell index to be checked
    * @return If cell is part of the boundary
    */
-  [[nodiscard]] bool isBoundary_testing(std::size_t cellIndex) const;
+  [[nodiscard]] bool isBoundaryTesting(std::size_t cell_index) const;
 
   /**
    * @brief calculates all directions of the boundary cell
@@ -370,21 +371,21 @@ class LinkedCellsContainer final : public ParticleContainer {
    *  3: up
    *  4: south
    *  5: north
-   * @param cellIndex cell index to be checked
+   * @param cell_index cell index to be checked
    * @param f function to check if it is a special cell
-   * @param lowerMagicNumber lower bound index
-   * @param upperMagicNumber upper bound index
+   * @param lower_magic_number lower bound index
+   * @param upper_magic_number upper bound index
    * @return the directions of the boundary cell
    */
-  [[nodiscard]] std::vector<std::size_t> special_cell_direction(
-      std::size_t cellIndex, const std::function<bool(std::size_t)>& f,
-      int lowerMagicNumber, int upperMagicNumber) const;
+  [[nodiscard]] std::vector<std::size_t> specialCellDirection(
+      std::size_t cell_index, const std::function<bool(std::size_t)>& f,
+      int lower_magic_number, int upper_magic_number) const;
 
   /**
    * @brief Debug method to get direct access to the cells vector
    * @return Reference to the cell vector
    */
-  std::vector<std::vector<Particle*>>& getCells() { return cells; }
+  std::vector<std::vector<Particle*>>& getCells() { return cells_; }
 
   /**
    * @brief warp negative cell index to maximum cell coordinate to enable
@@ -394,7 +395,7 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @return bool: whether it is a valid cell to be checked, ivec3: real cell,
    * dvec3: offset to be applied
    */
-  [[nodiscard]] inline std::tuple<bool, ivec3, dvec3> reflective_warp_around(
+  [[nodiscard]] inline std::tuple<bool, ivec3, dvec3> reflectiveWarpAround(
       ivec3 cell_coordinate, std::size_t raw_dimension) const;
 
   /**
@@ -404,7 +405,7 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @return bool: whether it is a valid cell to be checked, ivec3: real cell,
    * dvec3: offset to be applied
    */
-  [[nodiscard]] std::tuple<bool, ivec3, dvec3> reflective_warp_around_testing(
+  [[nodiscard]] std::tuple<bool, ivec3, dvec3> reflectiveWarpAroundTesting(
       ivec3 cell_coordinate, std::size_t raw_dimension) const;
 
   /**
@@ -417,21 +418,21 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @brief returns particle count of the container
    * @return particle count
    */
-  std::size_t getParticleCount() override { return particle_count; }
+  std::size_t getParticleCount() override { return particle_count_; }
 
   /**
    * @brief returns the count of immovable particles
    * @return count of immovable particles
    */
   std::size_t getSpecialParticleCount() override {
-    return special_particle_count;
+    return special_particle_count_;
   }
 
   /**
    * @brief returns the domain of the container
    * @return the domain of the container
    */
-  ivec3 getDomain() override { return domain; }
+  ivec3 getDomain() override { return domain_; }
 
   /**
    * @brief if true, this corner should not be evaluated because it was already
@@ -448,7 +449,6 @@ class LinkedCellsContainer final : public ParticleContainer {
    * set them again
    */
    void setNeighbourReferences();
-
 };
 
 /**

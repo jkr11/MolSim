@@ -27,5 +27,4 @@ template <typename T>
 inline void InfoVec(std::string msg, std::array<T, 3> vec) {
   INFO_FMT("{} -- [{},{},{}]", msg, vec[0], vec[1], vec[2]);
 }
-
 #endif  // DEBUG_H

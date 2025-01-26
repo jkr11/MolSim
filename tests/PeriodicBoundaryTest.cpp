@@ -73,7 +73,7 @@ TEST(PeriodicBoundary, warpingBothPeriodicForX) {
 
   // ee
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(ee, xhigh);
+      container.reflectiveWarpAroundTesting(ee, xhigh);
   constexpr dvec3 expected_offset1 = {9, 9, 0};
   EXPECT_EQ(is_adjacent, true);
   EXPECT_IVEC3_EQ(new_coordinates, bb);
@@ -81,7 +81,7 @@ TEST(PeriodicBoundary, warpingBothPeriodicForX) {
 
   // de
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(de, xhigh);
+      container.reflectiveWarpAroundTesting(de, xhigh);
   constexpr dvec3 expected_offset2 = {9, 0, 0};
   EXPECT_EQ(is_adjacent, true);
   EXPECT_IVEC3_EQ(new_coordinates, db);
@@ -89,7 +89,7 @@ TEST(PeriodicBoundary, warpingBothPeriodicForX) {
 
   // ce
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(ce, xhigh);
+      container.reflectiveWarpAroundTesting(ce, xhigh);
   constexpr dvec3 expected_offset3 = {9, 0, 0};
   EXPECT_EQ(is_adjacent, true);
   EXPECT_IVEC3_EQ(new_coordinates, cb);
@@ -97,7 +97,7 @@ TEST(PeriodicBoundary, warpingBothPeriodicForX) {
 
   // be
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(be, xhigh);
+      container.reflectiveWarpAroundTesting(be, xhigh);
   constexpr dvec3 expected_offset4 = {9, 0, 0};
   EXPECT_EQ(is_adjacent, true);
   EXPECT_IVEC3_EQ(new_coordinates, bb);
@@ -105,7 +105,7 @@ TEST(PeriodicBoundary, warpingBothPeriodicForX) {
 
   // ae
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(ae, xhigh);
+      container.reflectiveWarpAroundTesting(ae, xhigh);
   constexpr dvec3 expected_offset5 = {9, -9, 0};
   EXPECT_EQ(is_adjacent, true);
   EXPECT_IVEC3_EQ(new_coordinates, db);
@@ -134,12 +134,12 @@ TEST(PeriodicBoundary, warpingBothPeriodicForY) {
 
   // ea
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(ea, yhigh);
+      container.reflectiveWarpAroundTesting(ea, yhigh);
   EXPECT_EQ(is_adjacent, false) << "wrong adjacency1";
 
   // eb
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(eb, yhigh);
+      container.reflectiveWarpAroundTesting(eb, yhigh);
   constexpr dvec3 expected_offset2 = {0, 9, 0};
   EXPECT_EQ(is_adjacent, true) << "wrong adjacency2";
   EXPECT_IVEC3_EQ(new_coordinates, bb);
@@ -147,7 +147,7 @@ TEST(PeriodicBoundary, warpingBothPeriodicForY) {
 
   // ec
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(ec, yhigh);
+      container.reflectiveWarpAroundTesting(ec, yhigh);
   constexpr dvec3 expected_offset3 = {0, 9, 0};
   EXPECT_EQ(is_adjacent, true) << "wrong adjacency3";
   EXPECT_IVEC3_EQ(new_coordinates, bc);
@@ -155,7 +155,7 @@ TEST(PeriodicBoundary, warpingBothPeriodicForY) {
 
   // ed
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(ed, yhigh);
+      container.reflectiveWarpAroundTesting(ed, yhigh);
   constexpr dvec3 expected_offset4 = {0, 9, 0};
   EXPECT_EQ(is_adjacent, true) << "wrong adjacency4";
   EXPECT_IVEC3_EQ(new_coordinates, bd);
@@ -163,7 +163,7 @@ TEST(PeriodicBoundary, warpingBothPeriodicForY) {
 
   // ee
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(ee, yhigh);
+      container.reflectiveWarpAroundTesting(ee, yhigh);
   EXPECT_EQ(is_adjacent, false) << "wrong adjacency5";
 }
 
@@ -189,12 +189,12 @@ TEST(PeriodicBoundary, warpingXPeriodicForX) {
 
   // ee
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(ee, xhigh);
+      container.reflectiveWarpAroundTesting(ee, xhigh);
   EXPECT_EQ(is_adjacent, false);
 
   // de
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(de, xhigh);
+      container.reflectiveWarpAroundTesting(de, xhigh);
   constexpr dvec3 expected_offset2 = {9, 0, 0};
   EXPECT_EQ(is_adjacent, true);
   EXPECT_IVEC3_EQ(new_coordinates, db);
@@ -202,7 +202,7 @@ TEST(PeriodicBoundary, warpingXPeriodicForX) {
 
   // ce
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(ce, xhigh);
+      container.reflectiveWarpAroundTesting(ce, xhigh);
   constexpr dvec3 expected_offset3 = {9, 0, 0};
   EXPECT_EQ(is_adjacent, true);
   EXPECT_IVEC3_EQ(new_coordinates, cb);
@@ -210,7 +210,7 @@ TEST(PeriodicBoundary, warpingXPeriodicForX) {
 
   // be
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(be, xhigh);
+      container.reflectiveWarpAroundTesting(be, xhigh);
   constexpr dvec3 expected_offset4 = {9, 0, 0};
   EXPECT_EQ(is_adjacent, true);
   EXPECT_IVEC3_EQ(new_coordinates, bb);
@@ -218,7 +218,7 @@ TEST(PeriodicBoundary, warpingXPeriodicForX) {
 
   // ae
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(ae, xhigh);
+      container.reflectiveWarpAroundTesting(ae, xhigh);
   EXPECT_EQ(is_adjacent, false);
 }
 
@@ -244,12 +244,12 @@ TEST(PeriodicBoundary, warpingYPeriodicForY) {
 
   // ea
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(ea, yhigh);
+      container.reflectiveWarpAroundTesting(ea, yhigh);
   EXPECT_EQ(is_adjacent, false) << "wrong adjacency1";
 
   // eb
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(eb, yhigh);
+      container.reflectiveWarpAroundTesting(eb, yhigh);
   constexpr dvec3 expected_offset2 = {0, 9, 0};
   EXPECT_EQ(is_adjacent, true) << "wrong adjacency2";
   EXPECT_IVEC3_EQ(new_coordinates, bb);
@@ -257,7 +257,7 @@ TEST(PeriodicBoundary, warpingYPeriodicForY) {
 
   // ec
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(ec, yhigh);
+      container.reflectiveWarpAroundTesting(ec, yhigh);
   constexpr dvec3 expected_offset3 = {0, 9, 0};
   EXPECT_EQ(is_adjacent, true) << "wrong adjacency3";
   EXPECT_IVEC3_EQ(new_coordinates, bc);
@@ -265,7 +265,7 @@ TEST(PeriodicBoundary, warpingYPeriodicForY) {
 
   // ed
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(ed, yhigh);
+      container.reflectiveWarpAroundTesting(ed, yhigh);
   constexpr dvec3 expected_offset4 = {0, 9, 0};
   EXPECT_EQ(is_adjacent, true) << "wrong adjacency4";
   EXPECT_IVEC3_EQ(new_coordinates, bd);
@@ -273,7 +273,7 @@ TEST(PeriodicBoundary, warpingYPeriodicForY) {
 
   // ee
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(ee, yhigh);
+      container.reflectiveWarpAroundTesting(ee, yhigh);
   EXPECT_EQ(is_adjacent, false) << "wrong adjacency5";
 }
 
@@ -304,7 +304,7 @@ TEST(PeriodicBoundaryForce, offsetX) {
   const auto test = new Particle({-1, 1, 1}, {0, 0, 0}, 1, 5.0, 1);
 
   auto [is_adjacent, new_coordinates, particle_offset] =
-      container.reflective_warp_around_testing(be, xhigh);
+      container.reflectiveWarpAroundTesting(be, xhigh);
   constexpr dvec3 expected_offset = {9, 0, 0};
   EXPECT_EQ(is_adjacent, true) << "wrong adjacency";
   EXPECT_IVEC3_EQ(new_coordinates, bb);
@@ -343,7 +343,7 @@ TEST(PeriodicBoundaryForce, offsetY) {
   const auto test = new Particle({1, -1, 1}, {0, 0, 0}, 1, 5.0, 1);
 
   auto [is_adjacent, new_coordinates, particle_offset] =
-      container.reflective_warp_around_testing(eb, yhigh);
+      container.reflectiveWarpAroundTesting(eb, yhigh);
   constexpr dvec3 expected_offset = {0, 9, 0};
   EXPECT_EQ(is_adjacent, true) << "wrong adjacency";
   EXPECT_IVEC3_EQ(new_coordinates, bb);
@@ -382,7 +382,7 @@ TEST(PeriodicBoundaryForce, offsetZ) {
   const auto test = new Particle({1, 1, -1}, {0, 0, 0}, 1, 5.0, 1);
 
   auto [is_adjacent, new_coordinates, particle_offset] =
-      container.reflective_warp_around_testing({0, 0, 3}, zhigh);
+      container.reflectiveWarpAroundTesting({0, 0, 3}, zhigh);
   constexpr dvec3 expected_offset = {0, 0, 9};
 
   SpdWrapper::get()->info("{}, [{}, {}, {}], [{}, {}, {}]", is_adjacent,
@@ -426,7 +426,7 @@ TEST(PeriodicBoundaryForce, offsetXY1) {
   const auto test = new Particle({-1, -1, 1}, {0, 0, 0}, 1, 5.0, 1);
 
   auto [is_adjacent, new_coordinates, particle_offset] =
-      container.reflective_warp_around_testing(
+      container.reflectiveWarpAroundTesting(
           ee,
           xhigh);  // xhigh and not yhigh because corners are invalid for yhigh
                    // if both boundaries are periodic to avoid double matching
@@ -469,7 +469,7 @@ TEST(PeriodicBoundaryForce, offsetXY2) {
   const auto test = new Particle({-1, 10, 1}, {0, 0, 0}, 1, 5.0, 1);
 
   auto [is_adjacent, new_coordinates, particle_offset] =
-      container.reflective_warp_around_testing(
+      container.reflectiveWarpAroundTesting(
           ae,
           xhigh);  // xhigh and not yhigh because corners are invalid for yhigh
   // if both boundaries are periodic to avoid double matching
@@ -519,7 +519,7 @@ TEST(PeriodicBoundaryForce, offsetXYZ) {
   const auto test = new Particle({-1, -1, -1}, {0, 0, 0}, 1, 5.0, 1);
 
   auto [is_adjacent, new_coordinates, particle_offset] =
-      container.reflective_warp_around_testing(
+      container.reflectiveWarpAroundTesting(
           {3, 3, 3},
           xhigh);  // xhigh and not yhigh or zhigh because corners are invalid
                    // for yhigh and zhigh
@@ -587,9 +587,9 @@ TEST(PeriodicBoundaryMoving, moveXLeft) {
 
   // test that particle is registered in its true cell
   const auto old_cell =
-      container.getCells()[container.cellCoordToIndex_testing({0, 0, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({0, 0, 0})];
   const auto new_cell =
-      container.getCells()[container.cellCoordToIndex_testing({2, 0, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({2, 0, 0})];
 
   EXPECT_EQ(old_cell.size(), 0);
   EXPECT_EQ(new_cell.size(), 1);
@@ -642,9 +642,9 @@ TEST(PeriodicBoundaryMoving, moveXRight) {
 
   // test that particle is registered in its true cell
   const auto old_cell =
-      container.getCells()[container.cellCoordToIndex_testing({2, 0, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({2, 0, 0})];
   const auto new_cell =
-      container.getCells()[container.cellCoordToIndex_testing({0, 0, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({0, 0, 0})];
 
   EXPECT_EQ(old_cell.size(), 0);
   EXPECT_EQ(new_cell.size(), 1);
@@ -881,9 +881,9 @@ TEST(PeriodicBoundaryMoving, moveYDown) {
 
   // test that particle is registered in its true cell
   const auto old_cell =
-      container.getCells()[container.cellCoordToIndex_testing({0, 0, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({0, 0, 0})];
   const auto new_cell =
-      container.getCells()[container.cellCoordToIndex_testing({0, 2, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({0, 2, 0})];
 
   EXPECT_EQ(old_cell.size(), 0);
   EXPECT_EQ(new_cell.size(), 1);
@@ -936,9 +936,9 @@ TEST(PeriodicBoundaryMoving, moveYUp) {
 
   // test that particle is registered in its true cell
   const auto old_cell =
-      container.getCells()[container.cellCoordToIndex_testing({0, 2, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({0, 2, 0})];
   const auto new_cell =
-      container.getCells()[container.cellCoordToIndex_testing({0, 0, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({0, 0, 0})];
 
   EXPECT_EQ(old_cell.size(), 0);
   EXPECT_EQ(new_cell.size(), 1);
@@ -991,9 +991,9 @@ TEST(PeriodicBoundaryMoving, moveXYDiagonal1) {
 
   // test that particle is registered in its true cell
   const auto old_cell =
-      container.getCells()[container.cellCoordToIndex_testing({0, 0, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({0, 0, 0})];
   const auto new_cell =
-      container.getCells()[container.cellCoordToIndex_testing({2, 2, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({2, 2, 0})];
 
   EXPECT_EQ(old_cell.size(), 0);
   EXPECT_EQ(new_cell.size(), 1);
@@ -1046,9 +1046,9 @@ TEST(PeriodicBoundaryMoving, moveXYDiagonal2) {
 
   // test that particle is registered in its true cell
   const auto old_cell =
-      container.getCells()[container.cellCoordToIndex_testing({2, 0, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({2, 0, 0})];
   const auto new_cell =
-      container.getCells()[container.cellCoordToIndex_testing({0, 2, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({0, 2, 0})];
 
   EXPECT_EQ(old_cell.size(), 0);
   EXPECT_EQ(new_cell.size(), 1);
@@ -1101,9 +1101,9 @@ TEST(PeriodicBoundaryMoving, moveXYDiagonal3) {
 
   // test that particle is registered in its true cell
   const auto old_cell =
-      container.getCells()[container.cellCoordToIndex_testing({0, 2, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({0, 2, 0})];
   const auto new_cell =
-      container.getCells()[container.cellCoordToIndex_testing({2, 0, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({2, 0, 0})];
 
   EXPECT_EQ(old_cell.size(), 0);
   EXPECT_EQ(new_cell.size(), 1);
@@ -1156,9 +1156,9 @@ TEST(PeriodicBoundaryMoving, moveXYDiagonal4) {
 
   // test that particle is registered in its true cell
   const auto old_cell =
-      container.getCells()[container.cellCoordToIndex_testing({2, 2, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({2, 2, 0})];
   const auto new_cell =
-      container.getCells()[container.cellCoordToIndex_testing({0, 0, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({0, 0, 0})];
 
   EXPECT_EQ(old_cell.size(), 0);
   EXPECT_EQ(new_cell.size(), 1);
@@ -1211,9 +1211,9 @@ TEST(PeriodicBoundaryMoving, moveZForward) {
 
   // test that particle is registered in its true cell
   const auto old_cell =
-      container.getCells()[container.cellCoordToIndex_testing({0, 0, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({0, 0, 0})];
   const auto new_cell =
-      container.getCells()[container.cellCoordToIndex_testing({0, 0, 2})];
+      container.getCells()[container.cellCoordToIndexTesting({0, 0, 2})];
 
   EXPECT_EQ(old_cell.size(), 0);
   EXPECT_EQ(new_cell.size(), 1);
@@ -1266,9 +1266,9 @@ TEST(PeriodicBoundaryMoving, moveZBackward) {
 
   // test that particle is registered in its true cell
   const auto old_cell =
-      container.getCells()[container.cellCoordToIndex_testing({0, 0, 2})];
+      container.getCells()[container.cellCoordToIndexTesting({0, 0, 2})];
   const auto new_cell =
-      container.getCells()[container.cellCoordToIndex_testing({0, 0, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({0, 0, 0})];
 
   EXPECT_EQ(old_cell.size(), 0);
   EXPECT_EQ(new_cell.size(), 1);
@@ -1321,9 +1321,9 @@ TEST(PeriodicBoundaryMoving, moveXYZDiagonal) {
 
   // test that particle is registered in its true cell
   const auto old_cell =
-      container.getCells()[container.cellCoordToIndex_testing({2, 2, 2})];
+      container.getCells()[container.cellCoordToIndexTesting({2, 2, 2})];
   const auto new_cell =
-      container.getCells()[container.cellCoordToIndex_testing({0, 0, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({0, 0, 0})];
 
   EXPECT_EQ(old_cell.size(), 0);
   EXPECT_EQ(new_cell.size(), 1);
