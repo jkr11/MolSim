@@ -20,11 +20,16 @@ Final Assignment
 - manual build
   ```bash
   mkdir build
+  cmake -S . -B build - <options>
   cd build
-  cmake ..
-  
+  make
   ```
-
+- testing: use option -DBUILD_TESTS=ON
+  ```bash
+  cd build/tests
+  make
+  ctest
+  ```
 
 - Build the project using the provided build script by using source, add `-t` to also build and run tests, add `-b` to
   enable the BENCHMARK cmake macro
