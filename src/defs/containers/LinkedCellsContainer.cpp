@@ -269,6 +269,10 @@ void LinkedCellsContainer::imposeInvariant() {
 
 void LinkedCellsContainer::singleIterator(
     const std::function<void(Particle &)> &f) {
+  //TODO: does this make sense, or should we do it on particle level?
+  #ifdef _OPENMP
+  #pragma omp parallel for schedule(dynamic)
+  #endif
   for (auto &c : cells) {
     for (auto &p : c) {
       f(p);
@@ -303,6 +307,9 @@ void LinkedCellsContainer::pairIterator(
   }};
 
   // go over all cell indices
+  #ifdef _OPENMP
+  #pragma omp parallel for schedule(dynamic)
+  #endif
   for (std::size_t cellIndex = 0; cellIndex < cells.size(); cellIndex++) {
     std::vector<Particle> &cellParticles = cells[cellIndex];
 

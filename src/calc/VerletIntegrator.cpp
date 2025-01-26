@@ -29,6 +29,8 @@ void VerletIntegrator::step(ParticleContainer& particle_container) const {
     for (const auto& force : interactive_forces) {
       f12 = f12 + force->directionalForce(p1, p2);
     }
+
+    //aquire in same order => prevent deadlock (TODO: ?)
     p1.addF(f12);
     p2.subF(f12);
   });

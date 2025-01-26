@@ -22,17 +22,6 @@
 
 int main(const int argc, char* argv[]) {
 
-//omp test
-  #ifdef _OPENMP
-  #pragma omp parallel for
-  for (int i = 0; i < 10; ++i) {
-    std::cout << "Thread " << omp_get_thread_num() << " is processing iteration " << i << std::endl;
-  }
-  #endif
-
-//omp test end
-
-
 #ifndef BENCHMARK
   SpdWrapper::get()->info("Application started");
 #endif

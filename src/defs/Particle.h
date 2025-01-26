@@ -9,6 +9,7 @@
 
 #include <array>
 #include <string>
+#include <mutex>
 
 #include "defs/types.h"
 
@@ -56,6 +57,11 @@ class Particle final {
    * used in the calculation of lennard-jones force
    */
   double sigma{};
+
+  /**
+   * Mutex to ensure proper force calculation
+   */
+  std::mutex mutex;
 
  public:
   explicit Particle(int type = 0);
@@ -118,7 +124,22 @@ class Particle final {
 
   bool operator==(const Particle &other) const;
 
+
   [[nodiscard]] std::string toString() const;
+
+  Particle &operator=(const Particle &o) {
+    x = o.x;
+    v = o.v;
+    f = o.f;
+    old_f = o.old_f;
+    m = o.m;
+    type = o.type;
+    epsilon = o.epsilon;
+    sigma = o.sigma;
+    //skip mutex
+    return *this;
+  }
+
 };
 
 std::ostream &operator<<(std::ostream &stream, const Particle &p);
