@@ -50,7 +50,7 @@ TEST(XmlReader, failOnNonXml) {
 TEST(XmlReader, testCuboid) {
 
   std::vector<Particle> particles;
-  XmlReader::read(particles, "../../../tests/test_cuboid.xml", arguments);
+  XmlReader::read(particles, "../../tests/test_cuboid.xml", arguments);
 
   EXPECT_EQ(particles.size(), 20);
   EXPECT_EQ(arguments.t_end, 15);
@@ -66,7 +66,7 @@ TEST(XmlReader, testCuboid) {
  */
 TEST(XmlReader, testCuboidSpheroidLinkedCells) {
   std::vector<Particle> particles;
-  XmlReader::read(particles, "../../../tests/test_cuboid_spheroid.xml", arguments);
+  XmlReader::read(particles, "../../tests/test_cuboid_spheroid.xml", arguments);
   EXPECT_EQ(particles.size(), 1257);
   EXPECT_EQ(arguments.t_end, 15);
   EXPECT_EQ(arguments.delta_t, 0.015);

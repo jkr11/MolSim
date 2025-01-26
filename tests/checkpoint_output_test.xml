@@ -38,6 +38,6 @@
         <delta_t>0.0005</delta_t>
         <t_end>0</t_end>
         <twoD>true</twoD>
-        <checkpoint>../../../input/checkpoint_test.xml</checkpoint>
+        <checkpoint>../../input/checkpoint_test.xml</checkpoint>
     </metadata>
 </simulation>

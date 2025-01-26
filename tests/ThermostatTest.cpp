@@ -19,7 +19,7 @@
 TEST(Thermostat, holding) {
   char arg0[] = "MolSim";
   char arg1[] = "-f";
-  char arg2[] = "../../../tests/test_cuboid.xml";
+  char arg2[] = "../../tests/test_cuboid.xml";
   char* argv[] = {arg0, arg1, arg2};
   auto [name, step, checkpoint] = CLArgumentParser::parse(3, argv);
 
@@ -101,7 +101,7 @@ TEST(Thermostat, holding) {
 TEST(Thermostat, cooling) {
   char arg0[] = "MolSim";
   char arg1[] = "-f";
-  char arg2[] = "../../../tests/test_cuboid_cooling.xml";
+  char arg2[] = "../../tests/test_cuboid_cooling.xml";
   char* argv[] = {arg0, arg1, arg2};
   auto [name, step, checkpoint] = CLArgumentParser::parse(3, argv);
 
@@ -175,7 +175,7 @@ TEST(Thermostat, cooling) {
 TEST(Thermostat, heating) {
   char arg0[] = "MolSim";
   char arg1[] = "-f";
-  char arg2[] = "../../../tests/test_cuboid_heating.xml";
+  char arg2[] = "../../tests/test_cuboid_heating.xml";
   char* argv[] = {arg0, arg1, arg2};
   auto [name, step, checkpoint] = CLArgumentParser::parse(3, argv);
 
@@ -251,7 +251,7 @@ TEST(Thermostat, heating) {
 TEST(Thermostat, gradual) {
   char arg0[] = "MolSim";
   char arg1[] = "-f";
-  char arg2[] = "../../../tests/test_cuboid_gradual.xml";
+  char arg2[] = "../../tests/test_cuboid_gradual.xml";
   char* argv[] = {arg0, arg1, arg2};
   auto [name, step, checkpoint] = CLArgumentParser::parse(3, argv);
 

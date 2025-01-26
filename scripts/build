@@ -41,7 +41,7 @@ printf "\033[32mbuilding '%s'\033[0m\n" "$RELEASE_TYPE"
 BUILD_DIR="../build${RELEASE_TYPE}"
 if [ -d "$BUILD_DIR" ]
 then
-  printf "\033[32mdetected existing 'buildDir/%s'\033[0m\n" "$RELEASE_TYPE"
+  printf "\033[32mdetected existing 'build%s'\033[0m\n" "$RELEASE_TYPE"
 else
   mkdir -p "$BUILD_DIR"
   echo "created 'build${RELEASE_TYPE}'"
