@@ -12,6 +12,7 @@ file(GLOB_RECURSE MOLSIM_TEST
 option(BUILD_TESTS "Build tests executable" OFF)
 
 if (BUILD_TESTS)
+    message("BUILD_TESTS is enabled")
     add_executable(MolSimTest ${MOLSIM_TEST}
             CLArgumentParserTest.cpp
             DirectSumContainerTest.cpp

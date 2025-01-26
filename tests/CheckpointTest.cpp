@@ -8,10 +8,8 @@
 #include "calc/VerletIntegrator.h"
 #include "defs/Simulation.h"
 #include "defs/containers/DirectSumContainer.h"
-// #include "defs/containers/LinkedCellsContainer.cpp"
 #include "defs/containers/LinkedCellsContainer.h"
 #include "defs/containers/ParticleContainer.h"
-#include "defs/types.h"
 #include "forces/Gravity.h"
 #include "forces/LennardJones.h"
 #include "io/file/in/xml/XmlReader.h"
@@ -25,7 +23,7 @@
 TEST(Checkpoint, cuboid) {
   char arg0[] = "./MolSim";
   char arg1[] = "-f";
-  char arg2[] = "../../../tests/checkpoint_input_test.xml";
+  char arg2[] = "../../tests/checkpoint_input_test.xml";
   char* argv[] = {arg0, arg1, arg2};
   auto [name, step, write_checkpoint] = CLArgumentParser::parse(3, argv);
   // const char * name = arg2;
@@ -59,13 +57,12 @@ TEST(Checkpoint, cuboid) {
 
   VerletIntegrator verlet_integrator(interactive_forces, singular_forces, 0.1);
 
-  if constexpr (true) {
-    XmlWriter::writeFile(*container, "../../../input/checkpoint_test.xml");
-  }
+  XmlWriter::writeFile(*container, "../../input/checkpoint_test.xml");
+
   std::cout << "New file trying .... " << std::endl;
   char arg01[] = "MolSim";
   char arg11[] = "-f";
-  char arg21[] = "../../../tests/checkpoint_output_test.xml";
+  char arg21[] = "../../tests/checkpoint_output_test.xml";
   char arg31[] = "-c";
   char* argv1[] = {arg01, arg11, arg21, arg31};
   auto [name1, step1, write_checkpoint1] = CLArgumentParser::parse(4, argv1);

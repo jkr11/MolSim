@@ -16,7 +16,16 @@ Final Assignment
 - Install
   ```bash
   git clone https://github.com/jkr11/MolSim.git
+  ``` 
+- manual build
+  ```bash
+  mkdir build
+  cd build
+  cmake ..
+  
   ```
+
+
 - Build the project using the provided build script by using source, add `-t` to also build and run tests, add `-b` to
   enable the BENCHMARK cmake macro
   ```bash
