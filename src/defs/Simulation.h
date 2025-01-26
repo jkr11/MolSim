@@ -99,7 +99,7 @@ struct SphereoidGeneratorConfig {
   const int radius{};
   double h{};
   double m{};
-  const dvec3 initial_velocity;
+  const dvec3 initial_velocity{};
   double epsilon{};
   double sigma{};
   const int type{};

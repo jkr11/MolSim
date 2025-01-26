@@ -3,12 +3,12 @@
 //
 #include "VerletIntegrator.h"
 
-#include "../utils/ArrayUtils.h"
-#include "debug/debug_print.h"
-#include "utils/SpdWrapper.h"
 #include <iostream>
 
-void VerletIntegrator::step(ParticleContainer& particle_container) {
+#include "../utils/ArrayUtils.h"
+#include "utils/SpdWrapper.h"
+
+void VerletIntegrator::step(ParticleContainer& particle_container) const {
   // position update
   auto p = particle_container.getParticles()[0];
   std::cout << "Particle " << p->getId() << " is at mem " << p << std::endl;
@@ -16,9 +16,9 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
   for (auto [diag, ref] : p2->getNeighbours()) {
     auto dings = reinterpret_cast<Particle*>(ref);
     if (dings->getId() == 0) {
-      std::cout << "Neighbour 0 from Particle 1 has reference location " << ref << " and is diag? " << diag << std::endl;
+      std::cout << "Neighbour 0 from Particle 1 has reference location " << ref
+                << " and is diag? " << diag << std::endl;
     }
-
   }
 
   particle_container.singleIterator([this](Particle& p) {
@@ -29,8 +29,8 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
     }  // ignore position update for walls
 
     dvec3 oldx = p.getX();
-    const dvec3 new_x = p.getX() + delta_t * p.getV() +
-                        (delta_t * delta_t / (2 * p.getM())) * (p.getF());
+    const dvec3 new_x = p.getX() + delta_t_ * p.getV() +
+                        (delta_t_ * delta_t_ / (2 * p.getM())) * (p.getF());
 
     p.setX(new_x);
 
@@ -53,17 +53,16 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
   // Pull Up
   particle_container.singleIterator([this](Particle& p) {
     dvec3 f = {0, 0, 0};
-    for (const auto& index_force : index_forces) {
+    for (const auto& index_force : index_forces_) {
       for (const int id : index_force->getIndeces()) {
         if (p.getId() == id) {
           // SpdWrapper::get()->info("Particle {}; -> [{}, {}, {}]", p.getId(),
           // f[0], f[1], f[2]);
-          f = f + index_force->applyForce(p, current_time);
+          f = f + index_force->applyForce(p, current_time_);
           // SpdWrapper::get()->info("Particle {} adding [{}, {}, {}]",
           // p.getId(), f[0], f[1], f[2]);
         }
       }
-
     }
     p.addF(f);
   });
@@ -81,7 +80,7 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
   });
 
   // TODO DELETE
-  particle_container.singleIterator([this](Particle& p) {
+  particle_container.singleIterator([this](const Particle& p) {
     if (p.getId() == 874) {
       SpdWrapper::get()->info("   current 874 f = [{}, {}, {}]", p.getF()[0],
                               p.getF()[1], p.getF()[2]);
@@ -91,7 +90,7 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
   // Gravity and or Membrane
   particle_container.singleIterator([this, &particle_container](Particle& p) {
     dvec3 f = {0, 0, 0};
-    for (const auto& force : singular_forces) {
+    for (const auto& force : singular_forces_) {
       f = f + force->applyForce(p, particle_container);
     }
 

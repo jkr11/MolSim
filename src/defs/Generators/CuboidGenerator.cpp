@@ -27,7 +27,7 @@ CuboidGenerator::CuboidGenerator(const dvec3 &corner,
       type(type),
       two_d(two_d) {
   DEBUG_PRINT_FMT("CuboidGenerator of dim {} created with parameters:",
-                  twoD ? 2 : 3);
+                  two_d ? 2 : 3);
   DEBUG_PRINT_FMT("corner: ({}, {}, {})", corner[0], corner[1], corner[2]);
   DEBUG_PRINT_FMT("dimensions: ({}, {}, {})", dimensions[0], dimensions[1],
                   dimensions[2]);

@@ -204,7 +204,7 @@ void XmlReader::read(std::vector<Particle>& particles,
         double mv;
         if (config->thermostat().present() &&
             velocity == dvec3{0.0, 0.0, 0.0}) {
-          mv = std::sqrt(simulation_parameters.thermostat_config.T_init /
+          mv = std::sqrt(simulation_parameters.thermostat_config.t_init /
                          membranes.mass());
         } else {
           mv = membranes.mv();
@@ -233,7 +233,6 @@ void XmlReader::read(std::vector<Particle>& particles,
         } else {
           mv = spheres.mv();
         }
-
 
         SpheroidGenerator sg(origin, spheres.radius(), spheres.h(),
                              spheres.mass(), velocity, spheres.epsilon(),

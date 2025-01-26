@@ -27,13 +27,13 @@ SpheroidGenerator::SpheroidGenerator(const dvec3& origin, const int radius,
       mv(mv),
       two_d(two_d) {
   DEBUG_PRINT_FMT("SpheroidGenerator of dim {} created with parameters:",
-                  twoD ? 2 : 3);
+                  two_d ? 2 : 3);
   DEBUG_PRINT_FMT("origin: ({}, {}, {})", origin[0], origin[1], origin[2]);
   DEBUG_PRINT_FMT("radius: {}", radius + 1);
   DEBUG_PRINT_FMT("h: {}", h);
   DEBUG_PRINT_FMT("m: {}", m);
-  DEBUG_PRINT_FMT("initialVelocity: ({}, {}, {})", initialVelocity[0],
-                  initialVelocity[1], initialVelocity[2]);
+  DEBUG_PRINT_FMT("initialVelocity: ({}, {}, {})", initial_velocity[0],
+                  initial_velocity[1], initial_velocity[2]);
   DEBUG_PRINT_FMT("mv: {}", mv);
   DEBUG_PRINT_FMT("epsilon: {}", epsilon);
   DEBUG_PRINT_FMT("sigma: {}", sigma);

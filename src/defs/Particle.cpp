@@ -29,7 +29,7 @@ Particle::Particle(const Particle &other) {
   type_ = other.type_;
   epsilon_ = other.epsilon_;
   sigma_ = other.sigma_;
-  id_ = other.id;
+  id_ = other.id_;
   neighbours = std::move(other.neighbours);
 }
 
@@ -61,7 +61,7 @@ Particle::Particle(const std::array<double, 3> &x_arg,
       type_(type_arg),
       epsilon_(epsilon_arg),
       sigma_(sigma_arg),
-      id(global_id_counter++) {}
+      id_(global_id_counter++) {}
 
 
 Particle::~Particle() = default;
@@ -80,7 +80,7 @@ void Particle::updateForceInTime() {
   f_ = {0., 0., 0.};
 }
 
-int Particle::getId() const { return id; }
+int Particle::getId() const { return id_; }
 
 std::string Particle::toString() const {
   std::stringstream stream;

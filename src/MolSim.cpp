@@ -22,10 +22,9 @@
 #include "utils/Statistics.h"
 
 int main(const int argc, char* argv[]) {
+  Arguments arguments = {};
 
- Arguments arguments = {};
-
- auto [input_file, step_size, write_checkpoint] =
+  auto [input_file, step_size, write_checkpoint] =
       CLArgumentParser::parse(argc, argv);
 
   std::vector<Particle> particles;
@@ -111,7 +110,7 @@ int main(const int argc, char* argv[]) {
   }
 
   VerletIntegrator verlet_integrator(interactive_forces, singular_forces,
-                                     index_forces, arguments.delta_t);
+                                     arguments.delta_t, index_forces);
   outputWriter::VTKWriter writer;
   std::unique_ptr<Thermostat> thermostat;
   if (arguments.use_thermostat) {
@@ -134,7 +133,7 @@ int main(const int argc, char* argv[]) {
   spdlog::stopwatch stopwatch;  // TODO whats up with this?
   auto time_of_last_mups = start_time;
   // TODO breaks sometimes i think it has to do with paths?
-  
+
   Statistics statistics(
       arguments.statistics_config.x_bins, arguments.statistics_config.y_bins,
       *container,
@@ -147,9 +146,9 @@ int main(const int argc, char* argv[]) {
   for (auto [diag, ref] : p2->getNeighbours()) {
     auto dings = reinterpret_cast<Particle*>(ref);
     if (dings->getId() == 0) {
-      SpdWrapper::get()->info("Neighbour 0 from Particle 1 has reference location {}", ref);
+      SpdWrapper::get()->info(
+          "Neighbour 0 from Particle 1 has reference location {}", ref);
     }
-
   }
 
   while (current_time <= arguments.t_end) {
@@ -158,8 +157,9 @@ int main(const int argc, char* argv[]) {
       SpdWrapper::get()->info("test test");
       std::cout << "ahhh" << std::endl;
       container->singleIterator([](Particle& p) {
-      SpdWrapper::get()->info("particle {} at [{}, {}, {}]", p.getId(), p.getX()[0], p.getX()[1], p.getX()[2]);
-  });
+        SpdWrapper::get()->info("particle {} at [{}, {}, {}]", p.getId(),
+                                p.getX()[0], p.getX()[1], p.getX()[2]);
+      });
     }
 
     verlet_integrator.step(*container);

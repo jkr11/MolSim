@@ -64,7 +64,7 @@ class Particle final {
   /**
    * unique identifier for every particle
    */
-  int id{};
+  int id_{};
 
   /**
    * neighbouring cells for the membranes
@@ -82,7 +82,6 @@ class Particle final {
       const std::array<double, 3> &x_arg, const std::array<double, 3> &v_arg,
       double m_arg, double epsilon, double sigma, int type = 0);
 
-  Particle(Particle &&other) noexcept;  // Move constructor? cancer
 
   explicit Particle(const std::array<double, 3> &x_arg,
                     const std::array<double, 3> &v_arg,
@@ -156,15 +155,15 @@ class Particle final {
 
   Particle &operator=(const Particle &other) {
     if (this != &other) {
-      x = other.x;
-      v = other.v;
-      f = other.f;
-      old_f = other.old_f;
-      m = other.m;
-      type = other.type;
-      id = other.id;
-      epsilon = other.epsilon;
-      sigma = other.sigma;
+      x_ = other.x_;
+      v_ = other.v_;
+      f_ = other.f_;
+      old_f_ = other.old_f_;
+      m_ = other.m_;
+      type_ = other.type_;
+      id_ = other.id_;
+      epsilon_ = other.epsilon_;
+      sigma_ = other.sigma_;
       neighbours = other.neighbours;  // Shallow copy of shared_ptr
     }
     return *this;
@@ -173,15 +172,15 @@ class Particle final {
   // Move assignment operator
   Particle &operator=(Particle &&other) noexcept {
     if (this != &other) {
-      x = other.x;
-      v = other.v;
-      f = other.f;
-      old_f = other.old_f;
-      m = other.m;
-      type = other.type;
-      id = other.id;
-      epsilon = other.epsilon;
-      sigma = other.sigma;
+      x_ = other.x_;
+      v_ = other.v_;
+      f_ = other.f_;
+      old_f_ = other.old_f_;
+      m_ = other.m_;
+      type_ = other.type_;
+      id_ = other.id_;
+      epsilon_ = other.epsilon_;
+      sigma_ = other.sigma_;
       neighbours =
           std::move(other.neighbours);  // Transfer ownership of shared_ptr
     }

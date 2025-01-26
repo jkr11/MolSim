@@ -59,7 +59,7 @@ LinkedCellsContainer::LinkedCellsContainer(
 
   this->boundary_config_ = linked_cells_config.boundary_config;
 
-  DEBUG_PRINT_FMT("Num Cells: {}", cells.size());
+  DEBUG_PRINT_FMT("Num Cells: {}", cells_.size());
 
   halo_direction_cells_ = {};
   boundary_direction_cells_ = {};
@@ -110,7 +110,7 @@ void LinkedCellsContainer::addParticle(Particle &p) {
     exit(1);
   }
   particles_.push_back(p);
-  cells[index].push_back(&particles_.back());
+  cells_[index].push_back(&particles_.back());
 
 
   this->particle_count_++;
@@ -225,7 +225,7 @@ void LinkedCellsContainer::imposeInvariant() {
       }
       default: {
         DEBUG_PRINT_FMT("BoundaryType {} for dimension {} unknown",
-                        static_cast<int>(boundaries[dimension]), dimension);
+                        static_cast<int>(boundaries_[dimension]), dimension);
         break;
       }
     }
@@ -275,10 +275,10 @@ void LinkedCellsContainer::pairIterator(
 
     if (cell_particles.empty()) continue;
 
-    ivec3 cellCoordinate = cellIndexToCoord(cell_index);
+    ivec3 cell_coordinate = cellIndexToCoord(cell_index);
     DEBUG_PRINT_FMT("cell index: {}; coord = ({}, {}, {}); halo? = {}",
-                    cellIndex, cellCoordinate[0], cellCoordinate[1],
-                    cellCoordinate[2], isHalo(cellIndex))
+                    cell_index, cell_coordinate[0], cell_coordinate[1],
+                    cell_coordinate[2], isHalo(cell_index))
 
     // iterate over particles inside cell
     for (std::size_t i = 0; i < cell_particles.size(); ++i) {
@@ -301,13 +301,13 @@ void LinkedCellsContainer::pairIterator(
     // iterate over neighbouring particles
     for (auto &offset : offsets) {
       // compute neighbourIndex and check if it is valid
-      const ivec3 neighbour_coord = {cellCoordinate[0] + offset[0],
-                                    cellCoordinate[1] + offset[1],
-                                    cellCoordinate[2] + offset[2]};
+      const ivec3 neighbour_coord = {cell_coordinate[0] + offset[0],
+                                    cell_coordinate[1] + offset[1],
+                                    cell_coordinate[2] + offset[2]};
 
       if (!isValidCellCoordinate(neighbour_coord)) {
-        DEBUG_PRINT_FMT("Invalid coord: ({}, {}, {})", neighbourCoord[0],
-                        neighbourCoord[1], neighbourCoord[2])
+        DEBUG_PRINT_FMT("Invalid coord: ({}, {}, {})", neighbour_coord[0],
+                        neighbour_coord[1], neighbour_coord[2])
         continue;
       }
 
@@ -315,11 +315,11 @@ void LinkedCellsContainer::pairIterator(
       DEBUG_PRINT_FMT(
           "Checking cell i={}; c=({}, {}, {}) for pairs (offset = ({}, {}, "
           "{}))",
-          neighbourIndex, neighbourCoord[0], neighbourCoord[1],
-          neighbourCoord[2], offset[0], offset[1], offset[2]);
+          neighbour_index, neighbour_coord[0], neighbour_coord[1],
+          neighbour_coord[2], offset[0], offset[1], offset[2]);
 
       // go over all pairs with neighbour particles
-      std::vector<Particle *> &neighbour_particles = cells_[neighbourIndex];
+      std::vector<Particle *> &neighbour_particles = cells_[neighbour_index];
       if (neighbour_particles.empty()) continue;
 
       for (auto &cell_particle : cell_particles) {
@@ -755,7 +755,7 @@ void LinkedCellsContainer::setNeighbourReferences() {
 
     for (Particle* p2 : getParticles()) {
       for (auto [diag, ref] : p->getNeighbours()) {
-        Particle* new_p = reinterpret_cast<Particle*>(ref);
+        auto* new_p = reinterpret_cast<Particle*>(ref);
 
         if (p2->getId() == new_p->getId()) {
           size_t* pointer = (size_t*) p2;
