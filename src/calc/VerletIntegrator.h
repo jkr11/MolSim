@@ -5,7 +5,6 @@
 #ifndef VERLET_H
 #define VERLET_H
 #pragma once
-#include <utility>
 
 #include "Integrator.h"
 

@@ -18,4 +18,7 @@
 #define DEBUG_PRINT_FMT(msg, ...)
 #endif
 
+#define INFO(msg) SpdWrapper::get()->info(msg);
+#define INFO_FMT(msg, ...) SpdWrapper::get()->info(msg, __VA_ARGS__);
+
 #endif  // DEBUG_H

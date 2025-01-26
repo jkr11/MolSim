@@ -33,26 +33,14 @@ class XmlReader {
    * @param boundary the boundary configuration
    */
   static inline void validateBoundaries(
-      const LinkedCellsConfig::BoundaryConfig& boundary) {
-    if (boundary.x_high != boundary.x_low &&
-        (boundary.x_high == LinkedCellsConfig::Periodic ||
-         boundary.x_low == LinkedCellsConfig::Periodic)) {
-      throw std::runtime_error("x dimension has incompatible boundaries");
-    }
+      const LinkedCellsConfig::BoundaryConfig& boundary);
 
-    if (boundary.y_high != boundary.y_low &&
-        (boundary.y_high == LinkedCellsConfig::Periodic ||
-         boundary.y_low == LinkedCellsConfig::Periodic)) {
-      throw std::runtime_error("y dimension has incompatible boundaries");
-    }
-
-    if (boundary.z_high != boundary.z_low &&
-        (boundary.z_high == LinkedCellsConfig::Periodic ||
-         boundary.z_low == LinkedCellsConfig::Periodic)) {
-      throw std::runtime_error("z dimension has incompatible boundaries");
-    }
-  }
-
+  /**
+   * @brief Reads a xml checkpoint file as specified in
+   * MolSim/src/io/file/out/checkpoint-schema.xsd
+   * @param filepath path pointing to checkpoint // TODO default location
+   * @param particles particles to which the checkpoint is read
+   */
   static void loadCheckpoint(const std::string& filepath,
                              std::vector<Particle>& particles);
 };

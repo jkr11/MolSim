@@ -23,8 +23,9 @@ void XmlReader::read(std::vector<Particle>& particles,
   validate_path(path, ".xml", "Simulation input");
   try {
     const std::unique_ptr<::simulation> config = simulation_(filepath);
-    SpdWrapper::get()->info("Reading XML file {}", filepath);
+    INFO_FMT("Reading XML file {}", filepath);
     auto& metadata = config->metadata();
+    INFO("Reading containers ...")
     if (auto& container = metadata.container();
         container.directSum().present()) {
       DirectSumConfig direct_sum_config;
@@ -55,6 +56,7 @@ void XmlReader::read(std::vector<Particle>& particles,
       SpdWrapper::get()->warn(
           "No container provided, using default LinkedCells");
     }
+    INFO("Reading interactive forces ...")
     if (auto& force = metadata.force(); force.LennardJones().present()) {
       simulation_parameters.interactive_force_types.emplace_back(
           LennardJonesConfig{});
@@ -66,14 +68,18 @@ void XmlReader::read(std::vector<Particle>& particles,
     } else {
       SpdWrapper::get()->warn("No force provided, using default LennardJones");
     }
+    INFO("Reading singular foces ...")
     if (auto& singular_force = metadata.force();
         singular_force.SingularGravity().present()) {
+      INFO("Read SingularGravity")
       simulation_parameters.singular_force_types.emplace_back(
           SingularGravityConfig{singular_force.SingularGravity()->g().get()});
     }
+    INFO("Checking if checkpoint is  present ...")
     if (metadata.checkpoint().present()) {
       loadCheckpoint(metadata.checkpoint().get(), particles);
     }
+    INFO("Checking for thermostat ...")
     if (config->thermostat().present()) {
       auto thermostat = config->thermostat();
       ThermostatConfig thermostat_config = {
@@ -96,8 +102,6 @@ void XmlReader::read(std::vector<Particle>& particles,
         thermostat_config.T_target = thermostat->T_target().get();
       }
 
-      SpdWrapper::get()->info("Checkpoint thermostat deltaT {}",
-                              thermostat_config.deltaT);
       simulation_parameters.thermostat_config = thermostat_config;
       simulation_parameters.use_thermostat = true;
     } else {
@@ -105,8 +109,10 @@ void XmlReader::read(std::vector<Particle>& particles,
     }
     simulation_parameters.delta_t = metadata.delta_t();
     simulation_parameters.t_end = metadata.t_end();
-    const auto& twoD = metadata.twoD();
 
+    const auto& twoD = metadata.twoD();
+    INFO_FMT("Simulation has dimension {}", twoD ? 2 : 3)
+    INFO("Reading in particle shape configurations ...")
     if (config->cuboids() != nullptr) {
       for (const auto& cubes : config->cuboids()->cuboid()) {
         const auto& _corner = cubes.corner();
@@ -125,7 +131,7 @@ void XmlReader::read(std::vector<Particle>& particles,
         } else {
           mv = cubes.mv();
         }
-
+        // These info print themselves
         CuboidGenerator cg(corner, dimensions, cubes.h(), cubes.mass(),
                            velocity, mv, cubes.epsilon(), cubes.sigma(),
                            cubes.type(), twoD);
@@ -133,7 +139,6 @@ void XmlReader::read(std::vector<Particle>& particles,
         cg.generate(particles);
       }
     }
-
     if (config->spheroids() != nullptr) {
       for (const auto& spheres : config->spheroids()->spheroid()) {
         const auto& _origin = spheres.origin();
@@ -164,13 +169,12 @@ void XmlReader::read(std::vector<Particle>& particles,
 
 void XmlReader::loadCheckpoint(const std::string& _filepath,
                                std::vector<Particle>& particles) {
-  SpdWrapper::get()->info("Looking and for checkpoint file");
   const std::filesystem::path filepath(_filepath);
   validate_path(filepath, ".xml", "checkpoint");
   try {
     DEBUG_PRINT("Found checkpoint file");
     const std::unique_ptr<::CheckpointType> checkpoint = Checkpoint(filepath);
-    SpdWrapper::get()->info("Reading checkpoint particles");
+    INFO("Reading checkpoint particles");
     std::vector<Particle> temp_particles;
     for (const auto& p : checkpoint->Particles().Particle()) {
       auto position =
@@ -187,13 +191,33 @@ void XmlReader::loadCheckpoint(const std::string& _filepath,
       temp_particles.emplace_back(position, velocity, force, old_force, mass,
                                   type, epsilon, sigma);
     }
-    SpdWrapper::get()->info("Read {} particles from checkpoint",
-                            temp_particles.size());
+    INFO_FMT("Read {} particles from checkpoint", temp_particles.size());
     particles.reserve(particles.size() + temp_particles.size());
     particles.insert(particles.end(), temp_particles.begin(),
                      temp_particles.end());
   } catch (const std::exception& e) {
     SpdWrapper::get()->error("Error reading checkpoint file: {}", e.what());
+  }
+}
+
+void XmlReader::validateBoundaries(
+    const LinkedCellsConfig::BoundaryConfig& boundary) {
+  if (boundary.x_high != boundary.x_low &&
+      (boundary.x_high == LinkedCellsConfig::Periodic ||
+       boundary.x_low == LinkedCellsConfig::Periodic)) {
+    throw std::runtime_error("x dimension has incompatible boundaries");
+  }
+
+  if (boundary.y_high != boundary.y_low &&
+      (boundary.y_high == LinkedCellsConfig::Periodic ||
+       boundary.y_low == LinkedCellsConfig::Periodic)) {
+    throw std::runtime_error("y dimension has incompatible boundaries");
+  }
+
+  if (boundary.z_high != boundary.z_low &&
+      (boundary.z_high == LinkedCellsConfig::Periodic ||
+       boundary.z_low == LinkedCellsConfig::Periodic)) {
+    throw std::runtime_error("z dimension has incompatible boundaries");
   }
 }
 

@@ -86,11 +86,11 @@ void DirectSumContainer::pairIterator(
 }
 
 double DirectSumContainer::getKineticEnergy() {
-  double E_kin = 0.0;
-  singleIterator([&E_kin](const Particle& p) {
-    E_kin += 0.5 * p.getM() * ArrayUtils::L2InnerProduct(p.getV());
+  double e_kin = 0.0;
+  singleIterator([&e_kin](const Particle& p) {
+    e_kin += 0.5 * p.getM() * ArrayUtils::L2InnerProduct(p.getV());
   });
-  return E_kin;
+  return e_kin;
 }
 
 void DirectSumContainer::imposeInvariant() {
