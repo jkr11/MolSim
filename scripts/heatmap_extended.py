@@ -43,7 +43,7 @@ for i, row in enumerate(data_array):
 
     plt.figure(figsize=(5, 5))  # Adjust figure size for a full heatmap
     ax = sns.heatmap(
-        row.reshape(15, 15),
+        row.reshape(15, 15)[::-1],
         cmap="summer",  # Color scheme
         cbar=True,  # Display color bar
         cbar_kws={'label': 'density in p/u³'},  # Add label to the color bar
