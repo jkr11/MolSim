@@ -20,6 +20,8 @@ const double LinkedCellsContainer::sigma_factor = std::pow(2.0, 1.0 / 6.0);
 LinkedCellsContainer::LinkedCellsContainer(
     const LinkedCellsConfig &linked_cells_config) {
   domain = linked_cells_config.domain;
+  particle_count = 0;
+  special_particle_count = 0;
 
   DEBUG_PRINT("LinkedCellsContainer instantiated");
   SpdWrapper::get()->info("domain size: ({}, {}, {})", domain[0], domain[1],
@@ -42,8 +44,9 @@ LinkedCellsContainer::LinkedCellsContainer(
   // possible pairs are already iterated over
   for (std::size_t i = 0; i < 2; i++) {
     if (cell_count[i] < 3) {
-      SpdWrapper::get()->info(
-          "cell count is too small if reflective boundaries are used");
+      SpdWrapper::get()->error(
+          "Cell count is too small if reflective boundaries are used! If this "
+          "is not a testing instance, please exit the simulation");
     }
   }
 
@@ -100,6 +103,12 @@ void LinkedCellsContainer::addParticle(const Particle &p) {
   }
   cells[index].emplace_back(p);
 
+  this->particle_count++;
+
+  if (p.getType() < 0) {
+    this->special_particle_count++;
+  }
+
   DEBUG_PRINT_FMT("Added particle with coords ({}, {}, {}) into cell index: {}",
                   p.getX()[0], p.getX()[1], p.getX()[2], index)
 }
@@ -118,6 +127,11 @@ void LinkedCellsContainer::removeParticle(const Particle &p) {
   particles.erase(std::remove_if(particles.begin(), particles.end(),
                                  [&p](const Particle &q) { return p == q; }),
                   particles.end());
+
+  this->particle_count--;
+  if (p.getType() < 0) {
+    this->special_particle_count--;
+  }
 
   DEBUG_PRINT_FMT(
       "Removed particle with coords ({}, {}, {}) from cell index: {}",
@@ -163,13 +177,15 @@ void LinkedCellsContainer::imposeInvariant() {
   // apply boundary condition
   // it is assumed that GhostParticles do not have to persist, so we dont have
   // to iterate over the halo cells of Reflective Boundaries
-  // accessible, 4 instead of 6
 
-  for (size_t dimension = 0; dimension < 4; ++dimension) {
+  for (size_t dimension = 0; dimension < 6; ++dimension) {
     switch (boundaries[dimension]) {
       case LinkedCellsConfig::BoundaryType::Outflow: {
         // clear halo
         for (const size_t cell_index : halo_direction_cells[dimension]) {
+          particle_count -=
+              cells[cell_index].size();  // update particle count, only place
+                                         // where particles are deleted
           cells[cell_index].clear();
           cells[cell_index].shrink_to_fit();
         }
@@ -180,82 +196,7 @@ void LinkedCellsContainer::imposeInvariant() {
         break;
       }
       case LinkedCellsConfig::Periodic: {
-        // move particles in halo to the other side
-        // calculate forces only for ?_high, so all particles are until then in
-        // the right place
-        const std::size_t problematic_dimension = dimension / 2;
-        const std::size_t problematic_dimension_direction = dimension % 2;
-
-        for (const std::size_t cell_index : halo_direction_cells[dimension]) {
-          int counter = 0;
-          for (auto it = cells[cell_index].begin();
-               it < cells[cell_index].end(); ++it) {
-            counter++;
-            dvec3 new_pos = it->getX();
-            new_pos[problematic_dimension] +=
-                domain[problematic_dimension] *
-                (problematic_dimension_direction % 2 == 0 ? 1 : -1);
-            const std::size_t should_be_index = dvec3ToCellIndex(new_pos);
-
-            it->setX(new_pos);
-            cells[should_be_index].push_back(*it);
-          }
-
-          cells[cell_index].clear();
-          cells[cell_index].shrink_to_fit();
-        }
-
-        // skip force calculation for lower side of the axis
-        if (problematic_dimension_direction == 0) {
-          break;
-        }
-
-        // iterate over all 9 / 3 cells on the other end
-        // for now strict 2D implementation for performance
-        for (const std::size_t cell_index :
-             boundary_direction_cells[dimension]) {
-          ivec3 cell_coordinates = cellIndexToCoord(cell_index);
-
-          // change 3 to 9 for 3D
-          for (std::size_t i = 0; i < 3; ++i) {
-            ivec3 offset = index_offsets[problematic_dimension][i];
-            const ivec3 cell_to_check = cell_coordinates + offset;
-            bool is_adjacent_cell;
-            ivec3 adjacent_cell_coordinates;
-            dvec3 particle_distance_offset;
-
-            std::tie(is_adjacent_cell, adjacent_cell_coordinates,
-                     particle_distance_offset) =
-                reflectiveWarpAround(cell_to_check, dimension);
-
-            if (!is_adjacent_cell) {
-              continue;
-            }
-
-            const auto adjacent_cell_index =
-                cellCoordToIndex(adjacent_cell_coordinates);
-
-            // iterate over all pairs and calculate force
-            for (Particle &p : cells[cell_index]) {
-              for (Particle &q : cells[adjacent_cell_index]) {
-                // distance check
-                const dvec3 accounted_particle_distance =
-                    q.getX() - p.getX() + particle_distance_offset;
-
-                if (ArrayUtils::L2InnerProduct(accounted_particle_distance) >=
-                    cutoff * cutoff) {
-                  continue;
-                }
-
-                const dvec3 applied_force =
-                    LennardJones::directionalForceWithOffset(
-                        p, q, accounted_particle_distance);
-                p.setF(p.getF() + applied_force);
-                q.setF(q.getF() - applied_force);
-              }
-            }
-          }
-        }
+        applyPeriodicBoundary(dimension);
         break;
       }
       default: {
@@ -535,24 +476,112 @@ void LinkedCellsContainer::applyReflectiveBoundary(const size_t dimension) {
   }
 }
 
-std::tuple<bool, ivec3, dvec3> LinkedCellsContainer::reflectiveWarpAround(
+void LinkedCellsContainer::applyPeriodicBoundary(const size_t dimension) {
+  // move particles in halo to the other side
+  // calculate forces only for ?_high, so all particles are until then in
+  // the right place
+  const std::size_t problematic_dimension = dimension / 2;
+  const std::size_t problematic_dimension_direction = dimension % 2;
+
+  for (const std::size_t cell_index : halo_direction_cells[dimension]) {
+    int counter = 0;
+    for (auto it = cells[cell_index].begin(); it < cells[cell_index].end();
+         ++it) {
+      counter++;
+      dvec3 new_pos = it->getX();
+      new_pos[problematic_dimension] +=
+          domain[problematic_dimension] *
+          (problematic_dimension_direction % 2 == 0 ? 1 : -1);
+      const std::size_t shouldBeIndex = dvec3ToCellIndex(new_pos);
+
+      it->setX(new_pos);
+      cells[shouldBeIndex].push_back(*it);
+    }
+
+    cells[cell_index].clear();
+    cells[cell_index].shrink_to_fit();
+  }
+
+  // skip force calculation for lower side of the axis
+  if (problematic_dimension_direction == 0) {
+    return;
+  }
+
+  // iterate over all 9 / 3 cells on the other end
+  for (const std::size_t cell_index : boundary_direction_cells[dimension]) {
+    ivec3 cell_coordinates = cellIndexToCoord(cell_index);
+
+    // change 3 to 9 for 3D
+    for (std::size_t i = 0; i < 9; ++i) {
+      ivec3 offset = index_offsets[problematic_dimension][i];
+      const ivec3 cell_to_check = cell_coordinates + offset;
+      bool is_adjacent_cell;
+      ivec3 adjacent_cell_coordinates;
+      dvec3 particle_distance_offset;
+
+      std::tie(is_adjacent_cell, adjacent_cell_coordinates,
+               particle_distance_offset) =
+          reflective_warp_around(cell_to_check, dimension);
+
+      if (!is_adjacent_cell) {
+        continue;
+      }
+
+      const auto adjacent_cell_index =
+          cellCoordToIndex(adjacent_cell_coordinates);
+
+      // // account for the dimension that is checked
+      // particle_distance_offset[problematic_dimension] =
+      //     domain[problematic_dimension];
+
+      // iterate over all pairs and calculate force
+
+      for (Particle &p : cells[cell_index]) {
+        for (Particle &q : cells[adjacent_cell_index]) {
+          // distance check
+          const dvec3 accounted_particle_distance =
+              q.getX() - p.getX() + particle_distance_offset;
+
+          if (ArrayUtils::L2InnerProduct(accounted_particle_distance) >=
+              cutoff * cutoff) {
+            continue;
+          }
+
+          const dvec3 applied_force = LennardJones::directionalForceWithOffset(
+              p, q, accounted_particle_distance);
+          p.setF(p.getF() + applied_force);
+          q.setF(q.getF() - applied_force);
+        }
+      }
+    }
+  }
+}
+
+std::tuple<bool, ivec3, dvec3> LinkedCellsContainer::reflective_warp_around(
     const ivec3 cell_coordinate, const std::size_t raw_dimension) const {
   dvec3 offset = {0, 0, 0};
 
-  if (raw_dimension == yhigh &&
-      boundaries[xlow] == LinkedCellsConfig::Periodic &&
-      boundaries[ylow] == LinkedCellsConfig::Periodic &&
-      (cell_coordinate[0] == -1 || cell_coordinate[0] == cell_count[1] - 2)) {
-    // both dimensions are periodic -> make sure that corner cells are valid
-    // only once! skip this for the y dimension, since it was already calculated
-    // in the x dimension
+  // if (raw_dimension == yhigh &&
+  //     boundaries[xlow] == LinkedCellsConfig::Periodic &&
+  //     boundaries[ylow] == LinkedCellsConfig::Periodic &&
+  //     (cell_coordinate[0] == -1 || cell_coordinate[0] == cell_count[1] - 2))
+  //     {
+  //   // both dimensions are periodic -> make sure that corner cells are valid
+  //   // only once! skip this for the y dimension, since it was already
+  //   calculated
+  //   // in the x dimension
+  //
+  //   DEBUG_PRINT("cell should not be warped");
+  //   return std::make_tuple(false, cell_coordinate, offset);
+  // }
 
-    SpdWrapper::get()->info("cell should not be warped");
+  if (isDoubleCorner(cell_coordinate, raw_dimension)) {
+    DEBUG_PRINT("cell should not be warped");
     return std::make_tuple(false, cell_coordinate, offset);
   }
 
   ivec3 new_cell_coordinate = cell_coordinate;
-  for (std::size_t dimension = 0; dimension < 2; dimension++) {
+  for (std::size_t dimension = 0; dimension < 3; dimension++) {
     if (cell_coordinate[dimension] == -1) {
       // low wrap around to high cell
       new_cell_coordinate[dimension] = cell_count[dimension] - 3;  // top cell
@@ -602,4 +631,81 @@ double LinkedCellsContainer::getKineticEnergy() {
     e_kin += p.getM() * ArrayUtils::L2InnerProduct(p.getV());
   });
   return e_kin * 0.5;
+}
+
+bool LinkedCellsContainer::isDoubleCorner(
+    const ivec3 cell_coordinate, const std::size_t raw_dimension) const {
+  // check whether it really is a corner
+  int edge_of_x_dimensions_counter = 0;
+  for (std::size_t dimension = 0; dimension < 3; dimension++) {
+    if (cell_coordinate[dimension] == -1 ||
+        cell_coordinate[dimension] == cell_count[dimension] - 2) {
+      edge_of_x_dimensions_counter++;
+    }
+  }
+
+  if (edge_of_x_dimensions_counter < 2) {
+    // SpdWrapper::get()->info("[{}, {}, {}] is not a corner!", cell_coordinate[0],
+    //                       cell_coordinate[1], cell_coordinate[2]);
+    return false;
+  }
+  // SpdWrapper::get()->info("[{}, {}, {}] is a corner!", cell_coordinate[0],
+  //                         cell_coordinate[1], cell_coordinate[2]);
+
+  // TODO: make beautiful
+  // lookup table via some if statements
+  // ugly, but best I could think of
+  if (boundaries[xlow] == LinkedCellsConfig::Periodic &&
+      boundaries[ylow] == LinkedCellsConfig::Periodic &&
+      boundaries[zlow] != LinkedCellsConfig::Periodic) {
+    // 110
+    // SpdWrapper::get()->info("isDoubleCorner - xlow ylow !zlow");
+    if (raw_dimension == yhigh &&
+        (cell_coordinate[0] == -1 || cell_coordinate[0] == cell_count[0] - 2)) {
+      return true;
+    }
+    return false;
+  }
+  if (boundaries[xlow] == LinkedCellsConfig::Periodic &&
+      boundaries[ylow] != LinkedCellsConfig::Periodic &&
+      boundaries[zlow] == LinkedCellsConfig::Periodic) {
+    // 101
+    // SpdWrapper::get()->info("isDoubleCorner - xlow !ylow zlow");
+    if (raw_dimension == zhigh &&
+        (cell_coordinate[0] == -1 || cell_coordinate[0] == cell_count[0] - 2)) {
+      return true;
+    }
+    return false;
+  }
+  if (boundaries[xlow] != LinkedCellsConfig::Periodic &&
+      boundaries[ylow] == LinkedCellsConfig::Periodic &&
+      boundaries[zlow] == LinkedCellsConfig::Periodic) {
+    // 011
+    // SpdWrapper::get()->info("isDoubleCorner - !xlow ylow zlow");
+    if (raw_dimension == zhigh &&
+        (cell_coordinate[1] == -1 || cell_coordinate[1] == cell_count[1] - 2)) {
+      return true;
+    }
+    return false;
+  }
+  if (boundaries[xlow] == LinkedCellsConfig::Periodic &&
+      boundaries[ylow] == LinkedCellsConfig::Periodic &&
+      boundaries[zlow] == LinkedCellsConfig::Periodic) {
+    // 111
+    // SpdWrapper::get()->info("isDoubleCorner - xlow ylow zlow");
+    if (raw_dimension == yhigh &&
+        (cell_coordinate[0] == -1 || cell_coordinate[0] == cell_count[0] - 2)) {
+      return true;
+    }
+    if (raw_dimension == zhigh &&
+        (cell_coordinate[0] == -1 || cell_coordinate[0] == cell_count[0] - 2)) {
+      return true;
+    }
+    if (raw_dimension == zhigh &&
+        (cell_coordinate[1] == -1 || cell_coordinate[1] == cell_count[1] - 2)) {
+      return true;
+    }
+    return false;
+  }
+  return false;
 }

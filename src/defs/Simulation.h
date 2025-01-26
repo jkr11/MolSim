@@ -56,12 +56,21 @@ struct ThermostatConfig {
   double deltaT{};
   int n_thermostat{};
   bool use_relative{};
+  bool use_thermal_motion{};
+};
+
+struct StatisticsConfig {
+  bool calc_stats{};
+  int x_bins{};
+  int y_bins{};
+  int output_interval{};
+  std::string velocity_output_location{};
+  std::string density_output_location{};
 };
 
 /**
  * @brief struct to hold command line arguments
  */
-
 struct Arguments {
   using SingularForceTypes =
       std::variant<SingularGravityConfig, HarmonicForceConfig>;
@@ -75,6 +84,7 @@ struct Arguments {
   std::variant<LinkedCellsConfig, DirectSumConfig> container_data;
   std::vector<SingularForceTypes> singular_force_types;
   std::vector<InteractiveForceTypes> interactive_force_types;
+  StatisticsConfig statistics_config;
 };
 
 /**
@@ -129,7 +139,6 @@ inline void printConfiguration(const Arguments& args) {
         std::get<LinkedCellsConfig>(args.container_data);
     logger->info("-- Domain: ({}, {}, {})", domain[0], domain[1], domain[2]);
     logger->info("-- Cutoff Radius: {}", cutoff_radius);
-
     logger->info("Boundary Configuration:");
     logger->info("------------------------");
 

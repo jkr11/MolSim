@@ -17,6 +17,7 @@ class Thermostat {
   double d_temp{};
   int n_thermostat{};
   bool use_relative{};
+  bool use_thermal_motion{};
 
   explicit Thermostat(const ThermostatConfig& config);
 
@@ -35,6 +36,13 @@ class Thermostat {
   static dvec3 getGlobalVelocity(ParticleContainer& particle_container);
 
   /**
+   * @calculates the average global velocity excluding special particles
+   * @param particle_container container
+   * @return the average global velocity
+   */
+  static dvec3 getAverageVelocity(ParticleContainer& particle_container);
+
+  /**
    * @brief scales the temperature relatively or absolutely using beta
    * @param particle_container container
    * @param beta the scaling coefficient sqrt(T_new / T_current)
@@ -42,9 +50,28 @@ class Thermostat {
   void applyBeta(ParticleContainer& particle_container, double beta) const;
 
   /**
+   * @brief scales the temperature relatively or absolutely using beta and
+   * ignores average velocity
+   * @param particle_container container
+   * @param beta the scaling coefficient sqrt(T_new / T_current)
+   * @param avg_velocity average velocity
+   */
+  void applyThermalBeta(ParticleContainer& particle_container, double beta,
+                        const dvec3& avg_velocity) const;
+
+  /**
    * @a wrapper to proved applyBeta with the necessary data
    * @param particle_container container
    */
   void setTemperature(ParticleContainer& particle_container) const;
+
+  /**
+   * @brief calculates the temperature according to the thermal motion
+   * @param particle_container container
+   * @param avg_velocity average velocity of particles
+   * @return the temperature according to the thermal motion
+   */
+  static double getThermalTemperature(ParticleContainer& particle_container,
+                                      dvec3 avg_velocity);
 };
 #endif  // THERMOSTAT_H
