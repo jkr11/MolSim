@@ -69,7 +69,7 @@ class Particle final {
   /**
    * neighbouring cells for the membranes
    */
-  std::vector<std::pair<bool, std::shared_ptr<Particle>>> neighbours;
+  std::vector<std::pair<bool, size_t>> neighbours;
 
  public:
   explicit Particle(int type = 0);
@@ -112,8 +112,8 @@ class Particle final {
 
   [[nodiscard]] double getSigma() const { return sigma; }
 
-  [[nodiscard]] const std::vector<std::pair<bool, std::shared_ptr<Particle>>> &
-  getNeighbours() const;
+  [[nodiscard]] const std::vector<std::pair<bool,size_t>> &getNeighbours()
+      const;
 
   void setF(const std::array<double, 3> &F) { f = F; }
 
@@ -127,7 +127,7 @@ class Particle final {
 
   void setSigma(const double &new_sigma) { sigma = new_sigma; }
 
-  void pushBackNeighbour(bool diag, const std::shared_ptr<Particle> &particle);
+  void pushBackNeighbour(bool diag, long particle);
 
   void updateForceInTime();
 
@@ -140,6 +140,13 @@ class Particle final {
   void addF(const dvec3 &F) { f = f + F; }
 
   void subF(const dvec3 &F) { f = f - F; }
+
+  void setNeighbours(
+      const std::vector<std::pair<bool, size_t>> &new_neighbours) {
+    neighbours = new_neighbours;
+  }
+
+  void resetNeighbours() { neighbours = {}; }
 
   [[nodiscard]] int getId() const;
 

@@ -3,6 +3,9 @@
 //
 #include "MembraneGenerator.h"
 
+#include <iostream>
+#include <iomanip>
+
 #include "debug/debug_print.h"
 #include "utils/ArrayUtils.h"
 #include "utils/MaxwellBoltzmannDistribution.h"
@@ -105,13 +108,18 @@ void MembraneGenerator::generate(std::vector<Particle> &particles) {
                 const long neighborIndex = ni * dimensions[1] * dimensions[2] +
                                            nj * dimensions[2] + nk;
                 const bool isDiagonal = (di != 0) + (dj != 0) + (dk != 0) > 1;
-                const auto &neighbor_particle = particles[neighborIndex];
+                Particle* neighbor_particle = &particles[neighborIndex];
+                if (neighbor_particle->getId() == 0) {
+                  std::cout << std::hex << std::setw(16) << std::setfill('0') << reinterpret_cast<size_t>(&particles[neighborIndex]) << std::dec << std::endl;
+
+                }
+
                 // SpdWrapper::get()->info(
                 //     "Particle {} is diagonal {} to Particle {}",
                 //     neighbor_particle.getId(), isDiagonal,
                 //     particles[currentIndex].getId());
                 particles[currentIndex].pushBackNeighbour(
-                    isDiagonal, std::make_shared<Particle>(neighbor_particle));
+                    isDiagonal, reinterpret_cast<size_t>(neighbor_particle));
               }
             }
           }

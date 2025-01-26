@@ -80,6 +80,52 @@ struct StatisticsConfig {
   std::string density_output_location{};
 };
 
+struct SphereoidGeneratorConfig {
+  dvec3 origin{};
+  const int radius{};
+  double h{};
+  double m{};
+  const dvec3 initial_velocity;
+  double epsilon{};
+  double sigma{};
+  const int type{};
+  double mv{};
+  const bool two_d{};
+  SphereoidGeneratorConfig() = default;
+
+
+};
+
+struct CuboidGeneratorConfig {
+  dvec3 corner{};
+  ivec3 dimensions{};
+  double h{};
+  double m{};
+  const dvec3 initial_velocity{};
+  double mv{};
+  double epsilon{};
+  double sigma{};
+  const int type{};
+  const bool two_d{};
+  CuboidGeneratorConfig() = default;
+
+};
+
+struct MembraneGeneratorConfig {
+  dvec3 corner{};
+  ivec3 dimensions{};
+  double h{};
+  double m{};
+  const dvec3 initial_velocity{};
+  double mv{};
+  double epsilon{};
+  double sigma{};
+  const int type{};
+  const bool two_d{};
+  std::vector<int> ids{};
+  std::vector<ivec3> indeces{};
+};
+
 /**
  * @brief struct to hold command line arguments
  */
@@ -96,8 +142,10 @@ struct Arguments {
   std::vector<SingularForceTypes> singular_force_types;
   std::vector<InteractiveForceTypes> interactive_force_types;
   std::vector<IndexForceConfig> index_force_configs;
-
   StatisticsConfig statistics_config;
+  SphereoidGeneratorConfig spheroid_generator_config;
+  CuboidGeneratorConfig cuboid_generator_config;
+  MembraneGeneratorConfig membrane_generator_config;
 };
 
 /**

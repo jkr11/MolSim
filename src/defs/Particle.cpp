@@ -35,6 +35,7 @@ Particle::Particle(Particle &&other) noexcept
       id(other.id),
       neighbours(
           std::move(other.neighbours)) {  // Transfer ownership of shared_ptr
+  // SpdWrapper::get()->error("Why is this even called");
 }
 
 Particle::Particle(const std::array<double, 3> &x_arg,
@@ -68,17 +69,14 @@ Particle::Particle(const std::array<double, 3> &x_arg,
 
 Particle::~Particle() = default;
 
-
-const std::vector<std::pair<bool, std::shared_ptr<Particle>>> &
-Particle::getNeighbours() const {
+const std::vector<std::pair<bool, size_t>> &Particle::getNeighbours()
+    const {
   return neighbours;
 }
 
-void Particle::pushBackNeighbour(bool diag,
-                                 const std::shared_ptr<Particle> &particle) {
-  neighbours.push_back({diag, particle});
+void Particle::pushBackNeighbour(bool diag, long particle) {
+  neighbours.emplace_back(diag, particle);
 }
-
 
 void Particle::updateForceInTime() {
   old_f = f;

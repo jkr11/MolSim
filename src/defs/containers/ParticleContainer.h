@@ -24,7 +24,7 @@ class ParticleContainer {
    * @brief Add a particle to the particle system.
    * @param p Particle to be added.
    */
-  virtual void addParticle(const Particle& p) = 0;
+  virtual void addParticle(Particle& p) = 0;
 
   virtual void addParticles(const std::vector<Particle>& particles) = 0;
   /**

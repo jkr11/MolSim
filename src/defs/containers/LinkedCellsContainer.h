@@ -22,7 +22,9 @@ class LinkedCellsContainer final : public ParticleContainer {
    *
    * position = x * (cellsY * cellsZ) + y * (cellsZ) + z
    */
-  std::vector<std::vector<Particle>> cells;
+  std::vector<std::vector<Particle*>> cells;
+
+  std::vector<Particle> particles_;
 
   /**
    * @brief current number of particles
@@ -160,7 +162,7 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @param p Particle to be added
    * @note Does not impose the invariant automatically!
    */
-  void addParticle(const Particle& p) override;
+  void addParticle(Particle& p) override;
 
   /**
    * @brief Add a vector of particles to the container
@@ -382,7 +384,7 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @brief Debug method to get direct access to the cells vector
    * @return Reference to the cell vector
    */
-  std::vector<std::vector<Particle>>& getCells() { return cells; }
+  std::vector<std::vector<Particle*>>& getCells() { return cells; }
 
   /**
    * @brief warp negative cell index to maximum cell coordinate to enable
@@ -438,7 +440,15 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @param raw_dimension the evaluated dimension
    * @return if cell should be ignored
    */
-  inline bool isDoubleCorner(ivec3 cell_coordinate, std::size_t raw_dimension) const;
+  inline bool isDoubleCorner(ivec3 cell_coordinate,
+                             std::size_t raw_dimension) const;
+
+  /**
+   * @brief since the neighbour references are invalid after adding particles,
+   * set them again
+   */
+   void setNeighbourReferences();
+
 };
 
 /**

@@ -174,7 +174,6 @@ void XmlReader::read(std::vector<Particle>& particles,
         } else {
           mv = cubes.mv();
         }
-
         CuboidGenerator cg(corner, dimensions, cubes.h(), cubes.mass(),
                            velocity, mv, cubes.epsilon(), cubes.sigma(),
                            cubes.type(), twoD);
@@ -225,6 +224,8 @@ void XmlReader::read(std::vector<Particle>& particles,
         } else {
           mv = spheres.mv();
         }
+
+
         SpheroidGenerator sg(origin, spheres.radius(), spheres.h(),
                              spheres.mass(), velocity, spheres.epsilon(),
                              spheres.sigma(), spheres.type(), mv, twoD);

@@ -57,7 +57,13 @@ int main(const int argc, char* argv[]) {
     //     std::count_if(particles.begin(), particles.end(),
     //                   [](const Particle& p) { return p.getType() < 0; });
     container = std::make_unique<LinkedCellsContainer>(linked_cells_data);
+
+    auto q = particles[0];
+    std::cout << "Particle " << q.getId() << " is at mem " << q << std::endl;
     container->addParticles(particles);
+    auto p = container->getParticles()[0];
+    std::cout << "Particle " << p->getId() << " is at mem " << p << std::endl;
+
     container->imposeInvariant();
   } else if (std::holds_alternative<DirectSumConfig>(
                  arguments.container_data)) {
@@ -132,8 +138,25 @@ int main(const int argc, char* argv[]) {
           arguments.statistics_config.velocity_output_location);
   */
 #endif
+  auto p2 = container->getParticles()[1];
+  for (auto [diag, ref] : p2->getNeighbours()) {
+    auto dings = reinterpret_cast<Particle*>(ref);
+    if (dings->getId() == 0) {
+      SpdWrapper::get()->info("Neighbour 0 from Particle 1 has reference location {}", ref);
+    }
+
+  }
 
   while (current_time <= arguments.t_end) {
+    // TODO REMOVE
+    if (iteration == 100) {
+      SpdWrapper::get()->info("test test");
+      std::cout << "ahhh" << std::endl;
+      container->singleIterator([](Particle& p) {
+      SpdWrapper::get()->info("particle {} at [{}, {}, {}]", p.getId(), p.getX()[0], p.getX()[1], p.getX()[2]);
+  });
+    }
+
     verlet_integrator.step(*container);
     if (arguments.use_thermostat) {
       if (iteration % thermostat->n_thermostat == 0 && iteration > 0) {
@@ -229,6 +252,7 @@ int main(const int argc, char* argv[]) {
 #endif
     iteration++;
     current_time = arguments.delta_t * iteration;
+    SpdWrapper::get()->info("Iteration {}", iteration);
   }
 
   // Writes the finished simulations particle state into a checkpoint file

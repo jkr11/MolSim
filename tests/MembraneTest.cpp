@@ -69,9 +69,9 @@ TEST(Membrane, LC3x3x3) {
   linked_cells.addParticles(particles);
   linked_cells.imposeInvariant();
   for (auto& cell : linked_cells.getCells()) {
-    for (Particle& particle : cell) {
+    for (auto particle : cell) {
       SpdWrapper::get()->info("Number of neighbours {}",
-                              particle.getNeighbours().size());
+                              particle->getNeighbours().size());
     }
   }
   double t = 0;
@@ -135,10 +135,10 @@ TEST(Membrane, LC3x3) {
   linked_cells.addParticles(particles);
   linked_cells.imposeInvariant();
   for (auto& cell : linked_cells.getCells()) {
-    for (Particle& particle : cell) {
+    for (auto particle : cell) {
       SpdWrapper::get()->info("Number of neighbours {}",
-                              particle.getNeighbours().size());
-      for (const auto& [fst, snd] : particle.getNeighbours()) {
+                              particle->getNeighbours().size());
+      for (const auto& [fst, snd] : particle->getNeighbours()) {
         ASSERT_TRUE(snd);
       }
     }

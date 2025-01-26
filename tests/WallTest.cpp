@@ -27,7 +27,7 @@ TEST(Wall, immovable) {
            LinkedCellsConfig::BoundaryType::Outflow,
        }});
 
-  const Particle p({1, 1, 1}, {1, 1, 1}, 1, 1, 1, -1);
+  Particle p({1, 1, 1}, {1, 1, 1}, 1, 1, 1, -1);
   container.addParticle(p);
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
 
@@ -35,7 +35,7 @@ TEST(Wall, immovable) {
   interactive_forces.push_back(std::make_unique<LennardJones>());
 
   std::vector<std::unique_ptr<SingularForce>> singular_forces;
-  singular_forces.push_back(std::make_unique<SingularGravity>(1,1));
+  singular_forces.push_back(std::make_unique<SingularGravity>(1, 1));
 
   std::vector<std::unique_ptr<IndexForce>> index_forces;
 

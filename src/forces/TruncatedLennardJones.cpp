@@ -9,7 +9,8 @@
 dvec3 TruncatedLennardJones::directionalForce(Particle& p1,
                                               Particle& p2) const {
   for (auto [diag, ppt] : p1.getNeighbours()) {
-    if (ppt->getId() == p2.getId()) {
+    auto p3 = reinterpret_cast<Particle*>(ppt);
+    if (p3->getId() == p2.getId()) {
       return {0, 0, 0};
     }
   }
