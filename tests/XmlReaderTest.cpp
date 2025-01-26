@@ -3,6 +3,7 @@
 #include <fstream>
 
 #include "../src/io/file/in/xml/XmlReader.h"
+
 #include "io/file/in/xml/input.cxx"  // <- this is necessary at least on clang
 #include "io/file/in/xml/input.hxx"
 #include "io/file/out/checkpoint-schema.cxx"
@@ -13,7 +14,6 @@
 Arguments arguments = {
     .t_end = 5,
     .delta_t = 0.0002,
-    .force_type = Arguments::LennardJones,
     .container_data =
         LinkedCellsConfig{.domain = {100, 100, 100},
                           .cutoff_radius = 3.0,
@@ -53,7 +53,8 @@ TEST(XmlReader, testCuboid) {
   EXPECT_EQ(particles.size(), 20);
   EXPECT_EQ(arguments.t_end, 15);
   EXPECT_EQ(arguments.delta_t, 0.015);
-  EXPECT_EQ(arguments.force_type, Arguments::LennardJones);
+  EXPECT_TRUE(std::holds_alternative<LennardJonesConfig>(
+      arguments.interactive_force_types[0]));
   EXPECT_TRUE(
       std::holds_alternative<DirectSumConfig>(arguments.container_data));
 }
@@ -65,11 +66,13 @@ TEST(XmlReader, testCuboid) {
  */
 TEST(XmlReader, testCuboidSpheroidLinkedCells) {
   std::vector<Particle> particles;
+
   XmlReader::read(particles, "../../tests/test_cuboid_spheroid.xml", arguments);
   EXPECT_EQ(particles.size(), 1257);
   EXPECT_EQ(arguments.t_end, 15);
   EXPECT_EQ(arguments.delta_t, 0.015);
-  EXPECT_EQ(arguments.force_type, Arguments::LennardJones);
+  EXPECT_TRUE(std::holds_alternative<LennardJonesConfig>(
+      arguments.interactive_force_types[0]));
   EXPECT_TRUE(
       std::holds_alternative<LinkedCellsConfig>(arguments.container_data));
   const auto& config = std::get<LinkedCellsConfig>(arguments.container_data);
@@ -83,6 +86,7 @@ TEST(XmlReader, testCuboidSpheroidLinkedCells) {
   EXPECT_EQ(config.boundary_config.z_high, LinkedCellsConfig::Outflow);
   EXPECT_EQ(config.boundary_config.z_low, LinkedCellsConfig::Outflow);
 }
+
 
 namespace fs = std::filesystem;
 

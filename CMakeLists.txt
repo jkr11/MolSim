@@ -37,6 +37,7 @@ endif ()
 
 # Enable DEBUG macro
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_compile_options(-ggdb3)
     add_compile_definitions(DEBUG)
     message("Debug mode is enabled")
 endif ()

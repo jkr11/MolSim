@@ -11,12 +11,15 @@
 #include "utils/ArrayUtils.h"
 #include "utils/SpdWrapper.h"
 
+int Particle::global_id_counter = 0;
+
 Particle::Particle(const int type) {
   type_ = type;
   f_ = {0., 0., 0.};
   old_f_ = {0., 0., 0.};
 }
 
+// TODO default?
 Particle::Particle(const Particle &other) {
   x_ = other.x_;
   v_ = other.v_;
@@ -26,6 +29,8 @@ Particle::Particle(const Particle &other) {
   type_ = other.type_;
   epsilon_ = other.epsilon_;
   sigma_ = other.sigma_;
+  id_ = other.id_;
+  neighbours = std::move(other.neighbours);
 }
 
 Particle::Particle(const std::array<double, 3> &x_arg,
@@ -39,6 +44,7 @@ Particle::Particle(const std::array<double, 3> &x_arg,
   old_f_ = {0., 0., 0.};
   sigma_ = sigma;
   epsilon_ = epsilon;
+  id_ = global_id_counter++;
 }
 
 Particle::Particle(const std::array<double, 3> &x_arg,
@@ -54,14 +60,27 @@ Particle::Particle(const std::array<double, 3> &x_arg,
       m_(m_arg),
       type_(type_arg),
       epsilon_(epsilon_arg),
-      sigma_(sigma_arg) {}
+      sigma_(sigma_arg),
+      id_(global_id_counter++) {}
 
-Particle::~Particle() { DEBUG_PRINT("Particle destructed!"); }
+
+Particle::~Particle() = default;
+
+const std::vector<std::pair<bool, size_t>> &Particle::getNeighbours()
+    const {
+  return neighbours;
+}
+
+void Particle::pushBackNeighbour(bool diag, long particle) {
+  neighbours.emplace_back(diag, particle);
+}
 
 void Particle::updateForceInTime() {
   old_f_ = f_;
   f_ = {0., 0., 0.};
 }
+
+int Particle::getId() const { return id_; }
 
 std::string Particle::toString() const {
   std::stringstream stream;

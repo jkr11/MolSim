@@ -34,7 +34,7 @@ class DirectSumContainer final : public ParticleContainer {
    * @brief Add a particle to the container
    * @param p Particle to be added
    */
-  void addParticle(const Particle& p) override;
+  void addParticle(Particle& p) override;
 
   /**
    * @brief Add a vector of particles to the container

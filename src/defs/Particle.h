@@ -8,6 +8,7 @@
 #pragma once
 
 #include <array>
+#include <memory>
 #include <string>
 
 #include "defs/types.h"
@@ -15,6 +16,7 @@
 
 class Particle final {
  private:
+  static int global_id_counter;
   /**
    * Position of the particle
    */
@@ -59,6 +61,16 @@ class Particle final {
    */
   double sigma_{};
 
+  /**
+   * unique identifier for every particle
+   */
+  int id_{};
+
+  /**
+   * neighbouring cells for the membranes
+   */
+  std::vector<std::pair<bool, size_t>> neighbours;
+
  public:
   explicit Particle(int type = 0);
 
@@ -70,11 +82,16 @@ class Particle final {
       const std::array<double, 3> &x_arg, const std::array<double, 3> &v_arg,
       double m_arg, double epsilon, double sigma, int type = 0);
 
+
   explicit Particle(const std::array<double, 3> &x_arg,
                     const std::array<double, 3> &v_arg,
                     const std::array<double, 3> &f_arg,
                     const std::array<double, 3> &old_f_arg, double m_arg,
                     int type_arg, double epsilon_arg, double sigma_arg);
+  // ambiguous overload?
+  // Particle()
+  //    : neighbours(std::vector<std::pair<bool, std::shared_ptr<Particle>>>())
+  //    {}
 
   ~Particle();
 
@@ -94,6 +111,9 @@ class Particle final {
 
   [[nodiscard]] double getSigma() const { return sigma_; }
 
+  [[nodiscard]] const std::vector<std::pair<bool,size_t>> &getNeighbours()
+      const;
+
   void setF(const std::array<double, 3> &f) { f_ = f; }
 
   void setX(const std::array<double, 3> &x) { x_ = x; }
@@ -105,6 +125,8 @@ class Particle final {
   void setEpsilon(const double &epsilon) { epsilon_ = epsilon; }
 
   void setSigma(const double &sigma) { sigma_ = sigma; }
+
+  void pushBackNeighbour(bool diag, long particle);
 
   void updateForceInTime();
 
@@ -118,9 +140,52 @@ class Particle final {
 
   void subF(const dvec3 &f) { f_ = f_ - f; }
 
+  void setNeighbours(
+      const std::vector<std::pair<bool, size_t>> &new_neighbours) {
+    neighbours = new_neighbours;
+  }
+
+  void resetNeighbours() { neighbours = {}; }
+
+  [[nodiscard]] int getId() const;
+
   bool operator==(const Particle &other) const;
 
   [[nodiscard]] std::string toString() const;
+
+  Particle &operator=(const Particle &other) {
+    if (this != &other) {
+      x_ = other.x_;
+      v_ = other.v_;
+      f_ = other.f_;
+      old_f_ = other.old_f_;
+      m_ = other.m_;
+      type_ = other.type_;
+      id_ = other.id_;
+      epsilon_ = other.epsilon_;
+      sigma_ = other.sigma_;
+      neighbours = other.neighbours;  // Shallow copy of shared_ptr
+    }
+    return *this;
+  }
+
+  // Move assignment operator
+  Particle &operator=(Particle &&other) noexcept {
+    if (this != &other) {
+      x_ = other.x_;
+      v_ = other.v_;
+      f_ = other.f_;
+      old_f_ = other.old_f_;
+      m_ = other.m_;
+      type_ = other.type_;
+      id_ = other.id_;
+      epsilon_ = other.epsilon_;
+      sigma_ = other.sigma_;
+      neighbours =
+          std::move(other.neighbours);  // Transfer ownership of shared_ptr
+    }
+    return *this;
+  }
 };
 
 std::ostream &operator<<(std::ostream &stream, const Particle &p);

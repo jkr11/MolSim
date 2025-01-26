@@ -13,13 +13,16 @@
 class SingularGravity final : public SingularForce {
  private:
   double g_{};
+  int axis_{};
+
 
  public:
   /**
    *
    * @param g the gravitational coefficient
+   * @param axis the axis 0 - 2 x - z on which gravity acts
    */
-  explicit SingularGravity(double g);
+  explicit SingularGravity(double g, int axis);
 
   // TODO: do we need to do this modular over the axis? or is it only in y
   // direction?
@@ -28,7 +31,7 @@ class SingularGravity final : public SingularForce {
    * @param p the particle to act on
    * @return the force to be added to the particles force
    */
-  [[nodiscard]] dvec3 applyForce(const Particle &p) const override;
+  [[nodiscard]] dvec3 applyForce(const Particle &p, ParticleContainer& container) const override;
 };
 
 #endif  // SINGULARGRAVITY_H

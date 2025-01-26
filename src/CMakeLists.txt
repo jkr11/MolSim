@@ -11,6 +11,12 @@ list(REMOVE_ITEM MY_SRC "${CMAKE_CURRENT_SOURCE_DIR}/MolSim.cpp")
 
 add_library(MolSimLib
         ${MY_SRC}
+        forces/HarmonicForce.cpp
+        forces/HarmonicForce.h
+        forces/TruncatedLennardJones.cpp
+        forces/TruncatedLennardJones.h
+        forces/IndexForce.cpp
+        forces/IndexForce.h
 )
 
 target_link_libraries(MolSimLib
@@ -44,6 +50,7 @@ add_executable(MolSim MolSim.cpp
         io/file/out/checkpoint-schema.hxx
         io/file/out/checkpoint-schema.cxx
         io/file/out/XmlWriter.cpp
+        defs/Generators/MembraneGenerator.cpp
 )
 
 set(FILES_TO_DISABLE_WARNINGS

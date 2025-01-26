@@ -8,6 +8,7 @@
 
 #include "debug/debug_print.h"
 #include "defs/Generators/CuboidGenerator.h"
+#include "defs/Generators/MembraneGenerator.h"
 #include "defs/Generators/SpheroidGenerator.h"
 #include "defs/types.h"
 #include "forces/Gravity.h"
@@ -71,9 +72,36 @@ void XmlReader::read(std::vector<Particle>& particles,
     INFO("Reading singular foces ...")
     if (auto& singular_force = metadata.force();
         singular_force.SingularGravity().present()) {
-      INFO("Read SingularGravity")
+      SpdWrapper::get()->info("Adding singular gravity on axis {}",
+                              singular_force.SingularGravity()->axis());
+
       simulation_parameters.singular_force_types.emplace_back(
-          SingularGravityConfig{singular_force.SingularGravity()->g().get()});
+          SingularGravityConfig{singular_force.SingularGravity()->g(),
+                                singular_force.SingularGravity()->axis()});
+    }
+    if (auto& singular_force = metadata.force();
+        singular_force.HarmonicForce().present()) {
+      simulation_parameters.singular_force_types.emplace_back(
+          HarmonicForceConfig{singular_force.HarmonicForce()->r_0(),
+                              singular_force.HarmonicForce()->k()});
+      DEBUG_PRINT("Using HarmonicForce");
+    }
+    if (auto& index_force = metadata.force();
+        index_force.IndexForce().present()) {
+      SpdWrapper::get()->info("Building index force");
+      std::vector<ivec3> indeces{};
+      for (auto& i : index_force.IndexForce()->index()) {
+        indeces.push_back(unwrapVec<const Ivec3Type&, ivec3>(i, "index"));
+      }
+      SpdWrapper::get()->info("indeces[0] {}", indeces[0][0]);
+      IndexForceConfig index_force_config{
+          indeces,
+          {},
+          index_force.IndexForce()->time(),
+          unwrapVec<const Dvec3Type&, dvec3>(
+              index_force.IndexForce()->force_values(), "force_values"),
+      };
+      simulation_parameters.index_force_configs.push_back(index_force_config);
     }
     INFO("Checking if checkpoint is  present ...")
     if (metadata.checkpoint().present()) {
@@ -136,6 +164,7 @@ void XmlReader::read(std::vector<Particle>& particles,
     INFO("Reading in particle shape configurations ...")
     if (config->cuboids() != nullptr) {
       for (const auto& cubes : config->cuboids()->cuboid()) {
+        SpdWrapper::get()->info("Generating cuboid");
         const auto& _corner = cubes.corner();
         const auto& _dimensions = cubes.dimensions();
         const auto& _velocity = cubes.velocity();
@@ -152,14 +181,44 @@ void XmlReader::read(std::vector<Particle>& particles,
         } else {
           mv = cubes.mv();
         }
+
         // These info print themselves
         CuboidGenerator cg(corner, dimensions, cubes.h(), cubes.mass(),
                            velocity, mv, cubes.epsilon(), cubes.sigma(),
                            cubes.type(), twoD);
-
         cg.generate(particles);
       }
     }
+
+    if (config->membranes() != nullptr) {
+      for (const auto& membranes : config->membranes()->membrane()) {
+        SpdWrapper::get()->info("Generating membranes");
+        const auto& _corner = membranes.corner();
+        const auto& _dimensions = membranes.dimensions();
+        const auto& _velocity = membranes.velocity();
+        dvec3 corner = unwrapVec<const Dvec3Type&, dvec3>(_corner, "corner");
+        ivec3 dimensions =
+            unwrapVec<const Ivec3Type&, ivec3>(_dimensions, "dimensions");
+        dvec3 velocity =
+            unwrapVec<const Dvec3Type&, dvec3>(_velocity, "velocity");
+        double mv;
+        if (config->thermostat().present() &&
+            velocity == dvec3{0.0, 0.0, 0.0}) {
+          mv = std::sqrt(simulation_parameters.thermostat_config.t_init /
+                         membranes.mass());
+        } else {
+          mv = membranes.mv();
+        }
+        MembraneGenerator mg(
+            corner, dimensions, membranes.h(), membranes.mass(), velocity, mv,
+            membranes.epsilon(), membranes.sigma(), membranes.type(), twoD,
+            simulation_parameters.index_force_configs[0].indeces);
+        mg.generate(particles);
+        std::vector<int> ids = mg.getIndeces();
+        simulation_parameters.index_force_configs[0].ids = ids;
+      }
+    }
+
     if (config->spheroids() != nullptr) {
       for (const auto& spheres : config->spheroids()->spheroid()) {
         const auto& _origin = spheres.origin();
@@ -174,6 +233,7 @@ void XmlReader::read(std::vector<Particle>& particles,
         } else {
           mv = spheres.mv();
         }
+
         SpheroidGenerator sg(origin, spheres.radius(), spheres.h(),
                              spheres.mass(), velocity, spheres.epsilon(),
                              spheres.sigma(), spheres.type(), mv, twoD);

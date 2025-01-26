@@ -7,8 +7,11 @@
 #include "defs/containers/DirectSumContainer.h"
 #include "defs/containers/LinkedCellsContainer.h"
 #include "forces/Gravity.h"
+#include "forces/HarmonicForce.h"
+#include "forces/IndexForce.h"
 #include "forces/LennardJones.h"
 #include "forces/SingularGravity.h"
+#include "forces/TruncatedLennardJones.h"
 #include "io/CLArgumentParser.h"
 #include "io/file/in/xml/XmlReader.h"
 #include "io/file/out/OutputHelper.h"
@@ -19,40 +22,8 @@
 #include "utils/Statistics.h"
 
 int main(const int argc, char* argv[]) {
-  Arguments arguments = {
-      .t_end = 5,
-      .delta_t = 0.0002,
-      .force_type = Arguments::LennardJones,
-      .thermostat_config =
-          {
-              .t_init = 0.5,
-              .t_target = 0.5,
-              .delta_t = 0.5,
-              .n_thermostat = 1000,
-              .use_relative = false,
-          },
-      .container_data =
-          LinkedCellsConfig{.domain = {100, 100, 100},
-                            .cutoff_radius = 3.0,
-                            .boundary_config =
-                                {
-                                    .x_high = LinkedCellsConfig::Outflow,
-                                    .x_low = LinkedCellsConfig::Outflow,
-                                    .y_high = LinkedCellsConfig::Outflow,
-                                    .y_low = LinkedCellsConfig::Outflow,
-                                    .z_high = LinkedCellsConfig::Outflow,
-                                    .z_low = LinkedCellsConfig::Outflow,
-                                }},
-      .statistics_config =
-          StatisticsConfig{
-              .calc_stats = false,
-              .x_bins = 0,
-              .y_bins = 0,
-              .output_interval = 0,
-              .velocity_output_location = "",
-              .density_output_location = "",
-          },
-  };
+  Arguments arguments = {};
+
   auto [input_file, step_size, write_checkpoint] =
       CLArgumentParser::parse(argc, argv);
 
@@ -62,6 +33,15 @@ int main(const int argc, char* argv[]) {
 
   printConfiguration(arguments);
   SpdWrapper::get()->info("Step size: {}", step_size);
+
+  // TODO: delte in config
+  std::vector<std::unique_ptr<IndexForce>> index_forces;
+  for (const auto& config : arguments.index_force_configs) {
+    const auto& [coords, ids, time, force_values] = config;
+    SpdWrapper::get()->info("Adding index force with indices {}", ids.size());
+    index_forces.push_back(
+        std::make_unique<IndexForce>(ids, time, force_values));
+  }
 
   std::unique_ptr<ParticleContainer> container;
   if (std::holds_alternative<LinkedCellsConfig>(arguments.container_data)) {
@@ -73,7 +53,13 @@ int main(const int argc, char* argv[]) {
     //     std::count_if(particles.begin(), particles.end(),
     //                   [](const Particle& p) { return p.getType() < 0; });
     container = std::make_unique<LinkedCellsContainer>(linked_cells_data);
+
+    auto q = particles[0];
+    std::cout << "Particle " << q.getId() << " is at mem " << q << std::endl;
     container->addParticles(particles);
+    auto p = container->getParticles()[0];
+    std::cout << "Particle " << p->getId() << " is at mem " << p << std::endl;
+
     container->imposeInvariant();
   } else if (std::holds_alternative<DirectSumConfig>(
                  arguments.container_data)) {
@@ -88,6 +74,7 @@ int main(const int argc, char* argv[]) {
   // assign all forces from the configs
 
   std::vector<std::unique_ptr<InteractiveForce>> interactive_forces;
+
   std::vector<std::unique_ptr<SingularForce>> singular_forces;
 
   // Assign interactive forces
@@ -96,7 +83,11 @@ int main(const int argc, char* argv[]) {
       interactive_forces.push_back(std::make_unique<LennardJones>());
     } else if (std::holds_alternative<GravityConfig>(config)) {
       interactive_forces.push_back(std::make_unique<Gravity>());
-    } else {
+    } else if (std::holds_alternative<TruncatedLennardJonesConfig>(config)) {
+      interactive_forces.push_back(std::make_unique<TruncatedLennardJones>());
+    }
+
+    else {
       SpdWrapper::get()->error("Unrecognized interactive_force_type");
     }
   }
@@ -105,15 +96,21 @@ int main(const int argc, char* argv[]) {
 
   for (auto config : arguments.singular_force_types) {
     if (std::holds_alternative<SingularGravityConfig>(config)) {
-      const auto& [g] = std::get<SingularGravityConfig>(config);
-      singular_forces.push_back(std::make_unique<SingularGravity>(g));
+      const auto& [g, a] = std::get<SingularGravityConfig>(config);
+      singular_forces.push_back(
+          std::move(std::make_unique<SingularGravity>(g, a)));
+    } else if (std::holds_alternative<HarmonicForceConfig>(config)) {
+      const auto& [r, k] = std::get<HarmonicForceConfig>(config);
+      singular_forces.push_back(
+          std::move(std::make_unique<HarmonicForce>(k, r)));
+
     } else {
       SpdWrapper::get()->error("Unrecognized singular force");
     }
   }
 
   VerletIntegrator verlet_integrator(interactive_forces, singular_forces,
-                                     arguments.delta_t);
+                                     arguments.delta_t, index_forces);
   outputWriter::VTKWriter writer;
   std::unique_ptr<Thermostat> thermostat;
   if (arguments.use_thermostat) {
@@ -135,6 +132,8 @@ int main(const int argc, char* argv[]) {
   double next_output_time = 0;
   spdlog::stopwatch stopwatch;  // TODO whats up with this?
   auto time_of_last_mups = start_time;
+  // TODO breaks sometimes i think it has to do with paths?
+
   Statistics statistics(
       arguments.statistics_config.x_bins, arguments.statistics_config.y_bins,
       *container,
@@ -142,10 +141,27 @@ int main(const int argc, char* argv[]) {
           arguments.statistics_config.density_output_location,
       output_directory + "/" +
           arguments.statistics_config.velocity_output_location);
-
 #endif
+  auto p2 = container->getParticles()[1];
+  for (auto [diag, ref] : p2->getNeighbours()) {
+    auto dings = reinterpret_cast<Particle*>(ref);
+    if (dings->getId() == 0) {
+      SpdWrapper::get()->info(
+          "Neighbour 0 from Particle 1 has reference location {}", ref);
+    }
+  }
 
   while (current_time <= arguments.t_end) {
+    // TODO REMOVE
+    if (iteration == 100) {
+      SpdWrapper::get()->info("test test");
+      std::cout << "ahhh" << std::endl;
+      container->singleIterator([](Particle& p) {
+        SpdWrapper::get()->info("particle {} at [{}, {}, {}]", p.getId(),
+                                p.getX()[0], p.getX()[1], p.getX()[2]);
+      });
+    }
+
     verlet_integrator.step(*container);
     if (arguments.use_thermostat) {
       if (iteration % thermostat->n_thermostat == 0 && iteration > 0) {
@@ -166,6 +182,31 @@ int main(const int argc, char* argv[]) {
 #endif
 
     particle_updates += container->getParticleCount();
+    /*
+    if (iteration % 100 == 0) {
+      container->singleIterator([](Particle& p) {
+        if (p.getId() == 0) {
+          InfoVec("0 Position", p.getX());
+          InfoVec("0 Velocity", p.getV());
+          InfoVec("0 Force", p.getF());
+        }
+        if (p.getId() == 823) {
+          InfoVec("823 Position", p.getX());
+          InfoVec("823 Velocity", p.getV());
+          InfoVec("823 Force", p.getF());
+        }
+
+        if (p.getId() == 874) {
+          InfoVec("874 Position", p.getX());
+          InfoVec("874 Velocity", p.getV());
+          InfoVec("874 Force", p.getF());
+          SpdWrapper::get()->info(
+              "---------------------------------------------");
+        }
+      });
+    }
+    */
+
 #ifndef BENCHMARK
     if (current_time >= next_output_time) {
       plotParticles(output_directory, iteration, writer, *container);
@@ -193,6 +234,7 @@ int main(const int argc, char* argv[]) {
             std::chrono::duration_cast<std::chrono::microseconds>(
                 current_time_hrc - time_of_last_mups)
                 .count();
+
         // TODO can we solve narrowing conversion? i dont think so
         double mmups =
             particle_updates * (1.0 / static_cast<double>(microseconds));
@@ -209,14 +251,16 @@ int main(const int argc, char* argv[]) {
         percentage++;
       }
     }
-
+    // TODO breaks on membrane branch idk why
+    /*
     if (arguments.statistics_config.calc_stats &&
         iteration % arguments.statistics_config.output_interval == 0) {
       statistics.writeStatistics(current_time);
-    }
+    }*/
 #endif
     iteration++;
     current_time = arguments.delta_t * iteration;
+    SpdWrapper::get()->info("Iteration {}", iteration);
   }
 
   // Writes the finished simulations particle state into a checkpoint file
@@ -239,7 +283,8 @@ int main(const int argc, char* argv[]) {
   std::cout << "MMUPS: " << mmups << std::endl;
 
 #ifndef BENCHMARK
-  statistics.closeFiles();
+  // TODO
+  // statistics.closeFiles();
 #endif
   SpdWrapper::get()->info("Output written. Terminating...");
 

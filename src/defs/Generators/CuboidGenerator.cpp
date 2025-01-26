@@ -8,6 +8,7 @@
 #include "utils/MaxwellBoltzmannDistribution.h"
 #include "utils/SpdWrapper.h"
 
+
 CuboidGenerator::CuboidGenerator(const dvec3 &corner,
                                  const std::array<int, 3> &dimensions,
                                  const double h, const double m,
@@ -26,7 +27,7 @@ CuboidGenerator::CuboidGenerator(const dvec3 &corner,
       type(type),
       two_d(two_d) {
   DEBUG_PRINT_FMT("CuboidGenerator of dim {} created with parameters:",
-                  twoD ? 2 : 3);
+                  two_d ? 2 : 3);
   DEBUG_PRINT_FMT("corner: ({}, {}, {})", corner[0], corner[1], corner[2]);
   DEBUG_PRINT_FMT("dimensions: ({}, {}, {})", dimensions[0], dimensions[1],
                   dimensions[2]);
@@ -42,7 +43,8 @@ CuboidGenerator::CuboidGenerator(const dvec3 &corner,
 
 void CuboidGenerator::generate(std::vector<Particle> &particles) {
   const int size = dimensions[0] * dimensions[1] * dimensions[2];
-  particles.reserve(size);
+  const std::size_t offset = particles.size();
+  particles.reserve(offset + size);
   DEBUG_PRINT("reserved: " + std::to_string(size) + "particles");
 
   for (int i = 0; i < dimensions[0]; i++) {

@@ -24,7 +24,7 @@ class ParticleContainer {
    * @brief Add a particle to the particle system.
    * @param p Particle to be added.
    */
-  virtual void addParticle(const Particle& p) = 0;
+  virtual void addParticle(Particle& p) = 0;
 
   virtual void addParticles(const std::vector<Particle>& particles) = 0;
   /**
@@ -73,6 +73,10 @@ class ParticleContainer {
       const std::function<void(Particle&, Particle&)>& f) = 0;
 
   virtual double getKineticEnergy() = 0;
+
+  virtual void incrementTime() { this->current_time++; }
+
+  double current_time = 0;
 
   /**
    * @brief the exact number of current particles, updated accordingly

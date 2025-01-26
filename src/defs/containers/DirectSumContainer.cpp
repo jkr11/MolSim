@@ -29,12 +29,11 @@ DirectSumContainer::DirectSumContainer(const std::vector<Particle>& particles)
 
 // DirectSumContainer::~DirectSumContainer();
 
-void DirectSumContainer::addParticle(const Particle& p) {
-  particles_.push_back(p);
-}
+void DirectSumContainer::addParticle(Particle& p) { particles_.push_back(p); }
+
 
 void DirectSumContainer::addParticles(const std::vector<Particle>& particles) {
-  for (const auto& p : particles) {
+  for (Particle p : particles) {
     addParticle(p);
   }
 }
@@ -101,4 +100,3 @@ ivec3 DirectSumContainer::getDomain() {
   SPDLOG_TRACE("DirectSumContainer::getDomain()");
   return {-1, -1, -1};
 }
-

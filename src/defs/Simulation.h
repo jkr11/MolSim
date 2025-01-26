@@ -9,9 +9,15 @@
 #include <variant>
 
 #include "defs/types.h"
-#include "forces/InteractiveForce.h"
 #include "forces/SingularForce.h"
 #include "utils/SpdWrapper.h"
+
+struct IndexForceConfig {
+  std::vector<ivec3> indeces{};
+  std::vector<int> ids{};
+  double end_time{};
+  dvec3 force_values{};
+};
 
 /**
  * @brief holds the specification for the LinkedCellsContainer
@@ -42,17 +48,25 @@ struct DirectSumConfig {};
  */
 struct SingularGravityConfig {
   double g{};
+  int axis{};
 };
+
+
 
 /**
  * @brief holds the harmonic force parameters
  */
-struct HarmonicForceConfig {};
+struct HarmonicForceConfig {
+  double r_0{};
+  double k{};
+};
 
 /**
  * @brief holds the LennardJones force parameters
  */
 struct LennardJonesConfig {};
+
+struct TruncatedLennardJonesConfig {};
 
 /**
  * @brief holds the interactive gravity parameters
@@ -80,23 +94,72 @@ struct StatisticsConfig {
   std::string density_output_location{};
 };
 
+struct SphereoidGeneratorConfig {
+  dvec3 origin{};
+  const int radius{};
+  double h{};
+  double m{};
+  const dvec3 initial_velocity{};
+  double epsilon{};
+  double sigma{};
+  const int type{};
+  double mv{};
+  const bool two_d{};
+  SphereoidGeneratorConfig() = default;
+
+
+};
+
+struct CuboidGeneratorConfig {
+  dvec3 corner{};
+  ivec3 dimensions{};
+  double h{};
+  double m{};
+  const dvec3 initial_velocity{};
+  double mv{};
+  double epsilon{};
+  double sigma{};
+  const int type{};
+  const bool two_d{};
+  CuboidGeneratorConfig() = default;
+
+};
+
+struct MembraneGeneratorConfig {
+  dvec3 corner{};
+  ivec3 dimensions{};
+  double h{};
+  double m{};
+  const dvec3 initial_velocity{};
+  double mv{};
+  double epsilon{};
+  double sigma{};
+  const int type{};
+  const bool two_d{};
+  std::vector<int> ids{};
+  std::vector<ivec3> indeces{};
+};
+
 /**
  * @brief struct to hold command line arguments
  */
+using SingularForceTypes =
+    std::variant<SingularGravityConfig, HarmonicForceConfig>;
+using InteractiveForceTypes = std::variant<LennardJonesConfig, GravityConfig,
+                                           TruncatedLennardJonesConfig>;
 struct Arguments {
-  using SingularForceTypes =
-      std::variant<SingularGravityConfig, HarmonicForceConfig>;
-  using InteractiveForceTypes = std::variant<LennardJonesConfig, GravityConfig>;
   double t_end;
   double delta_t;
-  enum ForceType { LennardJones, Gravity } force_type;
-  enum SingularForceType { SingularGravity } singular_force_type;
   ThermostatConfig thermostat_config;
   bool use_thermostat;
   std::variant<LinkedCellsConfig, DirectSumConfig> container_data;
   std::vector<SingularForceTypes> singular_force_types;
   std::vector<InteractiveForceTypes> interactive_force_types;
+  std::vector<IndexForceConfig> index_force_configs;
   StatisticsConfig statistics_config;
+  SphereoidGeneratorConfig spheroid_generator_config;
+  CuboidGeneratorConfig cuboid_generator_config;
+  MembraneGeneratorConfig membrane_generator_config;
 };
 
 /**

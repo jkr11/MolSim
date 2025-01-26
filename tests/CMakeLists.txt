@@ -25,9 +25,11 @@ if (BUILD_TESTS)
             testUtil.h
             XmlReaderTest.cpp
             ThermostatTest.cpp
+            MembraneTest.cpp
             StatisticsTest.cpp
             WallTest.cpp
-            CheckpointTest.cpp)
+            CheckpointTest.cpp
+            )
 
     target_link_libraries(MolSimTest MolSimLib GTest::gtest_main)
     include(GoogleTest)

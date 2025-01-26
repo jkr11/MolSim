@@ -6,6 +6,7 @@
 #include "defs/Particle.h"
 #include "defs/Simulation.h"
 #include "defs/containers/ParticleContainer.h"
+#include "forces/IndexForce.h"
 
 /**
  * @brief a particle container with linked cells
@@ -21,7 +22,10 @@ class LinkedCellsContainer final : public ParticleContainer {
    *
    * position = x * (cellsY * cellsZ) + y * (cellsZ) + z
    */
-  std::vector<std::vector<Particle>> cells_;
+
+  std::vector<Particle> particles_;
+
+  std::vector<std::vector<Particle*>> cells_;
 
   /**
    * @brief current number of particles
@@ -88,6 +92,8 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @param dimension the problematic dimension
    */
   inline void applyReflectiveBoundary(size_t dimension);
+
+  IndexForce index_force{};
 
   /**
    *@brief index offsets orthogonal to a cell for each dimension, optimized for
@@ -157,7 +163,7 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @param p Particle to be added
    * @note Does not impose the invariant automatically!
    */
-  void addParticle(const Particle& p) override;
+  void addParticle(Particle& p) override;
 
   /**
    * @brief Add a vector of particles to the container
@@ -204,6 +210,8 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @return Count of particles in the container
    */
   [[nodiscard]] std::size_t size() const override;
+
+  void setIndexForce(const IndexForce& index_force);
 
   /**
    * applies the periodic boundary conditions to the given dimension
@@ -377,7 +385,7 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @brief Debug method to get direct access to the cells vector
    * @return Reference to the cell vector
    */
-  std::vector<std::vector<Particle>>& getCells() { return cells_; }
+  std::vector<std::vector<Particle*>>& getCells() { return cells_; }
 
   /**
    * @brief warp negative cell index to maximum cell coordinate to enable
@@ -433,7 +441,14 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @param raw_dimension the evaluated dimension
    * @return if cell should be ignored
    */
-  [[nodiscard]] inline bool isDoubleCorner(ivec3 cell_coordinate, std::size_t raw_dimension) const;
+  inline bool isDoubleCorner(ivec3 cell_coordinate,
+                             std::size_t raw_dimension) const;
+
+  /**
+   * @brief since the neighbour references are invalid after adding particles,
+   * set them again
+   */
+   void setNeighbourReferences();
 };
 
 /**

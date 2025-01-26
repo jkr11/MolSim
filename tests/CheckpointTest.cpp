@@ -54,8 +54,10 @@ TEST(Checkpoint, cuboid) {
   interactive_forces.push_back(std::make_unique<LennardJones>());
 
   std::vector<std::unique_ptr<SingularForce>> singular_forces;
+  std::vector<std::unique_ptr<IndexForce>> index_forces;
 
-  VerletIntegrator verlet_integrator(interactive_forces, singular_forces, 0.1);
+  VerletIntegrator verlet_integrator(interactive_forces, singular_forces,
+                                     index_forces, 0.1);
 
   XmlWriter::writeFile(*container, "../../input/checkpoint_test.xml");
 
