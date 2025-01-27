@@ -502,6 +502,7 @@ void LinkedCellsContainer::computeSingularForces(
 
 void LinkedCellsContainer::computeIndexForces(
   const std::vector<std::unique_ptr<IndexForce>>& index_forces) {
+#pragma omp parallel for schedule(dynamic)
   for (auto &p : particles_) {
     dvec3 f = {0, 0, 0};
     for (const auto& index_force : index_forces) {
