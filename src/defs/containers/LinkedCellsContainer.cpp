@@ -95,7 +95,8 @@ LinkedCellsContainer::LinkedCellsContainer(
       linked_cells_config.boundary_config.z_low,
       linked_cells_config.boundary_config.z_high,
   };
-
+  is_membrane = linked_cells_config.is_membrane;
+  INFO_FMT("Using membranes is {}", is_membrane);
   // TODO
   // const auto &[ids, time, force_values, dims] =
   // linked_cells_config.index_force_config; index_force = IndexForce(ids, time,
@@ -135,7 +136,7 @@ void LinkedCellsContainer::addParticles(
     const std::vector<Particle> &particles) {
   particles_.reserve(particles.size());
   for (Particle p : particles) {
-    //SpdWrapper::get()->info("Adding Particle with Id : {}", p.getId());
+    // SpdWrapper::get()->info("Adding Particle with Id : {}", p.getId());
     addParticle(p);
   }
   setNeighbourReferences();
@@ -914,9 +915,9 @@ bool LinkedCellsContainer::isDoubleCorner(
 }
 
 void LinkedCellsContainer::setNeighbourReferences() {
-  //auto p3 = &particles_[0];
-  //std::cout << "in setNeighbours Particle 1 has reference location " << p3
-  //          << std::endl;
+  // auto p3 = &particles_[0];
+  // std::cout << "in setNeighbours Particle 1 has reference location " << p3
+  //           << std::endl;
 
   for (Particle *p : getParticles()) {
     std::vector<std::pair<bool, size_t>> new_neighbours{};

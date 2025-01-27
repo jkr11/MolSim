@@ -90,6 +90,8 @@ class LinkedCellsContainer final : public ParticleContainer {
    */
   LinkedCellsConfig::BoundaryConfig boundary_config_{};
 
+  bool is_membrane{};
+
   /**
    * @brief apply reflective boundary condition to a dimension
    * @param dimension the problematic dimension
@@ -458,7 +460,7 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @return if cell should be ignored
    */
   [[nodiscard]] inline bool isDoubleCorner(ivec3 cell_coordinate,
-                             std::size_t raw_dimension) const;
+                                           std::size_t raw_dimension) const;
 
   /**
    * @brief since the neighbour references are invalid after adding particles,

@@ -34,6 +34,7 @@ struct LinkedCellsConfig {
     BoundaryType z_high;
     BoundaryType z_low;
   } boundary_config;
+  bool is_membrane = false;
 };
 
 /**
@@ -50,8 +51,6 @@ struct SingularGravityConfig {
   double g{};
   int axis{};
 };
-
-
 
 /**
  * @brief holds the harmonic force parameters
@@ -106,8 +105,6 @@ struct SphereoidGeneratorConfig {
   double mv{};
   const bool two_d{};
   SphereoidGeneratorConfig() = default;
-
-
 };
 
 struct CuboidGeneratorConfig {
@@ -122,7 +119,6 @@ struct CuboidGeneratorConfig {
   const int type{};
   const bool two_d{};
   CuboidGeneratorConfig() = default;
-
 };
 
 struct MembraneGeneratorConfig {
@@ -210,7 +206,8 @@ inline void printConfiguration(const Arguments& args) {
   if (std::holds_alternative<LinkedCellsConfig>(args.container_data)) {
     logger->info("Container Type: Linked Cells");
 
-    const auto& [domain, cutoff_radius, boundary_type, boundary_config] =
+    const auto& [domain, cutoff_radius, boundary_type, boundary_config,
+                 is_membrane] =
         std::get<LinkedCellsConfig>(args.container_data);
     logger->info("-- Domain: ({}, {}, {})", domain[0], domain[1], domain[2]);
     logger->info("-- Cutoff Radius: {}", cutoff_radius);
