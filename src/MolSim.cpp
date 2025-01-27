@@ -96,13 +96,11 @@ int main(const int argc, char* argv[]) {
 
   for (auto config : arguments.singular_force_types) {
     if (std::holds_alternative<SingularGravityConfig>(config)) {
-      const auto& [g, a] = std::get<SingularGravityConfig>(config);
-      singular_forces.push_back(
-          std::move(std::make_unique<SingularGravity>(g, a)));
+      const auto& [g, axis] = std::get<SingularGravityConfig>(config);
+      singular_forces.push_back(std::make_unique<SingularGravity>(g, axis));
     } else if (std::holds_alternative<HarmonicForceConfig>(config)) {
       const auto& [r, k] = std::get<HarmonicForceConfig>(config);
-      singular_forces.push_back(
-          std::move(std::make_unique<HarmonicForce>(k, r)));
+      singular_forces.push_back(std::make_unique<HarmonicForce>(k, r));
 
     } else {
       SpdWrapper::get()->error("Unrecognized singular force");
@@ -133,14 +131,14 @@ int main(const int argc, char* argv[]) {
   spdlog::stopwatch stopwatch;  // TODO whats up with this?
   auto time_of_last_mups = start_time;
   // TODO breaks sometimes i think it has to do with paths?
-
+  /*
   Statistics statistics(
       arguments.statistics_config.x_bins, arguments.statistics_config.y_bins,
       *container,
       output_directory + "/" +
           arguments.statistics_config.density_output_location,
       output_directory + "/" +
-          arguments.statistics_config.velocity_output_location);
+          arguments.statistics_config.velocity_output_location);*/
 #endif
   auto p2 = container->getParticles()[1];
   for (auto [diag, ref] : p2->getNeighbours()) {
@@ -260,7 +258,7 @@ int main(const int argc, char* argv[]) {
 #endif
     iteration++;
     current_time = arguments.delta_t * iteration;
-    SpdWrapper::get()->info("Iteration {}", iteration);
+    // SpdWrapper::get()->info("Iteration {}", iteration);
   }
 
   // Writes the finished simulations particle state into a checkpoint file
