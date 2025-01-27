@@ -473,6 +473,7 @@ void LinkedCellsContainer::computeInteractiveForces(const std::vector<std::uniqu
   }
 
 #pragma omp barrier
+
   for (size_t i = 1; i < num_threads; i++) {
     for (size_t j = 0; j < particle_count_; j++) {
       force_buffers[0][j] = force_buffers[i][j];
@@ -488,7 +489,34 @@ void LinkedCellsContainer::computeInteractiveForces(const std::vector<std::uniqu
 
 void LinkedCellsContainer::computeSingularForces(
     const std::vector<std::unique_ptr<SingularForce>> &singular_forces) {
+#pragma omp parallel for schedule(dynamic)
+  for (auto &p : particles_) {
+    dvec3 f = {0, 0, 0};
+    for (const auto& force : singular_forces) {
+      f = f + force->applyForce(p);
+    }
 
+    p.addF(f);
+  }
+}
+
+void LinkedCellsContainer::computeIndexForces(
+  const std::vector<std::unique_ptr<IndexForce>>& index_forces) {
+  for (auto &p : particles_) {
+    dvec3 f = {0, 0, 0};
+    for (const auto& index_force : index_forces) {
+      for (const int id : index_force->getIndeces()) {
+        if (p.getId() == id) {
+          // SpdWrapper::get()->info("Particle {}; -> [{}, {}, {}]", p.getId(),
+          // f[0], f[1], f[2]);
+          f = f + index_force->applyForce(p, current_time);
+          // SpdWrapper::get()->info("Particle {} adding [{}, {}, {}]",
+          // p.getId(), f[0], f[1], f[2]);
+        }
+      }
+    }
+    p.addF(f);
+  }
 }
 
 

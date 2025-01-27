@@ -2,12 +2,13 @@
 // Created by jkr on 12/26/24.
 //
 
+#pragma once
 #ifndef INDEXFORCE_H
 #define INDEXFORCE_H
 
 #include <vector>
 
-#include "defs/containers/ParticleContainer.h"
+#include "defs/Particle.h"
 
 class IndexForce {
   std::vector<int> indeces_{};

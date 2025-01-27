@@ -269,6 +269,12 @@ class LinkedCellsContainer final : public ParticleContainer {
   void computeSingularForces(const std::vector<std::unique_ptr<SingularForce>>&
                                  singular_forces) override;
 
+  /**
+   * @brief Compute Index forces
+   * @param index_forces
+   */
+  void computeIndexForces(const std::vector<std::unique_ptr<IndexForce>>& index_forces) override;
+
 
   /**
    * @brief Get the amount of cells in each dimension

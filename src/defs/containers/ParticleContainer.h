@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "defs/Particle.h"
+#include "forces/IndexForce.h"
 #include "forces/InteractiveForce.h"
 #include "forces/SingularForce.h"
 
@@ -76,6 +77,7 @@ class ParticleContainer {
 
 
   /**
+   * TODO
    * @brief Compute interactive forces
    */
   virtual void computeInteractiveForces(
@@ -87,6 +89,13 @@ class ParticleContainer {
    */
   virtual void computeSingularForces(
       const std::vector<std::unique_ptr<SingularForce>>& singular_forces) = 0;
+
+  /**
+   * @brief Compute Index forces
+   * @param index_forces
+   */
+  virtual void computeIndexForces(
+      const std::vector<std::unique_ptr<IndexForce>>& index_forces) = 0;
 
 
   virtual double getKineticEnergy() = 0;

@@ -6,6 +6,7 @@
 #include <memory>
 #include <vector>
 
+#include "defs/containers/ParticleContainer.h"
 #include "forces/IndexForce.h"
 #include "forces/InteractiveForce.h"
 #include "forces/SingularForce.h"

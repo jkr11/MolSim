@@ -95,6 +95,10 @@ class DirectSumContainer final : public ParticleContainer {
   void computeSingularForces(const std::vector<std::unique_ptr<SingularForce>>&
                                  singular_forces) override {}
 
+  //TODO: implement?
+  void computeIndexForces(const std::vector<std::unique_ptr<IndexForce>>&
+                                 index_forces) override {}
+
   double getKineticEnergy() override;
 
   size_t getParticleCount() override { return particles_.size(); }
