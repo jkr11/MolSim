@@ -70,17 +70,10 @@ void VerletIntegrator::step(ParticleContainer& particle_container) const {
   SpdWrapper::get()->info("----------------- Iteration done");
 
   // Lennard Jones (or truncated)
-  particle_container.pairIterator([this](Particle& p1, Particle& p2) {
-    dvec3 f12 = {0.0, 0.0, 0.0};
-    for (const auto& force : interactive_forces_) {
-      f12 = f12 + force->directionalForce(p1, p2);
-    }
-    p1.addF(f12);
-    p2.subF(f12);
-  });
+  particle_container.computeInteractiveForces(interactive_forces_);
 
   // TODO DELETE
-  particle_container.singleIterator([this](const Particle& p) {
+  particle_container.singleIterator([](const Particle& p) {
     if (p.getId() == 874) {
       SpdWrapper::get()->info("   current 874 f = [{}, {}, {}]", p.getF()[0],
                               p.getF()[1], p.getF()[2]);
@@ -88,10 +81,10 @@ void VerletIntegrator::step(ParticleContainer& particle_container) const {
   });
 
   // Gravity and or Membrane
-  particle_container.singleIterator([this, &particle_container](Particle& p) {
+  particle_container.singleIterator([this](Particle& p) {
     dvec3 f = {0, 0, 0};
     for (const auto& force : singular_forces_) {
-      f = f + force->applyForce(p, particle_container);
+      f = f + force->applyForce(p);
     }
 
     if (p.getId() == 874) {

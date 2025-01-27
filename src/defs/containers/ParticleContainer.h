@@ -8,6 +8,8 @@
 #include <vector>
 
 #include "defs/Particle.h"
+#include "forces/InteractiveForce.h"
+#include "forces/SingularForce.h"
 
 /**
  * @brief Interface for an object storing particles while providing single and
@@ -71,6 +73,21 @@ class ParticleContainer {
    */
   virtual void pairIterator(
       const std::function<void(Particle&, Particle&)>& f) = 0;
+
+
+  /**
+   * @brief Compute interactive forces
+   */
+  virtual void computeInteractiveForces(
+      const std::vector<std::unique_ptr<InteractiveForce>>&
+          interactive_forces) = 0;
+
+  /**
+   * @brief Compute singular forces
+   */
+  virtual void computeSingularForces(
+      const std::vector<std::unique_ptr<SingularForce>>& singular_forces) = 0;
+
 
   virtual double getKineticEnergy() = 0;
 

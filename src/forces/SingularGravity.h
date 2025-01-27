@@ -31,7 +31,7 @@ class SingularGravity final : public SingularForce {
    * @param p the particle to act on
    * @return the force to be added to the particles force
    */
-  [[nodiscard]] dvec3 applyForce(const Particle &p, ParticleContainer& container) const override;
+  [[nodiscard]] dvec3 applyForce(const Particle &p) const override;
 };
 
 #endif  // SINGULARGRAVITY_H

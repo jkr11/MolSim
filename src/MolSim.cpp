@@ -133,14 +133,14 @@ int main(const int argc, char* argv[]) {
   spdlog::stopwatch stopwatch;  // TODO whats up with this?
   auto time_of_last_mups = start_time;
   // TODO breaks sometimes i think it has to do with paths?
-
+/*
   Statistics statistics(
       arguments.statistics_config.x_bins, arguments.statistics_config.y_bins,
       *container,
       output_directory + "/" +
           arguments.statistics_config.density_output_location,
       output_directory + "/" +
-          arguments.statistics_config.velocity_output_location);
+          arguments.statistics_config.velocity_output_location);*/
 #endif
   auto p2 = container->getParticles()[1];
   for (auto [diag, ref] : p2->getNeighbours()) {

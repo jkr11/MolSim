@@ -8,7 +8,7 @@
 #include "utils/ArrayUtils.h"
 #include "utils/SpdWrapper.h"
 
-dvec3 HarmonicForce::applyForce(const Particle& p, ParticleContainer& container) const {
+dvec3 HarmonicForce::applyForce(const Particle& p) const {
   // SpdWrapper::get()->info(
   //"HarmonicForce::applyForce() with k : {} and r_0 : {}", k, r_0);
   dvec3 force_acc = {0.0, 0.0, 0.0};

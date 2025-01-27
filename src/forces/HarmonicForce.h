@@ -19,7 +19,7 @@ class HarmonicForce final : public SingularForce {
     sr_0 = std::sqrt(2) * r_0;
   }
 
-  [[nodiscard]] dvec3 applyForce(const Particle& p, ParticleContainer& container) const override;
+  [[nodiscard]] dvec3 applyForce(const Particle& p) const override;
 };
 
 #endif  // HARMONICFORCE_H

@@ -9,7 +9,7 @@
 #include <functional>
 #include <vector>
 #include <iostream>
-
+#include <omp.h>
 
 #include "debug/debug_print.h"
 #include "defs/Particle.h"
@@ -243,6 +243,7 @@ void LinkedCellsContainer::setIndexForce(const IndexForce &index_force) {
   this->index_force = index_force;
 }
 
+//TODO: this is now unused => could be removed, are we allowed to? I guess
 void LinkedCellsContainer::pairIterator(
     const std::function<void(Particle &, Particle &)> &f) {
   // - as x, y, z are all increasing offsets point to all neighbours in
@@ -363,6 +364,124 @@ void LinkedCellsContainer::haloIterator(
     }
   }
 }
+
+void LinkedCellsContainer::computeInteractiveForces(
+    const std::vector<std::unique_ptr<InteractiveForce>> &interactive_forces) {
+  //parallelization type 1: Force buffers
+
+  //TODO: dont necessarily require OPENMP
+//#ifdef _OPENMP
+  //original c18 scheme to implement newton3
+  const std::array<ivec3, 13> offsets = {{
+    // 9 x facing
+    {{1, -1, -1}},
+    {{1, -1, 0}},
+    {{1, -1, 1}},
+    {{1, 0, -1}},
+    {{1, 0, 0}},
+    {{1, 0, 1}},
+    {{1, 1, -1}},
+    {{1, 1, 0}},
+    {{1, 1, 1}},
+    // 3 y
+    {{0, 1, -1}},
+    {{0, 1, 0}},
+    {{0, 1, 1}},
+    // last z
+    {{0, 0, 1}},
+}};
+
+  int num_threads = omp_get_max_threads();
+  std::vector<std::vector<dvec3>> force_buffers(num_threads, std::vector<dvec3>(particle_count_, {0, 0, 0}));
+
+  #pragma omp parallel for schedule(dynamic)
+  for (std::size_t cell_index = 0; cell_index < cells_.size(); cell_index++) {
+    std::vector<Particle*> &cell_particles = cells_[cell_index];
+    if (cell_particles.empty()) continue;
+
+    int thread_id = omp_get_thread_num();
+    std::vector<dvec3>& force_buffer = force_buffers[thread_id];
+
+    ivec3 cell_coordinate = cellIndexToCoord(cell_index);
+    DEBUG_PRINT_FMT("cell index: {}; coord = ({}, {}, {}); halo? = {}",
+                    cell_index, cell_coordinate[0], cell_coordinate[1],
+                    cell_coordinate[2], isHalo(cell_index))
+
+    // iterate over particles inside cell
+    for (std::size_t i = 0; i < cell_particles.size(); ++i) {
+      for (std::size_t j = i + 1; j < cell_particles.size(); ++j) {
+        const dvec3 p = cell_particles[i]->getX();
+        const dvec3 q = cell_particles[j]->getX();
+        if (dvec3 d = {p[0] - q[0], p[1] - q[1], p[2] - q[2]};
+            d[0] * d[0] + d[1] * d[1] + d[2] * d[2] > cutoff_ * cutoff_)
+          continue;
+
+        dvec3 f12 = {0, 0, 0};
+        for (auto &force : interactive_forces) {
+          f12 = f12 + force->directionalForce(*cell_particles[i], *cell_particles[j]);
+        }
+
+        force_buffer[cell_particles[i]->getId()] = force_buffer[cell_particles[i]->getId()] + f12;
+        force_buffer[cell_particles[j]->getId()] = force_buffer[cell_particles[j]->getId()] - f12;
+
+      }
+    }
+
+    // iterate over neighbouring particles
+    for (auto &offset : offsets) {
+      // compute neighbourIndex and check if it is valid
+      const ivec3 neighbour_coord = {cell_coordinate[0] + offset[0],
+                                    cell_coordinate[1] + offset[1],
+                                    cell_coordinate[2] + offset[2]};
+
+      if (!isValidCellCoordinate(neighbour_coord)) {
+        DEBUG_PRINT_FMT("Invalid coord: ({}, {}, {})", neighbour_coord[0],
+                        neighbour_coord[1], neighbour_coord[2])
+        continue;
+      }
+
+      const size_t neighbour_index = cellCoordToIndex(neighbour_coord);
+      DEBUG_PRINT_FMT(
+          "Checking cell i={}; c=({}, {}, {}) for pairs (offset = ({}, {}, "
+          "{}))",
+          neighbour_index, neighbour_coord[0], neighbour_coord[1],
+          neighbour_coord[2], offset[0], offset[1], offset[2]);
+
+      // go over all pairs with neighbour particles
+      std::vector<Particle *> &neighbour_particles = cells_[neighbour_index];
+      if (neighbour_particles.empty()) continue;
+
+      for (auto &cell_particle : cell_particles) {
+        for (auto &neighbour_particle : neighbour_particles) {
+          auto p = cell_particle->getX();
+          auto q = neighbour_particle->getX();
+
+          if (dvec3 d = {p[0] - q[0], p[1] - q[1], p[2] - q[2]};
+              d[0] * d[0] + d[1] * d[1] + d[2] * d[2] > cutoff_ * cutoff_)
+            continue;
+
+          dvec3 f12 = {0, 0, 0};
+          for (auto &force : interactive_forces) {
+            f12 = f12 + force->directionalForce(*cell_particle, *neighbour_particle);
+          }
+
+          force_buffer[cell_particle->getId()] = force_buffer[cell_particle->getId()] + f12;
+          force_buffer[neighbour_particle->getId()] = force_buffer[neighbour_particle->getId()] - f12;
+
+        }
+      }
+    }
+
+  }
+
+//#endif
+}
+
+void LinkedCellsContainer::computeSingularForces(
+    const std::vector<std::unique_ptr<SingularForce>> &singular_forces) {
+
+}
+
 
 inline std::size_t LinkedCellsContainer::dvec3ToCellIndex(
     const dvec3 &position) const {

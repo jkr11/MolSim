@@ -7,6 +7,7 @@
 #include "defs/Simulation.h"
 #include "defs/containers/ParticleContainer.h"
 #include "forces/IndexForce.h"
+#include "forces/InteractiveForce.h"
 
 /**
  * @brief a particle container with linked cells
@@ -255,6 +256,19 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @note Does not impose the invariant automatically!
    */
   void haloIterator(const std::function<void(Particle&)>& f);
+
+  /**
+   * @brief Compute interactive forces
+   */
+  void computeInteractiveForces(
+      const std::vector<std::unique_ptr<InteractiveForce>>& interactive_forces) override;
+
+  /**
+   * @brief Compute singular forces
+   */
+  void computeSingularForces(const std::vector<std::unique_ptr<SingularForce>>&
+                                 singular_forces) override;
+
 
   /**
    * @brief Get the amount of cells in each dimension

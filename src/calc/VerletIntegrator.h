@@ -1,8 +1,11 @@
 #pragma once
+
+#ifndef VERLETINTEGRATOR_H
+#define VERLETINTEGRATOR_H
+
 #include <memory>
 #include <vector>
 
-#include "defs/containers/ParticleContainer.h"
 #include "forces/IndexForce.h"
 #include "forces/InteractiveForce.h"
 #include "forces/SingularForce.h"
@@ -51,3 +54,4 @@ class VerletIntegrator {
    */
    void step(ParticleContainer& particle_container) const;
 };
+#endif

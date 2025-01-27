@@ -87,6 +87,14 @@ class DirectSumContainer final : public ParticleContainer {
   void pairIterator(
       const std::function<void(Particle&, Particle&)>& f) override;
 
+  //TODO: implement?
+  void computeInteractiveForces(
+      const std::vector<std::unique_ptr<InteractiveForce>>& interactive_forces) override {}
+
+  //TODO: implement?
+  void computeSingularForces(const std::vector<std::unique_ptr<SingularForce>>&
+                                 singular_forces) override {}
+
   double getKineticEnergy() override;
 
   size_t getParticleCount() override { return particles_.size(); }
