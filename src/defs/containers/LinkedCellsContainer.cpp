@@ -3,13 +3,14 @@
 //
 #include "LinkedCellsContainer.h"
 
+#include <omp.h>
+
 #include <algorithm>
 #include <cmath>
 #include <cstddef>
 #include <functional>
-#include <vector>
 #include <iostream>
-#include <omp.h>
+#include <vector>
 
 #include "debug/debug_print.h"
 #include "defs/Particle.h"
@@ -32,13 +33,14 @@ LinkedCellsContainer::LinkedCellsContainer(
   cells_ = {};
   this->cutoff_ = linked_cells_config.cutoff_radius;
 
-  cell_count_ = {std::max(static_cast<int>(std::floor(domain_[0] / cutoff_)), 1),
-                std::max(static_cast<int>(std::floor(domain_[1] / cutoff_)), 1),
-                std::max(static_cast<int>(std::floor(domain_[2] / cutoff_)), 1)};
+  cell_count_ = {
+      std::max(static_cast<int>(std::floor(domain_[0] / cutoff_)), 1),
+      std::max(static_cast<int>(std::floor(domain_[1] / cutoff_)), 1),
+      std::max(static_cast<int>(std::floor(domain_[2] / cutoff_)), 1)};
 
   cell_dim_ = {static_cast<double>(domain_[0]) / cell_count_[0],
-              static_cast<double>(domain_[1]) / cell_count_[1],
-              static_cast<double>(domain_[2]) / cell_count_[2]};
+               static_cast<double>(domain_[1]) / cell_count_[1],
+               static_cast<double>(domain_[2]) / cell_count_[2]};
 
   // safety check that minimum cell count is satisfied so the boundaries work as
   // expected:
@@ -99,8 +101,8 @@ LinkedCellsContainer::LinkedCellsContainer(
   // force_values);
 
   SpdWrapper::get()->info("cell dim: {}, {}, {}; cell count: {}, {}, {}",
-                          cell_dim_[0], cell_dim_[1], cell_dim_[2], cell_count_[0],
-                          cell_count_[1], cell_count_[2]);
+                          cell_dim_[0], cell_dim_[1], cell_dim_[2],
+                          cell_count_[0], cell_count_[1], cell_count_[2]);
 }
 
 void LinkedCellsContainer::addParticle(Particle &p) {
@@ -111,7 +113,6 @@ void LinkedCellsContainer::addParticle(Particle &p) {
   }
   particles_.push_back(p);
   cells_[index].push_back(&particles_.back());
-
 
   this->particle_count_++;
 
@@ -194,7 +195,6 @@ void LinkedCellsContainer::imposeInvariant() {
       // SpdWrapper::get()->info("Imposing on partice with id {}", it->getId());
       cells_[shouldBeIndex].push_back(*it);
       it = cells_[index].erase(it);
-
     }
   }
 
@@ -209,7 +209,7 @@ void LinkedCellsContainer::imposeInvariant() {
         for (const size_t cell_index : halo_direction_cells_[dimension]) {
           particle_count_ -=
               cells_[cell_index].size();  // update particle count, only place
-                                         // where particles are deleted
+                                          // where particles are deleted
           cells_[cell_index].clear();
           cells_[cell_index].shrink_to_fit();
         }
@@ -243,7 +243,7 @@ void LinkedCellsContainer::setIndexForce(const IndexForce &index_force) {
   this->index_force = index_force;
 }
 
-//TODO: this is now unused => could be removed, are we allowed to? I guess
+// TODO: this is now unused => could be removed, are we allowed to? I guess
 void LinkedCellsContainer::pairIterator(
     const std::function<void(Particle &, Particle &)> &f) {
   // - as x, y, z are all increasing offsets point to all neighbours in
@@ -295,7 +295,6 @@ void LinkedCellsContainer::pairIterator(
         DEBUG_PRINT_FMT("Intra cell pair: ({}, {})",
                         cell_particles[i]->getType(),
                         cell_particles[j]->getType());
-
       }
     }
 
@@ -303,8 +302,8 @@ void LinkedCellsContainer::pairIterator(
     for (auto &offset : offsets) {
       // compute neighbourIndex and check if it is valid
       const ivec3 neighbour_coord = {cell_coordinate[0] + offset[0],
-                                    cell_coordinate[1] + offset[1],
-                                    cell_coordinate[2] + offset[2]};
+                                     cell_coordinate[1] + offset[1],
+                                     cell_coordinate[2] + offset[2]};
 
       if (!isValidCellCoordinate(neighbour_coord)) {
         DEBUG_PRINT_FMT("Invalid coord: ({}, {}, {})", neighbour_coord[0],
@@ -346,7 +345,6 @@ void LinkedCellsContainer::boundaryIterator(
   for (std::size_t index = 0; index < cells_.size(); index++) {
     if (!isBoundary(index)) continue;
 
-
     for (auto &p : cells_[index]) {
       f(*p);
     }
@@ -358,51 +356,52 @@ void LinkedCellsContainer::haloIterator(
   for (std::size_t index = 0; index < cells_.size(); index++) {
     if (!isHalo(index)) continue;
 
-
     for (auto &p : cells_[index]) {
       f(*p);
     }
   }
 }
 
-void LinkedCellsContainer::computeInteractiveForces(const std::vector<std::unique_ptr<InteractiveForce>> &interactive_forces) {
-  //parallelization type 1: Force buffers
-
-  //TODO: dont necessarily require OPENMP
-  //#ifdef _OPENMP
-  //original c18 scheme to implement newton3
+void LinkedCellsContainer::computeInteractiveForces(
+    const std::vector<std::unique_ptr<InteractiveForce>> &interactive_forces) {
+  // parallelization type 1: Force buffers
+  // INFO_FMT("INteractive size in computed --- {}", interactive_forces.size());
+  // TODO: dont necessarily require OPENMP
+  // #ifdef _OPENMP
+  // original c18 scheme to implement newton3
   const std::array<ivec3, 13> offsets = {{
-    // 9 x facing
-    {{1, -1, -1}},
-    {{1, -1, 0}},
-    {{1, -1, 1}},
-    {{1, 0, -1}},
-    {{1, 0, 0}},
-    {{1, 0, 1}},
-    {{1, 1, -1}},
-    {{1, 1, 0}},
-    {{1, 1, 1}},
-    // 3 y
-    {{0, 1, -1}},
-    {{0, 1, 0}},
-    {{0, 1, 1}},
-    // last z
-    {{0, 0, 1}},
+      // 9 x facing
+      {{1, -1, -1}},
+      {{1, -1, 0}},
+      {{1, -1, 1}},
+      {{1, 0, -1}},
+      {{1, 0, 0}},
+      {{1, 0, 1}},
+      {{1, 1, -1}},
+      {{1, 1, 0}},
+      {{1, 1, 1}},
+      // 3 y
+      {{0, 1, -1}},
+      {{0, 1, 0}},
+      {{0, 1, 1}},
+      // last z
+      {{0, 0, 1}},
   }};
 
   int num_threads = omp_get_max_threads();
-  SpdWrapper::get()->critical("num threads: {}", num_threads);
-  std::vector<std::vector<dvec3>> force_buffers(num_threads, std::vector<dvec3>(particle_count_, {0, 0, 0}));
+  // SpdWrapper::get()->critical("num threads: {}", num_threads);
+  std::vector<std::vector<dvec3>> force_buffers(
+      num_threads, std::vector<dvec3>(particle_count_, {0, 0, 0}));
 
-  #pragma omp parallel for schedule(dynamic)
+#pragma omp parallel for schedule(dynamic)
   for (std::size_t cell_index = 0; cell_index < cells_.size(); cell_index++) {
-    std::vector<Particle*> &cell_particles = cells_[cell_index];
+    std::vector<Particle *> &cell_particles = cells_[cell_index];
     if (cell_particles.empty()) continue;
 
     int thread_id = omp_get_thread_num();
-    std::vector<dvec3>& force_buffer = force_buffers[thread_id];
+    std::vector<dvec3> &force_buffer = force_buffers[thread_id];
 
-    SpdWrapper::get()->critical("threadid: {}", thread_id);
+    // SpdWrapper::get()->critical("threadid: {}", thread_id);
 
     ivec3 cell_coordinate = cellIndexToCoord(cell_index);
     DEBUG_PRINT_FMT("cell index: {}; coord = ({}, {}, {}); halo? = {}",
@@ -420,14 +419,20 @@ void LinkedCellsContainer::computeInteractiveForces(const std::vector<std::uniqu
 
         dvec3 f12 = {0, 0, 0};
         for (auto &force : interactive_forces) {
-          f12 = f12 + force->directionalForce(*cell_particles[i], *cell_particles[j]);
+          // INFO("IN LOOOOPS")
+          dvec3 ftmp =
+              force->directionalForce(*cell_particles[i], *cell_particles[j]);
+          // InfoVec("computed force ", ftmp);
+          f12 = f12 + ftmp;
         }
 
-        SpdWrapper::get()->critical("f12: {}, {}, {}", f12[0], f12[1], f12[2]);
+        // SpdWrapper::get()->critical("f12: {}, {}, {}", f12[0], f12[1],
+        // f12[2]);
 
-        force_buffer[cell_particles[i]->getId()] = force_buffer[cell_particles[i]->getId()] + f12;
-        force_buffer[cell_particles[j]->getId()] = force_buffer[cell_particles[j]->getId()] - f12;
-
+        force_buffer[cell_particles[i]->getId()] =
+            force_buffer[cell_particles[i]->getId()] + f12;
+        force_buffer[cell_particles[j]->getId()] =
+            force_buffer[cell_particles[j]->getId()] - f12;
       }
     }
 
@@ -435,8 +440,8 @@ void LinkedCellsContainer::computeInteractiveForces(const std::vector<std::uniqu
     for (auto &offset : offsets) {
       // compute neighbourIndex and check if it is valid
       const ivec3 neighbour_coord = {cell_coordinate[0] + offset[0],
-                                    cell_coordinate[1] + offset[1],
-                                    cell_coordinate[2] + offset[2]};
+                                     cell_coordinate[1] + offset[1],
+                                     cell_coordinate[2] + offset[2]};
 
       if (!isValidCellCoordinate(neighbour_coord)) {
         DEBUG_PRINT_FMT("Invalid coord: ({}, {}, {})", neighbour_coord[0],
@@ -465,44 +470,48 @@ void LinkedCellsContainer::computeInteractiveForces(const std::vector<std::uniqu
             continue;
 
           dvec3 f12 = {0, 0, 0};
-          SpdWrapper::get()->critical("interactive forces size: {}", interactive_forces.size());
+          // SpdWrapper::get()->critical("interactive forces size: {}",
+          //                             interactive_forces.size());
           for (auto &force : interactive_forces) {
-            f12 = f12 + force->directionalForce(*cell_particle, *neighbour_particle);
+            f12 = f12 +
+                  force->directionalForce(*cell_particle, *neighbour_particle);
           }
 
-          SpdWrapper::get()->critical("f12 (2): {}, {}, {}", f12[0], f12[1], f12[2]);
+          // SpdWrapper::get()->critical("f12 (2): {}, {}, {}", f12[0], f12[1],
+          //                             f12[2]);
 
-          force_buffer[cell_particle->getId()] = force_buffer[cell_particle->getId()] + f12;
-          force_buffer[neighbour_particle->getId()] = force_buffer[neighbour_particle->getId()] - f12;
-
+          force_buffer[cell_particle->getId()] =
+              force_buffer[cell_particle->getId()] + f12;
+          force_buffer[neighbour_particle->getId()] =
+              force_buffer[neighbour_particle->getId()] - f12;
         }
       }
     }
   }
 
-  #pragma omp barrier
+#pragma omp barrier
 
   for (size_t i = 1; i < num_threads; i++) {
     for (size_t j = 0; j < particle_count_; j++) {
       force_buffers[0][j] = force_buffers[0][j] + force_buffers[i][j];
-      //SpdWrapper::get()->critical("forcebuffer[{}][{}] = {}, {}, {}", i, j, force_buffers[i][j][0], force_buffers[i][j][1], force_buffers[i][j][2]);
+      // SpdWrapper::get()->critical("forcebuffer[{}][{}] = {}, {}, {}", i, j,
+      // force_buffers[i][j][0], force_buffers[i][j][1],
+      // force_buffers[i][j][2]);
     }
   }
 
   for (auto &p : particles_) {
     dvec3 f = force_buffers[0][p.getId()];
     p.addF(f);
-    //SpdWrapper::get()->critical("applied force: {}, {}, {}", f[0], f[1], f[2]);
+    // SpdWrapper::get()->critical("applied force: {}, {}, {}", f[0], f[1],
+    // f[2]);
   }
 
-//#endif
+  // #endif
 }
 
 void LinkedCellsContainer::computeSingularForces(
-    const std::vector<std::unique_ptr<SingularForce>> &singular_forces) {
-
-}
-
+    const std::vector<std::unique_ptr<SingularForce>> &singular_forces) {}
 
 inline std::size_t LinkedCellsContainer::dvec3ToCellIndex(
     const dvec3 &position) const {
@@ -522,7 +531,8 @@ inline std::size_t LinkedCellsContainer::cellCoordToIndex(
 
 inline ivec3 LinkedCellsContainer::cellIndexToCoord(
     std::size_t cell_index) const {
-  const int x = static_cast<int>(cell_index / (cell_count_[1] * cell_count_[2]));
+  const int x =
+      static_cast<int>(cell_index / (cell_count_[1] * cell_count_[2]));
   cell_index = cell_index - (x * cell_count_[1] * cell_count_[2]);
 
   const int y = static_cast<int>(cell_index / cell_count_[2]);
@@ -711,7 +721,6 @@ void LinkedCellsContainer::applyPeriodicBoundary(const size_t dimension) {
 
       for (auto &p : cells_[cell_index]) {
         for (auto &q : cells_[adjacent_cell_index]) {
-
           // distance check
           const dvec3 accounted_particle_distance =
               q->getX() - p->getX() + particle_distance_offset;
@@ -835,8 +844,8 @@ bool LinkedCellsContainer::isDoubleCorner(
       boundaries_[zlow] != LinkedCellsConfig::Periodic) {
     // 110
     // SpdWrapper::get()->info("isDoubleCorner - xlow ylow !zlow");
-    if (raw_dimension == yhigh &&
-        (cell_coordinate[0] == -1 || cell_coordinate[0] == cell_count_[0] - 2)) {
+    if (raw_dimension == yhigh && (cell_coordinate[0] == -1 ||
+                                   cell_coordinate[0] == cell_count_[0] - 2)) {
       return true;
     }
     return false;
@@ -846,8 +855,8 @@ bool LinkedCellsContainer::isDoubleCorner(
       boundaries_[zlow] == LinkedCellsConfig::Periodic) {
     // 101
     // SpdWrapper::get()->info("isDoubleCorner - xlow !ylow zlow");
-    if (raw_dimension == zhigh &&
-        (cell_coordinate[0] == -1 || cell_coordinate[0] == cell_count_[0] - 2)) {
+    if (raw_dimension == zhigh && (cell_coordinate[0] == -1 ||
+                                   cell_coordinate[0] == cell_count_[0] - 2)) {
       return true;
     }
     return false;
@@ -857,8 +866,8 @@ bool LinkedCellsContainer::isDoubleCorner(
       boundaries_[zlow] == LinkedCellsConfig::Periodic) {
     // 011
     // SpdWrapper::get()->info("isDoubleCorner - !xlow ylow zlow");
-    if (raw_dimension == zhigh &&
-        (cell_coordinate[1] == -1 || cell_coordinate[1] == cell_count_[1] - 2)) {
+    if (raw_dimension == zhigh && (cell_coordinate[1] == -1 ||
+                                   cell_coordinate[1] == cell_count_[1] - 2)) {
       return true;
     }
     return false;
@@ -868,16 +877,16 @@ bool LinkedCellsContainer::isDoubleCorner(
       boundaries_[zlow] == LinkedCellsConfig::Periodic) {
     // 111
     // SpdWrapper::get()->info("isDoubleCorner - xlow ylow zlow");
-    if (raw_dimension == yhigh &&
-        (cell_coordinate[0] == -1 || cell_coordinate[0] == cell_count_[0] - 2)) {
+    if (raw_dimension == yhigh && (cell_coordinate[0] == -1 ||
+                                   cell_coordinate[0] == cell_count_[0] - 2)) {
       return true;
     }
-    if (raw_dimension == zhigh &&
-        (cell_coordinate[0] == -1 || cell_coordinate[0] == cell_count_[0] - 2)) {
+    if (raw_dimension == zhigh && (cell_coordinate[0] == -1 ||
+                                   cell_coordinate[0] == cell_count_[0] - 2)) {
       return true;
     }
-    if (raw_dimension == zhigh &&
-        (cell_coordinate[1] == -1 || cell_coordinate[1] == cell_count_[1] - 2)) {
+    if (raw_dimension == zhigh && (cell_coordinate[1] == -1 ||
+                                   cell_coordinate[1] == cell_count_[1] - 2)) {
       return true;
     }
     return false;
@@ -887,24 +896,25 @@ bool LinkedCellsContainer::isDoubleCorner(
 
 void LinkedCellsContainer::setNeighbourReferences() {
   auto p3 = &particles_[0];
-  std::cout << "in setNeighbours Particle 1 has reference location " << p3 << std::endl;
+  std::cout << "in setNeighbours Particle 1 has reference location " << p3
+            << std::endl;
 
-
-  for (Particle* p : getParticles()) {
+  for (Particle *p : getParticles()) {
     std::vector<std::pair<bool, size_t>> new_neighbours{};
 
-    for (Particle* p2 : getParticles()) {
+    for (Particle *p2 : getParticles()) {
       for (auto [diag, ref] : p->getNeighbours()) {
-        auto* new_p = reinterpret_cast<Particle*>(ref);
+        auto *new_p = reinterpret_cast<Particle *>(ref);
 
         if (p2->getId() == new_p->getId()) {
-          size_t* pointer = (size_t*) p2;
+          size_t *pointer = (size_t *)p2;
           new_neighbours.emplace_back(diag, (size_t)pointer);
         }
 
         if (new_p->getId() == 0) {
-          size_t* pointer = (size_t*)new_p;
-          std::cout << "P0 is at " << new_p << " or " << pointer << " or " << ((size_t)(pointer)) << std::endl;
+          size_t *pointer = (size_t *)new_p;
+          std::cout << "P0 is at " << new_p << " or " << pointer << " or "
+                    << ((size_t)(pointer)) << std::endl;
           std::cout << "P0 is at actually at " << p3 << std::endl;
         }
       }

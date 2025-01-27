@@ -20,7 +20,7 @@
 #include "spdlog/stopwatch.h"
 #include "utils/SpdWrapper.h"
 #include "utils/Statistics.h"
-
+#define BENCHMARK
 int main(const int argc, char* argv[]) {
   Arguments arguments = {};
 
@@ -85,9 +85,7 @@ int main(const int argc, char* argv[]) {
       interactive_forces.push_back(std::make_unique<Gravity>());
     } else if (std::holds_alternative<TruncatedLennardJonesConfig>(config)) {
       interactive_forces.push_back(std::make_unique<TruncatedLennardJones>());
-    }
-
-    else {
+    } else {
       SpdWrapper::get()->error("Unrecognized interactive_force_type");
     }
   }
@@ -157,8 +155,8 @@ int main(const int argc, char* argv[]) {
       SpdWrapper::get()->info("test test");
       std::cout << "ahhh" << std::endl;
       container->singleIterator([](Particle& p) {
-        SpdWrapper::get()->info("particle {} at [{}, {}, {}]", p.getId(),
-                                p.getX()[0], p.getX()[1], p.getX()[2]);
+        // SpdWrapper::get()->info("particle {} at [{}, {}, {}]", p.getId(),
+        //                         p.getX()[0], p.getX()[1], p.getX()[2]);
       });
     }
 
@@ -260,7 +258,7 @@ int main(const int argc, char* argv[]) {
 #endif
     iteration++;
     current_time = arguments.delta_t * iteration;
-    SpdWrapper::get()->info("Iteration {}", iteration);
+    // SpdWrapper::get()->info("Iteration {}", iteration);
   }
 
   // Writes the finished simulations particle state into a checkpoint file

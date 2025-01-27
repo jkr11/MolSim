@@ -66,6 +66,10 @@ void XmlReader::read(std::vector<Particle>& particles,
       simulation_parameters.interactive_force_types.emplace_back(
           GravityConfig{});
       DEBUG_PRINT("Using Gravity");
+    } else if (force.TruncatedLennardJonesForce().present()) {
+      simulation_parameters.interactive_force_types.emplace_back(
+          TruncatedLennardJonesConfig{});
+      DEBUG_PRINT("Using TruncatedLennardJonesForce");
     } else {
       SpdWrapper::get()->warn("No force provided, using default LennardJones");
     }

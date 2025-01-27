@@ -6,20 +6,11 @@
 #include <iostream>
 
 #include "../utils/ArrayUtils.h"
+#include "debug/debug_print.h"
 #include "utils/SpdWrapper.h"
 
 void VerletIntegrator::step(ParticleContainer& particle_container) const {
   // position update
-  auto p = particle_container.getParticles()[0];
-  std::cout << "Particle " << p->getId() << " is at mem " << p << std::endl;
-  auto p2 = particle_container.getParticles()[1];
-  for (auto [diag, ref] : p2->getNeighbours()) {
-    auto dings = reinterpret_cast<Particle*>(ref);
-    if (dings->getId() == 0) {
-      std::cout << "Neighbour 0 from Particle 1 has reference location " << ref
-                << " and is diag? " << diag << std::endl;
-    }
-  }
 
   particle_container.singleIterator([this](Particle& p) {
     if (p.getType() < 0) {
@@ -34,13 +25,13 @@ void VerletIntegrator::step(ParticleContainer& particle_container) const {
 
     p.setX(new_x);
 
-    if (p.getId() == 874) {
+    /*if (p.getId() == 874) {
       dvec3 deltapos = new_x - oldx;
       SpdWrapper::get()->info("874 moved to [{}, {}, {}]", deltapos[0],
                               deltapos[1], deltapos[2]);
       SpdWrapper::get()->info("   with f = [{}, {}, {}]", p.getF()[0],
                               p.getF()[1], p.getF()[2]);
-    }
+    }*/
   });
 
   // reset
@@ -67,30 +58,31 @@ void VerletIntegrator::step(ParticleContainer& particle_container) const {
     p.addF(f);
   });
 
-  SpdWrapper::get()->info("----------------- Iteration done");
-
+  // SpdWrapper::get()->info("----------------- Iteration done");
+  // INFO_FMT("Size of interactive forces {}", interactive_forces_.size());
   // Lennard Jones (or truncated)
   particle_container.computeInteractiveForces(interactive_forces_);
 
   // TODO DELETE
   particle_container.singleIterator([](const Particle& p) {
-    if (p.getId() == 874) {
+    /*if (p.getId() == 874) {
       SpdWrapper::get()->info("   current 874 f = [{}, {}, {}]", p.getF()[0],
                               p.getF()[1], p.getF()[2]);
-    }
+    }*/
   });
 
   // Gravity and or Membrane
   particle_container.singleIterator([this](Particle& p) {
     dvec3 f = {0, 0, 0};
     for (const auto& force : singular_forces_) {
+      // INFO("Applying singular force")
       f = f + force->applyForce(p);
     }
 
-    if (p.getId() == 874) {
-      SpdWrapper::get()->info("874 membrane force: [{}, {}, {}]", f[0], f[1],
-                              f[2]);
-    }
+    // if (p.getId() == 874) {
+    //   SpdWrapper::get()->info("874 membrane force: [{}, {}, {}]", f[0], f[1],
+    //                           f[2]);
+    // }
     p.addF(f);
   });
 
