@@ -4,7 +4,9 @@
 
 #include "TruncatedLennardJones.h"
 
+#include "debug/debug_print.h"
 #include "utils/ArrayUtils.h"
+#include "utils/SpdWrapper.h"
 
 dvec3 TruncatedLennardJones::directionalForce(Particle& p1,
                                               Particle& p2) const {
@@ -26,5 +28,10 @@ dvec3 TruncatedLennardJones::directionalForce(Particle& p1,
   const double sr12 = std::pow(sr6, 2);
   const double force_magnitude =
       24 * epsilon * (sr6 - 2 * sr12) / std::pow(r, 2);
-  return force_magnitude * rv;
+
+  const dvec3 force = force_magnitude * rv;
+
+  SpdWrapper::get()->critical("lennard jones force: {}, {}, {}", force[0], force[1], force[2]);
+
+  return force;
 }
