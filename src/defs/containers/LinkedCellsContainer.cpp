@@ -365,12 +365,11 @@ void LinkedCellsContainer::haloIterator(
   }
 }
 
-void LinkedCellsContainer::computeInteractiveForces(
-    const std::vector<std::unique_ptr<InteractiveForce>> &interactive_forces) {
+void LinkedCellsContainer::computeInteractiveForces(const std::vector<std::unique_ptr<InteractiveForce>> &interactive_forces) {
   //parallelization type 1: Force buffers
 
   //TODO: dont necessarily require OPENMP
-//#ifdef _OPENMP
+  //#ifdef _OPENMP
   //original c18 scheme to implement newton3
   const std::array<ivec3, 13> offsets = {{
     // 9 x facing
@@ -389,7 +388,7 @@ void LinkedCellsContainer::computeInteractiveForces(
     {{0, 1, 1}},
     // last z
     {{0, 0, 1}},
-}};
+  }};
 
   int num_threads = omp_get_max_threads();
   std::vector<std::vector<dvec3>> force_buffers(num_threads, std::vector<dvec3>(particle_count_, {0, 0, 0}));
@@ -471,7 +470,17 @@ void LinkedCellsContainer::computeInteractiveForces(
         }
       }
     }
+  }
 
+#pragma omp barrier
+  for (size_t i = 1; i < num_threads; i++) {
+    for (size_t j = 0; j < particle_count_; j++) {
+      force_buffers[0][j] = force_buffers[i][j];
+    }
+  }
+
+  for (size_t i = 0; i < particle_count_; i++) {
+    particles_[i].setF(force_buffers[0][i]);
   }
 
 //#endif
