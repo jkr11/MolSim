@@ -20,7 +20,7 @@
 #include "spdlog/stopwatch.h"
 #include "utils/SpdWrapper.h"
 #include "utils/Statistics.h"
-#undef BENCHMARK
+
 int main(const int argc, char* argv[]) {
   Arguments arguments = {};
 
@@ -54,11 +54,11 @@ int main(const int argc, char* argv[]) {
     //                   [](const Particle& p) { return p.getType() < 0; });
     container = std::make_unique<LinkedCellsContainer>(linked_cells_data);
 
-    auto q = particles[0];
-    std::cout << "Particle " << q.getId() << " is at mem " << q << std::endl;
+    // auto q = particles[0];
+    // std::cout << "Particle " << q.getId() << " is at mem " << q << std::endl;
     container->addParticles(particles);
-    auto p = container->getParticles()[0];
-    std::cout << "Particle " << p->getId() << " is at mem " << p << std::endl;
+    // auto p = container->getParticles()[0];
+    // std::cout << "Particle " << p->getId() << " is at mem " << p << std::endl;
 
     container->imposeInvariant();
   } else if (std::holds_alternative<DirectSumConfig>(
@@ -69,7 +69,7 @@ int main(const int argc, char* argv[]) {
     SpdWrapper::get()->error("Unrecognized container type");
     throw std::runtime_error("Unrecognized container type");
   }
-  INFO_FMT("Simulation is using {} particles", particles.size());
+  // INFO_FMT("Simulation is using {} particles", particles.size());
 
   // assign all forces from the configs
 
@@ -140,25 +140,25 @@ int main(const int argc, char* argv[]) {
       output_directory + "/" +
           arguments.statistics_config.velocity_output_location);*/
 #endif
-  auto p2 = container->getParticles()[1];
-  for (auto [diag, ref] : p2->getNeighbours()) {
-    auto dings = reinterpret_cast<Particle*>(ref);
-    if (dings->getId() == 0) {
-      SpdWrapper::get()->info(
-          "Neighbour 0 from Particle 1 has reference location {}", ref);
-    }
-  }
+  // auto p2 = container->getParticles()[1];
+  // for (auto [diag, ref] : p2->getNeighbours()) {
+  //   auto dings = reinterpret_cast<Particle*>(ref);
+  //   if (dings->getId() == 0) {
+  //     SpdWrapper::get()->info(
+  //         "Neighbour 0 from Particle 1 has reference location {}", ref);
+  //   }
+  // }
 
   while (current_time <= arguments.t_end) {
     // TODO REMOVE
-    if (iteration == 100) {
-      SpdWrapper::get()->info("test test");
-      std::cout << "ahhh" << std::endl;
-      container->singleIterator([](Particle& p) {
-        // SpdWrapper::get()->info("particle {} at [{}, {}, {}]", p.getId(),
-        //                         p.getX()[0], p.getX()[1], p.getX()[2]);
-      });
-    }
+    // if (iteration == 100) {
+    //   SpdWrapper::get()->info("test test");
+    //   std::cout << "ahhh" << std::endl;
+    //   container->singleIterator([](Particle& p) {
+    //     // SpdWrapper::get()->info("particle {} at [{}, {}, {}]", p.getId(),
+    //     //                         p.getX()[0], p.getX()[1], p.getX()[2]);
+    //   });
+    // }
 
     verlet_integrator.step(*container);
     if (arguments.use_thermostat) {

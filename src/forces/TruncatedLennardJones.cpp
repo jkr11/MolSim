@@ -16,17 +16,17 @@ dvec3 TruncatedLennardJones::directionalForce(Particle& p1,
       return {0, 0, 0};
     }
   }*/
-  INFO("Entered LennardJonesForce")
+  //INFO("Entered LennardJonesForce")
   const dvec3 rv = p2.getX() - p1.getX();
   const double r = ArrayUtils::L2Norm(rv);
   const double sigma = (p1.getSigma() + p2.getSigma()) / 2;
-  INFO_FMT("Distance {}", r)
-  INFO_FMT("Sigma * C {}", sigma * 1.1225)
+  //INFO_FMT("Distance {}", r)
+  //INFO_FMT("Sigma * C {}", sigma * 1.1225)
   if (r >= sigma * 1.22462048309) {
-    INFO("Returning 000")
+    //INFO("Returning 000")
     return {0, 0, 0};
   }
-  INFO("Made past loop")
+  //INFO("Made past loop")
   const double epsilon = std::sqrt(p1.getEpsilon() * p2.getEpsilon());
   const double sr = sigma / r;
   const double sr6 = std::pow(sr, 6);

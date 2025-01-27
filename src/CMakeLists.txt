@@ -1,5 +1,7 @@
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
+find_package(OpenMP REQUIRED)
+
 ##### Collect all cpp files except MolSim.cpp #####
 file(GLOB_RECURSE MY_SRC
         "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
@@ -23,6 +25,7 @@ target_link_libraries(MolSimLib
         PUBLIC
         xerces-c
         spdlog::spdlog
+        OpenMP::OpenMP_CXX
 )
 
 target_compile_features(MolSimLib

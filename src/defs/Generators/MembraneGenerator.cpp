@@ -70,7 +70,7 @@ void MembraneGenerator::generate(std::vector<Particle> &particles) {
         // So we cant directly emplace here beceause for molecules we need
         // ownership of the neighbour and therefore the particle later on
         Particle particle(position, V, m, epsilon, sigma, type);
-        std::cout << "Particle with id " << particle.getId() << std::endl;
+        //std::cout << "Particle with id " << particle.getId() << std::endl;
         // particles.emplace_back(position, V, m, epsilon, sigma, type);
         // and then we transfer ownership to the particles vector
         particles.push_back(std::move(particle));

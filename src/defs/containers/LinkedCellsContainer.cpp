@@ -134,12 +134,12 @@ void LinkedCellsContainer::addParticle(Particle &p) {
 void LinkedCellsContainer::addParticles(
     const std::vector<Particle> &particles) {
   particles_.reserve(particles.size());
-  SpdWrapper::get()->info("Added new particles");
   for (Particle p : particles) {
-    // SpdWrapper::get()->info("Adding Particle with Id : {}", p.getId());
+    //SpdWrapper::get()->info("Adding Particle with Id : {}", p.getId());
     addParticle(p);
   }
   setNeighbourReferences();
+  SpdWrapper::get()->info("Added new particles");
 }
 
 void LinkedCellsContainer::removeParticle(const Particle &p) {
@@ -914,9 +914,9 @@ bool LinkedCellsContainer::isDoubleCorner(
 }
 
 void LinkedCellsContainer::setNeighbourReferences() {
-  auto p3 = &particles_[0];
-  std::cout << "in setNeighbours Particle 1 has reference location " << p3
-            << std::endl;
+  //auto p3 = &particles_[0];
+  //std::cout << "in setNeighbours Particle 1 has reference location " << p3
+  //          << std::endl;
 
   for (Particle *p : getParticles()) {
     std::vector<std::pair<bool, size_t>> new_neighbours{};
@@ -930,12 +930,12 @@ void LinkedCellsContainer::setNeighbourReferences() {
           new_neighbours.emplace_back(diag, (size_t)pointer);
         }
 
-        if (new_p->getId() == 0) {
-          size_t *pointer = (size_t *)new_p;
-          std::cout << "P0 is at " << new_p << " or " << pointer << " or "
-                    << ((size_t)(pointer)) << std::endl;
-          std::cout << "P0 is at actually at " << p3 << std::endl;
-        }
+        // if (new_p->getId() == 0) {
+        //   size_t *pointer = (size_t *)new_p;
+        //   std::cout << "P0 is at " << new_p << " or " << pointer << " or "
+        //             << ((size_t)(pointer)) << std::endl;
+        //   std::cout << "P0 is at actually at " << p3 << std::endl;
+        // }
       }
     }
 
