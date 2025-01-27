@@ -21,7 +21,6 @@ class VerletIntegrator {
   double delta_t_;
   double current_time_;
 
-
  public:
   /**
    * @brief Create Integrator object
@@ -32,16 +31,16 @@ class VerletIntegrator {
    * @param index_forces
    * @note Since this is an interface, it's invalid
    */
-  VerletIntegrator(std::vector<std::unique_ptr<InteractiveForce>>& interactive_forces,
-             std::vector<std::unique_ptr<SingularForce>>& singular_forces,
-             const double delta_t,
-             std::vector<std::unique_ptr<IndexForce>>& index_forces)
+  VerletIntegrator(
+      std::vector<std::unique_ptr<InteractiveForce>>& interactive_forces,
+      std::vector<std::unique_ptr<SingularForce>>& singular_forces,
+      std::vector<std::unique_ptr<IndexForce>>& index_forces,
+      const double delta_t)
       : interactive_forces_(std::move(interactive_forces)),
         singular_forces_(std::move(singular_forces)),
         index_forces_(std::move(index_forces)),
         delta_t_(delta_t),
         current_time_(0) {};
-
 
   /**
    * @brief Virtual destructor for all Integrator inheritors
@@ -52,6 +51,6 @@ class VerletIntegrator {
    * @brief Virtual method to advance time by one step
    * @param particle_container
    */
-   void step(ParticleContainer& particle_container) const;
+  void step(ParticleContainer& particle_container) const;
 };
 #endif

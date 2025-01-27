@@ -28,6 +28,8 @@ class LinkedCellsContainer final : public ParticleContainer {
 
   std::vector<std::vector<Particle*>> cells_;
 
+  // std::vector<std::vector<Particle*>> cell_orders_;
+
   /**
    * @brief current number of particles
    */
@@ -261,14 +263,14 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @brief Compute interactive forces
    */
   void computeInteractiveForces(
-      const std::vector<std::unique_ptr<InteractiveForce>>& interactive_forces) override;
+      const std::vector<std::unique_ptr<InteractiveForce>>& interactive_forces)
+      override;
 
   /**
    * @brief Compute singular forces
    */
   void computeSingularForces(const std::vector<std::unique_ptr<SingularForce>>&
                                  singular_forces) override;
-
 
   /**
    * @brief Get the amount of cells in each dimension
@@ -455,14 +457,14 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @param raw_dimension the evaluated dimension
    * @return if cell should be ignored
    */
-  inline bool isDoubleCorner(ivec3 cell_coordinate,
+  [[nodiscard]] inline bool isDoubleCorner(ivec3 cell_coordinate,
                              std::size_t raw_dimension) const;
 
   /**
    * @brief since the neighbour references are invalid after adding particles,
    * set them again
    */
-   void setNeighbourReferences();
+  void setNeighbourReferences();
 };
 
 /**

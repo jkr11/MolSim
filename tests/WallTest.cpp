@@ -62,8 +62,8 @@ TEST(Wall, excludedFromThermostat) {
            LinkedCellsConfig::BoundaryType::Outflow,
        }});
 
-  const Particle wall({1, 1, 1}, {1, 1, 1}, 1, 1, 1, -1);
-  const Particle q({2, 2, 2}, {2, 2, 2}, 1, 1, 1, 1);
+   Particle wall({1, 1, 1}, {1, 1, 1}, 1, 1, 1, -1);
+   Particle q({2, 2, 2}, {2, 2, 2}, 1, 1, 1, 1);
 
   container.addParticle(wall);
   container.addParticle(q);

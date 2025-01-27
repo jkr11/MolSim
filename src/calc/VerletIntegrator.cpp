@@ -64,14 +64,16 @@ void VerletIntegrator::step(ParticleContainer& particle_container) const {
   particle_container.computeInteractiveForces(interactive_forces_);
 
   // TODO DELETE
-  particle_container.singleIterator([](const Particle& p) {
-    /*if (p.getId() == 874) {
+  /*particle_container.singleIterator([](const Particle& p) {
+    if (p.getId() == 874) {
       SpdWrapper::get()->info("   current 874 f = [{}, {}, {}]", p.getF()[0],
                               p.getF()[1], p.getF()[2]);
-    }*/
-  });
+    }
+  });*/
 
   // Gravity and or Membrane
+  particle_container.computeSingularForces(singular_forces_);
+#if 0
   particle_container.singleIterator([this](Particle& p) {
     dvec3 f = {0, 0, 0};
     for (const auto& force : singular_forces_) {
@@ -85,7 +87,7 @@ void VerletIntegrator::step(ParticleContainer& particle_container) const {
     // }
     p.addF(f);
   });
-
+#endif
   // Velocity Update
   particle_container.singleIterator([this](Particle& p) {
     if (p.getType() < 0) {

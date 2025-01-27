@@ -60,7 +60,7 @@ TEST(Thermostat, holding) {
     if (std::holds_alternative<SingularGravityConfig>(config)) {
       const auto& [g, a] = std::get<SingularGravityConfig>(config);
       singular_forces.push_back(
-          std::move(std::make_unique<SingularGravity>(g, a)));
+          std::make_unique<SingularGravity>(g, a));
     } else {
       SpdWrapper::get()->error("Unrecognized singular force");
     }
@@ -144,7 +144,7 @@ TEST(Thermostat, cooling) {
     if (std::holds_alternative<SingularGravityConfig>(config)) {
       const auto& [g, a] = std::get<SingularGravityConfig>(config);
       singular_forces.push_back(
-          std::move(std::make_unique<SingularGravity>(g, a)));
+          std::make_unique<SingularGravity>(g, a));
     } else {
       SpdWrapper::get()->error("Unrecognized singular force");
     }
@@ -219,7 +219,7 @@ TEST(Thermostat, heating) {
     if (std::holds_alternative<SingularGravityConfig>(config)) {
       const auto& [g, a] = std::get<SingularGravityConfig>(config);
       singular_forces.push_back(
-          std::move(std::make_unique<SingularGravity>(g, a)));
+          std::make_unique<SingularGravity>(g, a));
     } else {
       SpdWrapper::get()->error("Unrecognized singular force");
     }
@@ -297,7 +297,7 @@ TEST(Thermostat, gradual) {
     if (std::holds_alternative<SingularGravityConfig>(config)) {
       const auto& [g, a] = std::get<SingularGravityConfig>(config);
       singular_forces.push_back(
-          std::move(std::make_unique<SingularGravity>(g, a)));
+          std::make_unique<SingularGravity>(g, a));
     } else {
       SpdWrapper::get()->error("Unrecognized singular force");
     }

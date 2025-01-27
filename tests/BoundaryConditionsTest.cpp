@@ -123,7 +123,7 @@ TEST(BoundaryConditions, Idempotence_Outflow) {
                                       LinkedCellsConfig::BoundaryType::Outflow,
                                   }});
 
-  const Particle p({1, 1, 1}, {0, 0, 0}, 1, 1, 1);
+  Particle p({1, 1, 1}, {0, 0, 0}, 1, 1, 1);
   EXPECT_EQ(container.size(), 0) << "Number of Particles is not 0";
 
   container.imposeInvariant();
@@ -151,7 +151,7 @@ TEST(BoundaryConditions, xhigh_Outflow) {
            LinkedCellsConfig::BoundaryType::Reflective,
        }});
 
-  const Particle p({1, 1, 1}, {0, 0, 0}, 1, 1, 1);
+  Particle p({1, 1, 1}, {0, 0, 0}, 1, 1, 1);
   container.addParticle(p);
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
 
@@ -178,7 +178,7 @@ TEST(BoundaryConditions, xlow_Outflow) {
            LinkedCellsConfig::BoundaryType::Reflective,
        }});
 
-  const Particle p({1, 1, 1}, {0, 0, 0}, 1, 1, 1);
+  Particle p({1, 1, 1}, {0, 0, 0}, 1, 1, 1);
   container.addParticle(p);
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
 
@@ -205,7 +205,7 @@ TEST(BoundaryConditions, yhigh_Outflow) {
            LinkedCellsConfig::BoundaryType::Reflective,
        }});
 
-  const Particle p({1, 1, 1}, {0, 0, 0}, 1, 1, 1);
+  Particle p({1, 1, 1}, {0, 0, 0}, 1, 1, 1);
   container.addParticle(p);
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
 
@@ -232,7 +232,7 @@ TEST(BoundaryConditions, ylow_Outflow) {
            LinkedCellsConfig::BoundaryType::Reflective,
        }});
 
-  const Particle p({1, 1, 1}, {0, 0, 0}, 1, 1, 1);
+  Particle p({1, 1, 1}, {0, 0, 0}, 1, 1, 1);
   container.addParticle(p);
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
 
@@ -259,7 +259,7 @@ TEST(BoundaryConditions, zhigh_Outflow) {
            LinkedCellsConfig::BoundaryType::Reflective,
        }});
 
-  const Particle p({1, 1, 1}, {0, 0, 0}, 1, 1, 1);
+  Particle p({1, 1, 1}, {0, 0, 0}, 1, 1, 1);
   container.addParticle(p);
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
 
@@ -286,7 +286,7 @@ TEST(BoundaryConditions, zlow_Outflow) {
            LinkedCellsConfig::BoundaryType::Outflow,
        }});
 
-  const Particle p({1, 1, 1}, {0, 0, 0}, 1, 1, 1);
+  Particle p({1, 1, 1}, {0, 0, 0}, 1, 1, 1);
   container.addParticle(p);
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
 
@@ -313,7 +313,7 @@ TEST(BoundaryConditions, xlow_Reflective) {
            LinkedCellsConfig::BoundaryType::Outflow,
        }});
 
-  const Particle p({0.7, 1, 1}, {-1, 0, 0}, 1, 1, 1);
+  Particle p({0.7, 1, 1}, {-1, 0, 0}, 1, 1, 1);
   container.addParticle(p);
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
 
@@ -358,7 +358,7 @@ TEST(BoundaryConditions, xhigh_Reflective) {
            LinkedCellsConfig::BoundaryType::Outflow,
        }});
 
-  const Particle p({89.3, 1, 1}, {1, 0, 0}, 1, 1, 1);
+  Particle p({89.3, 1, 1}, {1, 0, 0}, 1, 1, 1);
   container.addParticle(p);
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
 
@@ -403,7 +403,7 @@ TEST(BoundaryConditions, ylow_Reflective) {
            LinkedCellsConfig::BoundaryType::Outflow,
        }});
 
-  const Particle p({1, 0.7, 1}, {0, -1, 0}, 1, 1, 1);
+  Particle p({1, 0.7, 1}, {0, -1, 0}, 1, 1, 1);
   container.addParticle(p);
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
 
@@ -448,7 +448,7 @@ TEST(BoundaryConditions, yhigh_Reflective) {
            LinkedCellsConfig::BoundaryType::Outflow,
        }});
 
-  const Particle p({1, 89.3, 1}, {0, 1, 0}, 1, 1, 1);
+  Particle p({1, 89.3, 1}, {0, 1, 0}, 1, 1, 1);
   container.addParticle(p);
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
 
@@ -493,7 +493,7 @@ TEST(BoundaryConditions, zlow_Reflective) {
            LinkedCellsConfig::BoundaryType::Reflective,
        }});
 
-  const Particle p({1, 1, 0.7}, {0, 0, -1}, 1, 1, 1);
+  Particle p({1, 1, 0.7}, {0, 0, -1}, 1, 1, 1);
   container.addParticle(p);
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
 
@@ -538,7 +538,7 @@ TEST(BoundaryConditions, zhigh_Reflective) {
            LinkedCellsConfig::BoundaryType::Outflow,
        }});
 
-  const Particle p({1, 1, 89.3}, {0, 0, 1}, 1, 1, 1);
+  Particle p({1, 1, 89.3}, {0, 0, 1}, 1, 1, 1);
   container.addParticle(p);
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
 

@@ -558,7 +558,7 @@ TEST(PeriodicBoundaryMoving, moveXLeft) {
   const LennardJones f{};
 
   // move to other end
-  const Particle one({1, 1, 1}, {-2, 0, 0}, 1, 5.0, 1);  // in bb
+  Particle one({1, 1, 1}, {-2, 0, 0}, 1, 5.0, 1);  // in bb
 
   container.addParticle(one);
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 2";
@@ -613,7 +613,8 @@ TEST(PeriodicBoundaryMoving, moveXRight) {
   const LennardJones f{};
 
   // move to other end
-  const Particle one({8, 1, 1}, {2, 0, 0}, 1, 5.0, 1);  // in bb
+
+  Particle one({8, 1, 1}, {2, 0, 0}, 1, 5.0, 1);  // in bb
 
   container.addParticle(one);
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 2";
@@ -668,8 +669,8 @@ TEST(PeriodicBoundaryMoving, moveXDiagonal1) {
   const LennardJones f{};
 
   // move to other end
-  const Particle one({8, 8, 1}, {2, 2, 0}, 1, 5.0, 1);
-  const Particle two({8, 1, 1}, {2, -2, 0}, 1, 5.0, 1);
+  Particle one({8, 8, 1}, {2, 2, 0}, 1, 5.0, 1);
+  Particle two({8, 1, 1}, {2, -2, 0}, 1, 5.0, 1);
 
   container.addParticle(one);
   container.addParticle(two);
@@ -714,8 +715,8 @@ TEST(PeriodicBoundaryMoving, moveXDiagonal2) {
   const LennardJones f{};
 
   // move to other end
-  const Particle one({1, 1, 1}, {-2, -2, 0}, 1, 5.0, 1);
-  const Particle two({1, 8, 1}, {-2, 2, 0}, 1, 5.0, 1);
+  Particle one({1, 1, 1}, {-2, -2, 0}, 1, 5.0, 1);
+  Particle two({1, 8, 1}, {-2, 2, 0}, 1, 5.0, 1);
 
   container.addParticle(one);
   container.addParticle(two);
@@ -760,8 +761,8 @@ TEST(PeriodicBoundaryMoving, moveYDiagonal1) {
   const LennardJones f{};
 
   // move to other end
-  const Particle one({8, 8, 1}, {2, 2, 0}, 1, 5.0, 1);
-  const Particle two({8, 1, 1}, {2, -2, 0}, 1, 5.0, 1);
+  Particle one({8, 8, 1}, {2, 2, 0}, 1, 5.0, 1);
+  Particle two({8, 1, 1}, {2, -2, 0}, 1, 5.0, 1);
 
   container.addParticle(one);
   container.addParticle(two);
@@ -806,8 +807,8 @@ TEST(PeriodicBoundaryMoving, moveYDiagonal2) {
   const LennardJones f{};
 
   // move to other end
-  const Particle one({1, 1, 1}, {-2, -2, 0}, 1, 5.0, 1);
-  const Particle two({1, 8, 1}, {-2, 2, 0}, 1, 5.0, 1);
+  Particle one({1, 1, 1}, {-2, -2, 0}, 1, 5.0, 1);
+  Particle two({1, 8, 1}, {-2, 2, 0}, 1, 5.0, 1);
 
   container.addParticle(one);
   container.addParticle(two);
@@ -852,7 +853,7 @@ TEST(PeriodicBoundaryMoving, moveYDown) {
   const LennardJones f{};
 
   // move to other end
-  const Particle one({1, 1, 1}, {0, -2, 0}, 1, 5.0, 1);  // in bb
+  Particle one({1, 1, 1}, {0, -2, 0}, 1, 5.0, 1);  // in bb
 
   container.addParticle(one);
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 2";
@@ -907,7 +908,7 @@ TEST(PeriodicBoundaryMoving, moveYUp) {
   const LennardJones f{};
 
   // move to other end
-  const Particle one({1, 8, 1}, {0, 2, 0}, 1, 5.0, 1);  // in bb
+  Particle one({1, 8, 1}, {0, 2, 0}, 1, 5.0, 1);  // in bb
 
   container.addParticle(one);
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 2";
@@ -962,7 +963,7 @@ TEST(PeriodicBoundaryMoving, moveXYDiagonal1) {
   const LennardJones f{};
 
   // move to other end
-  const Particle one({1, 1, 1}, {-2, -2, 0}, 1, 5.0, 1);
+  Particle one({1, 1, 1}, {-2, -2, 0}, 1, 5.0, 1);
 
   container.addParticle(one);
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 1";
@@ -1017,7 +1018,7 @@ TEST(PeriodicBoundaryMoving, moveXYDiagonal2) {
   const LennardJones f{};
 
   // move to other end
-  const Particle one({8, 1, 1}, {2, -2, 0}, 1, 5.0, 1);
+  Particle one({8, 1, 1}, {2, -2, 0}, 1, 5.0, 1);
 
   container.addParticle(one);
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 2";
@@ -1072,7 +1073,7 @@ TEST(PeriodicBoundaryMoving, moveXYDiagonal3) {
   const LennardJones f{};
 
   // move to other end
-  const Particle one({1, 8, 1}, {-2, 2, 0}, 1, 5.0, 1);
+  Particle one({1, 8, 1}, {-2, 2, 0}, 1, 5.0, 1);
 
   container.addParticle(one);
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 1";
@@ -1127,7 +1128,7 @@ TEST(PeriodicBoundaryMoving, moveXYDiagonal4) {
   const LennardJones f{};
 
   // move to other end
-  const Particle one({8, 8, 1}, {2, 2, 0}, 1, 5.0, 1);
+  Particle one({8, 8, 1}, {2, 2, 0}, 1, 5.0, 1);
 
   container.addParticle(one);
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 2";
@@ -1182,7 +1183,7 @@ TEST(PeriodicBoundaryMoving, moveZForward) {
   const LennardJones f{};
 
   // move to other end
-  const Particle one({1, 1, 1}, {0, 0, -2}, 1, 5.0, 1);  // in bb
+  Particle one({1, 1, 1}, {0, 0, -2}, 1, 5.0, 1);  // in bb
 
   container.addParticle(one);
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 2";
@@ -1237,7 +1238,7 @@ TEST(PeriodicBoundaryMoving, moveZBackward) {
   const LennardJones f{};
 
   // move to other end
-  const Particle one({1, 1, 8}, {0, 0, 2}, 1, 5.0, 1);  // in bb
+  Particle one({1, 1, 8}, {0, 0, 2}, 1, 5.0, 1);  // in bb
 
   container.addParticle(one);
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 1";
@@ -1292,7 +1293,7 @@ TEST(PeriodicBoundaryMoving, moveXYZDiagonal) {
   const LennardJones f{};
 
   // move to other end
-  const Particle one({8, 8, 8}, {2, 2, 2}, 1, 5.0, 1);  // in bb
+  Particle one({8, 8, 8}, {2, 2, 2}, 1, 5.0, 1);  // in bb
 
   container.addParticle(one);
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 1";

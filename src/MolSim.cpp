@@ -20,7 +20,7 @@
 #include "spdlog/stopwatch.h"
 #include "utils/SpdWrapper.h"
 #include "utils/Statistics.h"
-#define BENCHMARK
+#undef BENCHMARK
 int main(const int argc, char* argv[]) {
   Arguments arguments = {};
 
@@ -108,7 +108,7 @@ int main(const int argc, char* argv[]) {
   }
 
   VerletIntegrator verlet_integrator(interactive_forces, singular_forces,
-                                     arguments.delta_t, index_forces);
+                                     index_forces, arguments.delta_t);
   outputWriter::VTKWriter writer;
   std::unique_ptr<Thermostat> thermostat;
   if (arguments.use_thermostat) {

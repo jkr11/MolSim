@@ -10,6 +10,7 @@
 #include <cstddef>
 #include <functional>
 #include <iostream>
+#include <random>
 #include <vector>
 
 #include "debug/debug_print.h"
@@ -103,6 +104,11 @@ LinkedCellsContainer::LinkedCellsContainer(
   SpdWrapper::get()->info("cell dim: {}, {}, {}; cell count: {}, {}, {}",
                           cell_dim_[0], cell_dim_[1], cell_dim_[2],
                           cell_count_[0], cell_count_[1], cell_count_[2]);
+
+  // std::random_device rd;
+  // std::mt19937 g(rd());
+
+  // std::shuffle(cells_.begin(), cells_.end(), g);
 }
 
 void LinkedCellsContainer::addParticle(Particle &p) {
@@ -137,14 +143,14 @@ void LinkedCellsContainer::addParticles(
 }
 
 void LinkedCellsContainer::removeParticle(const Particle &p) {
-  /*
   SpdWrapper::get()->info("Particle Id remove: {}", p.getId());
   const std::size_t index = dvec3ToCellIndex(p.getX());
   std::vector<Particle *> &particles = cells_[index];
 
-
   particles.erase(std::remove_if(particles.begin(), particles.end(),
-                                 [&p](const Particle &q) { return p == q; }),
+                                 [&p](const Particle *q) {
+                                   return *q == p;
+                                 }),  // Compare dereferenced Particle*
                   particles.end());
 
   this->particle_count_--;
@@ -154,8 +160,8 @@ void LinkedCellsContainer::removeParticle(const Particle &p) {
 
   DEBUG_PRINT_FMT(
       "Removed particle with coords ({}, {}, {}) from cell index: {}",
-      p.getX()[0], p.getX()[1], p.getX()[2], index)*/
-  throw std::runtime_error("Not implemented remove Partice.");
+      p.getX()[0], p.getX()[1], p.getX()[2], index)
+  // TODO : throw std::runtime_error("Not implemented remove Partice.");
 }
 
 std::vector<Particle *> LinkedCellsContainer::getParticles() {
@@ -392,8 +398,9 @@ void LinkedCellsContainer::computeInteractiveForces(
   // SpdWrapper::get()->critical("num threads: {}", num_threads);
   std::vector<std::vector<dvec3>> force_buffers(
       num_threads, std::vector<dvec3>(particle_count_, {0, 0, 0}));
-
+#ifdef _OPENMP
 #pragma omp parallel for schedule(dynamic)
+#endif
   for (std::size_t cell_index = 0; cell_index < cells_.size(); cell_index++) {
     std::vector<Particle *> &cell_particles = cells_[cell_index];
     if (cell_particles.empty()) continue;
@@ -488,9 +495,10 @@ void LinkedCellsContainer::computeInteractiveForces(
       }
     }
   }
-
+#ifdef _OPENMP
 #pragma omp barrier
-
+// #pragma omp parallel for schedule(static)
+#endif
   for (size_t i = 1; i < num_threads; i++) {
     for (size_t j = 0; j < particle_count_; j++) {
       force_buffers[0][j] = force_buffers[0][j] + force_buffers[i][j];
@@ -511,7 +519,18 @@ void LinkedCellsContainer::computeInteractiveForces(
 }
 
 void LinkedCellsContainer::computeSingularForces(
-    const std::vector<std::unique_ptr<SingularForce>> &singular_forces) {}
+    const std::vector<std::unique_ptr<SingularForce>> &singular_forces) {
+#ifdef _OPENMP
+#pragma omp parallel for schedule(dynamic)
+#endif
+  for (auto &p : particles_) {
+    dvec3 f = {0, 0, 0};
+    for (auto &force : singular_forces) {
+      f = f + force->applyForce(p);
+    }
+    p.addF(f);
+  }
+}
 
 inline std::size_t LinkedCellsContainer::dvec3ToCellIndex(
     const dvec3 &position) const {

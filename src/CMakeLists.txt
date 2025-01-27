@@ -63,6 +63,12 @@ set_source_files_properties(${FILES_TO_DISABLE_WARNINGS}
         COMPILE_OPTIONS "-w"
 )
 
+find_package(OpenMP REQUIRED)
+
+if (OpenMP_CXX_FOUND)
+    target_link_libraries(MolSimLib PUBLIC OpenMP::OpenMP_CXX)
+endif()
+
 target_link_libraries(MolSim PUBLIC MolSimLib)
 
 target_compile_options(MolSimLib
@@ -73,11 +79,5 @@ target_compile_options(MolSimLib
         $<$<CXX_COMPILER_ID:Intel>:-w3 -wd383,981,1418,1572,2259>
 )
 
-# TODO make nicer
-find_package(OpenMP REQUIRED)
-
-if (OpenMP_CXX_FOUND)
-    target_link_libraries(MolSimLib PUBLIC OpenMP::OpenMP_CXX)
-endif ()
 
 
