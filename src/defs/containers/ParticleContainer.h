@@ -97,6 +97,12 @@ class ParticleContainer {
   virtual void computeIndexForces(
       const std::vector<std::unique_ptr<IndexForce>>& index_forces) = 0;
 
+  //TODO: doc
+  virtual void computePositionUpdate(double delta_t) = 0;
+
+  //TODO: doc
+  virtual void computeVelocityUpdate(double delta_t) = 0;
+
 
   virtual double getKineticEnergy() = 0;
 

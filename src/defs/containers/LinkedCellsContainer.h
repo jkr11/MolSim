@@ -277,6 +277,17 @@ class LinkedCellsContainer final : public ParticleContainer {
 
 
   /**
+   * @brief Compute position update
+   */
+  void computePositionUpdate(double delta_t) override;
+
+  /**
+   * @brief Compute velocity update
+   */
+
+  void computeVelocityUpdate(double delta_t) override;
+
+  /**
    * @brief Get the amount of cells in each dimension
    * @return ivec3 of cells in each dimension
    */

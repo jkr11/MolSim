@@ -10,17 +10,6 @@
 
 void VerletIntegrator::step(ParticleContainer& particle_container) const {
   // position update
-  auto p = particle_container.getParticles()[0];
-  std::cout << "Particle " << p->getId() << " is at mem " << p << std::endl;
-  auto p2 = particle_container.getParticles()[1];
-  for (auto [diag, ref] : p2->getNeighbours()) {
-    auto dings = reinterpret_cast<Particle*>(ref);
-    if (dings->getId() == 0) {
-      std::cout << "Neighbour 0 from Particle 1 has reference location " << ref
-                << " and is diag? " << diag << std::endl;
-    }
-  }
-
   particle_container.singleIterator([this](Particle& p) {
     // ignore position update for walls
     if (p.getType() < 0) {
@@ -42,13 +31,38 @@ void VerletIntegrator::step(ParticleContainer& particle_container) const {
   // TODO: refactor in lower iterator? maybe pass time to all? just get the
   // global var?
   // Pull Up
-  particle_container.computeIndexForces(index_forces_);
+  //particle_container.computeIndexForces(index_forces_);
 
-  // Lennard Jones (or truncated)
+  particle_container.singleIterator([this](Particle& p) {
+  dvec3 f = {0, 0, 0};
+  for (const auto& index_force : index_forces_) {
+    for (const int id : index_force->getIndeces()) {
+      if (p.getId() == id) {
+        // SpdWrapper::get()->info("Particle {}; -> [{}, {}, {}]", p.getId(),
+        // f[0], f[1], f[2]);
+        f = f + index_force->applyForce(p, current_time_);
+        // SpdWrapper::get()->info("Particle {} adding [{}, {}, {}]",
+        // p.getId(), f[0], f[1], f[2]);
+      }
+    }
+  }
+  p.addF(f);
+});
+
+  // Lennard Jones (or truncated)cd
   particle_container.computeInteractiveForces(interactive_forces_);
 
   // Gravity and or Membrane
-  particle_container.computeSingularForces(singular_forces_);
+  //particle_container.computeSingularForces(singular_forces_);
+  particle_container.singleIterator([this](Particle& p) {
+    dvec3 f = {0, 0, 0};
+    for (const auto& force : singular_forces_) {
+      f = f + force->applyForce(p);
+    }
+
+    p.addF(f);
+  });
+
 
   // Velocity Update
   particle_container.singleIterator([this](Particle& p) {

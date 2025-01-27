@@ -489,7 +489,7 @@ void LinkedCellsContainer::computeInteractiveForces(const std::vector<std::uniqu
 
 void LinkedCellsContainer::computeSingularForces(
     const std::vector<std::unique_ptr<SingularForce>> &singular_forces) {
-#pragma omp parallel for schedule(dynamic)
+//#pragma omp parallel for schedule(dynamic)
   for (auto &p : particles_) {
     dvec3 f = {0, 0, 0};
     for (const auto& force : singular_forces) {
@@ -502,7 +502,7 @@ void LinkedCellsContainer::computeSingularForces(
 
 void LinkedCellsContainer::computeIndexForces(
   const std::vector<std::unique_ptr<IndexForce>>& index_forces) {
-#pragma omp parallel for schedule(dynamic)
+/*#pragma omp parallel for schedule(dynamic)
   for (auto &p : particles_) {
     dvec3 f = {0, 0, 0};
     for (const auto& index_force : index_forces) {
@@ -510,15 +510,47 @@ void LinkedCellsContainer::computeIndexForces(
         if (p.getId() == id) {
           // SpdWrapper::get()->info("Particle {}; -> [{}, {}, {}]", p.getId(),
           // f[0], f[1], f[2]);
-          f = f + index_force->applyForce(p, current_time);
+          f = f + index_force->applyForce(p, 0);
           // SpdWrapper::get()->info("Particle {} adding [{}, {}, {}]",
           // p.getId(), f[0], f[1], f[2]);
         }
       }
     }
     p.addF(f);
+  }*/
+}
+
+void LinkedCellsContainer::computePositionUpdate(double delta_t) {
+//#pragma omp parallel for schedule(dynamic)
+  for (auto &p : particles_) {
+    // ignore position update for walls
+    if (p.getType() < 0) {
+      continue;
+    }
+
+    const dvec3 new_x = p.getX() + delta_t * p.getV() +
+                        (delta_t * delta_t / (2 * p.getM())) * (p.getF());
+
+    p.setX(new_x);
   }
 }
+
+void LinkedCellsContainer::computeVelocityUpdate(double delta_t) {
+//#pragma omp parallel for schedule(dynamic)
+  for (auto &p : particles_) {
+    // ignore position update for walls
+    if (p.getType() < 0) {
+      continue;
+    }
+
+    const dvec3 new_v =
+        p.getV() + (delta_t / (2 * p.getM()) * (p.getOldF() + p.getF()));
+
+    p.setV(new_v);
+  }
+}
+
+
 
 
 inline std::size_t LinkedCellsContainer::dvec3ToCellIndex(

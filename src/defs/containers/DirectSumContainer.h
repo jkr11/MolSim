@@ -99,6 +99,12 @@ class DirectSumContainer final : public ParticleContainer {
   void computeIndexForces(const std::vector<std::unique_ptr<IndexForce>>&
                                  index_forces) override {}
 
+  //TODO: implement?
+  void computePositionUpdate(double delta_t) override {}
+
+  //TODO: implement?
+  void computeVelocityUpdate(double delta_t) override {}
+
   double getKineticEnergy() override;
 
   size_t getParticleCount() override { return particles_.size(); }
