@@ -134,9 +134,9 @@ int main(const int argc, char* argv[]) {
   Statistics statistics(
       arguments.statistics_config.x_bins, arguments.statistics_config.y_bins,
       *container,
-      output_directory + "/" +
+      output_directory +
           arguments.statistics_config.density_output_location,
-      output_directory + "/" +
+      output_directory +
           arguments.statistics_config.velocity_output_location);
 #endif
   // auto p2 = container->getParticles()[1];

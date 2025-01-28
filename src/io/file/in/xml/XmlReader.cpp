@@ -126,6 +126,8 @@ void XmlReader::read(std::vector<Particle>& particles,
     } else {
       statistics_config = {
           .calc_stats = false,
+          .velocity_output_location = "velocity.csv",
+          .density_output_location = "density.csv",
       };
     }
     simulation_parameters.statistics_config = statistics_config;
