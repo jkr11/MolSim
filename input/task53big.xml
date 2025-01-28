@@ -5,29 +5,29 @@
         <container>
             <linkedCells>
                 <domain>
-                    <x>303</x>
-                    <y>180</y>
-                    <z>1</z>
+                    <x>60</x>
+                    <y>60</y>
+                    <z>60</z>
                 </domain>
-                <r_cutoff>3.0</r_cutoff>
+                <r_cutoff>3.6</r_cutoff>
                 <boundary>
                     <x_high>
-                        <Reflective/>
+                        <Outflow></Outflow>
                     </x_high>
                     <x_low>
-                        <Reflective/>
+                        <Outflow></Outflow>
                     </x_low>
                     <y_high>
-                        <Reflective/>
+                        <Outflow></Outflow>
                     </y_high>
                     <y_low>
-                        <Reflective/>
+                        <Outflow></Outflow>
                     </y_low>
                     <z_high>
-                        <Outflow/>
+                        <Periodic></Periodic>
                     </z_high>
                     <z_low>
-                        <Outflow/>
+                        <Periodic></Periodic>
                     </z_low>
                 </boundary>
             </linkedCells>
@@ -40,8 +40,8 @@
             </SingularGravity>
         </force>
         <delta_t>0.0005</delta_t>
-        <t_end>15</t_end>
-        <twoD>true</twoD>
+        <t_end>100</t_end>
+        <twoD>false</twoD>
     </metadata>
     <cuboids>
         <cuboid>
@@ -51,25 +51,48 @@
                 <z>0</z>
             </velocity>
             <corner>
-                <x>1.5</x>
-                <y>2</y>
-                <z>0</z>
+                <x>0.6</x>
+                <y>0.6</y>
+                <z>0.6</z>
             </corner>
             <dimensions>
-                <x>250</x>
-                <y>50</y>
-                <z>1</z>
+                <x>50</x>
+                <y>20</y>
+                <z>50</z>
             </dimensions>
             <type>1</type>
             <h>1.2</h>
-            <mass>1.0</mass>
-            <epsilon>1.0</epsilon>
+            <mass>1</mass>
+            <epsilon>1</epsilon>
             <sigma>1.2</sigma>
-            <mv>0.1</mv>
+            <mv>0</mv>
+        </cuboid>
+        <cuboid>
+            <velocity>
+                <x>0</x>
+                <y>0</y>
+                <z>0</z>
+            </velocity>
+            <corner>
+                <x>0.6</x>
+                <y>24.6</y>
+                <z>0.6</z>
+            </corner>
+            <dimensions>
+                <x>50</x>
+                <y>20</y>
+                <z>50</z>
+            </dimensions>
+            <type>2</type>
+            <h>1.2</h>
+            <mass>1</mass>
+            <epsilon>1</epsilon>
+            <sigma>1.1</sigma>
+            <mv>0.0</mv>
         </cuboid>
     </cuboids>
     <thermostat>
-        <T_init>0.5</T_init>
+        <T_init>40</T_init>
         <n_thermostat>1000</n_thermostat>
     </thermostat>
 </simulation>

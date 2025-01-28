@@ -6,9 +6,11 @@
 #include <iostream>
 
 #include "../utils/ArrayUtils.h"
+#include "debug/debug_print.h"
 #include "utils/SpdWrapper.h"
 
 void VerletIntegrator::step(ParticleContainer& particle_container) {
+  // position update
   particle_container.singleIterator([this](Particle& p) {
     if (p.getType() < 0) {
       return;
@@ -40,23 +42,10 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
   });
 
   // Lennard Jones (or truncated)
-  particle_container.pairIterator([this](Particle& p1, Particle& p2) {
-    dvec3 f12 = {0.0, 0.0, 0.0};
-    for (const auto& force : interactive_forces_) {
-      f12 = f12 + force->directionalForce(p1, p2);
-    }
-    p1.addF(f12);
-    p2.subF(f12);
-  });
+  particle_container.computeInteractiveForces(interactive_forces_);
 
   // Gravity and or Membrane
-  particle_container.singleIterator([this](Particle& p) {
-    dvec3 f = {0, 0, 0};
-    for (const auto& force : singular_forces_) {
-      f = f + force->applyForce(p);
-    }
-    p.addF(f);
-  });
+  particle_container.computeSingularForces(singular_forces_);
 
   // Velocity Update
   particle_container.singleIterator([this](Particle& p) {

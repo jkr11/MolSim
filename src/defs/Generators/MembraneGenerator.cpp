@@ -3,8 +3,8 @@
 //
 #include "MembraneGenerator.h"
 
-#include <iostream>
 #include <iomanip>
+#include <iostream>
 
 #include "debug/debug_print.h"
 #include "utils/ArrayUtils.h"
@@ -70,6 +70,7 @@ void MembraneGenerator::generate(std::vector<Particle> &particles) {
         // So we cant directly emplace here beceause for molecules we need
         // ownership of the neighbour and therefore the particle later on
         Particle particle(position, V, m, epsilon, sigma, type);
+        //std::cout << "Particle with id " << particle.getId() << std::endl;
         // particles.emplace_back(position, V, m, epsilon, sigma, type);
         // and then we transfer ownership to the particles vector
         particles.push_back(std::move(particle));
@@ -108,10 +109,12 @@ void MembraneGenerator::generate(std::vector<Particle> &particles) {
                 const long neighborIndex = ni * dimensions[1] * dimensions[2] +
                                            nj * dimensions[2] + nk;
                 const bool isDiagonal = (di != 0) + (dj != 0) + (dk != 0) > 1;
-                Particle* neighbor_particle = &particles[neighborIndex];
+                Particle *neighbor_particle = &particles[neighborIndex];
                 if (neighbor_particle->getId() == 0) {
-                  std::cout << std::hex << std::setw(16) << std::setfill('0') << reinterpret_cast<size_t>(&particles[neighborIndex]) << std::dec << std::endl;
-
+                  std::cout
+                      << std::hex << std::setw(16) << std::setfill('0')
+                      << reinterpret_cast<size_t>(&particles[neighborIndex])
+                      << std::dec << std::endl;
                 }
 
                 // SpdWrapper::get()->info(

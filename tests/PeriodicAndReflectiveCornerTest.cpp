@@ -28,9 +28,9 @@ TEST(PeriodicAndReflective, XPeriodicYReflective) {
   const LennardJones f{};
 
   // move to other end
-  const Particle one({8, 8, 1}, {2, 2, 0}, 1, 5.0, 1);  // in bb
+  Particle one({8, 8, 1}, {2, 2, 0}, 1, 5.0, 1);  // in bb
 
-  container.addParticle(one);
+  container.addParticles({one});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 1";
 
   // simulate 10.000 steps for a specific delta t to assure that it turned

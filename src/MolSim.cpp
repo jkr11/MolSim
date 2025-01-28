@@ -1,5 +1,6 @@
 #include <filesystem>
 #include <iostream>
+#include <omp.h>
 
 #include "calc/VerletIntegrator.h"
 #include "debug/debug_print.h"
@@ -54,11 +55,11 @@ int main(const int argc, char* argv[]) {
     //                   [](const Particle& p) { return p.getType() < 0; });
     container = std::make_unique<LinkedCellsContainer>(linked_cells_data);
 
-    auto q = particles[0];
-    std::cout << "Particle " << q.getId() << " is at mem " << q << std::endl;
+    // auto q = particles[0];
+    // std::cout << "Particle " << q.getId() << " is at mem " << q << std::endl;
     container->addParticles(particles);
-    auto p = container->getParticles()[0];
-    std::cout << "Particle " << p->getId() << " is at mem " << p << std::endl;
+    // auto p = container->getParticles()[0];
+    // std::cout << "Particle " << p->getId() << " is at mem " << p << std::endl;
 
     container->imposeInvariant();
   } else if (std::holds_alternative<DirectSumConfig>(
@@ -85,9 +86,7 @@ int main(const int argc, char* argv[]) {
       interactive_forces.push_back(std::make_unique<Gravity>());
     } else if (std::holds_alternative<TruncatedLennardJonesConfig>(config)) {
       interactive_forces.push_back(std::make_unique<TruncatedLennardJones>());
-    }
-
-    else {
+    } else {
       SpdWrapper::get()->error("Unrecognized interactive_force_type");
     }
   }
@@ -108,7 +107,7 @@ int main(const int argc, char* argv[]) {
   }
 
   VerletIntegrator verlet_integrator(interactive_forces, singular_forces,
-                                     arguments.delta_t, index_forces);
+                                     index_forces, arguments.delta_t);
   outputWriter::VTKWriter writer;
   std::unique_ptr<Thermostat> thermostat;
   if (arguments.use_thermostat) {
@@ -131,7 +130,7 @@ int main(const int argc, char* argv[]) {
   spdlog::stopwatch stopwatch;  // TODO whats up with this?
   auto time_of_last_mups = start_time;
   // TODO breaks sometimes i think it has to do with paths?
-  /*
+/*
   Statistics statistics(
       arguments.statistics_config.x_bins, arguments.statistics_config.y_bins,
       *container,
@@ -140,25 +139,25 @@ int main(const int argc, char* argv[]) {
       output_directory + "/" +
           arguments.statistics_config.velocity_output_location);*/
 #endif
-  auto p2 = container->getParticles()[1];
-  for (auto [diag, ref] : p2->getNeighbours()) {
-    auto dings = reinterpret_cast<Particle*>(ref);
-    if (dings->getId() == 0) {
-      SpdWrapper::get()->info(
-          "Neighbour 0 from Particle 1 has reference location {}", ref);
-    }
-  }
+  // auto p2 = container->getParticles()[1];
+  // for (auto [diag, ref] : p2->getNeighbours()) {
+  //   auto dings = reinterpret_cast<Particle*>(ref);
+  //   if (dings->getId() == 0) {
+  //     SpdWrapper::get()->info(
+  //         "Neighbour 0 from Particle 1 has reference location {}", ref);
+  //   }
+  // }
 
   while (current_time <= arguments.t_end) {
     // TODO REMOVE
-    if (iteration == 100) {
-      SpdWrapper::get()->info("test test");
-      std::cout << "ahhh" << std::endl;
-      container->singleIterator([](Particle& p) {
-        SpdWrapper::get()->info("particle {} at [{}, {}, {}]", p.getId(),
-                                p.getX()[0], p.getX()[1], p.getX()[2]);
-      });
-    }
+    // if (iteration == 100) {
+    //   SpdWrapper::get()->info("test test");
+    //   std::cout << "ahhh" << std::endl;
+    //   container->singleIterator([](Particle& p) {
+    //     // SpdWrapper::get()->info("particle {} at [{}, {}, {}]", p.getId(),
+    //     //                         p.getX()[0], p.getX()[1], p.getX()[2]);
+    //   });
+    // }
 
     verlet_integrator.step(*container);
     if (arguments.use_thermostat) {
@@ -166,16 +165,23 @@ int main(const int argc, char* argv[]) {
         thermostat->setTemperature(*container);
       }
     }
+
+
+    if (iteration % 100 == 0) {
+      SpdWrapper::get()->info("Iteration {}", iteration);
+    }
+
 #ifdef BENCHMARK  // these are the first 1000 iterations for the contest
-    if (iteration == 1000) {
+    if (iteration == 10000) {
       const auto first_1_k = std::chrono::high_resolution_clock::now();
       const std::chrono::duration<double> elapsed = first_1_k - start_time;
-      std::cout << "First 1k iterations took: " << elapsed.count() << " seconds"
+      std::cout << "First 10k iterations took: " << elapsed.count() << " seconds"
                 << std::endl;
-      const auto mups = static_cast<double>(number_of_particles) * 1000 *
+      const auto mups = static_cast<double>(number_of_particles) * 10000 *
                         (1.0 / elapsed.count());
-      std::cout << "MMUPS for first 1k iterations: " << mups * (1.0 / 1e6)
+      std::cout << "MMUPS for first 10k iterations: " << mups * (1.0 / 1e6)
                 << std::endl;
+      exit(0);
     }
 #endif
 

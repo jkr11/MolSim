@@ -1,8 +1,11 @@
 #pragma once
+
+#ifndef VERLETINTEGRATOR_H
+#define VERLETINTEGRATOR_H
+
 #include <memory>
 #include <vector>
 
-#include "defs/containers/ParticleContainer.h"
 #include "forces/IndexForce.h"
 #include "forces/InteractiveForce.h"
 #include "forces/SingularForce.h"
@@ -31,8 +34,8 @@ class VerletIntegrator {
   VerletIntegrator(
       std::vector<std::unique_ptr<InteractiveForce>>& interactive_forces,
       std::vector<std::unique_ptr<SingularForce>>& singular_forces,
-      const double delta_t,
-      std::vector<std::unique_ptr<IndexForce>>& index_forces)
+      std::vector<std::unique_ptr<IndexForce>>& index_forces,
+      const double delta_t)
       : interactive_forces_(std::move(interactive_forces)),
         singular_forces_(std::move(singular_forces)),
         index_forces_(std::move(index_forces)),
@@ -50,8 +53,10 @@ class VerletIntegrator {
    */
   void step(ParticleContainer& particle_container);
 
+
   /**
    * @brief increments the current simulation time by delta_t_
    */
   void incrementTime() { current_time_ += delta_t_; }
 };
+#endif

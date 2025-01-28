@@ -1,5 +1,7 @@
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
+find_package(OpenMP REQUIRED)
+
 ##### Collect all cpp files except MolSim.cpp #####
 file(GLOB_RECURSE MY_SRC
         "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
@@ -23,6 +25,7 @@ target_link_libraries(MolSimLib
         PUBLIC
         xerces-c
         spdlog::spdlog
+        OpenMP::OpenMP_CXX
 )
 
 target_compile_features(MolSimLib
@@ -63,6 +66,12 @@ set_source_files_properties(${FILES_TO_DISABLE_WARNINGS}
         COMPILE_OPTIONS "-w"
 )
 
+find_package(OpenMP REQUIRED)
+
+if (OpenMP_CXX_FOUND)
+    target_link_libraries(MolSimLib PUBLIC OpenMP::OpenMP_CXX)
+endif()
+
 target_link_libraries(MolSim PUBLIC MolSimLib)
 
 target_compile_options(MolSimLib
@@ -72,4 +81,6 @@ target_compile_options(MolSimLib
         # disable some spam warnings for icpc...
         $<$<CXX_COMPILER_ID:Intel>:-w3 -wd383,981,1418,1572,2259>
 )
+
+
 

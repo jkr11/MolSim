@@ -7,6 +7,7 @@
 #include "defs/Simulation.h"
 #include "defs/containers/ParticleContainer.h"
 #include "forces/IndexForce.h"
+#include "forces/InteractiveForce.h"
 
 /**
  * @brief a particle container with linked cells
@@ -27,6 +28,8 @@ class LinkedCellsContainer final : public ParticleContainer {
 
   std::vector<std::vector<Particle*>> cells_;
 
+  // std::vector<std::vector<Particle*>> cell_orders_;
+
   /**
    * @brief current number of particles
    */
@@ -36,6 +39,11 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @brief number of particles, that are immovable
    */
   size_t special_particle_count_{};
+
+  /**
+   * @brief enables the neighbour calculation for membranes
+   */
+  bool is_membrane{};
 
   /**
    * @brief
@@ -135,6 +143,13 @@ class LinkedCellsContainer final : public ParticleContainer {
         {-1, -1, 1}}},
   }};
 
+  /**
+ * @brief Add a particle to the container
+ * @param p Particle to be added
+ * @note Does not impose the invariant automatically!
+ */
+  void addParticle(Particle& p);
+
  public:
   /**
    * 6th root of 2
@@ -158,12 +173,7 @@ class LinkedCellsContainer final : public ParticleContainer {
    */
   ~LinkedCellsContainer() override = default;
 
-  /**
-   * @brief Add a particle to the container
-   * @param p Particle to be added
-   * @note Does not impose the invariant automatically!
-   */
-  void addParticle(Particle& p) override;
+
 
   /**
    * @brief Add a vector of particles to the container
@@ -255,6 +265,19 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @note Does not impose the invariant automatically!
    */
   void haloIterator(const std::function<void(Particle&)>& f);
+
+  /**
+   * @brief Compute interactive forces
+   */
+  void computeInteractiveForces(
+      const std::vector<std::unique_ptr<InteractiveForce>>& interactive_forces)
+      override;
+
+  /**
+   * @brief Compute singular forces
+   */
+  void computeSingularForces(const std::vector<std::unique_ptr<SingularForce>>&
+                                 singular_forces) override;
 
   /**
    * @brief Get the amount of cells in each dimension
@@ -441,14 +464,14 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @param raw_dimension the evaluated dimension
    * @return if cell should be ignored
    */
-  inline bool isDoubleCorner(ivec3 cell_coordinate,
-                             std::size_t raw_dimension) const;
+  [[nodiscard]] inline bool isDoubleCorner(ivec3 cell_coordinate,
+                                           std::size_t raw_dimension) const;
 
   /**
    * @brief since the neighbour references are invalid after adding particles,
    * set them again
    */
-   void setNeighbourReferences();
+  void setNeighbourReferences();
 };
 
 /**

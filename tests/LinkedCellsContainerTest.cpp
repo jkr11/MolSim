@@ -183,7 +183,7 @@ TEST(LinkedCellsContainer, Size_addParticle_and_removeParticle) {
       << "Freshly instantiated LinkedCellsContainer is not empty.";
 
   Particle p = createParticle(1, 1, 1);
-  container.addParticle(p);
+  container.addParticles({p});
   EXPECT_EQ(container.size(), 1)
       << ".addParticle() did not increase .size() by 1.";
 
@@ -216,9 +216,9 @@ TEST(LinkedCellsContainer, singleIterator) {
   Particle p2 = createParticle(5, 1, 6);
   Particle p3 = createParticle(7, 7, 8);
 
-  container.addParticle(p1);
-  container.addParticle(p2);
-  container.addParticle(p3);
+  container.addParticles({p1});
+  container.addParticles({p2});
+  container.addParticles({p3});
 
   EXPECT_EQ(container.size(), 3)
       << "container particle count not matching after adding 3 particles.";
@@ -244,7 +244,7 @@ TEST(LinkedCellsContainer, singleIterator) {
         if total generated pair count is the same as in reference impl)
 */
 TEST(LinkedCellsContainer, pairIterator) {
-  LinkedCellsConfig config = {.domain = {10, 10, 10},
+  constexpr LinkedCellsConfig config = {.domain = {10, 10, 10},
                               .cutoff_radius = 5,
                               .boundary_config = {
                                   .x_high = LinkedCellsConfig::Outflow,
@@ -257,15 +257,19 @@ TEST(LinkedCellsContainer, pairIterator) {
 
   LinkedCellsContainer container(config);
 
-  std::array<Particle, 10> particles = {
-      createParticle(1, 1, 1), createParticle(5, 1, 6), createParticle(7, 7, 8),
-      createParticle(4, 3, 0), createParticle(5, 0, 5), createParticle(1, 5, 2),
-      createParticle(9, 6, 4), createParticle(2, 1, 1), createParticle(3, 0, 0),
+  std::vector<Particle> particles = {
+      createParticle(1, 1, 1),
+      createParticle(5, 1, 6),
+      createParticle(7, 7, 8),
+      createParticle(4, 3, 0),
+      createParticle(5, 0, 5),
+      createParticle(1, 5, 2),
+      createParticle(9, 6, 4),
+      createParticle(2, 1, 1),
+      createParticle(3, 0, 0),
       createParticle(0, 6, 1)};
 
-  for (std::size_t i = 0; i < particles.size(); i++) {
-    container.addParticle(particles[i]);
-  }
+  container.addParticles(particles);
 
   EXPECT_EQ(container.size(), particles.size())
       << "container particle count not matching after adding 4 particles.";
@@ -287,16 +291,17 @@ TEST(LinkedCellsContainer, pairIterator) {
   }
 
   int count = 0;
-  container.pairIterator([&pairs, &count](Particle& p, Particle& q) {
+  container.pairIterator([&pairs, &count](const Particle& p,
+                                          const Particle& q) {
     count++;
 
     for (auto & pair : pairs) {
-      if ((*pair[0] == p && *pair[1] == q) ||
-          (*pair[0] == q && *pair[1] == p))
+      if ((pair[0]->getId() == p.getId() && pair[1]->getId() == q.getId()) ||
+          (pair[0]->getId() == q.getId() && pair[1]->getId() == p.getId()))
         return;
     }
 
-    EXPECT_TRUE(false) << "Pair Iterator produced a invalid pair";
+    FAIL() << "Pair Iterator produced an invalid pair " << p.getId() << " and " << q.getId();
   });
 
   EXPECT_EQ(count, pairs.size())
@@ -325,10 +330,10 @@ TEST(LinkedCellsContainer, boundaryIterator) {
   Particle p3 = createParticle(0, 9, 3);
   Particle p4 = createParticle(4, 4, 4);
 
-  container.addParticle(p1);
-  container.addParticle(p2);
-  container.addParticle(p3);
-  container.addParticle(p4);
+  container.addParticles({p1});
+  container.addParticles({p2});
+  container.addParticles({p3});
+  container.addParticles({p4});
 
   container.boundaryIterator([&p1, &p2, &p3, &p4](Particle& p) {
     EXPECT_TRUE(p == p1 || p == p2 || p == p3 || !(p == p4));
@@ -357,10 +362,10 @@ TEST(LinkedCellsContainer, haloIterator) {
   Particle p3 = createParticle(0, 11, 0);
   Particle p4 = createParticle(0, 0, 0);
 
-  container.addParticle(p1);
-  container.addParticle(p2);
-  container.addParticle(p3);
-  container.addParticle(p4);
+  container.addParticles({p1});
+  container.addParticles({p2});
+  container.addParticles({p3});
+  container.addParticles({p4});
 
   container.haloIterator([&p1, &p2, &p3, &p4](Particle& p) {
     EXPECT_TRUE(p == p1 || p == p2 || p == p3 || !(p == p4));

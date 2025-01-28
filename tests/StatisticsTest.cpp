@@ -41,12 +41,12 @@ TEST(Statistics, WallThermostat) {
 
   Thermostat thermostat(config);
 
-  const Particle wall({2, 1, 1}, {1, 1, 1}, 1, 1, 1, -1);
-  const Particle p({1, 2, 1}, {2, 2, 2}, 1, 1, 1, 1);
-  const Particle q({1, 1, 2}, {3, 3, 3}, 1, 1, 1, 2);
-  container.addParticle(wall);
-  container.addParticle(p);
-  container.addParticle(q);
+  Particle wall({2, 1, 1}, {1, 1, 1}, 1, 1, 1, -1);
+  Particle p({1, 2, 1}, {2, 2, 2}, 1, 1, 1, 1);
+  Particle q({1, 1, 2}, {3, 3, 3}, 1, 1, 1, 2);
+  container.addParticles({wall});
+  container.addParticles({p});
+  container.addParticles({q});
 
   EXPECT_EQ(container.getParticleCount(), 3) << "Particle Count wrong";
   EXPECT_EQ(container.getSpecialParticleCount(), 1) << "Special Particle Count wrong";
@@ -82,12 +82,12 @@ TEST(Statistics, ThermalTemperature) {
 
   Thermostat thermostat(config);
 
-  const Particle wall({2, 1, 1}, {1, 1, 1}, 1, 1, 1, -1);
-  const Particle p({1, 2, 1}, {2, 2, 2}, 1, 1, 1, 1);
-  const Particle q({1, 1, 2}, {3, 3, 3}, 2, 1, 1, 2);
-  container.addParticle(wall);
-  container.addParticle(p);
-  container.addParticle(q);
+  Particle wall({2, 1, 1}, {1, 1, 1}, 1, 1, 1, -1);
+  Particle p({1, 2, 1}, {2, 2, 2}, 1, 1, 1, 1);
+  Particle q({1, 1, 2}, {3, 3, 3}, 2, 1, 1, 2);
+  container.addParticles({wall});
+  container.addParticles({p});
+  container.addParticles({q});
 
   EXPECT_EQ(container.getParticleCount(), 3) << "Particle Count wrong";
   EXPECT_EQ(container.getSpecialParticleCount(), 1) << "Special Particle Count wrong";
@@ -122,15 +122,15 @@ TEST(Statistics, bins) {
 
   Statistics statistics(3, 1, container, densityFile, velocityFile);
 
-  const Particle wall({0.5, 0.5, 0.5}, {1, 1, 1}, 1, 1, 1, -1);
-  const Particle p({0.5, 0.5, 0.5}, {2, 2, 2}, 1, 1, 1, 1);
-  const Particle q({0.5, 0.5, 0.5}, {3, 3, 1}, 2, 1, 1, 2);
-  const Particle r({2.5, 2.5, 0.5}, {4, 3, 3}, 2, 1, 1, 2);
+   Particle wall({0.5, 0.5, 0.5}, {1, 1, 1}, 1, 1, 1, -1);
+   Particle p({0.5, 0.5, 0.5}, {2, 2, 2}, 1, 1, 1, 1);
+   Particle q({0.5, 0.5, 0.5}, {3, 3, 1}, 2, 1, 1, 2);
+   Particle r({2.5, 2.5, 0.5}, {4, 3, 3}, 2, 1, 1, 2);
 
-  container.addParticle(wall);
-  container.addParticle(p);
-  container.addParticle(q);
-  container.addParticle(r);
+  container.addParticles({wall});
+  container.addParticles({p});
+  container.addParticles({q});
+  container.addParticles({r});
 
   EXPECT_EQ(container.getParticleCount(), 4) << "Particle Count wrong";
 

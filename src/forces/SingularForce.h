@@ -5,7 +5,7 @@
 #define SINGULARFORCE_H
 #pragma once
 #include "defs/Particle.h"
-#include "defs/containers/ParticleContainer.h"
+
 /**
  * @brief instance of forces that are global and not an interaction force
  */

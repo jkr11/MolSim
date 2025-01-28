@@ -9,7 +9,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_compile_options(-O3 -ffast-math -march=native -std=c++17 -Wno-deprecated-declarations)
+add_compile_options(-O3 -ffast-math -march=native -std=c++17 -lstdc++
+        -Wno-deprecated-declarations)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
 include(googletest)
@@ -42,7 +43,7 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     message("Debug mode is enabled")
 endif ()
 
-option(ENABLE_BENCHMARK "Enable benchmark mode" ON)
+option(ENABLE_BENCHMARK "Enable benchmark mode" OFF)
 
 if (ENABLE_BENCHMARK)
     message("Benchmark mode is enabled")
