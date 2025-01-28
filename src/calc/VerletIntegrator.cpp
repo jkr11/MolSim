@@ -19,19 +19,10 @@ void VerletIntegrator::step(ParticleContainer& particle_container) const {
       return;
     }  // ignore position update for walls
 
-    dvec3 oldx = p.getX();
     const dvec3 new_x = p.getX() + delta_t_ * p.getV() +
                         (delta_t_ * delta_t_ / (2 * p.getM())) * (p.getF());
 
     p.setX(new_x);
-
-    /*if (p.getId() == 874) {
-      dvec3 deltapos = new_x - oldx;
-      SpdWrapper::get()->info("874 moved to [{}, {}, {}]", deltapos[0],
-                              deltapos[1], deltapos[2]);
-      SpdWrapper::get()->info("   with f = [{}, {}, {}]", p.getF()[0],
-                              p.getF()[1], p.getF()[2]);
-    }*/
   });
 
   // reset

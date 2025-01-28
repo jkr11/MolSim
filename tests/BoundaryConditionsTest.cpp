@@ -527,8 +527,8 @@ TEST(BoundaryConditions, zlow_Reflective) {
  */
 TEST(BoundaryConditions, zhigh_Reflective) {
   LinkedCellsContainer container(
-      {.domain = {3, 90, 3},  // better safe than sorry
-       .cutoff_radius = 3,
+      {.domain = {3, 3, 3},  // better safe than sorry
+       .cutoff_radius = 1,
        .boundary_config = {
            LinkedCellsConfig::BoundaryType::Outflow,
            LinkedCellsConfig::BoundaryType::Outflow,
@@ -538,31 +538,31 @@ TEST(BoundaryConditions, zhigh_Reflective) {
            LinkedCellsConfig::BoundaryType::Outflow,
        }});
 
-  Particle p({1, 1, 89.3}, {0, 0, 1}, 1, 1, 1);
+  Particle p({1, 1, 2.3}, {0, 0, 1}, 1, 1, 1);
   container.addParticle(p);
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
 
   // simulate 10.000 steps for a specific delta t to assure that it turned around
   for (int i = 0; i < 10000; i++) {
     double delta_t = 0.00005;
-    container.singleIterator([this, delta_t](Particle& p) {
-      const dvec3 new_x = p.getX() + delta_t * p.getV() +
-                          (delta_t * delta_t / (2 * p.getM())) * (p.getF());
-      p.setX(new_x);
+    container.singleIterator([this, delta_t](Particle& particle) {
+      const dvec3 new_x = particle.getX() + delta_t * particle.getV() +
+                          (delta_t * delta_t / (2 * particle.getM())) * (particle.getF());
+      particle.setX(new_x);
     });
 
-    container.singleIterator([](Particle& p) { p.updateForceInTime(); });
+    container.singleIterator([](Particle& particle) { particle.updateForceInTime(); });
 
     container.imposeInvariant();
 
-    container.singleIterator([this, delta_t](Particle& p) {
+    container.singleIterator([this, delta_t](Particle& particle) {
       const dvec3 new_v =
-          p.getV() + (delta_t / (2 * p.getM()) * (p.getOldF() + p.getF()));
-      p.setV(new_v);
+          particle.getV() + (delta_t / (2 * particle.getM()) * (particle.getOldF() + particle.getF()));
+      particle.setV(new_v);
     });
   }
 
-  container.singleIterator([this](Particle& p) {
-    DVEC3_NEAR(p.getV(), {0.0, 0.0, -1.0}, "Violated the law of conservation of energy", 1e-5);
+  container.singleIterator([this](const Particle& particle) {
+    DVEC3_NEAR(particle.getV(), {0.0, 0.0, -1.0}, "Violated the law of conservation of energy", 1e-5);
   });
 }

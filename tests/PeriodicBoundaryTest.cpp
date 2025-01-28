@@ -655,7 +655,7 @@ TEST(PeriodicBoundaryMoving, moveXRight) {
  * tests that particles can move through the x periodic boundary
  */
 TEST(PeriodicBoundaryMoving, moveXDiagonal1) {
-  LinkedCellsContainer container({.domain = {9, 9, 3},
+  LinkedCellsContainer container({.domain = {9, 9, 9},
                                   .cutoff_radius = 3,
                                   .boundary_config = {
                                       LinkedCellsConfig::BoundaryType::Periodic,
@@ -672,29 +672,39 @@ TEST(PeriodicBoundaryMoving, moveXDiagonal1) {
   Particle one({8, 8, 1}, {2, 2, 0}, 1, 5.0, 1);
   Particle two({8, 1, 1}, {2, -2, 0}, 1, 5.0, 1);
 
+  std::cout << "Adding Particles" << std::endl;
   container.addParticle(one);
   container.addParticle(two);
   EXPECT_EQ(container.size(), 2) << "Number of Particles is not 2";
+
+  SpdWrapper::get()->info("Starting test");
+  std::cout << "Starting Test" << std::endl;
+
 
   double delta_t = 1;
   container.singleIterator([this, delta_t](Particle& p) {
     const dvec3 new_x = p.getX() + delta_t * p.getV() +
                         (delta_t * delta_t / (2 * p.getM())) * (p.getF());
     p.setX(new_x);
+    std::cout << "setting p " << p.getId() << " new_x [" << new_x[0] << "," << new_x[1] << "," << new_x[2] << "]" << std::endl;
   });
 
-  container.singleIterator([](Particle& p) { p.updateForceInTime(); });
+  SpdWrapper::get()->info("Positions Updated");
+  std::cout << "Positions Updated" << std::endl;
 
   container.imposeInvariant();
+  SpdWrapper::get()->info("Invariant Imposed");
+  std::cout << "Invariant Imposed" << std::endl;
 
-  container.singleIterator([this, delta_t](Particle& p) {
-    const dvec3 new_v =
-        p.getV() + (delta_t / (2 * p.getM()) * (p.getOldF() + p.getF()));
-    p.setV(new_v);
-  });
 
-  container.singleIterator(
-      [this](Particle& p) { FAIL() << "Particle should have been deleted"; });
+
+
+  for (const auto& c : container.getCells()) {
+    for (const auto p : c) {
+      SpdWrapper::get()->info("p {} is at [{}, {}, {}]", p->getId(), p->getX()[0], p->getX()[1], p->getX()[2]);
+      FAIL() << "Particle should have been deleted";
+    }
+  }
 }
 
 /**
@@ -739,8 +749,12 @@ TEST(PeriodicBoundaryMoving, moveXDiagonal2) {
     p.setV(new_v);
   });
 
-  container.singleIterator(
-      [this](Particle& p) { FAIL() << "Particle should have been deleted"; });
+  for (const auto& c : container.getCells()) {
+    for (const auto p : c) {
+      SpdWrapper::get()->info("p {} is at [{}, {}, {}]", p->getId(), p->getX()[0], p->getX()[1], p->getX()[2]);
+      FAIL() << "Particle should have been deleted";
+    }
+  }
 }
 
 /**

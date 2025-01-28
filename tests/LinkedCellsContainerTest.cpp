@@ -244,7 +244,7 @@ TEST(LinkedCellsContainer, singleIterator) {
         if total generated pair count is the same as in reference impl)
 */
 TEST(LinkedCellsContainer, pairIterator) {
-  LinkedCellsConfig config = {.domain = {10, 10, 10},
+  constexpr LinkedCellsConfig config = {.domain = {10, 10, 10},
                               .cutoff_radius = 5,
                               .boundary_config = {
                                   .x_high = LinkedCellsConfig::Outflow,
@@ -258,9 +258,15 @@ TEST(LinkedCellsContainer, pairIterator) {
   LinkedCellsContainer container(config);
 
   std::array<Particle, 10> particles = {
-      createParticle(1, 1, 1), createParticle(5, 1, 6), createParticle(7, 7, 8),
-      createParticle(4, 3, 0), createParticle(5, 0, 5), createParticle(1, 5, 2),
-      createParticle(9, 6, 4), createParticle(2, 1, 1), createParticle(3, 0, 0),
+      createParticle(1, 1, 1),
+      createParticle(5, 1, 6),
+      createParticle(7, 7, 8),
+      createParticle(4, 3, 0),
+      createParticle(5, 0, 5),
+      createParticle(1, 5, 2),
+      createParticle(9, 6, 4),
+      createParticle(2, 1, 1),
+      createParticle(3, 0, 0),
       createParticle(0, 6, 1)};
 
   for (std::size_t i = 0; i < particles.size(); i++) {
@@ -286,17 +292,29 @@ TEST(LinkedCellsContainer, pairIterator) {
     }
   }
 
+
+  std::cout << "Pairs are: " << std::endl;
+  for (auto pair : pairs) {
+    std::cout << pair[0]->getId() << " and " << pair[1]->getId() << std::endl;
+  }
+  std::cout << "-------------" << std::endl;
+
+
   int count = 0;
-  container.pairIterator([&pairs, &count](Particle& p, Particle& q) {
+  container.pairIterator([&pairs, &count](const Particle& p,
+                                          const Particle& q) {
     count++;
+    std::cout<< "count is now " << count << std::endl;
+
+    std::cout << p.getId() << " and " << q.getId() << std::endl;
 
     for (auto & pair : pairs) {
-      if ((*pair[0] == p && *pair[1] == q) ||
-          (*pair[0] == q && *pair[1] == p))
+      if ((pair[0]->getId() == p.getId() && pair[1]->getId() == q.getId()) ||
+          (pair[0]->getId() == q.getId() && pair[1]->getId() == p.getId()))
         return;
     }
 
-    EXPECT_TRUE(false) << "Pair Iterator produced a invalid pair";
+    FAIL() << "Pair Iterator produced an invalid pair " << p.getId() << " and " << q.getId();
   });
 
   EXPECT_EQ(count, pairs.size())

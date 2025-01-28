@@ -46,12 +46,12 @@ LinkedCellsContainer::LinkedCellsContainer(
 
   // safety check that minimum cell count is satisfied so the boundaries work as
   // expected:
-  // could be ok, but then reflective calculation has to be disabled, since all
+  // could be ok, but then periodic calculation has to be disabled, since all
   // possible pairs are already iterated over
   for (std::size_t i = 0; i < 2; i++) {
     if (cell_count_[i] < 3) {
       SpdWrapper::get()->error(
-          "Cell count is too small if reflective boundaries are used! If this "
+          "Cell count is too small if periodic boundaries are used! If this "
           "is not a testing instance, please exit the simulation");
     }
   }
@@ -206,10 +206,19 @@ void LinkedCellsContainer::imposeInvariant() {
         continue;
       }
       // SpdWrapper::get()->info("Imposing on partice with id {}", it->getId());
+      ivec3 should_be_cell = cellIndexToCoord(shouldBeIndex);
+      // SpdWrapper::get()->info(
+      //     "Trying to register p {} at pos [{}, {}, {}] in cell [{}, {}, {}]",
+      //     (*it)->getId(), (*it)->getX()[0], (*it)->getX()[1],
+      //     (*it)->getX()[2], should_be_cell[0], should_be_cell[1],
+      //     should_be_cell[2]);
+
       cells_[shouldBeIndex].push_back(*it);
       it = cells_[index].erase(it);
     }
   }
+
+  // SpdWrapper::get()->info("Registered Particles in new cell");
 
   // apply boundary condition
   // it is assumed that GhostParticles do not have to persist, so we dont have
@@ -285,7 +294,7 @@ void LinkedCellsContainer::pairIterator(
 
   // go over all cell indices
   for (std::size_t cell_index = 0; cell_index < cells_.size(); cell_index++) {
-    std::vector<Particle *> &cell_particles = cells_[cell_index];
+    std::vector<Particle *> cell_particles = cells_[cell_index];
 
     if (cell_particles.empty()) continue;
 
@@ -299,15 +308,23 @@ void LinkedCellsContainer::pairIterator(
       for (std::size_t j = i + 1; j < cell_particles.size(); ++j) {
         const dvec3 p = cell_particles[i]->getX();
         const dvec3 q = cell_particles[j]->getX();
+        SpdWrapper::get()->info("\t{} is at [{}, {}, {}]", cell_particles[i]->getId(), cell_particles[i]->getX()[0], cell_particles[i]->getX()[1], cell_particles[i]->getX()[2]);
+        SpdWrapper::get()->info("\t{} is at [{}, {}, {}]", cell_particles[j]->getId(), cell_particles[j]->getX()[0], cell_particles[j]->getX()[1], cell_particles[j]->getX()[2]);
         if (dvec3 d = {p[0] - q[0], p[1] - q[1], p[2] - q[2]};
-            d[0] * d[0] + d[1] * d[1] + d[2] * d[2] > cutoff_ * cutoff_)
+            d[0] * d[0] + d[1] * d[1] + d[2] * d[2] > cutoff_ * cutoff_) {
+          SpdWrapper::get()->info("Distance from {} to {} too large [{}, {}, {}]", cell_particles[i]->getId(), cell_particles[j]->getId(), d[0], d[1], d[2]);
           continue;
+        }
         f(*cell_particles[i], *cell_particles[j]);
         // SpdWrapper::get()->info("Index pair {}/{}", cellParticles[i].getId(),
         //                        cellParticles[j].getId());
         DEBUG_PRINT_FMT("Intra cell pair: ({}, {})",
-                        cell_particles[i]->getType(),
-                        cell_particles[j]->getType());
+                        cell_particles[i]->getId(),
+                        cell_particles[j]->getId());
+
+        SpdWrapper::get()->info("Intra cell pair: ({}, {})",
+                        cell_particles[i]->getId(),
+                        cell_particles[j]->getId());
       }
     }
 
@@ -335,8 +352,8 @@ void LinkedCellsContainer::pairIterator(
       std::vector<Particle *> &neighbour_particles = cells_[neighbour_index];
       if (neighbour_particles.empty()) continue;
 
-      for (auto &cell_particle : cell_particles) {
-        for (auto &neighbour_particle : neighbour_particles) {
+      for (const auto cell_particle : cell_particles) {
+        for (const auto neighbour_particle : neighbour_particles) {
           auto p = cell_particle->getX();
           auto q = neighbour_particle->getX();
 
@@ -507,16 +524,17 @@ void LinkedCellsContainer::computeInteractiveForces(
 // #pragma omp parallel for schedule(static)
 #endif
 
-  // for some reason parallelising this makes it slower, no matter which approach is used
-//#pragma omp parallel for collapse(2)
+  // for some reason parallelising this makes it slower, no matter which
+  // approach is used
+  // #pragma omp parallel for collapse(2)
   for (size_t j = 0; j < particle_count_; j++) {
     for (size_t i = 1; i < num_threads; i++) {
-//#pragma omp critical
+      // #pragma omp critical
       { force_buffers[0][j] = force_buffers[0][j] + force_buffers[i][j]; }
       // SpdWrapper::get()->critical("forcebuffer[{}][{}] = {}, {}, {}", i, j,
     }
   }
-//#pragma omp barrier
+  // #pragma omp barrier
 
 #pragma omp parallel for
   for (size_t i = 0; i < particles_.size(); ++i) {
@@ -656,7 +674,8 @@ void LinkedCellsContainer::applyReflectiveBoundary(const size_t dimension) {
   // Particle, the cutoff is larger than half of sigma_factor * sigma
 
   for (const std::size_t cell_index : boundary_direction_cells_[dimension]) {
-    for (auto &p : cells_[cell_index]) {
+    SpdWrapper::get()->info("Boundary Cell {}", cell_index);
+    for (const auto p : cells_[cell_index]) {
       // check if it is too close
       double pos = p->getX()[problematic_dimension];
       const double boundary_position = domain_[problematic_dimension];
@@ -665,7 +684,10 @@ void LinkedCellsContainer::applyReflectiveBoundary(const size_t dimension) {
                                 pos);  // if both of them are so small that
       // they would trigger the boundary, the
       // simulation itself is already broken
-
+      SpdWrapper::get()->info(
+          "double dist: {} at [{}, {}, {}] adn v=[{}, {}, {}]",
+          double_dist_to_boundary, p->getX()[0], p->getX()[1], p->getX()[2],
+          p->getV()[0], p->getV()[1], p->getV()[2]);
       if (double_dist_to_boundary < sigma_factor * p->getSigma()) {
         const double force =
             LennardJones::simpleForce(*p, double_dist_to_boundary);
@@ -681,6 +703,11 @@ void LinkedCellsContainer::applyReflectiveBoundary(const size_t dimension) {
         // direction
         p->setF(p_force);
         DEBUG_PRINT_FMT(
+            "Applied Force=[{}, {}, {}] to Particle at [{}, {}, {}]",
+            p->getF()[0], p->getF()[1], p->getF()[2], p->getX()[0],
+            p->getX()[1], p->getX()[2]);
+
+        SpdWrapper::get()->info(
             "Applied Force=[{}, {}, {}] to Particle at [{}, {}, {}]",
             p->getF()[0], p->getF()[1], p->getF()[2], p->getX()[0],
             p->getX()[1], p->getX()[2]);
