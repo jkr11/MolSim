@@ -51,7 +51,7 @@ class VerletIntegrator {
    * @brief Virtual method to advance time by one step
    * @param particle_container
    */
-  void step(ParticleContainer& particle_container) const;
+  void step(ParticleContainer& particle_container);
 
 
   /**

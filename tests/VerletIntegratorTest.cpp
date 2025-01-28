@@ -49,7 +49,7 @@ TEST(VerletIntegrator, step2) {
   std::vector<std::unique_ptr<SingularForce>> singular_forces;
   std::vector<std::unique_ptr<IndexForce>> index_forces;
 
-  const VerletIntegrator integrator(interactive_forces, singular_forces, index_forces,
+  VerletIntegrator integrator(interactive_forces, singular_forces, index_forces,
                               0.01f);
 
   p.setF({0, 1, 0});

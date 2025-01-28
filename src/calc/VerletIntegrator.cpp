@@ -9,7 +9,7 @@
 #include "debug/debug_print.h"
 #include "utils/SpdWrapper.h"
 
-void VerletIntegrator::step(ParticleContainer& particle_container) const {
+void VerletIntegrator::step(ParticleContainer& particle_container) {
   // position update
   particle_container.singleIterator([this](Particle& p) {
     if (p.getType() < 0) {
