@@ -28,7 +28,7 @@ TEST(Wall, immovable) {
        }});
 
   Particle p({1, 1, 1}, {1, 1, 1}, 1, 1, 1, -1);
-  container.addParticle(p);
+  container.addParticles({p});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
 
   std::vector<std::unique_ptr<InteractiveForce>> interactive_forces;
@@ -65,7 +65,7 @@ TEST(Wall, excludedFromThermostat) {
    Particle wall({1, 1, 1}, {1, 1, 1}, 1, 1, 1, -1);
    Particle q({2, 2, 2}, {2, 2, 2}, 1, 1, 1, 1);
 
-  container.addParticle(wall);
-  container.addParticle(q);
+  container.addParticles({wall});
+  container.addParticles({q});
   EXPECT_EQ(container.size(), 2) << "Number of Particles is not 0";
 }

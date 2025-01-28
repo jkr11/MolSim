@@ -41,20 +41,19 @@ TEST(VerletIntegrator, step1) {
  */
 TEST(VerletIntegrator, step2) {
   DirectSumContainer container;
-  Particle p({1, 0, 0}, {0, 0, 0}, 1, 5, 1);
-  Particle q({0, 1, 0}, {0, 0, 0}, 1, 5, 1);
+  Particle p({1, 0, 0}, {0, 0, 0}, 1, 5, 1, 0);
+  Particle q({0, 1, 0}, {0, 0, 0}, 1, 5, 1, 0);
   LennardJones lj;
   std::vector<std::unique_ptr<InteractiveForce>> interactive_forces;
   interactive_forces.push_back(std::make_unique<LennardJones>());
   std::vector<std::unique_ptr<SingularForce>> singular_forces;
   std::vector<std::unique_ptr<IndexForce>> index_forces;
 
-  VerletIntegrator integrator(interactive_forces, singular_forces, index_forces,
+  const VerletIntegrator integrator(interactive_forces, singular_forces, index_forces,
                               0.01f);
 
   p.setF({0, 1, 0});
-  container.addParticle(p);
-  container.addParticle(q);
+  container.addParticles({p, q});
   ASSERT_EQ(container.size(), 2);
 
   integrator.step(container);

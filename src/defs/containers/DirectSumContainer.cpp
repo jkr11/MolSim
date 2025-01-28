@@ -100,3 +100,23 @@ ivec3 DirectSumContainer::getDomain() {
   SPDLOG_TRACE("DirectSumContainer::getDomain()");
   return {-1, -1, -1};
 }
+
+void DirectSumContainer::computeInteractiveForces(
+    const std::vector<std::unique_ptr<InteractiveForce>>& interactive_forces) {
+  // note that the upper tri-diag matrix is iterated over
+  for (size_t i = 0; i < particles_.size(); ++i) {
+    for (size_t j = i + 1; j < particles_.size(); ++j) {
+      dvec3 f12 = {0.0, 0.0, 0.0};
+      for (auto &force : interactive_forces) {
+        // INFO("IN LOOOOPS")
+        dvec3 ftmp =
+            force->directionalForce(particles_[i], particles_[j]);
+        // InfoVec("computed force ", ftmp);
+        f12 = f12 + ftmp;
+      }
+      particles_[i].addF(f12);
+      particles_[j].subF(f12);
+    }
+  }
+}
+

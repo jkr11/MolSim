@@ -183,7 +183,7 @@ TEST(LinkedCellsContainer, Size_addParticle_and_removeParticle) {
       << "Freshly instantiated LinkedCellsContainer is not empty.";
 
   Particle p = createParticle(1, 1, 1);
-  container.addParticle(p);
+  container.addParticles({p});
   EXPECT_EQ(container.size(), 1)
       << ".addParticle() did not increase .size() by 1.";
 
@@ -216,9 +216,9 @@ TEST(LinkedCellsContainer, singleIterator) {
   Particle p2 = createParticle(5, 1, 6);
   Particle p3 = createParticle(7, 7, 8);
 
-  container.addParticle(p1);
-  container.addParticle(p2);
-  container.addParticle(p3);
+  container.addParticles({p1});
+  container.addParticles({p2});
+  container.addParticles({p3});
 
   EXPECT_EQ(container.size(), 3)
       << "container particle count not matching after adding 3 particles.";
@@ -257,7 +257,7 @@ TEST(LinkedCellsContainer, pairIterator) {
 
   LinkedCellsContainer container(config);
 
-  std::array<Particle, 10> particles = {
+  std::vector<Particle> particles = {
       createParticle(1, 1, 1),
       createParticle(5, 1, 6),
       createParticle(7, 7, 8),
@@ -269,9 +269,7 @@ TEST(LinkedCellsContainer, pairIterator) {
       createParticle(3, 0, 0),
       createParticle(0, 6, 1)};
 
-  for (std::size_t i = 0; i < particles.size(); i++) {
-    container.addParticle(particles[i]);
-  }
+  container.addParticles(particles);
 
   EXPECT_EQ(container.size(), particles.size())
       << "container particle count not matching after adding 4 particles.";
@@ -292,21 +290,10 @@ TEST(LinkedCellsContainer, pairIterator) {
     }
   }
 
-
-  std::cout << "Pairs are: " << std::endl;
-  for (auto pair : pairs) {
-    std::cout << pair[0]->getId() << " and " << pair[1]->getId() << std::endl;
-  }
-  std::cout << "-------------" << std::endl;
-
-
   int count = 0;
   container.pairIterator([&pairs, &count](const Particle& p,
                                           const Particle& q) {
     count++;
-    std::cout<< "count is now " << count << std::endl;
-
-    std::cout << p.getId() << " and " << q.getId() << std::endl;
 
     for (auto & pair : pairs) {
       if ((pair[0]->getId() == p.getId() && pair[1]->getId() == q.getId()) ||
@@ -343,10 +330,10 @@ TEST(LinkedCellsContainer, boundaryIterator) {
   Particle p3 = createParticle(0, 9, 3);
   Particle p4 = createParticle(4, 4, 4);
 
-  container.addParticle(p1);
-  container.addParticle(p2);
-  container.addParticle(p3);
-  container.addParticle(p4);
+  container.addParticles({p1});
+  container.addParticles({p2});
+  container.addParticles({p3});
+  container.addParticles({p4});
 
   container.boundaryIterator([&p1, &p2, &p3, &p4](Particle& p) {
     EXPECT_TRUE(p == p1 || p == p2 || p == p3 || !(p == p4));
@@ -375,10 +362,10 @@ TEST(LinkedCellsContainer, haloIterator) {
   Particle p3 = createParticle(0, 11, 0);
   Particle p4 = createParticle(0, 0, 0);
 
-  container.addParticle(p1);
-  container.addParticle(p2);
-  container.addParticle(p3);
-  container.addParticle(p4);
+  container.addParticles({p1});
+  container.addParticles({p2});
+  container.addParticles({p3});
+  container.addParticles({p4});
 
   container.haloIterator([&p1, &p2, &p3, &p4](Particle& p) {
     EXPECT_TRUE(p == p1 || p == p2 || p == p3 || !(p == p4));

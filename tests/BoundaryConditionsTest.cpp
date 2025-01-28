@@ -129,7 +129,7 @@ TEST(BoundaryConditions, Idempotence_Outflow) {
   container.imposeInvariant();
   EXPECT_EQ(container.size(), 0) << "Number of Particles is not 0";
 
-  container.addParticle(p);
+  container.addParticles({p});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 1";
   container.imposeInvariant();
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 1";
@@ -152,7 +152,7 @@ TEST(BoundaryConditions, xhigh_Outflow) {
        }});
 
   Particle p({1, 1, 1}, {0, 0, 0}, 1, 1, 1);
-  container.addParticle(p);
+  container.addParticles({p});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
 
   container.singleIterator([this](Particle& p) { p.setX({4, 1, 1}); });
@@ -179,7 +179,7 @@ TEST(BoundaryConditions, xlow_Outflow) {
        }});
 
   Particle p({1, 1, 1}, {0, 0, 0}, 1, 1, 1);
-  container.addParticle(p);
+  container.addParticles({p});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
 
   container.singleIterator([this](Particle& p) { p.setX({-1, 1, 1}); });
@@ -206,7 +206,7 @@ TEST(BoundaryConditions, yhigh_Outflow) {
        }});
 
   Particle p({1, 1, 1}, {0, 0, 0}, 1, 1, 1);
-  container.addParticle(p);
+  container.addParticles({p});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
 
   container.singleIterator([this](Particle& p) { p.setX({1, 4, 1}); });
@@ -233,7 +233,7 @@ TEST(BoundaryConditions, ylow_Outflow) {
        }});
 
   Particle p({1, 1, 1}, {0, 0, 0}, 1, 1, 1);
-  container.addParticle(p);
+  container.addParticles({p});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
 
   container.singleIterator([this](Particle& p) { p.setX({1, -1, 1}); });
@@ -260,7 +260,7 @@ TEST(BoundaryConditions, zhigh_Outflow) {
        }});
 
   Particle p({1, 1, 1}, {0, 0, 0}, 1, 1, 1);
-  container.addParticle(p);
+  container.addParticles({p});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
 
   container.singleIterator([this](Particle& p) { p.setX({1, 1, 4}); });
@@ -287,7 +287,7 @@ TEST(BoundaryConditions, zlow_Outflow) {
        }});
 
   Particle p({1, 1, 1}, {0, 0, 0}, 1, 1, 1);
-  container.addParticle(p);
+  container.addParticles({p});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
 
   container.singleIterator([this](Particle& p) { p.setX({1, 1, -1}); });
@@ -314,7 +314,7 @@ TEST(BoundaryConditions, xlow_Reflective) {
        }});
 
   Particle p({0.7, 1, 1}, {-1, 0, 0}, 1, 1, 1);
-  container.addParticle(p);
+  container.addParticles({p});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
 
   // simulate 10.000 steps for a specific delta t to assure that it turned around
@@ -359,7 +359,7 @@ TEST(BoundaryConditions, xhigh_Reflective) {
        }});
 
   Particle p({89.3, 1, 1}, {1, 0, 0}, 1, 1, 1);
-  container.addParticle(p);
+  container.addParticles({p});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
 
   // simulate 10.000 steps for a specific delta t to assure that it turned around
@@ -404,7 +404,7 @@ TEST(BoundaryConditions, ylow_Reflective) {
        }});
 
   Particle p({1, 0.7, 1}, {0, -1, 0}, 1, 1, 1);
-  container.addParticle(p);
+  container.addParticles({p});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
 
   // simulate 10.000 steps for a specific delta t to assure that it turned around
@@ -449,7 +449,7 @@ TEST(BoundaryConditions, yhigh_Reflective) {
        }});
 
   Particle p({1, 89.3, 1}, {0, 1, 0}, 1, 1, 1);
-  container.addParticle(p);
+  container.addParticles({p});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
 
   // simulate 10.000 steps for a specific delta t to assure that it turned around
@@ -494,7 +494,7 @@ TEST(BoundaryConditions, zlow_Reflective) {
        }});
 
   Particle p({1, 1, 0.7}, {0, 0, -1}, 1, 1, 1);
-  container.addParticle(p);
+  container.addParticles({p});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
 
   // simulate 10.000 steps for a specific delta t to assure that it turned around
@@ -539,7 +539,7 @@ TEST(BoundaryConditions, zhigh_Reflective) {
        }});
 
   Particle p({1, 1, 2.3}, {0, 0, 1}, 1, 1, 1);
-  container.addParticle(p);
+  container.addParticles({p});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
 
   // simulate 10.000 steps for a specific delta t to assure that it turned around

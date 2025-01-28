@@ -560,7 +560,7 @@ TEST(PeriodicBoundaryMoving, moveXLeft) {
   // move to other end
   Particle one({1, 1, 1}, {-2, 0, 0}, 1, 5.0, 1);  // in bb
 
-  container.addParticle(one);
+  container.addParticles({one});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 2";
 
   double delta_t = 1;
@@ -616,7 +616,7 @@ TEST(PeriodicBoundaryMoving, moveXRight) {
 
   Particle one({8, 1, 1}, {2, 0, 0}, 1, 5.0, 1);  // in bb
 
-  container.addParticle(one);
+  container.addParticles({one});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 2";
 
   double delta_t = 1;
@@ -673,20 +673,19 @@ TEST(PeriodicBoundaryMoving, moveXDiagonal1) {
   Particle two({8, 1, 1}, {2, -2, 0}, 1, 5.0, 1);
 
   std::cout << "Adding Particles" << std::endl;
-  container.addParticle(one);
-  container.addParticle(two);
+  container.addParticles({one, two});
   EXPECT_EQ(container.size(), 2) << "Number of Particles is not 2";
 
   SpdWrapper::get()->info("Starting test");
   std::cout << "Starting Test" << std::endl;
-
 
   double delta_t = 1;
   container.singleIterator([this, delta_t](Particle& p) {
     const dvec3 new_x = p.getX() + delta_t * p.getV() +
                         (delta_t * delta_t / (2 * p.getM())) * (p.getF());
     p.setX(new_x);
-    std::cout << "setting p " << p.getId() << " new_x [" << new_x[0] << "," << new_x[1] << "," << new_x[2] << "]" << std::endl;
+    std::cout << "setting p " << p.getId() << " new_x [" << new_x[0] << ","
+              << new_x[1] << "," << new_x[2] << "]" << std::endl;
   });
 
   SpdWrapper::get()->info("Positions Updated");
@@ -696,12 +695,10 @@ TEST(PeriodicBoundaryMoving, moveXDiagonal1) {
   SpdWrapper::get()->info("Invariant Imposed");
   std::cout << "Invariant Imposed" << std::endl;
 
-
-
-
   for (const auto& c : container.getCells()) {
     for (const auto p : c) {
-      SpdWrapper::get()->info("p {} is at [{}, {}, {}]", p->getId(), p->getX()[0], p->getX()[1], p->getX()[2]);
+      SpdWrapper::get()->info("p {} is at [{}, {}, {}]", p->getId(),
+                              p->getX()[0], p->getX()[1], p->getX()[2]);
       FAIL() << "Particle should have been deleted";
     }
   }
@@ -728,8 +725,7 @@ TEST(PeriodicBoundaryMoving, moveXDiagonal2) {
   Particle one({1, 1, 1}, {-2, -2, 0}, 1, 5.0, 1);
   Particle two({1, 8, 1}, {-2, 2, 0}, 1, 5.0, 1);
 
-  container.addParticle(one);
-  container.addParticle(two);
+  container.addParticles({one, two});
   EXPECT_EQ(container.size(), 2) << "Number of Particles is not 2";
 
   double delta_t = 1;
@@ -751,7 +747,8 @@ TEST(PeriodicBoundaryMoving, moveXDiagonal2) {
 
   for (const auto& c : container.getCells()) {
     for (const auto p : c) {
-      SpdWrapper::get()->info("p {} is at [{}, {}, {}]", p->getId(), p->getX()[0], p->getX()[1], p->getX()[2]);
+      SpdWrapper::get()->info("p {} is at [{}, {}, {}]", p->getId(),
+                              p->getX()[0], p->getX()[1], p->getX()[2]);
       FAIL() << "Particle should have been deleted";
     }
   }
@@ -778,8 +775,7 @@ TEST(PeriodicBoundaryMoving, moveYDiagonal1) {
   Particle one({8, 8, 1}, {2, 2, 0}, 1, 5.0, 1);
   Particle two({8, 1, 1}, {2, -2, 0}, 1, 5.0, 1);
 
-  container.addParticle(one);
-  container.addParticle(two);
+  container.addParticles({one, two});
   EXPECT_EQ(container.size(), 2) << "Number of Particles is not 2";
 
   double delta_t = 1;
@@ -799,8 +795,13 @@ TEST(PeriodicBoundaryMoving, moveYDiagonal1) {
     p.setV(new_v);
   });
 
-  container.singleIterator(
-      [this](Particle& p) { FAIL() << "Particle should have been deleted"; });
+  for (const auto& c : container.getCells()) {
+    for (const auto p : c) {
+      SpdWrapper::get()->info("p {} is at [{}, {}, {}]", p->getId(),
+                              p->getX()[0], p->getX()[1], p->getX()[2]);
+      FAIL() << "Particle should have been deleted";
+    }
+  }
 }
 
 /**
@@ -824,8 +825,7 @@ TEST(PeriodicBoundaryMoving, moveYDiagonal2) {
   Particle one({1, 1, 1}, {-2, -2, 0}, 1, 5.0, 1);
   Particle two({1, 8, 1}, {-2, 2, 0}, 1, 5.0, 1);
 
-  container.addParticle(one);
-  container.addParticle(two);
+  container.addParticles({one, two});
   EXPECT_EQ(container.size(), 2) << "Number of Particles is not 2";
 
   double delta_t = 1;
@@ -845,8 +845,13 @@ TEST(PeriodicBoundaryMoving, moveYDiagonal2) {
     p.setV(new_v);
   });
 
-  container.singleIterator(
-      [this](Particle& p) { FAIL() << "Particle should have been deleted"; });
+  for (const auto& c : container.getCells()) {
+    for (const auto p : c) {
+      SpdWrapper::get()->info("p {} is at [{}, {}, {}]", p->getId(),
+                              p->getX()[0], p->getX()[1], p->getX()[2]);
+      FAIL() << "Particle should have been deleted";
+    }
+  }
 }
 
 /**
@@ -869,7 +874,7 @@ TEST(PeriodicBoundaryMoving, moveYDown) {
   // move to other end
   Particle one({1, 1, 1}, {0, -2, 0}, 1, 5.0, 1);  // in bb
 
-  container.addParticle(one);
+  container.addParticles({one});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 2";
 
   double delta_t = 1;
@@ -924,7 +929,7 @@ TEST(PeriodicBoundaryMoving, moveYUp) {
   // move to other end
   Particle one({1, 8, 1}, {0, 2, 0}, 1, 5.0, 1);  // in bb
 
-  container.addParticle(one);
+  container.addParticles({one});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 2";
 
   double delta_t = 1;
@@ -979,7 +984,7 @@ TEST(PeriodicBoundaryMoving, moveXYDiagonal1) {
   // move to other end
   Particle one({1, 1, 1}, {-2, -2, 0}, 1, 5.0, 1);
 
-  container.addParticle(one);
+  container.addParticles({one});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 1";
 
   double delta_t = 1;
@@ -1034,7 +1039,7 @@ TEST(PeriodicBoundaryMoving, moveXYDiagonal2) {
   // move to other end
   Particle one({8, 1, 1}, {2, -2, 0}, 1, 5.0, 1);
 
-  container.addParticle(one);
+  container.addParticles({one});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 2";
 
   double delta_t = 1;
@@ -1089,7 +1094,7 @@ TEST(PeriodicBoundaryMoving, moveXYDiagonal3) {
   // move to other end
   Particle one({1, 8, 1}, {-2, 2, 0}, 1, 5.0, 1);
 
-  container.addParticle(one);
+  container.addParticles({one});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 1";
 
   double delta_t = 1;
@@ -1144,7 +1149,7 @@ TEST(PeriodicBoundaryMoving, moveXYDiagonal4) {
   // move to other end
   Particle one({8, 8, 1}, {2, 2, 0}, 1, 5.0, 1);
 
-  container.addParticle(one);
+  container.addParticles({one});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 2";
 
   double delta_t = 1;
@@ -1199,7 +1204,7 @@ TEST(PeriodicBoundaryMoving, moveZForward) {
   // move to other end
   Particle one({1, 1, 1}, {0, 0, -2}, 1, 5.0, 1);  // in bb
 
-  container.addParticle(one);
+  container.addParticles({one});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 2";
 
   double delta_t = 1;
@@ -1254,7 +1259,7 @@ TEST(PeriodicBoundaryMoving, moveZBackward) {
   // move to other end
   Particle one({1, 1, 8}, {0, 0, 2}, 1, 5.0, 1);  // in bb
 
-  container.addParticle(one);
+  container.addParticles({one});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 1";
 
   double delta_t = 1;
@@ -1309,7 +1314,7 @@ TEST(PeriodicBoundaryMoving, moveXYZDiagonal) {
   // move to other end
   Particle one({8, 8, 8}, {2, 2, 2}, 1, 5.0, 1);  // in bb
 
-  container.addParticle(one);
+  container.addParticles({one});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 1";
 
   double delta_t = 1;

@@ -143,6 +143,13 @@ class LinkedCellsContainer final : public ParticleContainer {
         {-1, -1, 1}}},
   }};
 
+  /**
+ * @brief Add a particle to the container
+ * @param p Particle to be added
+ * @note Does not impose the invariant automatically!
+ */
+  void addParticle(Particle& p);
+
  public:
   /**
    * 6th root of 2
@@ -166,12 +173,7 @@ class LinkedCellsContainer final : public ParticleContainer {
    */
   ~LinkedCellsContainer() override = default;
 
-  /**
-   * @brief Add a particle to the container
-   * @param p Particle to be added
-   * @note Does not impose the invariant automatically!
-   */
-  void addParticle(Particle& p) override;
+
 
   /**
    * @brief Add a vector of particles to the container
