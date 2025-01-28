@@ -34,7 +34,10 @@
         </container>
         <force>
             <LennardJones/>
-            <SingularGravity g="-12.44"/>
+            <SingularGravity>
+                <g>-12.44</g>
+                <axis>1</axis>
+            </SingularGravity>
         </force>
         <delta_t>0.0005</delta_t>
         <t_end>50</t_end>
@@ -91,6 +94,5 @@
     <thermostat>
         <T_init>40</T_init>
         <n_thermostat>1000</n_thermostat>
-        <T_target>40</T_target>
     </thermostat>
 </simulation>

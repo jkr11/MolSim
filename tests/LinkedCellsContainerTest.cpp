@@ -187,8 +187,8 @@ TEST(LinkedCellsContainer, Size_addParticle_and_removeParticle) {
   EXPECT_EQ(container.size(), 1)
       << ".addParticle() did not increase .size() by 1.";
 
-  Particle pr;
-  container.singleIterator([&pr](Particle& q) { pr = q; });
+  Particle pr{{}};
+  container.singleIterator([&pr](const Particle& q) { pr = q; });
 
   container.removeParticle(pr);
   EXPECT_EQ(container.size(), 0)
@@ -290,9 +290,9 @@ TEST(LinkedCellsContainer, pairIterator) {
   container.pairIterator([&pairs, &count](Particle& p, Particle& q) {
     count++;
 
-    for (auto it = pairs.begin(); it != pairs.end(); ++it) {
-      if ((*(*it)[0] == p && *(*it)[1] == q) ||
-          (*(*it)[0] == q && *(*it)[1] == p))
+    for (auto & pair : pairs) {
+      if ((*pair[0] == p && *pair[1] == q) ||
+          (*pair[0] == q && *pair[1] == p))
         return;
     }
 

@@ -8,6 +8,7 @@
 
 #include "debug/debug_print.h"
 #include "defs/Generators/CuboidGenerator.h"
+#include "defs/Generators/MembraneGenerator.h"
 #include "defs/Generators/SpheroidGenerator.h"
 #include "defs/types.h"
 #include "forces/Gravity.h"
@@ -23,8 +24,9 @@ void XmlReader::read(std::vector<Particle>& particles,
   validate_path(path, ".xml", "Simulation input");
   try {
     const std::unique_ptr<::simulation> config = simulation_(filepath);
-    SpdWrapper::get()->info("Reading XML file {}", filepath);
+    INFO_FMT("Reading XML file {}", filepath);
     auto& metadata = config->metadata();
+    INFO("Reading containers ...")
     if (auto& container = metadata.container();
         container.directSum().present()) {
       DirectSumConfig direct_sum_config;
@@ -55,61 +57,118 @@ void XmlReader::read(std::vector<Particle>& particles,
       SpdWrapper::get()->warn(
           "No container provided, using default LinkedCells");
     }
+    INFO("Reading interactive forces ...")
     if (auto& force = metadata.force(); force.LennardJones().present()) {
-      // auto _force = std::make_unique<LennardJones>();
       simulation_parameters.interactive_force_types.emplace_back(
           LennardJonesConfig{});
       DEBUG_PRINT("Using LennardJones");
     } else if (force.Gravity().present()) {
-      // auto _force = std::make_unique<Gravity>();
-      // simulation_parameters.interactive_forces.push_back(std::move(_force));
       simulation_parameters.interactive_force_types.emplace_back(
           GravityConfig{});
       DEBUG_PRINT("Using Gravity");
+    } else if (force.TruncatedLennardJonesForce().present()) {
+      simulation_parameters.interactive_force_types.emplace_back(
+          TruncatedLennardJonesConfig{});
+      DEBUG_PRINT("Using TruncatedLennardJonesForce");
     } else {
       SpdWrapper::get()->warn("No force provided, using default LennardJones");
     }
+    INFO("Reading singular foces ...")
     if (auto& singular_force = metadata.force();
         singular_force.SingularGravity().present()) {
-      // auto _force = std::make_unique<SingularGravity>(
-      //     singular_force.SingularGravity()->g().get());
-      // simulation_parameters.singular_forces.push_back(std::move(_force));
+      SpdWrapper::get()->info("Adding singular gravity on axis {}",
+                              singular_force.SingularGravity()->axis());
+
       simulation_parameters.singular_force_types.emplace_back(
-          SingularGravityConfig{singular_force.SingularGravity()->g().get()});
+          SingularGravityConfig{singular_force.SingularGravity()->g(),
+                                singular_force.SingularGravity()->axis()});
     }
+    if (auto& singular_force = metadata.force();
+        singular_force.HarmonicForce().present()) {
+      simulation_parameters.singular_force_types.emplace_back(
+          HarmonicForceConfig{singular_force.HarmonicForce()->r_0(),
+                              singular_force.HarmonicForce()->k()});
+      DEBUG_PRINT("Using HarmonicForce");
+    }
+    if (auto& index_force = metadata.force();
+        index_force.IndexForce().present()) {
+      SpdWrapper::get()->info("Building index force");
+      std::vector<ivec3> indeces{};
+      for (auto& i : index_force.IndexForce()->index()) {
+        indeces.push_back(unwrapVec<const Ivec3Type&, ivec3>(i, "index"));
+      }
+      SpdWrapper::get()->info("indeces[0] {}", indeces[0][0]);
+      IndexForceConfig index_force_config{
+          indeces,
+          {},
+          index_force.IndexForce()->time(),
+          unwrapVec<const Dvec3Type&, dvec3>(
+              index_force.IndexForce()->force_values(), "force_values"),
+      };
+      simulation_parameters.index_force_configs.push_back(index_force_config);
+    }
+    INFO("Checking if checkpoint is  present ...")
     if (metadata.checkpoint().present()) {
       loadCheckpoint(metadata.checkpoint().get(), particles);
     }
+
+    StatisticsConfig statistics_config;
+    if (metadata.statistics().present()) {
+      auto statistics = metadata.statistics().get();
+      statistics_config = {
+          .calc_stats = true,
+          .x_bins = statistics.x_bins(),
+          .y_bins = statistics.y_bins(),
+          .output_interval = statistics.output_interval(),
+          .velocity_output_location = "velocity.csv",
+          .density_output_location = "density.csv",
+      };
+    } else {
+      statistics_config = {
+          .calc_stats = false,
+      };
+    }
+    simulation_parameters.statistics_config = statistics_config;
+
+    INFO("Checking for thermostat ...")
     if (config->thermostat().present()) {
       auto thermostat = config->thermostat();
       ThermostatConfig thermostat_config = {
-          .T_init = thermostat->T_init(),
-          .T_target = thermostat->T_target(),  // TODO: make this optional
-          .deltaT =
+          .t_init = thermostat->T_init(),
+          .t_target =
+              thermostat->T_init(),  // we initialize both this and deltaT to
+                                     // its defaults first and then check if the
+                                     // actual values are present
+          .delta_t =
               std::numeric_limits<double>::max(),  // Default to infinity, dont
                                                    // use infinity() limit
                                                    // because of -ffast-math
           .n_thermostat = thermostat->n_thermostat(),
+          .use_thermal_motion =
+              static_cast<bool>(thermostat->use_thermal_motion()),
       };
 
       if (thermostat->deltaT().present()) {
-        thermostat_config.deltaT = thermostat->deltaT().get();
+        thermostat_config.delta_t = thermostat->deltaT().get();
+      }
+      if (thermostat->T_target().present()) {
+        thermostat_config.t_target = thermostat->T_target().get();
       }
 
-      SpdWrapper::get()->info("Checkpoint thermostat deltaT {}",
-                              thermostat_config.deltaT);
       simulation_parameters.thermostat_config = thermostat_config;
       simulation_parameters.use_thermostat = true;
     } else {
       simulation_parameters.use_thermostat = false;
     }
-    // TODO: singular forces here , but its a good start
     simulation_parameters.delta_t = metadata.delta_t();
     simulation_parameters.t_end = metadata.t_end();
-    const auto& twoD = metadata.twoD();
 
+    const auto& twoD = metadata.twoD();
+    INFO_FMT("Simulation has dimension {}", twoD ? 2 : 3)
+    INFO("Reading in particle shape configurations ...")
     if (config->cuboids() != nullptr) {
       for (const auto& cubes : config->cuboids()->cuboid()) {
+        SpdWrapper::get()->info("Generating cuboid");
         const auto& _corner = cubes.corner();
         const auto& _dimensions = cubes.dimensions();
         const auto& _velocity = cubes.velocity();
@@ -121,17 +180,53 @@ void XmlReader::read(std::vector<Particle>& particles,
         double mv;
         if (config->thermostat().present() &&
             velocity == dvec3{0.0, 0.0, 0.0}) {
-          mv = std::sqrt(simulation_parameters.thermostat_config.T_init /
+          mv = std::sqrt(simulation_parameters.thermostat_config.t_init /
                          cubes.mass());
         } else {
           mv = cubes.mv();
         }
 
+        // These info print themselves
         CuboidGenerator cg(corner, dimensions, cubes.h(), cubes.mass(),
                            velocity, mv, cubes.epsilon(), cubes.sigma(),
                            cubes.type(), twoD);
-
         cg.generate(particles);
+      }
+    }
+
+    if (config->membranes() != nullptr) {
+      for (const auto& membranes : config->membranes()->membrane()) {
+        SpdWrapper::get()->info("Generating membranes");
+        const auto& _corner = membranes.corner();
+        const auto& _dimensions = membranes.dimensions();
+        const auto& _velocity = membranes.velocity();
+        dvec3 corner = unwrapVec<const Dvec3Type&, dvec3>(_corner, "corner");
+        ivec3 dimensions =
+            unwrapVec<const Ivec3Type&, ivec3>(_dimensions, "dimensions");
+        dvec3 velocity =
+            unwrapVec<const Dvec3Type&, dvec3>(_velocity, "velocity");
+        double mv;
+        if (config->thermostat().present() &&
+            velocity == dvec3{0.0, 0.0, 0.0}) {
+          mv = std::sqrt(simulation_parameters.thermostat_config.t_init /
+                         membranes.mass());
+        } else {
+          mv = membranes.mv();
+        }
+        MembraneGenerator mg(
+            corner, dimensions, membranes.h(), membranes.mass(), velocity, mv,
+            membranes.epsilon(), membranes.sigma(), membranes.type(), twoD,
+            simulation_parameters.index_force_configs[0].indeces);
+        mg.generate(particles);
+        std::vector<int> ids = mg.getIndeces();
+        simulation_parameters.index_force_configs[0].ids = ids;
+        if (std::holds_alternative<LinkedCellsConfig>(
+                simulation_parameters.container_data)) {
+          LinkedCellsConfig linked_cells_config_tmp =
+              std::get<LinkedCellsConfig>(simulation_parameters.container_data);
+          linked_cells_config_tmp.is_membrane = true;
+          simulation_parameters.container_data = linked_cells_config_tmp;
+        }
       }
     }
 
@@ -144,11 +239,12 @@ void XmlReader::read(std::vector<Particle>& particles,
         double mv;
         if (config->thermostat().present() &&
             velocity == dvec3{0.0, 0.0, 0.0}) {
-          mv = std::sqrt(simulation_parameters.thermostat_config.T_init /
+          mv = std::sqrt(simulation_parameters.thermostat_config.t_init /
                          spheres.mass());
         } else {
           mv = spheres.mv();
         }
+
         SpheroidGenerator sg(origin, spheres.radius(), spheres.h(),
                              spheres.mass(), velocity, spheres.epsilon(),
                              spheres.sigma(), spheres.type(), mv, twoD);
@@ -156,7 +252,6 @@ void XmlReader::read(std::vector<Particle>& particles,
         sg.generate(particles);
       }
     }
-
   } catch (const std::exception& e) {
     SpdWrapper::get()->error("Error reading XML file: {}", e.what());
     exit(EXIT_FAILURE);
@@ -165,13 +260,12 @@ void XmlReader::read(std::vector<Particle>& particles,
 
 void XmlReader::loadCheckpoint(const std::string& _filepath,
                                std::vector<Particle>& particles) {
-  SpdWrapper::get()->info("Looking and for checkpoint file");
   const std::filesystem::path filepath(_filepath);
   validate_path(filepath, ".xml", "checkpoint");
   try {
     DEBUG_PRINT("Found checkpoint file");
     const std::unique_ptr<::CheckpointType> checkpoint = Checkpoint(filepath);
-    SpdWrapper::get()->info("Reading checkpoint particles");
+    INFO("Reading checkpoint particles");
     std::vector<Particle> temp_particles;
     for (const auto& p : checkpoint->Particles().Particle()) {
       auto position =
@@ -185,17 +279,36 @@ void XmlReader::loadCheckpoint(const std::string& _filepath,
       double epsilon = p.epsilon();
       double sigma = p.sigma();
       int type = p.type();
-      // TODO: this is also bad
       temp_particles.emplace_back(position, velocity, force, old_force, mass,
-                                  epsilon, sigma, type);
+                                  type, epsilon, sigma);
     }
-    SpdWrapper::get()->info("Read {} particles from checkpoint",
-                            temp_particles.size());
+    INFO_FMT("Read {} particles from checkpoint", temp_particles.size());
     particles.reserve(particles.size() + temp_particles.size());
     particles.insert(particles.end(), temp_particles.begin(),
                      temp_particles.end());
   } catch (const std::exception& e) {
     SpdWrapper::get()->error("Error reading checkpoint file: {}", e.what());
+  }
+}
+
+void XmlReader::validateBoundaries(
+    const LinkedCellsConfig::BoundaryConfig& boundary) {
+  if (boundary.x_high != boundary.x_low &&
+      (boundary.x_high == LinkedCellsConfig::Periodic ||
+       boundary.x_low == LinkedCellsConfig::Periodic)) {
+    throw std::runtime_error("x dimension has incompatible boundaries");
+  }
+
+  if (boundary.y_high != boundary.y_low &&
+      (boundary.y_high == LinkedCellsConfig::Periodic ||
+       boundary.y_low == LinkedCellsConfig::Periodic)) {
+    throw std::runtime_error("y dimension has incompatible boundaries");
+  }
+
+  if (boundary.z_high != boundary.z_low &&
+      (boundary.z_high == LinkedCellsConfig::Periodic ||
+       boundary.z_low == LinkedCellsConfig::Periodic)) {
+    throw std::runtime_error("z dimension has incompatible boundaries");
   }
 }
 

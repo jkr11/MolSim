@@ -174,18 +174,6 @@ auto L2Norm(const Container &c) {
 }
 
 /**
- * Calculates the square L2 norm for a given container.
- * @tparam Container
- * @param c
- * @return sum_i(c[i]*c[i]).
- */
-template <class Container>
-auto squaredL2Norm(const Container &c) {
-  return std::accumulate(std::cbegin(c), std::cend(c), 0.0,
-                         [](auto a, auto b) { return a + b * b; });
-}
-
-/**
  * @brief Calculates the inner product on L2
  * @tparam Container
  * @param c
@@ -196,6 +184,23 @@ auto L2InnerProduct(const Container &c) {
   return std::accumulate(std::cbegin(c), std::cend(c), 0.0,
                          [](auto a, auto b) { return a + b * b; });
 }
+
+// TODO
+template <class Container>
+auto getSigns(const Container &c) {
+  std::vector<int> signs;
+  for (size_t i = 0; i < c.size(); ++i) {
+    if (c[i] > 0) {
+      signs[i] = 1;
+    } else if (c[i] < 0) {
+      signs[i] = -1;
+    } else {
+      signs[i] = 0;
+    }
+  }
+  return signs;
+}
+
 }  // namespace ArrayUtils
 
 /**

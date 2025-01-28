@@ -7,16 +7,17 @@
 #include "utils/SpdWrapper.h"
 
 dvec3 LennardJones::directionalForce(Particle& p1, Particle& p2) const {
-  const dvec3 rv = p2.getX() - p1.getX();
-  const double r = ArrayUtils::L2Norm(rv);
-  const double sigma = (p1.getSigma() + p2.getSigma()) / 2;
+  //SpdWrapper::get()->error("huhu");
+  const dvec3 r = p2.getX() - p1.getX();
+  const double r_squared = r[0] * r[0] + r[1] * r[1] + r[2] * r[2];
+  const double sigma_squared_div_r_squared =
+      std::pow(p1.getSigma() + p2.getSigma(), 2) / (4 * r_squared);
   const double epsilon = std::sqrt(p1.getEpsilon() * p2.getEpsilon());
-  const double sr = sigma / r;
-  const double sr6 = std::pow(sr, 6);
-  const double sr12 = std::pow(sr6, 2);
-  const double force_magnitude =
-      24 * epsilon * (sr6 - 2 * sr12) / std::pow(r, 2);
-  return force_magnitude * rv;
+  const double sr3 = std::pow(sigma_squared_div_r_squared, 3);
+  const double sr6 = 2 * std::pow(sr3, 2);
+  const double force_magnitude = 24 * epsilon * (sr3 - sr6) / r_squared;
+
+  return force_magnitude * r;
 }
 
 double LennardJones::simpleForce(const Particle& p, const double distance) {

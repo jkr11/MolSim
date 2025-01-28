@@ -1,7 +1,7 @@
 #!/bin/bash
 
 help() {
-  echo "builds the project in /buildDir/<CMAKE_BUILD_TYPE> and exports the path to the executable in \$BUILD"
+  echo "builds the project in /build<CMAKE_BUILD_TYPE> and exports the path to the executable in \$BUILD"
   printf "predefined <CMAKE_BUILD_TYPE>s are:\t Release    (default)\n"
   printf "\t\t\t\t\t Debug\n"
   printf "\t\t\t\t\t asan\n"
@@ -38,12 +38,13 @@ done
 printf "\033[32mbuilding '%s'\033[0m\n" "$RELEASE_TYPE"
 
 # create buildDir if needed
-if [ -d "../buildDir/$RELEASE_TYPE" ]
+BUILD_DIR="../build${RELEASE_TYPE}"
+if [ -d "$BUILD_DIR" ]
 then
-  printf "\033[32mdetected existing 'buildDir/%s'\033[0m\n" "$RELEASE_TYPE"
+  printf "\033[32mdetected existing 'build%s'\033[0m\n" "$RELEASE_TYPE"
 else
-  mkdir -p ../buildDir/"$RELEASE_TYPE"
-  echo "created 'buildDir/$RELEASE_TYPE'"
+  mkdir -p "$BUILD_DIR"
+  echo "created 'build${RELEASE_TYPE}'"
 fi
 
 echo ""
@@ -52,8 +53,8 @@ echo ""
 
 # setup cmake
 start_time=$(date +%s%N)
-cd ../buildDir/"$RELEASE_TYPE" || exit 1
-cmake ../../CMakeLists.txt
+cd "$BUILD_DIR" || exit 1
+cmake ../CMakeLists.txt
 cmake -DCMAKE_BUILD_TYPE="$RELEASE_TYPE" -DBUILD_TESTS="$RUN_TESTS" -DENABLE_BENCHMARK="$ENABLE_BENCHMARK" .
 
 echo ""
@@ -63,7 +64,7 @@ echo ""
 # build with cmake and all cores
 if ! cmake --build . -- -"j$(nproc)"; then
   printf "\033[31mbuild failed!\033[0m\n"
-  cd ../../scripts || return 127 # navigate back
+  cd ../scripts || return 127 # navigate back
   return 127
 fi
 
@@ -78,7 +79,7 @@ then
   echo ""
   if ! ctest; then
     printf "\033[31mtests failed!\033[0m\n"
-    cd ../../../scripts || return 127 # navigate back
+    cd ../../scripts || return 127 # navigate back
     return 127
   fi
   cd ..
@@ -112,7 +113,7 @@ BUILD_FILE=$(dirname "$(realpath "$0")")"/src/MolSim"
 export BUILD="$BUILD_FILE"
 
 # navigate back since this is should have been executed with the same shell
-cd ../../scripts || return 127
+cd ../scripts || return 127
 
 echo ""
 printf "\033[32mpath to executable is stored in \$BUILD:\033[0m\n"

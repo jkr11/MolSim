@@ -3,6 +3,8 @@ set(XERCESC_DIR /dss/dsshome1/lxc0B/di34miq/xercesc)
 include_directories(${XERCESC_DIR}/include)
 link_directories(${XERCESC_DIR}/lib64)
 
+find_package(OpenMP REQUIRED)
+
 ##### Collect all cpp files except MolSim.cpp #####
 file(GLOB_RECURSE MY_SRC
         "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
@@ -14,11 +16,18 @@ list(REMOVE_ITEM MY_SRC "${CMAKE_CURRENT_SOURCE_DIR}/MolSim.cpp")
 
 add_library(MolSimLib
         ${MY_SRC}
+        forces/HarmonicForce.cpp
+        forces/HarmonicForce.h
+        forces/TruncatedLennardJones.cpp
+        forces/TruncatedLennardJones.h
+        forces/IndexForce.cpp
+        forces/IndexForce.h
 )
 
 target_link_libraries(MolSimLib
         PUBLIC
         spdlog::spdlog
+        OpenMP::OpenMP_CXX
 )
 
 target_link_libraries(MolSimLib PRIVATE xerces-c)
@@ -48,6 +57,7 @@ add_executable(MolSim MolSim.cpp
         io/file/out/checkpoint-schema.hxx
         io/file/out/checkpoint-schema.cxx
         io/file/out/XmlWriter.cpp
+        defs/Generators/MembraneGenerator.cpp
 )
 
 set(FILES_TO_DISABLE_WARNINGS
@@ -60,6 +70,12 @@ set_source_files_properties(${FILES_TO_DISABLE_WARNINGS}
         COMPILE_OPTIONS "-w"
 )
 
+find_package(OpenMP REQUIRED)
+
+if (OpenMP_CXX_FOUND)
+    target_link_libraries(MolSimLib PUBLIC OpenMP::OpenMP_CXX)
+endif()
+
 target_link_libraries(MolSim PUBLIC MolSimLib)
 
 target_compile_options(MolSimLib
@@ -69,4 +85,6 @@ target_compile_options(MolSimLib
         # disable some spam warnings for icpc...
         $<$<CXX_COMPILER_ID:Intel>:-w3 -wd383,981,1418,1572,2259>
 )
+
+
 

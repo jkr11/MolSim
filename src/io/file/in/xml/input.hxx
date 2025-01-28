@@ -69,9 +69,23 @@
 #include <xsd/cxx/tree/parsing/unsigned-int.hxx>
 #include <xsd/cxx/tree/parsing/unsigned-long.hxx>
 #include <xsd/cxx/tree/parsing/unsigned-short.hxx>
+#include <xsd/cxx/tree/serialization.hxx>
+#include <xsd/cxx/tree/serialization/boolean.hxx>
+#include <xsd/cxx/tree/serialization/byte.hxx>
+#include <xsd/cxx/tree/serialization/decimal.hxx>
+#include <xsd/cxx/tree/serialization/double.hxx>
+#include <xsd/cxx/tree/serialization/float.hxx>
+#include <xsd/cxx/tree/serialization/int.hxx>
+#include <xsd/cxx/tree/serialization/long.hxx>
+#include <xsd/cxx/tree/serialization/short.hxx>
+#include <xsd/cxx/tree/serialization/unsigned-byte.hxx>
+#include <xsd/cxx/tree/serialization/unsigned-int.hxx>
+#include <xsd/cxx/tree/serialization/unsigned-long.hxx>
+#include <xsd/cxx/tree/serialization/unsigned-short.hxx>
 #include <xsd/cxx/tree/types.hxx>
 #include <xsd/cxx/xml/char-utf8.hxx>
 #include <xsd/cxx/xml/dom/auto-ptr.hxx>
+#include <xsd/cxx/xml/dom/serialization-header.hxx>
 #include <xsd/cxx/xml/error-handler.hxx>
 
 namespace xml_schema {
@@ -169,6 +183,16 @@ typedef ::xsd::cxx::tree::entity<char, ncname> entity;
 typedef ::xsd::cxx::tree::entities<char, simple_type, entity> entities;
 
 typedef ::xsd::cxx::tree::content_order content_order;
+// Namespace information and list stream. Used in
+// serialization functions.
+//
+typedef ::xsd::cxx::xml::dom::namespace_info<char> namespace_info;
+typedef ::xsd::cxx::xml::dom::namespace_infomap<char> namespace_infomap;
+typedef ::xsd::cxx::tree::list_stream<char> list_stream;
+typedef ::xsd::cxx::tree::as_double<double_> as_double;
+typedef ::xsd::cxx::tree::as_decimal<decimal> as_decimal;
+typedef ::xsd::cxx::tree::facet facet;
+
 // Flags and properties.
 //
 typedef ::xsd::cxx::tree::flags flags;
@@ -192,6 +216,7 @@ typedef ::xsd::cxx::tree::expected_attribute<char> expected_attribute;
 typedef ::xsd::cxx::tree::unexpected_enumerator<char> unexpected_enumerator;
 typedef ::xsd::cxx::tree::expected_text_content<char> expected_text_content;
 typedef ::xsd::cxx::tree::no_prefix_mapping<char> no_prefix_mapping;
+typedef ::xsd::cxx::tree::serialization<char> serialization;
 
 // Error handler callback interface.
 //
@@ -216,7 +241,9 @@ const XMLCh* const tree_node_key = ::xsd::cxx::tree::user_data_keys::node;
 // Forward declarations.
 //
 class MetadataType;
+class StatisticsType;
 class cuboidType;
+class membraneType;
 class spheroidType;
 class Dvec3Type;
 class Ivec3Type;
@@ -228,11 +255,15 @@ class BoundaryConfigType;
 class ForceType;
 class GravityType;
 class LennardJonesForce;
+class TruncatedLennardJonesForceType;
 class SingularGravityType;
+class HarmonicForceType;
+class IndexForceType;
 class ThermostatType;
 class simulation;
 class cuboids;
 class spheroids;
+class membranes;
 
 #include <algorithm>  // std::binary_search
 #include <limits>     // std::numeric_limits
@@ -325,6 +356,22 @@ class MetadataType : public ::xml_schema::type {
 
   void checkpoint(::std::auto_ptr<checkpoint_type> p);
 
+  // statistics
+  //
+  typedef ::StatisticsType statistics_type;
+  typedef ::xsd::cxx::tree::optional<statistics_type> statistics_optional;
+  typedef ::xsd::cxx::tree::traits<statistics_type, char> statistics_traits;
+
+  const statistics_optional& statistics() const;
+
+  statistics_optional& statistics();
+
+  void statistics(const statistics_type& x);
+
+  void statistics(const statistics_optional& x);
+
+  void statistics(::std::auto_ptr<statistics_type> p);
+
   // Constructors.
   //
   MetadataType(const container_type&, const force_type&, const delta_t_type&,
@@ -358,6 +405,72 @@ class MetadataType : public ::xml_schema::type {
   ::xsd::cxx::tree::one<t_end_type> t_end_;
   ::xsd::cxx::tree::one<twoD_type> twoD_;
   checkpoint_optional checkpoint_;
+  statistics_optional statistics_;
+};
+
+class StatisticsType : public ::xml_schema::type {
+ public:
+  // x_bins
+  //
+  typedef ::xml_schema::int_ x_bins_type;
+  typedef ::xsd::cxx::tree::traits<x_bins_type, char> x_bins_traits;
+
+  const x_bins_type& x_bins() const;
+
+  x_bins_type& x_bins();
+
+  void x_bins(const x_bins_type& x);
+
+  // y_bins
+  //
+  typedef ::xml_schema::int_ y_bins_type;
+  typedef ::xsd::cxx::tree::traits<y_bins_type, char> y_bins_traits;
+
+  const y_bins_type& y_bins() const;
+
+  y_bins_type& y_bins();
+
+  void y_bins(const y_bins_type& x);
+
+  // output_interval
+  //
+  typedef ::xml_schema::int_ output_interval_type;
+  typedef ::xsd::cxx::tree::traits<output_interval_type, char>
+      output_interval_traits;
+
+  const output_interval_type& output_interval() const;
+
+  output_interval_type& output_interval();
+
+  void output_interval(const output_interval_type& x);
+
+  // Constructors.
+  //
+  StatisticsType(const x_bins_type&, const y_bins_type&,
+                 const output_interval_type&);
+
+  StatisticsType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
+                 ::xml_schema::container* c = 0);
+
+  StatisticsType(const StatisticsType& x, ::xml_schema::flags f = 0,
+                 ::xml_schema::container* c = 0);
+
+  virtual StatisticsType* _clone(::xml_schema::flags f = 0,
+                                 ::xml_schema::container* c = 0) const;
+
+  StatisticsType& operator=(const StatisticsType& x);
+
+  virtual ~StatisticsType();
+
+  // Implementation.
+  //
+ protected:
+  void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
+
+ protected:
+  ::xsd::cxx::tree::one<x_bins_type> x_bins_;
+  ::xsd::cxx::tree::one<y_bins_type> y_bins_;
+  ::xsd::cxx::tree::one<output_interval_type> output_interval_;
 };
 
 class cuboidType : public ::xml_schema::type {
@@ -500,6 +613,164 @@ class cuboidType : public ::xml_schema::type {
   cuboidType& operator=(const cuboidType& x);
 
   virtual ~cuboidType();
+
+  // Implementation.
+  //
+ protected:
+  void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
+
+ protected:
+  ::xsd::cxx::tree::one<velocity_type> velocity_;
+  ::xsd::cxx::tree::one<corner_type> corner_;
+  ::xsd::cxx::tree::one<dimensions_type> dimensions_;
+  ::xsd::cxx::tree::one<type_type> type_;
+  ::xsd::cxx::tree::one<h_type> h_;
+  ::xsd::cxx::tree::one<mass_type> mass_;
+  ::xsd::cxx::tree::one<epsilon_type> epsilon_;
+  ::xsd::cxx::tree::one<sigma_type> sigma_;
+  ::xsd::cxx::tree::one<mv_type> mv_;
+};
+
+class membraneType : public ::xml_schema::type {
+ public:
+  // velocity
+  //
+  typedef ::Dvec3Type velocity_type;
+  typedef ::xsd::cxx::tree::traits<velocity_type, char> velocity_traits;
+
+  const velocity_type& velocity() const;
+
+  velocity_type& velocity();
+
+  void velocity(const velocity_type& x);
+
+  void velocity(::std::auto_ptr<velocity_type> p);
+
+  // corner
+  //
+  typedef ::Dvec3Type corner_type;
+  typedef ::xsd::cxx::tree::traits<corner_type, char> corner_traits;
+
+  const corner_type& corner() const;
+
+  corner_type& corner();
+
+  void corner(const corner_type& x);
+
+  void corner(::std::auto_ptr<corner_type> p);
+
+  // dimensions
+  //
+  typedef ::Ivec3Type dimensions_type;
+  typedef ::xsd::cxx::tree::traits<dimensions_type, char> dimensions_traits;
+
+  const dimensions_type& dimensions() const;
+
+  dimensions_type& dimensions();
+
+  void dimensions(const dimensions_type& x);
+
+  void dimensions(::std::auto_ptr<dimensions_type> p);
+
+  // type
+  //
+  typedef ::xml_schema::int_ type_type;
+  typedef ::xsd::cxx::tree::traits<type_type, char> type_traits;
+
+  const type_type& type() const;
+
+  type_type& type();
+
+  void type(const type_type& x);
+
+  // h
+  //
+  typedef ::xml_schema::decimal h_type;
+  typedef ::xsd::cxx::tree::traits<h_type, char,
+                                   ::xsd::cxx::tree::schema_type::decimal>
+      h_traits;
+
+  const h_type& h() const;
+
+  h_type& h();
+
+  void h(const h_type& x);
+
+  // mass
+  //
+  typedef ::xml_schema::decimal mass_type;
+  typedef ::xsd::cxx::tree::traits<mass_type, char,
+                                   ::xsd::cxx::tree::schema_type::decimal>
+      mass_traits;
+
+  const mass_type& mass() const;
+
+  mass_type& mass();
+
+  void mass(const mass_type& x);
+
+  // epsilon
+  //
+  typedef ::xml_schema::decimal epsilon_type;
+  typedef ::xsd::cxx::tree::traits<epsilon_type, char,
+                                   ::xsd::cxx::tree::schema_type::decimal>
+      epsilon_traits;
+
+  const epsilon_type& epsilon() const;
+
+  epsilon_type& epsilon();
+
+  void epsilon(const epsilon_type& x);
+
+  // sigma
+  //
+  typedef ::xml_schema::decimal sigma_type;
+  typedef ::xsd::cxx::tree::traits<sigma_type, char,
+                                   ::xsd::cxx::tree::schema_type::decimal>
+      sigma_traits;
+
+  const sigma_type& sigma() const;
+
+  sigma_type& sigma();
+
+  void sigma(const sigma_type& x);
+
+  // mv
+  //
+  typedef ::xml_schema::decimal mv_type;
+  typedef ::xsd::cxx::tree::traits<mv_type, char,
+                                   ::xsd::cxx::tree::schema_type::decimal>
+      mv_traits;
+
+  const mv_type& mv() const;
+
+  mv_type& mv();
+
+  void mv(const mv_type& x);
+
+  // Constructors.
+  //
+  membraneType(const velocity_type&, const corner_type&, const dimensions_type&,
+               const type_type&, const h_type&, const mass_type&,
+               const epsilon_type&, const sigma_type&, const mv_type&);
+
+  membraneType(::std::auto_ptr<velocity_type>, ::std::auto_ptr<corner_type>,
+               ::std::auto_ptr<dimensions_type>, const type_type&,
+               const h_type&, const mass_type&, const epsilon_type&,
+               const sigma_type&, const mv_type&);
+
+  membraneType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
+               ::xml_schema::container* c = 0);
+
+  membraneType(const membraneType& x, ::xml_schema::flags f = 0,
+               ::xml_schema::container* c = 0);
+
+  virtual membraneType* _clone(::xml_schema::flags f = 0,
+                               ::xml_schema::container* c = 0) const;
+
+  membraneType& operator=(const membraneType& x);
+
+  virtual ~membraneType();
 
   // Implementation.
   //
@@ -1210,6 +1481,58 @@ class ForceType : public ::xml_schema::type {
 
   void SingularGravity(::std::auto_ptr<SingularGravity_type> p);
 
+  // HarmonicForce
+  //
+  typedef ::HarmonicForceType HarmonicForce_type;
+  typedef ::xsd::cxx::tree::optional<HarmonicForce_type> HarmonicForce_optional;
+  typedef ::xsd::cxx::tree::traits<HarmonicForce_type, char>
+      HarmonicForce_traits;
+
+  const HarmonicForce_optional& HarmonicForce() const;
+
+  HarmonicForce_optional& HarmonicForce();
+
+  void HarmonicForce(const HarmonicForce_type& x);
+
+  void HarmonicForce(const HarmonicForce_optional& x);
+
+  void HarmonicForce(::std::auto_ptr<HarmonicForce_type> p);
+
+  // IndexForce
+  //
+  typedef ::IndexForceType IndexForce_type;
+  typedef ::xsd::cxx::tree::optional<IndexForce_type> IndexForce_optional;
+  typedef ::xsd::cxx::tree::traits<IndexForce_type, char> IndexForce_traits;
+
+  const IndexForce_optional& IndexForce() const;
+
+  IndexForce_optional& IndexForce();
+
+  void IndexForce(const IndexForce_type& x);
+
+  void IndexForce(const IndexForce_optional& x);
+
+  void IndexForce(::std::auto_ptr<IndexForce_type> p);
+
+  // TruncatedLennardJonesForce
+  //
+  typedef ::TruncatedLennardJonesForceType TruncatedLennardJonesForce_type;
+  typedef ::xsd::cxx::tree::optional<TruncatedLennardJonesForce_type>
+      TruncatedLennardJonesForce_optional;
+  typedef ::xsd::cxx::tree::traits<TruncatedLennardJonesForce_type, char>
+      TruncatedLennardJonesForce_traits;
+
+  const TruncatedLennardJonesForce_optional& TruncatedLennardJonesForce() const;
+
+  TruncatedLennardJonesForce_optional& TruncatedLennardJonesForce();
+
+  void TruncatedLennardJonesForce(const TruncatedLennardJonesForce_type& x);
+
+  void TruncatedLennardJonesForce(const TruncatedLennardJonesForce_optional& x);
+
+  void TruncatedLennardJonesForce(
+      ::std::auto_ptr<TruncatedLennardJonesForce_type> p);
+
   // Constructors.
   //
   ForceType();
@@ -1236,6 +1559,9 @@ class ForceType : public ::xml_schema::type {
   Gravity_optional Gravity_;
   LennardJones_optional LennardJones_;
   SingularGravity_optional SingularGravity_;
+  HarmonicForce_optional HarmonicForce_;
+  IndexForce_optional IndexForce_;
+  TruncatedLennardJonesForce_optional TruncatedLennardJonesForce_;
 };
 
 class GravityType : public ::xml_schema::type {
@@ -1286,27 +1612,64 @@ class LennardJonesForce : public ::xml_schema::type {
   virtual ~LennardJonesForce();
 };
 
+class TruncatedLennardJonesForceType : public ::xml_schema::type {
+ public:
+  // Constructors.
+  //
+  TruncatedLennardJonesForceType();
+
+  TruncatedLennardJonesForceType(const ::xercesc::DOMElement& e,
+                                 ::xml_schema::flags f = 0,
+                                 ::xml_schema::container* c = 0);
+
+  TruncatedLennardJonesForceType(const ::xercesc::DOMAttr& a,
+                                 ::xml_schema::flags f = 0,
+                                 ::xml_schema::container* c = 0);
+
+  TruncatedLennardJonesForceType(const ::std::string& s,
+                                 const ::xercesc::DOMElement* e,
+                                 ::xml_schema::flags f = 0,
+                                 ::xml_schema::container* c = 0);
+
+  TruncatedLennardJonesForceType(const TruncatedLennardJonesForceType& x,
+                                 ::xml_schema::flags f = 0,
+                                 ::xml_schema::container* c = 0);
+
+  virtual TruncatedLennardJonesForceType* _clone(
+      ::xml_schema::flags f = 0, ::xml_schema::container* c = 0) const;
+
+  virtual ~TruncatedLennardJonesForceType();
+};
+
 class SingularGravityType : public ::xml_schema::type {
  public:
   // g
   //
   typedef ::xml_schema::decimal g_type;
-  typedef ::xsd::cxx::tree::optional<g_type> g_optional;
   typedef ::xsd::cxx::tree::traits<g_type, char,
                                    ::xsd::cxx::tree::schema_type::decimal>
       g_traits;
 
-  const g_optional& g() const;
+  const g_type& g() const;
 
-  g_optional& g();
+  g_type& g();
 
   void g(const g_type& x);
 
-  void g(const g_optional& x);
+  // axis
+  //
+  typedef ::xml_schema::int_ axis_type;
+  typedef ::xsd::cxx::tree::traits<axis_type, char> axis_traits;
+
+  const axis_type& axis() const;
+
+  axis_type& axis();
+
+  void axis(const axis_type& x);
 
   // Constructors.
   //
-  SingularGravityType();
+  SingularGravityType(const g_type&, const axis_type&);
 
   SingularGravityType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
                       ::xml_schema::container* c = 0);
@@ -1327,7 +1690,135 @@ class SingularGravityType : public ::xml_schema::type {
   void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
 
  protected:
-  g_optional g_;
+  ::xsd::cxx::tree::one<g_type> g_;
+  ::xsd::cxx::tree::one<axis_type> axis_;
+};
+
+class HarmonicForceType : public ::xml_schema::type {
+ public:
+  // r_0
+  //
+  typedef ::xml_schema::decimal r_0_type;
+  typedef ::xsd::cxx::tree::traits<r_0_type, char,
+                                   ::xsd::cxx::tree::schema_type::decimal>
+      r_0_traits;
+
+  const r_0_type& r_0() const;
+
+  r_0_type& r_0();
+
+  void r_0(const r_0_type& x);
+
+  // k
+  //
+  typedef ::xml_schema::decimal k_type;
+  typedef ::xsd::cxx::tree::traits<k_type, char,
+                                   ::xsd::cxx::tree::schema_type::decimal>
+      k_traits;
+
+  const k_type& k() const;
+
+  k_type& k();
+
+  void k(const k_type& x);
+
+  // Constructors.
+  //
+  HarmonicForceType(const r_0_type&, const k_type&);
+
+  HarmonicForceType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
+                    ::xml_schema::container* c = 0);
+
+  HarmonicForceType(const HarmonicForceType& x, ::xml_schema::flags f = 0,
+                    ::xml_schema::container* c = 0);
+
+  virtual HarmonicForceType* _clone(::xml_schema::flags f = 0,
+                                    ::xml_schema::container* c = 0) const;
+
+  HarmonicForceType& operator=(const HarmonicForceType& x);
+
+  virtual ~HarmonicForceType();
+
+  // Implementation.
+  //
+ protected:
+  void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
+
+ protected:
+  ::xsd::cxx::tree::one<r_0_type> r_0_;
+  ::xsd::cxx::tree::one<k_type> k_;
+};
+
+class IndexForceType : public ::xml_schema::type {
+ public:
+  // index
+  //
+  typedef ::Ivec3Type index_type;
+  typedef ::xsd::cxx::tree::sequence<index_type> index_sequence;
+  typedef index_sequence::iterator index_iterator;
+  typedef index_sequence::const_iterator index_const_iterator;
+  typedef ::xsd::cxx::tree::traits<index_type, char> index_traits;
+
+  const index_sequence& index() const;
+
+  index_sequence& index();
+
+  void index(const index_sequence& s);
+
+  // time
+  //
+  typedef ::xml_schema::decimal time_type;
+  typedef ::xsd::cxx::tree::traits<time_type, char,
+                                   ::xsd::cxx::tree::schema_type::decimal>
+      time_traits;
+
+  const time_type& time() const;
+
+  time_type& time();
+
+  void time(const time_type& x);
+
+  // force_values
+  //
+  typedef ::Dvec3Type force_values_type;
+  typedef ::xsd::cxx::tree::traits<force_values_type, char> force_values_traits;
+
+  const force_values_type& force_values() const;
+
+  force_values_type& force_values();
+
+  void force_values(const force_values_type& x);
+
+  void force_values(::std::auto_ptr<force_values_type> p);
+
+  // Constructors.
+  //
+  IndexForceType(const time_type&, const force_values_type&);
+
+  IndexForceType(const time_type&, ::std::auto_ptr<force_values_type>);
+
+  IndexForceType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
+                 ::xml_schema::container* c = 0);
+
+  IndexForceType(const IndexForceType& x, ::xml_schema::flags f = 0,
+                 ::xml_schema::container* c = 0);
+
+  virtual IndexForceType* _clone(::xml_schema::flags f = 0,
+                                 ::xml_schema::container* c = 0) const;
+
+  IndexForceType& operator=(const IndexForceType& x);
+
+  virtual ~IndexForceType();
+
+  // Implementation.
+  //
+ protected:
+  void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
+
+ protected:
+  index_sequence index_;
+  ::xsd::cxx::tree::one<time_type> time_;
+  ::xsd::cxx::tree::one<force_values_type> force_values_;
 };
 
 class ThermostatType : public ::xml_schema::type {
@@ -1359,15 +1850,18 @@ class ThermostatType : public ::xml_schema::type {
   // T_target
   //
   typedef ::xml_schema::decimal T_target_type;
+  typedef ::xsd::cxx::tree::optional<T_target_type> T_target_optional;
   typedef ::xsd::cxx::tree::traits<T_target_type, char,
                                    ::xsd::cxx::tree::schema_type::decimal>
       T_target_traits;
 
-  const T_target_type& T_target() const;
+  const T_target_optional& T_target() const;
 
-  T_target_type& T_target();
+  T_target_optional& T_target();
 
   void T_target(const T_target_type& x);
+
+  void T_target(const T_target_optional& x);
 
   // deltaT
   //
@@ -1385,10 +1879,25 @@ class ThermostatType : public ::xml_schema::type {
 
   void deltaT(const deltaT_optional& x);
 
+  // use_thermal_motion
+  //
+  typedef ::xml_schema::boolean use_thermal_motion_type;
+  typedef ::xsd::cxx::tree::optional<use_thermal_motion_type>
+      use_thermal_motion_optional;
+  typedef ::xsd::cxx::tree::traits<use_thermal_motion_type, char>
+      use_thermal_motion_traits;
+
+  const use_thermal_motion_optional& use_thermal_motion() const;
+
+  use_thermal_motion_optional& use_thermal_motion();
+
+  void use_thermal_motion(const use_thermal_motion_type& x);
+
+  void use_thermal_motion(const use_thermal_motion_optional& x);
+
   // Constructors.
   //
-  ThermostatType(const T_init_type&, const n_thermostat_type&,
-                 const T_target_type&);
+  ThermostatType(const T_init_type&, const n_thermostat_type&);
 
   ThermostatType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
                  ::xml_schema::container* c = 0);
@@ -1411,8 +1920,9 @@ class ThermostatType : public ::xml_schema::type {
  protected:
   ::xsd::cxx::tree::one<T_init_type> T_init_;
   ::xsd::cxx::tree::one<n_thermostat_type> n_thermostat_;
-  ::xsd::cxx::tree::one<T_target_type> T_target_;
+  T_target_optional T_target_;
   deltaT_optional deltaT_;
+  use_thermal_motion_optional use_thermal_motion_;
 };
 
 class simulation : public ::xml_schema::type {
@@ -1462,6 +1972,22 @@ class simulation : public ::xml_schema::type {
 
   void spheroids(::std::auto_ptr<spheroids_type> p);
 
+  // membranes
+  //
+  typedef ::membranes membranes_type;
+  typedef ::xsd::cxx::tree::optional<membranes_type> membranes_optional;
+  typedef ::xsd::cxx::tree::traits<membranes_type, char> membranes_traits;
+
+  const membranes_optional& membranes() const;
+
+  membranes_optional& membranes();
+
+  void membranes(const membranes_type& x);
+
+  void membranes(const membranes_optional& x);
+
+  void membranes(::std::auto_ptr<membranes_type> p);
+
   // thermostat
   //
   typedef ::ThermostatType thermostat_type;
@@ -1506,6 +2032,7 @@ class simulation : public ::xml_schema::type {
   ::xsd::cxx::tree::one<metadata_type> metadata_;
   cuboids_optional cuboids_;
   spheroids_optional spheroids_;
+  membranes_optional membranes_;
   thermostat_optional thermostat_;
 };
 
@@ -1593,6 +2120,48 @@ class spheroids : public ::xml_schema::type {
   spheroid_sequence spheroid_;
 };
 
+class membranes : public ::xml_schema::type {
+ public:
+  // membrane
+  //
+  typedef ::membraneType membrane_type;
+  typedef ::xsd::cxx::tree::sequence<membrane_type> membrane_sequence;
+  typedef membrane_sequence::iterator membrane_iterator;
+  typedef membrane_sequence::const_iterator membrane_const_iterator;
+  typedef ::xsd::cxx::tree::traits<membrane_type, char> membrane_traits;
+
+  const membrane_sequence& membrane() const;
+
+  membrane_sequence& membrane();
+
+  void membrane(const membrane_sequence& s);
+
+  // Constructors.
+  //
+  membranes();
+
+  membranes(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
+            ::xml_schema::container* c = 0);
+
+  membranes(const membranes& x, ::xml_schema::flags f = 0,
+            ::xml_schema::container* c = 0);
+
+  virtual membranes* _clone(::xml_schema::flags f = 0,
+                            ::xml_schema::container* c = 0) const;
+
+  membranes& operator=(const membranes& x);
+
+  virtual ~membranes();
+
+  // Implementation.
+  //
+ protected:
+  void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
+
+ protected:
+  membrane_sequence membrane_;
+};
+
 #include <iosfwd>
 #include <xercesc/dom/DOMDocument.hpp>
 #include <xercesc/dom/DOMErrorHandler.hpp>
@@ -1674,6 +2243,132 @@ class spheroids : public ::xml_schema::type {
     ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument> d,
     ::xml_schema::flags f = 0,
     const ::xml_schema::properties& p = ::xml_schema::properties());
+
+#include <iosfwd>
+#include <xercesc/dom/DOMDocument.hpp>
+#include <xercesc/dom/DOMErrorHandler.hpp>
+#include <xercesc/framework/XMLFormatter.hpp>
+#include <xsd/cxx/xml/dom/auto-ptr.hxx>
+
+// Serialize to std::ostream.
+//
+
+void simulation_(::std::ostream& os, const ::simulation& x,
+                 const ::xml_schema::namespace_infomap& m =
+                     ::xml_schema::namespace_infomap(),
+                 const ::std::string& e = "UTF-8", ::xml_schema::flags f = 0);
+
+void simulation_(::std::ostream& os, const ::simulation& x,
+                 ::xml_schema::error_handler& eh,
+                 const ::xml_schema::namespace_infomap& m =
+                     ::xml_schema::namespace_infomap(),
+                 const ::std::string& e = "UTF-8", ::xml_schema::flags f = 0);
+
+void simulation_(::std::ostream& os, const ::simulation& x,
+                 ::xercesc::DOMErrorHandler& eh,
+                 const ::xml_schema::namespace_infomap& m =
+                     ::xml_schema::namespace_infomap(),
+                 const ::std::string& e = "UTF-8", ::xml_schema::flags f = 0);
+
+// Serialize to xercesc::XMLFormatTarget.
+//
+
+void simulation_(::xercesc::XMLFormatTarget& ft, const ::simulation& x,
+                 const ::xml_schema::namespace_infomap& m =
+                     ::xml_schema::namespace_infomap(),
+                 const ::std::string& e = "UTF-8", ::xml_schema::flags f = 0);
+
+void simulation_(::xercesc::XMLFormatTarget& ft, const ::simulation& x,
+                 ::xml_schema::error_handler& eh,
+                 const ::xml_schema::namespace_infomap& m =
+                     ::xml_schema::namespace_infomap(),
+                 const ::std::string& e = "UTF-8", ::xml_schema::flags f = 0);
+
+void simulation_(::xercesc::XMLFormatTarget& ft, const ::simulation& x,
+                 ::xercesc::DOMErrorHandler& eh,
+                 const ::xml_schema::namespace_infomap& m =
+                     ::xml_schema::namespace_infomap(),
+                 const ::std::string& e = "UTF-8", ::xml_schema::flags f = 0);
+
+// Serialize to an existing xercesc::DOMDocument.
+//
+
+void simulation_(::xercesc::DOMDocument& d, const ::simulation& x,
+                 ::xml_schema::flags f = 0);
+
+// Serialize to a new xercesc::DOMDocument.
+//
+
+::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument> simulation_(
+    const ::simulation& x,
+    const ::xml_schema::namespace_infomap& m =
+        ::xml_schema::namespace_infomap(),
+    ::xml_schema::flags f = 0);
+
+void operator<<(::xercesc::DOMElement&, const MetadataType&);
+
+void operator<<(::xercesc::DOMElement&, const StatisticsType&);
+
+void operator<<(::xercesc::DOMElement&, const cuboidType&);
+
+void operator<<(::xercesc::DOMElement&, const membraneType&);
+
+void operator<<(::xercesc::DOMElement&, const spheroidType&);
+
+void operator<<(::xercesc::DOMElement&, const Dvec3Type&);
+
+void operator<<(::xercesc::DOMElement&, const Ivec3Type&);
+
+void operator<<(::xercesc::DOMElement&, const ContainerType&);
+
+void operator<<(::xercesc::DOMElement&, const LinkedCellsType&);
+
+void operator<<(::xercesc::DOMElement&, const DirectSumType&);
+
+void operator<<(::xercesc::DOMAttr&, const DirectSumType&);
+
+void operator<<(::xml_schema::list_stream&, const DirectSumType&);
+
+void operator<<(::xercesc::DOMElement&, const BoundaryType&);
+
+void operator<<(::xercesc::DOMElement&, const BoundaryConfigType&);
+
+void operator<<(::xercesc::DOMElement&, const ForceType&);
+
+void operator<<(::xercesc::DOMElement&, const GravityType&);
+
+void operator<<(::xercesc::DOMAttr&, const GravityType&);
+
+void operator<<(::xml_schema::list_stream&, const GravityType&);
+
+void operator<<(::xercesc::DOMElement&, const LennardJonesForce&);
+
+void operator<<(::xercesc::DOMAttr&, const LennardJonesForce&);
+
+void operator<<(::xml_schema::list_stream&, const LennardJonesForce&);
+
+void operator<<(::xercesc::DOMElement&, const TruncatedLennardJonesForceType&);
+
+void operator<<(::xercesc::DOMAttr&, const TruncatedLennardJonesForceType&);
+
+void operator<<(::xml_schema::list_stream&,
+                const TruncatedLennardJonesForceType&);
+
+void operator<<(::xercesc::DOMElement&, const SingularGravityType&);
+
+void operator<<(::xercesc::DOMElement&, const HarmonicForceType&);
+
+void operator<<(::xercesc::DOMElement&, const IndexForceType&);
+
+void operator<<(::xercesc::DOMElement&, const ThermostatType&);
+
+void operator<<(::xercesc::DOMElement&, const simulation&);
+
+void operator<<(::xercesc::DOMElement&, const cuboids&);
+
+void operator<<(::xercesc::DOMElement&, const spheroids&);
+
+void operator<<(::xercesc::DOMElement&, const membranes&);
 
 #include <xsd/cxx/post.hxx>
 
