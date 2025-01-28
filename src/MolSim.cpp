@@ -21,7 +21,7 @@
 #include "spdlog/stopwatch.h"
 #include "utils/SpdWrapper.h"
 #include "utils/Statistics.h"
-
+#undef BENCHMARK
 int main(const int argc, char* argv[]) {
   Arguments arguments = {};
 
@@ -130,14 +130,14 @@ int main(const int argc, char* argv[]) {
   spdlog::stopwatch stopwatch;  // TODO whats up with this?
   auto time_of_last_mups = start_time;
   // TODO breaks sometimes i think it has to do with paths?
-/*
+
   Statistics statistics(
       arguments.statistics_config.x_bins, arguments.statistics_config.y_bins,
       *container,
       output_directory + "/" +
           arguments.statistics_config.density_output_location,
       output_directory + "/" +
-          arguments.statistics_config.velocity_output_location);*/
+          arguments.statistics_config.velocity_output_location);
 #endif
   // auto p2 = container->getParticles()[1];
   // for (auto [diag, ref] : p2->getNeighbours()) {
@@ -256,11 +256,11 @@ int main(const int argc, char* argv[]) {
       }
     }
     // TODO breaks on membrane branch idk why
-    /*
+
     if (arguments.statistics_config.calc_stats &&
         iteration % arguments.statistics_config.output_interval == 0) {
       statistics.writeStatistics(current_time);
-    }*/
+    }
 #endif
     iteration++;
     current_time = arguments.delta_t * iteration;
@@ -288,7 +288,7 @@ int main(const int argc, char* argv[]) {
 
 #ifndef BENCHMARK
   // TODO
-  // statistics.closeFiles();
+  statistics.closeFiles();
 #endif
   SpdWrapper::get()->info("Output written. Terminating...");
 
