@@ -10,5 +10,4 @@ dvec3 SingularGravity::applyForce(const Particle& p) const {
   dvec3 force{0.0, 0.0, 0.0};
   force[axis_] = g_ * p.getM();
   return force;
-
 }
