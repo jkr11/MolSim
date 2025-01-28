@@ -33,6 +33,7 @@ LinkedCellsContainer::LinkedCellsContainer(
 
   cells_ = {};
   this->cutoff_ = linked_cells_config.cutoff_radius;
+  this->is_membrane = linked_cells_config.is_membrane;
 
   cell_count_ = {
       std::max(static_cast<int>(std::floor(domain_[0] / cutoff_)), 1),
@@ -139,7 +140,12 @@ void LinkedCellsContainer::addParticles(
     // SpdWrapper::get()->info("Adding Particle with Id : {}", p.getId());
     addParticle(p);
   }
-  setNeighbourReferences();
+
+  if (is_membrane) {
+    SpdWrapper::get()->info("Recalculated the neighbour references");
+    setNeighbourReferences();
+  }
+
   SpdWrapper::get()->info("Added new particles");
 }
 
@@ -500,21 +506,25 @@ void LinkedCellsContainer::computeInteractiveForces(
 #pragma omp barrier
 // #pragma omp parallel for schedule(static)
 #endif
-  for (size_t i = 1; i < num_threads; i++) {
-    for (size_t j = 0; j < particle_count_; j++) {
-      force_buffers[0][j] = force_buffers[0][j] + force_buffers[i][j];
+
+  // for some reason parallelising this makes it slower, no matter which approach is used
+//#pragma omp parallel for collapse(2)
+  for (size_t j = 0; j < particle_count_; j++) {
+    for (size_t i = 1; i < num_threads; i++) {
+//#pragma omp critical
+      { force_buffers[0][j] = force_buffers[0][j] + force_buffers[i][j]; }
       // SpdWrapper::get()->critical("forcebuffer[{}][{}] = {}, {}, {}", i, j,
-      // force_buffers[i][j][0], force_buffers[i][j][1],
-      // force_buffers[i][j][2]);
     }
   }
+//#pragma omp barrier
 
-  for (auto &p : particles_) {
+#pragma omp parallel for
+  for (size_t i = 0; i < particles_.size(); ++i) {
+    Particle &p = particles_[i];
     dvec3 f = force_buffers[0][p.getId()];
     p.addF(f);
-    // SpdWrapper::get()->critical("applied force: {}, {}, {}", f[0], f[1],
-    // f[2]);
   }
+#pragma omp barrier
 
   // #endif
 }

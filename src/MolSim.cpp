@@ -1,5 +1,6 @@
 #include <filesystem>
 #include <iostream>
+#include <omp.h>
 
 #include "calc/VerletIntegrator.h"
 #include "debug/debug_print.h"
@@ -69,7 +70,7 @@ int main(const int argc, char* argv[]) {
     SpdWrapper::get()->error("Unrecognized container type");
     throw std::runtime_error("Unrecognized container type");
   }
-  // INFO_FMT("Simulation is using {} particles", particles.size());
+  INFO_FMT("Simulation is using {} particles", particles.size());
 
   // assign all forces from the configs
 
@@ -166,6 +167,12 @@ int main(const int argc, char* argv[]) {
         thermostat->setTemperature(*container);
       }
     }
+
+
+    if (iteration % 100 == 0) {
+      SpdWrapper::get()->info("Iteration {}", iteration);
+    }
+
 #ifdef BENCHMARK  // these are the first 1000 iterations for the contest
     if (iteration == 1000) {
       const auto first_1_k = std::chrono::high_resolution_clock::now();
@@ -176,6 +183,7 @@ int main(const int argc, char* argv[]) {
                         (1.0 / elapsed.count());
       std::cout << "MMUPS for first 1k iterations: " << mups * (1.0 / 1e6)
                 << std::endl;
+      exit(1);
     }
 #endif
 

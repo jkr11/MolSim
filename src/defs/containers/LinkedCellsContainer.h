@@ -41,6 +41,11 @@ class LinkedCellsContainer final : public ParticleContainer {
   size_t special_particle_count_{};
 
   /**
+   * @brief enables the neighbour calculation for membranes
+   */
+  bool is_membrane{};
+
+  /**
    * @brief
    * stores the indexes of all halo_cells for faster iteration in the
    * corresponding direction vector
@@ -89,8 +94,6 @@ class LinkedCellsContainer final : public ParticleContainer {
    * the boundary config of each direction of the simulation
    */
   LinkedCellsConfig::BoundaryConfig boundary_config_{};
-
-  bool is_membrane{};
 
   /**
    * @brief apply reflective boundary condition to a dimension

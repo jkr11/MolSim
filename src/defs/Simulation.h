@@ -7,6 +7,7 @@
 #pragma once
 
 #include <variant>
+#include <omp.h>
 
 #include "defs/types.h"
 #include "forces/SingularForce.h"
@@ -225,6 +226,7 @@ inline void printConfiguration(const Arguments& args) {
   } else {
     logger->info("Container Type: Direct Sum");
   }
+  logger->info("Number of Threads: {}", omp_get_max_threads());
 
   logger->info("============================");
 }
