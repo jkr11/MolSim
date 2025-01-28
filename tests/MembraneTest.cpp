@@ -280,27 +280,4 @@ TEST(Membrane, LC4x4) {
   linked_cells.addParticles(particles);
   linked_cells.singleIterator(
       [&](Particle& p) { p.addF(singular_forces[0]->applyForce(p)); });
-  /*
-  // linked_cells.imposeInvariant();
-
-  for (auto& cell : linked_cells.getCells()) {
-    for (Particle& particle : cell) {
-      SpdWrapper::get()->info("Number of neighbours {}",
-                              particle.getNeighbours().size());
-      for (const auto& [fst, snd] : particle.getNeighbours()) {
-        ASSERT_TRUE(snd);
-      }
-    }
-  }
-
-
-  linked_cells.singleIterator([&](Particle& p) {
-    dvec3 f = {0, 0, 0};
-    for (const auto& force : singular_forces) {
-      f = f + force->applyForce(p);
-    }
-    InfoVec("total singular forces {}", f);
-    p.addF(f);
-  });
-  */
 }

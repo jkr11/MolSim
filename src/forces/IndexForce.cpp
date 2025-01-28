@@ -12,7 +12,6 @@
 dvec3 IndexForce::applyForce(Particle &p, const double sim_time) const {
   // InfoVec("Force vals", force_values_);
   if (sim_time < time_) {
-    std::cout << "INdex force at time " << sim_time << "\n";
     return force_values_;
   }
 
