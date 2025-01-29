@@ -517,17 +517,19 @@ void LinkedCellsContainer::computeInteractiveForces(
 // #pragma omp parallel for schedule(static)
 #endif
 
-  // for some reason parallelising this makes it slower, no matter which
-  // approach is used
-  // #pragma omp parallel for collapse(2)
+
+  int max_threads = omp_get_max_threads();
+  int num_threads = (max_threads > 14) ? 4 : 1;
+
+    #pragma omp parallel for collapse(2) num_threads(num_threads)
   for (size_t j = 0; j < particle_count_; j++) {
     for (size_t i = 1; i < num_threads; i++) {
-      // #pragma omp critical
+#pragma omp critical
       { force_buffers[0][j] = force_buffers[0][j] + force_buffers[i][j]; }
       // SpdWrapper::get()->critical("forcebuffer[{}][{}] = {}, {}, {}", i, j,
     }
   }
-  // #pragma omp barrier
+#pragma omp barrier
 
 #pragma omp parallel for
   for (size_t i = 0; i < particles_.size(); ++i) {

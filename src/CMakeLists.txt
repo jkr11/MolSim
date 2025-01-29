@@ -1,4 +1,7 @@
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+set(XERCESC_DIR /dss/dsshome1/lxc0B/di34miq/xercesc)
+include_directories(${XERCESC_DIR}/include)
+link_directories(${XERCESC_DIR}/lib64)
 
 find_package(OpenMP REQUIRED)
 
@@ -23,10 +26,11 @@ add_library(MolSimLib
 
 target_link_libraries(MolSimLib
         PUBLIC
-        xerces-c
         spdlog::spdlog
         OpenMP::OpenMP_CXX
 )
+
+target_link_libraries(MolSimLib PRIVATE xerces-c)
 
 target_compile_features(MolSimLib
         PUBLIC cxx_std_17
