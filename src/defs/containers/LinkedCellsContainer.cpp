@@ -256,8 +256,10 @@ void LinkedCellsContainer::imposeInvariant() {
 
 void LinkedCellsContainer::singleIterator(
     const std::function<void(Particle &)> &f) {
-  for (auto &p : particles_) {
-    f(p);
+  for (const auto &cell : cells_) {
+    for (const auto &p : cell) {
+      f(*p);
+    }
   }
 }
 
