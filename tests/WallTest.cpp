@@ -27,17 +27,19 @@ TEST(Wall, immovable) {
            LinkedCellsConfig::BoundaryType::Outflow,
        }});
 
-  const Particle p({1, 1, 1}, {1, 1, 1}, 1, 1, 1, -1);
-  container.addParticle(p);
+  Particle p({1, 1, 1}, {1, 1, 1}, 1, 1, 1, -1);
+  container.addParticles({p});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
 
   std::vector<std::unique_ptr<InteractiveForce>> interactive_forces;
   interactive_forces.push_back(std::make_unique<LennardJones>());
 
   std::vector<std::unique_ptr<SingularForce>> singular_forces;
-  singular_forces.push_back(std::make_unique<SingularGravity>(1));
+  singular_forces.push_back(std::make_unique<SingularGravity>(1, 1));
 
-  VerletIntegrator v(interactive_forces, singular_forces, 0.005);
+  std::vector<std::unique_ptr<IndexForce>> index_forces;
+
+  VerletIntegrator v(interactive_forces, singular_forces, index_forces, 0.005);
   for (int i = 0; i < 3; i++) {
     v.step(container);
   }
@@ -60,10 +62,10 @@ TEST(Wall, excludedFromThermostat) {
            LinkedCellsConfig::BoundaryType::Outflow,
        }});
 
-  const Particle wall({1, 1, 1}, {1, 1, 1}, 1, 1, 1, -1);
-  const Particle q({2, 2, 2}, {2, 2, 2}, 1, 1, 1, 1);
+   Particle wall({1, 1, 1}, {1, 1, 1}, 1, 1, 1, -1);
+   Particle q({2, 2, 2}, {2, 2, 2}, 1, 1, 1, 1);
 
-  container.addParticle(wall);
-  container.addParticle(q);
+  container.addParticles({wall});
+  container.addParticles({q});
   EXPECT_EQ(container.size(), 2) << "Number of Particles is not 0";
 }

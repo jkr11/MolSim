@@ -5,13 +5,11 @@
 
 #include <filesystem>
 #include <fstream>
-#include <iostream>
 #include <string>
 
 #include "defs/Particle.h"
 #include "defs/Thermostat.h"
 #include "defs/containers/LinkedCellsContainer.h"
-#include "forces/LennardJones.h"
 #include "testUtil.h"
 #include "utils/ArrayUtils.h"
 #include "utils/Statistics.h"
@@ -33,9 +31,9 @@ TEST(Statistics, WallThermostat) {
        }});
 
   constexpr ThermostatConfig config = {
-    .T_init = 0,
-    .T_target = 1,
-    .deltaT = 1,
+    .t_init = 0,
+    .t_target = 1,
+    .delta_t = 1,
     .n_thermostat = 1,
     .use_relative = false,
     .use_thermal_motion = true,
@@ -43,18 +41,18 @@ TEST(Statistics, WallThermostat) {
 
   Thermostat thermostat(config);
 
-  const Particle wall({2, 1, 1}, {1, 1, 1}, 1, 1, 1, -1);
-  const Particle p({1, 2, 1}, {2, 2, 2}, 1, 1, 1, 1);
-  const Particle q({1, 1, 2}, {3, 3, 3}, 1, 1, 1, 2);
-  container.addParticle(wall);
-  container.addParticle(p);
-  container.addParticle(q);
+  Particle wall({2, 1, 1}, {1, 1, 1}, 1, 1, 1, -1);
+  Particle p({1, 2, 1}, {2, 2, 2}, 1, 1, 1, 1);
+  Particle q({1, 1, 2}, {3, 3, 3}, 1, 1, 1, 2);
+  container.addParticles({wall});
+  container.addParticles({p});
+  container.addParticles({q});
 
   EXPECT_EQ(container.getParticleCount(), 3) << "Particle Count wrong";
   EXPECT_EQ(container.getSpecialParticleCount(), 1) << "Special Particle Count wrong";
   EXPECT_EQ(container.size(), 3) << "Number of Particles is not 0";
 
-  DVEC3_NEAR(thermostat.getAverageVelocity(container), {2.5, 2.5, 2.5}, "average velocity wrong", 1e-5);
+  DVEC3_NEAR(Thermostat::getAverageVelocity(container), {2.5, 2.5, 2.5}, "average velocity wrong", 1e-5);
 }
 
 /**
@@ -74,9 +72,9 @@ TEST(Statistics, ThermalTemperature) {
        }});
 
   constexpr ThermostatConfig config = {
-    .T_init = 0,
-    .T_target = 1,
-    .deltaT = 1,
+    .t_init = 0,
+    .t_target = 1,
+    .delta_t = 1,
     .n_thermostat = 1,
     .use_relative = false,
     .use_thermal_motion = true,
@@ -84,21 +82,21 @@ TEST(Statistics, ThermalTemperature) {
 
   Thermostat thermostat(config);
 
-  const Particle wall({2, 1, 1}, {1, 1, 1}, 1, 1, 1, -1);
-  const Particle p({1, 2, 1}, {2, 2, 2}, 1, 1, 1, 1);
-  const Particle q({1, 1, 2}, {3, 3, 3}, 2, 1, 1, 2);
-  container.addParticle(wall);
-  container.addParticle(p);
-  container.addParticle(q);
+  Particle wall({2, 1, 1}, {1, 1, 1}, 1, 1, 1, -1);
+  Particle p({1, 2, 1}, {2, 2, 2}, 1, 1, 1, 1);
+  Particle q({1, 1, 2}, {3, 3, 3}, 2, 1, 1, 2);
+  container.addParticles({wall});
+  container.addParticles({p});
+  container.addParticles({q});
 
   EXPECT_EQ(container.getParticleCount(), 3) << "Particle Count wrong";
   EXPECT_EQ(container.getSpecialParticleCount(), 1) << "Special Particle Count wrong";
   EXPECT_EQ(container.size(), 3) << "Number of Particles is not 0";
 
-  dvec3 averageVelocity = thermostat.getAverageVelocity(container);
-  DVEC3_NEAR(averageVelocity, {2.5, 2.5, 2.5}, "average velocity wrong", 1e-5);
+  dvec3 average_velocity = Thermostat::getAverageVelocity(container);
+  DVEC3_NEAR(average_velocity, {2.5, 2.5, 2.5}, "average velocity wrong", 1e-5);
 
-  EXPECT_EQ(thermostat.getThermalTemperature(container, averageVelocity), 0.375);
+  EXPECT_EQ(thermostat.getThermalTemperature(container, average_velocity), 0.375);
 }
 
 /**
@@ -124,15 +122,15 @@ TEST(Statistics, bins) {
 
   Statistics statistics(3, 1, container, densityFile, velocityFile);
 
-  const Particle wall({0.5, 0.5, 0.5}, {1, 1, 1}, 1, 1, 1, -1);
-  const Particle p({0.5, 0.5, 0.5}, {2, 2, 2}, 1, 1, 1, 1);
-  const Particle q({0.5, 0.5, 0.5}, {3, 3, 1}, 2, 1, 1, 2);
-  const Particle r({2.5, 2.5, 0.5}, {4, 3, 3}, 2, 1, 1, 2);
+   Particle wall({0.5, 0.5, 0.5}, {1, 1, 1}, 1, 1, 1, -1);
+   Particle p({0.5, 0.5, 0.5}, {2, 2, 2}, 1, 1, 1, 1);
+   Particle q({0.5, 0.5, 0.5}, {3, 3, 1}, 2, 1, 1, 2);
+   Particle r({2.5, 2.5, 0.5}, {4, 3, 3}, 2, 1, 1, 2);
 
-  container.addParticle(wall);
-  container.addParticle(p);
-  container.addParticle(q);
-  container.addParticle(r);
+  container.addParticles({wall});
+  container.addParticles({p});
+  container.addParticles({q});
+  container.addParticles({r});
 
   EXPECT_EQ(container.getParticleCount(), 4) << "Particle Count wrong";
 

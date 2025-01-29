@@ -39,7 +39,7 @@ class SpdWrapper {
   /**
    * @brief holds the singleton instance of the logger
    */
-  static std::shared_ptr<spdlog::logger> instance;
+  static std::shared_ptr<spdlog::logger> instance_;
 };
 
 #endif  // SPDWRAPPER_H

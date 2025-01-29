@@ -31,14 +31,13 @@ jobs:
       run: sudo apt install libxerces-c-dev
     
     - name: Setup buildDir
-      run: mkdir buildDir && cd buildDir && mkdir Release && cd Release
+      run: mkdir buildDir && cd buildDir 
 
     - name: Configure CMake
-      run: cd buildDir/Release && cmake ../../CMakeLists.txt && cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON .
+      run: cd buildDir && cmake ../CMakeLists.txt && cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON .
 
     - name: Build
-      run: cd buildDir/Release && cmake --build . -- -"j$(nproc)"
+      run: cd buildDir && cmake --build . -- -"j$(nproc)"
 
     - name: Test
-      run: cd buildDir/Release/tests && ctest
-
+      run: cd buildDir/tests && ctest

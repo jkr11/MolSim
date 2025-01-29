@@ -5,16 +5,18 @@
 #ifndef THERMOSTAT_H
 #define THERMOSTAT_H
 #pragma once
+
 #include "Simulation.h"
 #include "containers/ParticleContainer.h"
+
 /**
  * adjusts the temperature of the system at a given periodic frequency
  */
 class Thermostat {
  public:
-  double T_init{};
-  double T_target{};
-  double d_temp{};
+  double t_init{};
+  double t_target{};
+  double delta_temp{};
   int n_thermostat{};
   bool use_relative{};
   bool use_thermal_motion{};
@@ -47,7 +49,7 @@ class Thermostat {
    * @param particle_container container
    * @param beta the scaling coefficient sqrt(T_new / T_current)
    */
-  void applyBeta(ParticleContainer& particle_container, double beta) const;
+  static void applyBeta(ParticleContainer& particle_container, double beta);
 
   /**
    * @brief scales the temperature relatively or absolutely using beta and
@@ -56,8 +58,8 @@ class Thermostat {
    * @param beta the scaling coefficient sqrt(T_new / T_current)
    * @param avg_velocity average velocity
    */
-  void applyThermalBeta(ParticleContainer& particle_container, double beta,
-                        const dvec3& avg_velocity) const;
+  static void applyThermalBeta(ParticleContainer& particle_container,
+                               double beta, const dvec3& avg_velocity);
 
   /**
    * @a wrapper to proved applyBeta with the necessary data

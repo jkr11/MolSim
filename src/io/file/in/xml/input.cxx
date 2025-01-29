@@ -135,6 +135,53 @@ void MetadataType::statistics(::std::auto_ptr<statistics_type> x) {
   this->statistics_.set(x);
 }
 
+// CheckpointWrapperType
+//
+
+const CheckpointWrapperType::name_type& CheckpointWrapperType::name() const {
+  return this->name_.get();
+}
+
+CheckpointWrapperType::name_type& CheckpointWrapperType::name() {
+  return this->name_.get();
+}
+
+void CheckpointWrapperType::name(const name_type& x) { this->name_.set(x); }
+
+void CheckpointWrapperType::name(::std::auto_ptr<name_type> x) {
+  this->name_.set(x);
+}
+
+const CheckpointWrapperType::is_membrane_type&
+CheckpointWrapperType::is_membrane() const {
+  return this->is_membrane_.get();
+}
+
+CheckpointWrapperType::is_membrane_type& CheckpointWrapperType::is_membrane() {
+  return this->is_membrane_.get();
+}
+
+void CheckpointWrapperType::is_membrane(const is_membrane_type& x) {
+  this->is_membrane_.set(x);
+}
+
+const CheckpointWrapperType::domain_type& CheckpointWrapperType::domain()
+    const {
+  return this->domain_.get();
+}
+
+CheckpointWrapperType::domain_type& CheckpointWrapperType::domain() {
+  return this->domain_.get();
+}
+
+void CheckpointWrapperType::domain(const domain_type& x) {
+  this->domain_.set(x);
+}
+
+void CheckpointWrapperType::domain(::std::auto_ptr<domain_type> x) {
+  this->domain_.set(x);
+}
+
 // StatisticsType
 //
 
@@ -259,6 +306,101 @@ const cuboidType::mv_type& cuboidType::mv() const { return this->mv_.get(); }
 cuboidType::mv_type& cuboidType::mv() { return this->mv_.get(); }
 
 void cuboidType::mv(const mv_type& x) { this->mv_.set(x); }
+
+// membraneType
+//
+
+const membraneType::velocity_type& membraneType::velocity() const {
+  return this->velocity_.get();
+}
+
+membraneType::velocity_type& membraneType::velocity() {
+  return this->velocity_.get();
+}
+
+void membraneType::velocity(const velocity_type& x) { this->velocity_.set(x); }
+
+void membraneType::velocity(::std::auto_ptr<velocity_type> x) {
+  this->velocity_.set(x);
+}
+
+const membraneType::corner_type& membraneType::corner() const {
+  return this->corner_.get();
+}
+
+membraneType::corner_type& membraneType::corner() {
+  return this->corner_.get();
+}
+
+void membraneType::corner(const corner_type& x) { this->corner_.set(x); }
+
+void membraneType::corner(::std::auto_ptr<corner_type> x) {
+  this->corner_.set(x);
+}
+
+const membraneType::dimensions_type& membraneType::dimensions() const {
+  return this->dimensions_.get();
+}
+
+membraneType::dimensions_type& membraneType::dimensions() {
+  return this->dimensions_.get();
+}
+
+void membraneType::dimensions(const dimensions_type& x) {
+  this->dimensions_.set(x);
+}
+
+void membraneType::dimensions(::std::auto_ptr<dimensions_type> x) {
+  this->dimensions_.set(x);
+}
+
+const membraneType::type_type& membraneType::type() const {
+  return this->type_.get();
+}
+
+membraneType::type_type& membraneType::type() { return this->type_.get(); }
+
+void membraneType::type(const type_type& x) { this->type_.set(x); }
+
+const membraneType::h_type& membraneType::h() const { return this->h_.get(); }
+
+membraneType::h_type& membraneType::h() { return this->h_.get(); }
+
+void membraneType::h(const h_type& x) { this->h_.set(x); }
+
+const membraneType::mass_type& membraneType::mass() const {
+  return this->mass_.get();
+}
+
+membraneType::mass_type& membraneType::mass() { return this->mass_.get(); }
+
+void membraneType::mass(const mass_type& x) { this->mass_.set(x); }
+
+const membraneType::epsilon_type& membraneType::epsilon() const {
+  return this->epsilon_.get();
+}
+
+membraneType::epsilon_type& membraneType::epsilon() {
+  return this->epsilon_.get();
+}
+
+void membraneType::epsilon(const epsilon_type& x) { this->epsilon_.set(x); }
+
+const membraneType::sigma_type& membraneType::sigma() const {
+  return this->sigma_.get();
+}
+
+membraneType::sigma_type& membraneType::sigma() { return this->sigma_.get(); }
+
+void membraneType::sigma(const sigma_type& x) { this->sigma_.set(x); }
+
+const membraneType::mv_type& membraneType::mv() const {
+  return this->mv_.get();
+}
+
+membraneType::mv_type& membraneType::mv() { return this->mv_.get(); }
+
+void membraneType::mv(const mv_type& x) { this->mv_.set(x); }
 
 // spheroidType
 //
@@ -681,24 +823,156 @@ void ForceType::SingularGravity(::std::auto_ptr<SingularGravity_type> x) {
   this->SingularGravity_.set(x);
 }
 
+const ForceType::HarmonicForce_optional& ForceType::HarmonicForce() const {
+  return this->HarmonicForce_;
+}
+
+ForceType::HarmonicForce_optional& ForceType::HarmonicForce() {
+  return this->HarmonicForce_;
+}
+
+void ForceType::HarmonicForce(const HarmonicForce_type& x) {
+  this->HarmonicForce_.set(x);
+}
+
+void ForceType::HarmonicForce(const HarmonicForce_optional& x) {
+  this->HarmonicForce_ = x;
+}
+
+void ForceType::HarmonicForce(::std::auto_ptr<HarmonicForce_type> x) {
+  this->HarmonicForce_.set(x);
+}
+
+const ForceType::IndexForce_optional& ForceType::IndexForce() const {
+  return this->IndexForce_;
+}
+
+ForceType::IndexForce_optional& ForceType::IndexForce() {
+  return this->IndexForce_;
+}
+
+void ForceType::IndexForce(const IndexForce_type& x) {
+  this->IndexForce_.set(x);
+}
+
+void ForceType::IndexForce(const IndexForce_optional& x) {
+  this->IndexForce_ = x;
+}
+
+void ForceType::IndexForce(::std::auto_ptr<IndexForce_type> x) {
+  this->IndexForce_.set(x);
+}
+
+const ForceType::TruncatedLennardJonesForce_optional&
+ForceType::TruncatedLennardJonesForce() const {
+  return this->TruncatedLennardJonesForce_;
+}
+
+ForceType::TruncatedLennardJonesForce_optional&
+ForceType::TruncatedLennardJonesForce() {
+  return this->TruncatedLennardJonesForce_;
+}
+
+void ForceType::TruncatedLennardJonesForce(
+    const TruncatedLennardJonesForce_type& x) {
+  this->TruncatedLennardJonesForce_.set(x);
+}
+
+void ForceType::TruncatedLennardJonesForce(
+    const TruncatedLennardJonesForce_optional& x) {
+  this->TruncatedLennardJonesForce_ = x;
+}
+
+void ForceType::TruncatedLennardJonesForce(
+    ::std::auto_ptr<TruncatedLennardJonesForce_type> x) {
+  this->TruncatedLennardJonesForce_.set(x);
+}
+
 // GravityType
 //
 
 // LennardJonesForce
 //
 
+// TruncatedLennardJonesForceType
+//
+
 // SingularGravityType
 //
 
-const SingularGravityType::g_optional& SingularGravityType::g() const {
-  return this->g_;
+const SingularGravityType::g_type& SingularGravityType::g() const {
+  return this->g_.get();
 }
 
-SingularGravityType::g_optional& SingularGravityType::g() { return this->g_; }
+SingularGravityType::g_type& SingularGravityType::g() { return this->g_.get(); }
 
 void SingularGravityType::g(const g_type& x) { this->g_.set(x); }
 
-void SingularGravityType::g(const g_optional& x) { this->g_ = x; }
+const SingularGravityType::axis_type& SingularGravityType::axis() const {
+  return this->axis_.get();
+}
+
+SingularGravityType::axis_type& SingularGravityType::axis() {
+  return this->axis_.get();
+}
+
+void SingularGravityType::axis(const axis_type& x) { this->axis_.set(x); }
+
+// HarmonicForceType
+//
+
+const HarmonicForceType::r_0_type& HarmonicForceType::r_0() const {
+  return this->r_0_.get();
+}
+
+HarmonicForceType::r_0_type& HarmonicForceType::r_0() {
+  return this->r_0_.get();
+}
+
+void HarmonicForceType::r_0(const r_0_type& x) { this->r_0_.set(x); }
+
+const HarmonicForceType::k_type& HarmonicForceType::k() const {
+  return this->k_.get();
+}
+
+HarmonicForceType::k_type& HarmonicForceType::k() { return this->k_.get(); }
+
+void HarmonicForceType::k(const k_type& x) { this->k_.set(x); }
+
+// IndexForceType
+//
+
+const IndexForceType::index_sequence& IndexForceType::index() const {
+  return this->index_;
+}
+
+IndexForceType::index_sequence& IndexForceType::index() { return this->index_; }
+
+void IndexForceType::index(const index_sequence& s) { this->index_ = s; }
+
+const IndexForceType::time_type& IndexForceType::time() const {
+  return this->time_.get();
+}
+
+IndexForceType::time_type& IndexForceType::time() { return this->time_.get(); }
+
+void IndexForceType::time(const time_type& x) { this->time_.set(x); }
+
+const IndexForceType::force_values_type& IndexForceType::force_values() const {
+  return this->force_values_.get();
+}
+
+IndexForceType::force_values_type& IndexForceType::force_values() {
+  return this->force_values_.get();
+}
+
+void IndexForceType::force_values(const force_values_type& x) {
+  this->force_values_.set(x);
+}
+
+void IndexForceType::force_values(::std::auto_ptr<force_values_type> x) {
+  this->force_values_.set(x);
+}
 
 // ThermostatType
 //
@@ -820,6 +1094,24 @@ void simulation::spheroids(::std::auto_ptr<spheroids_type> x) {
   this->spheroids_.set(x);
 }
 
+const simulation::membranes_optional& simulation::membranes() const {
+  return this->membranes_;
+}
+
+simulation::membranes_optional& simulation::membranes() {
+  return this->membranes_;
+}
+
+void simulation::membranes(const membranes_type& x) { this->membranes_.set(x); }
+
+void simulation::membranes(const membranes_optional& x) {
+  this->membranes_ = x;
+}
+
+void simulation::membranes(::std::auto_ptr<membranes_type> x) {
+  this->membranes_.set(x);
+}
+
 const simulation::thermostat_optional& simulation::thermostat() const {
   return this->thermostat_;
 }
@@ -861,6 +1153,17 @@ const spheroids::spheroid_sequence& spheroids::spheroid() const {
 spheroids::spheroid_sequence& spheroids::spheroid() { return this->spheroid_; }
 
 void spheroids::spheroid(const spheroid_sequence& s) { this->spheroid_ = s; }
+
+// membranes
+//
+
+const membranes::membrane_sequence& membranes::membrane() const {
+  return this->membrane_;
+}
+
+membranes::membrane_sequence& membranes::membrane() { return this->membrane_; }
+
+void membranes::membrane(const membrane_sequence& s) { this->membrane_ = s; }
 
 #include <xsd/cxx/xml/dom/parsing-source.hxx>
 
@@ -1042,6 +1345,119 @@ MetadataType& MetadataType::operator=(const MetadataType& x) {
 }
 
 MetadataType::~MetadataType() {}
+
+// CheckpointWrapperType
+//
+
+CheckpointWrapperType::CheckpointWrapperType(
+    const name_type& name, const is_membrane_type& is_membrane,
+    const domain_type& domain)
+    : ::xml_schema::type(),
+      name_(name, this),
+      is_membrane_(is_membrane, this),
+      domain_(domain, this) {}
+
+CheckpointWrapperType::CheckpointWrapperType(
+    const name_type& name, const is_membrane_type& is_membrane,
+    ::std::auto_ptr<domain_type> domain)
+    : ::xml_schema::type(),
+      name_(name, this),
+      is_membrane_(is_membrane, this),
+      domain_(domain, this) {}
+
+CheckpointWrapperType::CheckpointWrapperType(const CheckpointWrapperType& x,
+                                             ::xml_schema::flags f,
+                                             ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c),
+      name_(x.name_, f, this),
+      is_membrane_(x.is_membrane_, f, this),
+      domain_(x.domain_, f, this) {}
+
+CheckpointWrapperType::CheckpointWrapperType(const ::xercesc::DOMElement& e,
+                                             ::xml_schema::flags f,
+                                             ::xml_schema::container* c)
+    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c),
+      name_(this),
+      is_membrane_(this),
+      domain_(this) {
+  if ((f & ::xml_schema::flags::base) == 0) {
+    ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
+    this->parse(p, f);
+  }
+}
+
+void CheckpointWrapperType::parse(::xsd::cxx::xml::dom::parser<char>& p,
+                                  ::xml_schema::flags f) {
+  for (; p.more_content(); p.next_content(false)) {
+    const ::xercesc::DOMElement& i(p.cur_element());
+    const ::xsd::cxx::xml::qualified_name<char> n(
+        ::xsd::cxx::xml::dom::name<char>(i));
+
+    // name
+    //
+    if (n.name() == "name" && n.namespace_().empty()) {
+      ::std::auto_ptr<name_type> r(name_traits::create(i, f, this));
+
+      if (!name_.present()) {
+        this->name_.set(r);
+        continue;
+      }
+    }
+
+    // is_membrane
+    //
+    if (n.name() == "is_membrane" && n.namespace_().empty()) {
+      if (!is_membrane_.present()) {
+        this->is_membrane_.set(is_membrane_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    // domain
+    //
+    if (n.name() == "domain" && n.namespace_().empty()) {
+      ::std::auto_ptr<domain_type> r(domain_traits::create(i, f, this));
+
+      if (!domain_.present()) {
+        this->domain_.set(r);
+        continue;
+      }
+    }
+
+    break;
+  }
+
+  if (!name_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("name", "");
+  }
+
+  if (!is_membrane_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("is_membrane", "");
+  }
+
+  if (!domain_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("domain", "");
+  }
+}
+
+CheckpointWrapperType* CheckpointWrapperType::_clone(
+    ::xml_schema::flags f, ::xml_schema::container* c) const {
+  return new class CheckpointWrapperType(*this, f, c);
+}
+
+CheckpointWrapperType& CheckpointWrapperType::operator=(
+    const CheckpointWrapperType& x) {
+  if (this != &x) {
+    static_cast< ::xml_schema::type&>(*this) = x;
+    this->name_ = x.name_;
+    this->is_membrane_ = x.is_membrane_;
+    this->domain_ = x.domain_;
+  }
+
+  return *this;
+}
+
+CheckpointWrapperType::~CheckpointWrapperType() {}
 
 // StatisticsType
 //
@@ -1366,6 +1782,232 @@ cuboidType& cuboidType::operator=(const cuboidType& x) {
 }
 
 cuboidType::~cuboidType() {}
+
+// membraneType
+//
+
+membraneType::membraneType(const velocity_type& velocity,
+                           const corner_type& corner,
+                           const dimensions_type& dimensions,
+                           const type_type& type, const h_type& h,
+                           const mass_type& mass, const epsilon_type& epsilon,
+                           const sigma_type& sigma, const mv_type& mv)
+    : ::xml_schema::type(),
+      velocity_(velocity, this),
+      corner_(corner, this),
+      dimensions_(dimensions, this),
+      type_(type, this),
+      h_(h, this),
+      mass_(mass, this),
+      epsilon_(epsilon, this),
+      sigma_(sigma, this),
+      mv_(mv, this) {}
+
+membraneType::membraneType(::std::auto_ptr<velocity_type> velocity,
+                           ::std::auto_ptr<corner_type> corner,
+                           ::std::auto_ptr<dimensions_type> dimensions,
+                           const type_type& type, const h_type& h,
+                           const mass_type& mass, const epsilon_type& epsilon,
+                           const sigma_type& sigma, const mv_type& mv)
+    : ::xml_schema::type(),
+      velocity_(velocity, this),
+      corner_(corner, this),
+      dimensions_(dimensions, this),
+      type_(type, this),
+      h_(h, this),
+      mass_(mass, this),
+      epsilon_(epsilon, this),
+      sigma_(sigma, this),
+      mv_(mv, this) {}
+
+membraneType::membraneType(const membraneType& x, ::xml_schema::flags f,
+                           ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c),
+      velocity_(x.velocity_, f, this),
+      corner_(x.corner_, f, this),
+      dimensions_(x.dimensions_, f, this),
+      type_(x.type_, f, this),
+      h_(x.h_, f, this),
+      mass_(x.mass_, f, this),
+      epsilon_(x.epsilon_, f, this),
+      sigma_(x.sigma_, f, this),
+      mv_(x.mv_, f, this) {}
+
+membraneType::membraneType(const ::xercesc::DOMElement& e,
+                           ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c),
+      velocity_(this),
+      corner_(this),
+      dimensions_(this),
+      type_(this),
+      h_(this),
+      mass_(this),
+      epsilon_(this),
+      sigma_(this),
+      mv_(this) {
+  if ((f & ::xml_schema::flags::base) == 0) {
+    ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
+    this->parse(p, f);
+  }
+}
+
+void membraneType::parse(::xsd::cxx::xml::dom::parser<char>& p,
+                         ::xml_schema::flags f) {
+  for (; p.more_content(); p.next_content(false)) {
+    const ::xercesc::DOMElement& i(p.cur_element());
+    const ::xsd::cxx::xml::qualified_name<char> n(
+        ::xsd::cxx::xml::dom::name<char>(i));
+
+    // velocity
+    //
+    if (n.name() == "velocity" && n.namespace_().empty()) {
+      ::std::auto_ptr<velocity_type> r(velocity_traits::create(i, f, this));
+
+      if (!velocity_.present()) {
+        this->velocity_.set(r);
+        continue;
+      }
+    }
+
+    // corner
+    //
+    if (n.name() == "corner" && n.namespace_().empty()) {
+      ::std::auto_ptr<corner_type> r(corner_traits::create(i, f, this));
+
+      if (!corner_.present()) {
+        this->corner_.set(r);
+        continue;
+      }
+    }
+
+    // dimensions
+    //
+    if (n.name() == "dimensions" && n.namespace_().empty()) {
+      ::std::auto_ptr<dimensions_type> r(dimensions_traits::create(i, f, this));
+
+      if (!dimensions_.present()) {
+        this->dimensions_.set(r);
+        continue;
+      }
+    }
+
+    // type
+    //
+    if (n.name() == "type" && n.namespace_().empty()) {
+      if (!type_.present()) {
+        this->type_.set(type_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    // h
+    //
+    if (n.name() == "h" && n.namespace_().empty()) {
+      if (!h_.present()) {
+        this->h_.set(h_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    // mass
+    //
+    if (n.name() == "mass" && n.namespace_().empty()) {
+      if (!mass_.present()) {
+        this->mass_.set(mass_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    // epsilon
+    //
+    if (n.name() == "epsilon" && n.namespace_().empty()) {
+      if (!epsilon_.present()) {
+        this->epsilon_.set(epsilon_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    // sigma
+    //
+    if (n.name() == "sigma" && n.namespace_().empty()) {
+      if (!sigma_.present()) {
+        this->sigma_.set(sigma_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    // mv
+    //
+    if (n.name() == "mv" && n.namespace_().empty()) {
+      if (!mv_.present()) {
+        this->mv_.set(mv_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    break;
+  }
+
+  if (!velocity_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("velocity", "");
+  }
+
+  if (!corner_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("corner", "");
+  }
+
+  if (!dimensions_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("dimensions", "");
+  }
+
+  if (!type_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("type", "");
+  }
+
+  if (!h_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("h", "");
+  }
+
+  if (!mass_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("mass", "");
+  }
+
+  if (!epsilon_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("epsilon", "");
+  }
+
+  if (!sigma_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("sigma", "");
+  }
+
+  if (!mv_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("mv", "");
+  }
+}
+
+membraneType* membraneType::_clone(::xml_schema::flags f,
+                                   ::xml_schema::container* c) const {
+  return new class membraneType(*this, f, c);
+}
+
+membraneType& membraneType::operator=(const membraneType& x) {
+  if (this != &x) {
+    static_cast< ::xml_schema::type&>(*this) = x;
+    this->velocity_ = x.velocity_;
+    this->corner_ = x.corner_;
+    this->dimensions_ = x.dimensions_;
+    this->type_ = x.type_;
+    this->h_ = x.h_;
+    this->mass_ = x.mass_;
+    this->epsilon_ = x.epsilon_;
+    this->sigma_ = x.sigma_;
+    this->mv_ = x.mv_;
+  }
+
+  return *this;
+}
+
+membraneType::~membraneType() {}
 
 // spheroidType
 //
@@ -2268,21 +2910,30 @@ ForceType::ForceType()
     : ::xml_schema::type(),
       Gravity_(this),
       LennardJones_(this),
-      SingularGravity_(this) {}
+      SingularGravity_(this),
+      HarmonicForce_(this),
+      IndexForce_(this),
+      TruncatedLennardJonesForce_(this) {}
 
 ForceType::ForceType(const ForceType& x, ::xml_schema::flags f,
                      ::xml_schema::container* c)
     : ::xml_schema::type(x, f, c),
       Gravity_(x.Gravity_, f, this),
       LennardJones_(x.LennardJones_, f, this),
-      SingularGravity_(x.SingularGravity_, f, this) {}
+      SingularGravity_(x.SingularGravity_, f, this),
+      HarmonicForce_(x.HarmonicForce_, f, this),
+      IndexForce_(x.IndexForce_, f, this),
+      TruncatedLennardJonesForce_(x.TruncatedLennardJonesForce_, f, this) {}
 
 ForceType::ForceType(const ::xercesc::DOMElement& e, ::xml_schema::flags f,
                      ::xml_schema::container* c)
     : ::xml_schema::type(e, f | ::xml_schema::flags::base, c),
       Gravity_(this),
       LennardJones_(this),
-      SingularGravity_(this) {
+      SingularGravity_(this),
+      HarmonicForce_(this),
+      IndexForce_(this),
+      TruncatedLennardJonesForce_(this) {
   if ((f & ::xml_schema::flags::base) == 0) {
     ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
     this->parse(p, f);
@@ -2331,6 +2982,41 @@ void ForceType::parse(::xsd::cxx::xml::dom::parser<char>& p,
       }
     }
 
+    // HarmonicForce
+    //
+    if (n.name() == "HarmonicForce" && n.namespace_().empty()) {
+      ::std::auto_ptr<HarmonicForce_type> r(
+          HarmonicForce_traits::create(i, f, this));
+
+      if (!this->HarmonicForce_) {
+        this->HarmonicForce_.set(r);
+        continue;
+      }
+    }
+
+    // IndexForce
+    //
+    if (n.name() == "IndexForce" && n.namespace_().empty()) {
+      ::std::auto_ptr<IndexForce_type> r(IndexForce_traits::create(i, f, this));
+
+      if (!this->IndexForce_) {
+        this->IndexForce_.set(r);
+        continue;
+      }
+    }
+
+    // TruncatedLennardJonesForce
+    //
+    if (n.name() == "TruncatedLennardJonesForce" && n.namespace_().empty()) {
+      ::std::auto_ptr<TruncatedLennardJonesForce_type> r(
+          TruncatedLennardJonesForce_traits::create(i, f, this));
+
+      if (!this->TruncatedLennardJonesForce_) {
+        this->TruncatedLennardJonesForce_.set(r);
+        continue;
+      }
+    }
+
     break;
   }
 }
@@ -2346,6 +3032,9 @@ ForceType& ForceType::operator=(const ForceType& x) {
     this->Gravity_ = x.Gravity_;
     this->LennardJones_ = x.LennardJones_;
     this->SingularGravity_ = x.SingularGravity_;
+    this->HarmonicForce_ = x.HarmonicForce_;
+    this->IndexForce_ = x.IndexForce_;
+    this->TruncatedLennardJonesForce_ = x.TruncatedLennardJonesForce_;
   }
 
   return *this;
@@ -2414,37 +3103,96 @@ LennardJonesForce* LennardJonesForce::_clone(::xml_schema::flags f,
 
 LennardJonesForce::~LennardJonesForce() {}
 
+// TruncatedLennardJonesForceType
+//
+
+TruncatedLennardJonesForceType::TruncatedLennardJonesForceType()
+    : ::xml_schema::type() {}
+
+TruncatedLennardJonesForceType::TruncatedLennardJonesForceType(
+    const TruncatedLennardJonesForceType& x, ::xml_schema::flags f,
+    ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c) {}
+
+TruncatedLennardJonesForceType::TruncatedLennardJonesForceType(
+    const ::xercesc::DOMElement& e, ::xml_schema::flags f,
+    ::xml_schema::container* c)
+    : ::xml_schema::type(e, f, c) {}
+
+TruncatedLennardJonesForceType::TruncatedLennardJonesForceType(
+    const ::xercesc::DOMAttr& a, ::xml_schema::flags f,
+    ::xml_schema::container* c)
+    : ::xml_schema::type(a, f, c) {}
+
+TruncatedLennardJonesForceType::TruncatedLennardJonesForceType(
+    const ::std::string& s, const ::xercesc::DOMElement* e,
+    ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::type(s, e, f, c) {}
+
+TruncatedLennardJonesForceType* TruncatedLennardJonesForceType::_clone(
+    ::xml_schema::flags f, ::xml_schema::container* c) const {
+  return new class TruncatedLennardJonesForceType(*this, f, c);
+}
+
+TruncatedLennardJonesForceType::~TruncatedLennardJonesForceType() {}
+
 // SingularGravityType
 //
 
-SingularGravityType::SingularGravityType() : ::xml_schema::type(), g_(this) {}
+SingularGravityType::SingularGravityType(const g_type& g, const axis_type& axis)
+    : ::xml_schema::type(), g_(g, this), axis_(axis, this) {}
 
 SingularGravityType::SingularGravityType(const SingularGravityType& x,
                                          ::xml_schema::flags f,
                                          ::xml_schema::container* c)
-    : ::xml_schema::type(x, f, c), g_(x.g_, f, this) {}
+    : ::xml_schema::type(x, f, c), g_(x.g_, f, this), axis_(x.axis_, f, this) {}
 
 SingularGravityType::SingularGravityType(const ::xercesc::DOMElement& e,
                                          ::xml_schema::flags f,
                                          ::xml_schema::container* c)
-    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c), g_(this) {
+    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c),
+      g_(this),
+      axis_(this) {
   if ((f & ::xml_schema::flags::base) == 0) {
-    ::xsd::cxx::xml::dom::parser<char> p(e, false, false, true);
+    ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
     this->parse(p, f);
   }
 }
 
 void SingularGravityType::parse(::xsd::cxx::xml::dom::parser<char>& p,
                                 ::xml_schema::flags f) {
-  while (p.more_attributes()) {
-    const ::xercesc::DOMAttr& i(p.next_attribute());
+  for (; p.more_content(); p.next_content(false)) {
+    const ::xercesc::DOMElement& i(p.cur_element());
     const ::xsd::cxx::xml::qualified_name<char> n(
         ::xsd::cxx::xml::dom::name<char>(i));
 
+    // g
+    //
     if (n.name() == "g" && n.namespace_().empty()) {
-      this->g_.set(g_traits::create(i, f, this));
-      continue;
+      if (!g_.present()) {
+        this->g_.set(g_traits::create(i, f, this));
+        continue;
+      }
     }
+
+    // axis
+    //
+    if (n.name() == "axis" && n.namespace_().empty()) {
+      if (!axis_.present()) {
+        this->axis_.set(axis_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    break;
+  }
+
+  if (!g_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("g", "");
+  }
+
+  if (!axis_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("axis", "");
   }
 }
 
@@ -2458,12 +3206,194 @@ SingularGravityType& SingularGravityType::operator=(
   if (this != &x) {
     static_cast< ::xml_schema::type&>(*this) = x;
     this->g_ = x.g_;
+    this->axis_ = x.axis_;
   }
 
   return *this;
 }
 
 SingularGravityType::~SingularGravityType() {}
+
+// HarmonicForceType
+//
+
+HarmonicForceType::HarmonicForceType(const r_0_type& r_0, const k_type& k)
+    : ::xml_schema::type(), r_0_(r_0, this), k_(k, this) {}
+
+HarmonicForceType::HarmonicForceType(const HarmonicForceType& x,
+                                     ::xml_schema::flags f,
+                                     ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c), r_0_(x.r_0_, f, this), k_(x.k_, f, this) {}
+
+HarmonicForceType::HarmonicForceType(const ::xercesc::DOMElement& e,
+                                     ::xml_schema::flags f,
+                                     ::xml_schema::container* c)
+    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c),
+      r_0_(this),
+      k_(this) {
+  if ((f & ::xml_schema::flags::base) == 0) {
+    ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
+    this->parse(p, f);
+  }
+}
+
+void HarmonicForceType::parse(::xsd::cxx::xml::dom::parser<char>& p,
+                              ::xml_schema::flags f) {
+  for (; p.more_content(); p.next_content(false)) {
+    const ::xercesc::DOMElement& i(p.cur_element());
+    const ::xsd::cxx::xml::qualified_name<char> n(
+        ::xsd::cxx::xml::dom::name<char>(i));
+
+    // r_0
+    //
+    if (n.name() == "r_0" && n.namespace_().empty()) {
+      if (!r_0_.present()) {
+        this->r_0_.set(r_0_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    // k
+    //
+    if (n.name() == "k" && n.namespace_().empty()) {
+      if (!k_.present()) {
+        this->k_.set(k_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    break;
+  }
+
+  if (!r_0_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("r_0", "");
+  }
+
+  if (!k_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("k", "");
+  }
+}
+
+HarmonicForceType* HarmonicForceType::_clone(::xml_schema::flags f,
+                                             ::xml_schema::container* c) const {
+  return new class HarmonicForceType(*this, f, c);
+}
+
+HarmonicForceType& HarmonicForceType::operator=(const HarmonicForceType& x) {
+  if (this != &x) {
+    static_cast< ::xml_schema::type&>(*this) = x;
+    this->r_0_ = x.r_0_;
+    this->k_ = x.k_;
+  }
+
+  return *this;
+}
+
+HarmonicForceType::~HarmonicForceType() {}
+
+// IndexForceType
+//
+
+IndexForceType::IndexForceType(const time_type& time,
+                               const force_values_type& force_values)
+    : ::xml_schema::type(),
+      index_(this),
+      time_(time, this),
+      force_values_(force_values, this) {}
+
+IndexForceType::IndexForceType(const time_type& time,
+                               ::std::auto_ptr<force_values_type> force_values)
+    : ::xml_schema::type(),
+      index_(this),
+      time_(time, this),
+      force_values_(force_values, this) {}
+
+IndexForceType::IndexForceType(const IndexForceType& x, ::xml_schema::flags f,
+                               ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c),
+      index_(x.index_, f, this),
+      time_(x.time_, f, this),
+      force_values_(x.force_values_, f, this) {}
+
+IndexForceType::IndexForceType(const ::xercesc::DOMElement& e,
+                               ::xml_schema::flags f,
+                               ::xml_schema::container* c)
+    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c),
+      index_(this),
+      time_(this),
+      force_values_(this) {
+  if ((f & ::xml_schema::flags::base) == 0) {
+    ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
+    this->parse(p, f);
+  }
+}
+
+void IndexForceType::parse(::xsd::cxx::xml::dom::parser<char>& p,
+                           ::xml_schema::flags f) {
+  for (; p.more_content(); p.next_content(false)) {
+    const ::xercesc::DOMElement& i(p.cur_element());
+    const ::xsd::cxx::xml::qualified_name<char> n(
+        ::xsd::cxx::xml::dom::name<char>(i));
+
+    // index
+    //
+    if (n.name() == "index" && n.namespace_().empty()) {
+      ::std::auto_ptr<index_type> r(index_traits::create(i, f, this));
+
+      this->index_.push_back(r);
+      continue;
+    }
+
+    // time
+    //
+    if (n.name() == "time" && n.namespace_().empty()) {
+      if (!time_.present()) {
+        this->time_.set(time_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    // force_values
+    //
+    if (n.name() == "force_values" && n.namespace_().empty()) {
+      ::std::auto_ptr<force_values_type> r(
+          force_values_traits::create(i, f, this));
+
+      if (!force_values_.present()) {
+        this->force_values_.set(r);
+        continue;
+      }
+    }
+
+    break;
+  }
+
+  if (!time_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("time", "");
+  }
+
+  if (!force_values_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("force_values", "");
+  }
+}
+
+IndexForceType* IndexForceType::_clone(::xml_schema::flags f,
+                                       ::xml_schema::container* c) const {
+  return new class IndexForceType(*this, f, c);
+}
+
+IndexForceType& IndexForceType::operator=(const IndexForceType& x) {
+  if (this != &x) {
+    static_cast< ::xml_schema::type&>(*this) = x;
+    this->index_ = x.index_;
+    this->time_ = x.time_;
+    this->force_values_ = x.force_values_;
+  }
+
+  return *this;
+}
+
+IndexForceType::~IndexForceType() {}
 
 // ThermostatType
 //
@@ -2594,6 +3524,7 @@ simulation::simulation(const metadata_type& metadata)
       metadata_(metadata, this),
       cuboids_(this),
       spheroids_(this),
+      membranes_(this),
       thermostat_(this) {}
 
 simulation::simulation(::std::auto_ptr<metadata_type> metadata)
@@ -2601,6 +3532,7 @@ simulation::simulation(::std::auto_ptr<metadata_type> metadata)
       metadata_(metadata, this),
       cuboids_(this),
       spheroids_(this),
+      membranes_(this),
       thermostat_(this) {}
 
 simulation::simulation(const simulation& x, ::xml_schema::flags f,
@@ -2609,6 +3541,7 @@ simulation::simulation(const simulation& x, ::xml_schema::flags f,
       metadata_(x.metadata_, f, this),
       cuboids_(x.cuboids_, f, this),
       spheroids_(x.spheroids_, f, this),
+      membranes_(x.membranes_, f, this),
       thermostat_(x.thermostat_, f, this) {}
 
 simulation::simulation(const ::xercesc::DOMElement& e, ::xml_schema::flags f,
@@ -2617,6 +3550,7 @@ simulation::simulation(const ::xercesc::DOMElement& e, ::xml_schema::flags f,
       metadata_(this),
       cuboids_(this),
       spheroids_(this),
+      membranes_(this),
       thermostat_(this) {
   if ((f & ::xml_schema::flags::base) == 0) {
     ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
@@ -2664,6 +3598,17 @@ void simulation::parse(::xsd::cxx::xml::dom::parser<char>& p,
       }
     }
 
+    // membranes
+    //
+    if (n.name() == "membranes" && n.namespace_().empty()) {
+      ::std::auto_ptr<membranes_type> r(membranes_traits::create(i, f, this));
+
+      if (!this->membranes_) {
+        this->membranes_.set(r);
+        continue;
+      }
+    }
+
     // thermostat
     //
     if (n.name() == "thermostat" && n.namespace_().empty()) {
@@ -2694,6 +3639,7 @@ simulation& simulation::operator=(const simulation& x) {
     this->metadata_ = x.metadata_;
     this->cuboids_ = x.cuboids_;
     this->spheroids_ = x.spheroids_;
+    this->membranes_ = x.membranes_;
     this->thermostat_ = x.thermostat_;
   }
 
@@ -2809,6 +3755,60 @@ spheroids& spheroids::operator=(const spheroids& x) {
 }
 
 spheroids::~spheroids() {}
+
+// membranes
+//
+
+membranes::membranes() : ::xml_schema::type(), membrane_(this) {}
+
+membranes::membranes(const membranes& x, ::xml_schema::flags f,
+                     ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c), membrane_(x.membrane_, f, this) {}
+
+membranes::membranes(const ::xercesc::DOMElement& e, ::xml_schema::flags f,
+                     ::xml_schema::container* c)
+    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c), membrane_(this) {
+  if ((f & ::xml_schema::flags::base) == 0) {
+    ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
+    this->parse(p, f);
+  }
+}
+
+void membranes::parse(::xsd::cxx::xml::dom::parser<char>& p,
+                      ::xml_schema::flags f) {
+  for (; p.more_content(); p.next_content(false)) {
+    const ::xercesc::DOMElement& i(p.cur_element());
+    const ::xsd::cxx::xml::qualified_name<char> n(
+        ::xsd::cxx::xml::dom::name<char>(i));
+
+    // membrane
+    //
+    if (n.name() == "membrane" && n.namespace_().empty()) {
+      ::std::auto_ptr<membrane_type> r(membrane_traits::create(i, f, this));
+
+      this->membrane_.push_back(r);
+      continue;
+    }
+
+    break;
+  }
+}
+
+membranes* membranes::_clone(::xml_schema::flags f,
+                             ::xml_schema::container* c) const {
+  return new class membranes(*this, f, c);
+}
+
+membranes& membranes::operator=(const membranes& x) {
+  if (this != &x) {
+    static_cast< ::xml_schema::type&>(*this) = x;
+    this->membrane_ = x.membrane_;
+  }
+
+  return *this;
+}
+
+membranes::~membranes() {}
 
 #include <istream>
 #include <xsd/cxx/tree/error-handler.hxx>
@@ -3191,6 +4191,35 @@ void operator<<(::xercesc::DOMElement& e, const MetadataType& i) {
   }
 }
 
+void operator<<(::xercesc::DOMElement& e, const CheckpointWrapperType& i) {
+  e << static_cast<const ::xml_schema::type&>(i);
+
+  // name
+  //
+  {
+    ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("name", e));
+
+    s << i.name();
+  }
+
+  // is_membrane
+  //
+  {
+    ::xercesc::DOMElement& s(
+        ::xsd::cxx::xml::dom::create_element("is_membrane", e));
+
+    s << i.is_membrane();
+  }
+
+  // domain
+  //
+  {
+    ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("domain", e));
+
+    s << i.domain();
+  }
+}
+
 void operator<<(::xercesc::DOMElement& e, const StatisticsType& i) {
   e << static_cast<const ::xml_schema::type&>(i);
 
@@ -3221,6 +4250,85 @@ void operator<<(::xercesc::DOMElement& e, const StatisticsType& i) {
 }
 
 void operator<<(::xercesc::DOMElement& e, const cuboidType& i) {
+  e << static_cast<const ::xml_schema::type&>(i);
+
+  // velocity
+  //
+  {
+    ::xercesc::DOMElement& s(
+        ::xsd::cxx::xml::dom::create_element("velocity", e));
+
+    s << i.velocity();
+  }
+
+  // corner
+  //
+  {
+    ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("corner", e));
+
+    s << i.corner();
+  }
+
+  // dimensions
+  //
+  {
+    ::xercesc::DOMElement& s(
+        ::xsd::cxx::xml::dom::create_element("dimensions", e));
+
+    s << i.dimensions();
+  }
+
+  // type
+  //
+  {
+    ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("type", e));
+
+    s << i.type();
+  }
+
+  // h
+  //
+  {
+    ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("h", e));
+
+    s << ::xml_schema::as_decimal(i.h());
+  }
+
+  // mass
+  //
+  {
+    ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("mass", e));
+
+    s << ::xml_schema::as_decimal(i.mass());
+  }
+
+  // epsilon
+  //
+  {
+    ::xercesc::DOMElement& s(
+        ::xsd::cxx::xml::dom::create_element("epsilon", e));
+
+    s << ::xml_schema::as_decimal(i.epsilon());
+  }
+
+  // sigma
+  //
+  {
+    ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("sigma", e));
+
+    s << ::xml_schema::as_decimal(i.sigma());
+  }
+
+  // mv
+  //
+  {
+    ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("mv", e));
+
+    s << ::xml_schema::as_decimal(i.mv());
+  }
+}
+
+void operator<<(::xercesc::DOMElement& e, const membraneType& i) {
   e << static_cast<const ::xml_schema::type&>(i);
 
   // velocity
@@ -3605,6 +4713,33 @@ void operator<<(::xercesc::DOMElement& e, const ForceType& i) {
 
     s << *i.SingularGravity();
   }
+
+  // HarmonicForce
+  //
+  if (i.HarmonicForce()) {
+    ::xercesc::DOMElement& s(
+        ::xsd::cxx::xml::dom::create_element("HarmonicForce", e));
+
+    s << *i.HarmonicForce();
+  }
+
+  // IndexForce
+  //
+  if (i.IndexForce()) {
+    ::xercesc::DOMElement& s(
+        ::xsd::cxx::xml::dom::create_element("IndexForce", e));
+
+    s << *i.IndexForce();
+  }
+
+  // TruncatedLennardJonesForce
+  //
+  if (i.TruncatedLennardJonesForce()) {
+    ::xercesc::DOMElement& s(
+        ::xsd::cxx::xml::dom::create_element("TruncatedLennardJonesForce", e));
+
+    s << *i.TruncatedLennardJonesForce();
+  }
 }
 
 void operator<<(::xercesc::DOMElement& e, const GravityType& i) {
@@ -3623,15 +4758,84 @@ void operator<<(::xercesc::DOMAttr&, const LennardJonesForce&) {}
 
 void operator<<(::xml_schema::list_stream&, const LennardJonesForce&) {}
 
+void operator<<(::xercesc::DOMElement& e,
+                const TruncatedLennardJonesForceType& i) {
+  e << static_cast<const ::xml_schema::type&>(i);
+}
+
+void operator<<(::xercesc::DOMAttr&, const TruncatedLennardJonesForceType&) {}
+
+void operator<<(::xml_schema::list_stream&,
+                const TruncatedLennardJonesForceType&) {}
+
 void operator<<(::xercesc::DOMElement& e, const SingularGravityType& i) {
   e << static_cast<const ::xml_schema::type&>(i);
 
   // g
   //
-  if (i.g()) {
-    ::xercesc::DOMAttr& a(::xsd::cxx::xml::dom::create_attribute("g", e));
+  {
+    ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("g", e));
 
-    a << ::xml_schema::as_decimal(*i.g());
+    s << ::xml_schema::as_decimal(i.g());
+  }
+
+  // axis
+  //
+  {
+    ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("axis", e));
+
+    s << i.axis();
+  }
+}
+
+void operator<<(::xercesc::DOMElement& e, const HarmonicForceType& i) {
+  e << static_cast<const ::xml_schema::type&>(i);
+
+  // r_0
+  //
+  {
+    ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("r_0", e));
+
+    s << ::xml_schema::as_decimal(i.r_0());
+  }
+
+  // k
+  //
+  {
+    ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("k", e));
+
+    s << ::xml_schema::as_decimal(i.k());
+  }
+}
+
+void operator<<(::xercesc::DOMElement& e, const IndexForceType& i) {
+  e << static_cast<const ::xml_schema::type&>(i);
+
+  // index
+  //
+  for (IndexForceType::index_const_iterator b(i.index().begin()),
+       n(i.index().end());
+       b != n; ++b) {
+    ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("index", e));
+
+    s << *b;
+  }
+
+  // time
+  //
+  {
+    ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("time", e));
+
+    s << ::xml_schema::as_decimal(i.time());
+  }
+
+  // force_values
+  //
+  {
+    ::xercesc::DOMElement& s(
+        ::xsd::cxx::xml::dom::create_element("force_values", e));
+
+    s << i.force_values();
   }
 }
 
@@ -3712,6 +4916,15 @@ void operator<<(::xercesc::DOMElement& e, const simulation& i) {
     s << *i.spheroids();
   }
 
+  // membranes
+  //
+  if (i.membranes()) {
+    ::xercesc::DOMElement& s(
+        ::xsd::cxx::xml::dom::create_element("membranes", e));
+
+    s << *i.membranes();
+  }
+
   // thermostat
   //
   if (i.thermostat()) {
@@ -3746,6 +4959,21 @@ void operator<<(::xercesc::DOMElement& e, const spheroids& i) {
        b != n; ++b) {
     ::xercesc::DOMElement& s(
         ::xsd::cxx::xml::dom::create_element("spheroid", e));
+
+    s << *b;
+  }
+}
+
+void operator<<(::xercesc::DOMElement& e, const membranes& i) {
+  e << static_cast<const ::xml_schema::type&>(i);
+
+  // membrane
+  //
+  for (membranes::membrane_const_iterator b(i.membrane().begin()),
+       n(i.membrane().end());
+       b != n; ++b) {
+    ::xercesc::DOMElement& s(
+        ::xsd::cxx::xml::dom::create_element("membrane", e));
 
     s << *b;
   }

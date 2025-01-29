@@ -34,7 +34,10 @@
         </container>
         <force>
             <LennardJones/>
-            <SingularGravity g="-0.2"/>
+            <SingularGravity>
+                <g>-0.2</g>
+                <axis>1</axis>
+            </SingularGravity>
         </force>
         <delta_t>0.0005</delta_t>
         <t_end>500</t_end>

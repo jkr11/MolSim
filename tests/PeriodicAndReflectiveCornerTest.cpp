@@ -28,9 +28,9 @@ TEST(PeriodicAndReflective, XPeriodicYReflective) {
   const LennardJones f{};
 
   // move to other end
-  const Particle one({8, 8, 1}, {2, 2, 0}, 1, 5.0, 1);  // in bb
+  Particle one({8, 8, 1}, {2, 2, 0}, 1, 5.0, 1);  // in bb
 
-  container.addParticle(one);
+  container.addParticles({one});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 1";
 
   // simulate 10.000 steps for a specific delta t to assure that it turned
@@ -63,9 +63,9 @@ TEST(PeriodicAndReflective, XPeriodicYReflective) {
 
   // test that particle is registered in its true cell
   const auto old_cell =
-      container.getCells()[container.cellCoordToIndex_testing({2, 2, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({2, 2, 0})];
   const auto new_cell =
-      container.getCells()[container.cellCoordToIndex_testing({0, 2, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({0, 2, 0})];
 
   EXPECT_EQ(old_cell.size(), 0);
   EXPECT_EQ(new_cell.size(), 1);

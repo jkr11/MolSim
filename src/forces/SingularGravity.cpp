@@ -3,8 +3,11 @@
 //
 #include "SingularGravity.h"
 
-SingularGravity::SingularGravity(const double g) : g(g){};
+SingularGravity::SingularGravity(const double g, const int axis)
+    : g_(g), axis_(axis) {};
 
 dvec3 SingularGravity::applyForce(const Particle& p) const {
-  return {0.0, g * p.getM(), 0.0};
+  dvec3 force{0.0, 0.0, 0.0};
+  force[axis_] = g_ * p.getM();
+  return force;
 }

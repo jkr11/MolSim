@@ -56,3 +56,14 @@ inline void EXPECT_IVEC3_EQ(const ivec3& a, const ivec3& b) {
     EXPECT_EQ(a[i], b[i]) << "Elements at index " << i << " are not equal";
   }
 }
+
+/**
+ * @brief checks if a list contains an element
+ * @tparam T template type T
+ * @param elt query element
+ * @param list list possibly containing elt
+ */
+template <typename T>
+void VEC_CONTAINS(const T elt, const std::vector<T>& list) {
+  EXPECT_TRUE(std::find(list.begin(), list.end(), elt));
+}
