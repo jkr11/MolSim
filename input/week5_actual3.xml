@@ -40,7 +40,7 @@
             </SingularGravity>
         </force>
         <delta_t>0.0005</delta_t>
-        <t_end>1</t_end>
+        <t_end>100</t_end>
         <twoD>false</twoD>
         <statistics>
             <x_bins>1</x_bins>
