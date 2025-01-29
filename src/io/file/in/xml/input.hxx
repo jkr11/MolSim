@@ -241,6 +241,7 @@ const XMLCh* const tree_node_key = ::xsd::cxx::tree::user_data_keys::node;
 // Forward declarations.
 //
 class MetadataType;
+class CheckpointWrapperType;
 class StatisticsType;
 class cuboidType;
 class membraneType;
@@ -342,7 +343,7 @@ class MetadataType : public ::xml_schema::type {
 
   // checkpoint
   //
-  typedef ::xml_schema::string checkpoint_type;
+  typedef ::CheckpointWrapperType checkpoint_type;
   typedef ::xsd::cxx::tree::optional<checkpoint_type> checkpoint_optional;
   typedef ::xsd::cxx::tree::traits<checkpoint_type, char> checkpoint_traits;
 
@@ -406,6 +407,79 @@ class MetadataType : public ::xml_schema::type {
   ::xsd::cxx::tree::one<twoD_type> twoD_;
   checkpoint_optional checkpoint_;
   statistics_optional statistics_;
+};
+
+class CheckpointWrapperType : public ::xml_schema::type {
+ public:
+  // name
+  //
+  typedef ::xml_schema::string name_type;
+  typedef ::xsd::cxx::tree::traits<name_type, char> name_traits;
+
+  const name_type& name() const;
+
+  name_type& name();
+
+  void name(const name_type& x);
+
+  void name(::std::auto_ptr<name_type> p);
+
+  // is_membrane
+  //
+  typedef ::xml_schema::boolean is_membrane_type;
+  typedef ::xsd::cxx::tree::traits<is_membrane_type, char> is_membrane_traits;
+
+  const is_membrane_type& is_membrane() const;
+
+  is_membrane_type& is_membrane();
+
+  void is_membrane(const is_membrane_type& x);
+
+  // domain
+  //
+  typedef ::Ivec3Type domain_type;
+  typedef ::xsd::cxx::tree::traits<domain_type, char> domain_traits;
+
+  const domain_type& domain() const;
+
+  domain_type& domain();
+
+  void domain(const domain_type& x);
+
+  void domain(::std::auto_ptr<domain_type> p);
+
+  // Constructors.
+  //
+  CheckpointWrapperType(const name_type&, const is_membrane_type&,
+                        const domain_type&);
+
+  CheckpointWrapperType(const name_type&, const is_membrane_type&,
+                        ::std::auto_ptr<domain_type>);
+
+  CheckpointWrapperType(const ::xercesc::DOMElement& e,
+                        ::xml_schema::flags f = 0,
+                        ::xml_schema::container* c = 0);
+
+  CheckpointWrapperType(const CheckpointWrapperType& x,
+                        ::xml_schema::flags f = 0,
+                        ::xml_schema::container* c = 0);
+
+  virtual CheckpointWrapperType* _clone(::xml_schema::flags f = 0,
+                                        ::xml_schema::container* c = 0) const;
+
+  CheckpointWrapperType& operator=(const CheckpointWrapperType& x);
+
+  virtual ~CheckpointWrapperType();
+
+  // Implementation.
+  //
+ protected:
+  void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
+
+ protected:
+  ::xsd::cxx::tree::one<name_type> name_;
+  ::xsd::cxx::tree::one<is_membrane_type> is_membrane_;
+  ::xsd::cxx::tree::one<domain_type> domain_;
 };
 
 class StatisticsType : public ::xml_schema::type {
@@ -2306,6 +2380,8 @@ void simulation_(::xercesc::DOMDocument& d, const ::simulation& x,
     ::xml_schema::flags f = 0);
 
 void operator<<(::xercesc::DOMElement&, const MetadataType&);
+
+void operator<<(::xercesc::DOMElement&, const CheckpointWrapperType&);
 
 void operator<<(::xercesc::DOMElement&, const StatisticsType&);
 

@@ -8,7 +8,7 @@
 #include "forces/SingularGravity.h"
 #include "testUtil.h"
 
-/*
+/**
  * Positions correct after one step, arbitrary example 1
  */
 TEST(VerletIntegrator, step1) {
@@ -36,7 +36,7 @@ TEST(VerletIntegrator, step1) {
   DVEC3_NEAR(p.getV(), {1, 0.005, 0}, "Velocity wrong.", 1e-5f);
 }
 
-/*
+/**
  * Positions correct after one step, arbitrary example 2
  */
 TEST(VerletIntegrator, step2) {

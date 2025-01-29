@@ -4,7 +4,8 @@
 
 #include "../src/io/file/in/xml/XmlReader.h"
 
-// #include "io/file/in/xml/input.cxx"  // <- this is necessary at least on clang
+// #include "io/file/in/xml/input.cxx"  // <- this is necessary at least on
+// clang
 #include "io/file/in/xml/input.hxx"
 #include "io/file/out/checkpoint-schema.cxx"
 #include "io/file/out/checkpoint-schema.hxx"
@@ -87,13 +88,18 @@ TEST(XmlReader, testCuboidSpheroidLinkedCells) {
   EXPECT_EQ(config.boundary_config.z_low, LinkedCellsConfig::Outflow);
 }
 
-
 namespace fs = std::filesystem;
 
+/**
+ * checks if the extension is xml
+ */
 [[nodiscard]] bool isXMLFile(const fs::path& filePath) noexcept {
   return filePath.extension() == ".xml";
 }
 
+/**
+ * collects all files in the input directory for further testing
+ */
 void processXMLFilesInInput(std::vector<fs::path>& paths) {
   const std::string inputDir = "../../input";
 
@@ -114,17 +120,22 @@ void processXMLFilesInInput(std::vector<fs::path>& paths) {
     std::cerr << "Error: " << e.what() << std::endl;
   }
 }
+
+/**
+ * This tests that all our current and past input files can still be read
+ */
 TEST(XmlReader, all_inputs_no_error) {
   std::vector<fs::path> paths;
   processXMLFilesInInput(paths);
 
   for (const auto& path : paths) {
+    // because this requires checkpoints that havent been written yet -> these
+    // are adressed in different tests
     if (path != "../../input/week43.xml" &&
         path != "../../input/week43periodic.xml" &&
-        path != "../../input/checkpoint_test.xml") {  // because this requires
-                                                      // checkpoint
+        path != "../../input/checkpoint_test.xml" &&
+        path != "../../input/checkpoint_membrane_test.xml") {
       SpdWrapper::get()->info("Path {}", path.c_str());
-      // that isnt written yet
       std::vector<Particle> particles;
       EXPECT_NO_FATAL_FAILURE(XmlReader::read(particles, path, arguments));
     }

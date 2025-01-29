@@ -38,30 +38,14 @@
         <delta_t>0.0005</delta_t>
         <t_end>0</t_end>
         <twoD>true</twoD>
-    </metadata>
-    <cuboids>
-        <cuboid>
-            <velocity>
-                <x>0.0</x>
-                <y>0.0</y>
-                <z>0.0</z>
-            </velocity>
-            <corner>
-                <x>0</x>
-                <y>0</y>
-                <z>0</z>
-            </corner>
-            <dimensions>
-                <x>4</x>
-                <y>4</y>
+        <checkpoint>
+            <name>../../input/checkpoint_membrane_test.xml</name>
+            <is_membrane>true</is_membrane>
+            <domain>
+                <x>50</x>
+                <y>50</y>
                 <z>1</z>
-            </dimensions>
-            <type>1</type>
-            <h>1.1225</h>
-            <mass>1.0</mass>
-            <epsilon>5.0</epsilon>
-            <sigma>1.0</sigma>
-            <mv>0.0</mv>
-        </cuboid>
-    </cuboids>
+            </domain>
+        </checkpoint>
+    </metadata>
 </simulation>
