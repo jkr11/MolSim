@@ -414,7 +414,7 @@ void LinkedCellsContainer::computeInteractiveForces(
   int num_threads = omp_get_max_threads();
   // SpdWrapper::get()->critical("num threads: {}", num_threads);
   std::vector<std::vector<dvec3>> force_buffers(
-      num_threads, std::vector<dvec3>(particle_count_, {0, 0, 0}));
+      num_threads, std::vector<dvec3>(particles_.size(), {0, 0, 0}));
 #ifdef _OPENMP
 #pragma omp parallel for schedule(dynamic)
 #endif
