@@ -10,13 +10,13 @@
 
 class HarmonicForce final : public SingularForce {
  private:
-  int k{};
-  double r_0{};
-  double sr_0{};
+  int k_{};
+  double r_0_{};
+  double sr_0_{};
 
  public:
-  explicit HarmonicForce(const double k, const double r_0) : k(k), r_0(r_0) {
-    sr_0 = std::sqrt(2) * r_0;
+  explicit HarmonicForce(const int k, const double r_0) : k_(k), r_0_(r_0) {
+    sr_0_ = std::sqrt(2) * r_0;
   }
 
   [[nodiscard]] dvec3 applyForce(const Particle& p) const override;

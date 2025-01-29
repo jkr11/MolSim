@@ -12,6 +12,7 @@ class CSVWriter {
 
  public:
   explicit CSVWriter(const std::string& file_name) {
+    SpdWrapper::get()->info("Opening {}...", file_name);
     file_.open(file_name);
     if (!file_.is_open()) {
       SpdWrapper::get()->error("Failed to open CSV output file");

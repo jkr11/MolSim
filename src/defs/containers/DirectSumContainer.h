@@ -34,7 +34,7 @@ class DirectSumContainer final : public ParticleContainer {
    * @brief Add a particle to the container
    * @param p Particle to be added
    */
-  void addParticle(Particle& p) override;
+  void addParticle(Particle& p);
 
   /**
    * @brief Add a vector of particles to the container
@@ -89,8 +89,7 @@ class DirectSumContainer final : public ParticleContainer {
 
   //TODO: implement?
   void computeInteractiveForces(
-      const std::vector<std::unique_ptr<InteractiveForce>>& interactive_forces) override {}
-
+      const std::vector<std::unique_ptr<InteractiveForce>>& interactive_forces) override;
   //TODO: implement?
   void computeSingularForces(const std::vector<std::unique_ptr<SingularForce>>&
                                  singular_forces) override {}

@@ -22,15 +22,10 @@ class ParticleContainer {
    */
   virtual ~ParticleContainer() = default;
 
-  /**
-   * @brief Add a particle to the particle system.
-   * @param p Particle to be added.
-   */
-  virtual void addParticle(Particle& p) = 0;
-
   virtual void addParticles(const std::vector<Particle>& particles) = 0;
   /**
    * @brief Remove a particle from the particle system.
+   * DO NOT USE, JUST FOR TESTING!
    * @param p Particle to be removed.
    */
   virtual void removeParticle(const Particle& p) = 0;

@@ -16,7 +16,10 @@ if (BUILD_TESTS)
     add_executable(MolSimTest ${MOLSIM_TEST}
             BoundaryConditionsTest.cpp
             XmlReaderTest.cpp
-            XmlReaderTest.cpp)
+            XmlReaderTest.cpp
+            TruncatedLennardJones.cpp
+            IndexForceTest.cpp
+            SingularGravityTest.cpp)
 
     target_link_libraries(MolSimTest MolSimLib GTest::gtest_main)
     include(GoogleTest)

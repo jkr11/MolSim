@@ -51,6 +51,12 @@ class VerletIntegrator {
    * @brief Virtual method to advance time by one step
    * @param particle_container
    */
-  void step(ParticleContainer& particle_container) const;
+  void step(ParticleContainer& particle_container);
+
+
+  /**
+   * @brief increments the current simulation time by delta_t_
+   */
+  void incrementTime() { current_time_ += delta_t_; }
 };
 #endif

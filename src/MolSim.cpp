@@ -21,7 +21,7 @@
 #include "spdlog/stopwatch.h"
 #include "utils/SpdWrapper.h"
 #include "utils/Statistics.h"
-
+#undef BENCHMARK
 int main(const int argc, char* argv[]) {
   Arguments arguments = {};
 
@@ -95,13 +95,11 @@ int main(const int argc, char* argv[]) {
 
   for (auto config : arguments.singular_force_types) {
     if (std::holds_alternative<SingularGravityConfig>(config)) {
-      const auto& [g, a] = std::get<SingularGravityConfig>(config);
-      singular_forces.push_back(
-          std::move(std::make_unique<SingularGravity>(g, a)));
+      const auto& [g, axis] = std::get<SingularGravityConfig>(config);
+      singular_forces.push_back(std::make_unique<SingularGravity>(g, axis));
     } else if (std::holds_alternative<HarmonicForceConfig>(config)) {
       const auto& [r, k] = std::get<HarmonicForceConfig>(config);
-      singular_forces.push_back(
-          std::move(std::make_unique<HarmonicForce>(k, r)));
+      singular_forces.push_back(std::make_unique<HarmonicForce>(k, r));
 
     } else {
       SpdWrapper::get()->error("Unrecognized singular force");
@@ -132,14 +130,14 @@ int main(const int argc, char* argv[]) {
   spdlog::stopwatch stopwatch;  // TODO whats up with this?
   auto time_of_last_mups = start_time;
   // TODO breaks sometimes i think it has to do with paths?
-/*
+
   Statistics statistics(
       arguments.statistics_config.x_bins, arguments.statistics_config.y_bins,
       *container,
-      output_directory + "/" +
+      output_directory +
           arguments.statistics_config.density_output_location,
-      output_directory + "/" +
-          arguments.statistics_config.velocity_output_location);*/
+      output_directory +
+          arguments.statistics_config.velocity_output_location);
 #endif
   // auto p2 = container->getParticles()[1];
   // for (auto [diag, ref] : p2->getNeighbours()) {
@@ -174,16 +172,16 @@ int main(const int argc, char* argv[]) {
     }
 
 #ifdef BENCHMARK  // these are the first 1000 iterations for the contest
-    if (iteration == 1000) {
+    if (iteration == 10000) {
       const auto first_1_k = std::chrono::high_resolution_clock::now();
       const std::chrono::duration<double> elapsed = first_1_k - start_time;
-      std::cout << "First 1k iterations took: " << elapsed.count() << " seconds"
+      std::cout << "First 10k iterations took: " << elapsed.count() << " seconds"
                 << std::endl;
-      const auto mups = static_cast<double>(number_of_particles) * 1000 *
+      const auto mups = static_cast<double>(number_of_particles) * 10000 *
                         (1.0 / elapsed.count());
-      std::cout << "MMUPS for first 1k iterations: " << mups * (1.0 / 1e6)
+      std::cout << "MMUPS for first 10k iterations: " << mups * (1.0 / 1e6)
                 << std::endl;
-      exit(1);
+      exit(0);
     }
 #endif
 
@@ -258,11 +256,11 @@ int main(const int argc, char* argv[]) {
       }
     }
     // TODO breaks on membrane branch idk why
-    /*
+
     if (arguments.statistics_config.calc_stats &&
         iteration % arguments.statistics_config.output_interval == 0) {
       statistics.writeStatistics(current_time);
-    }*/
+    }
 #endif
     iteration++;
     current_time = arguments.delta_t * iteration;
@@ -290,7 +288,7 @@ int main(const int argc, char* argv[]) {
 
 #ifndef BENCHMARK
   // TODO
-  // statistics.closeFiles();
+  statistics.closeFiles();
 #endif
   SpdWrapper::get()->info("Output written. Terminating...");
 
