@@ -12,6 +12,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 add_compile_options(-O3 -ffast-math -march=native -std=c++17 -lstdc++
         -Wno-deprecated-declarations)
 
+#add_compile_options(-xHost -O3 -fp-model fast=2)
+
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
 include(googletest)
 include(doxygen)

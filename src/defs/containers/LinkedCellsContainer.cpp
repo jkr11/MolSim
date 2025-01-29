@@ -216,7 +216,8 @@ void LinkedCellsContainer::imposeInvariant() {
       //     should_be_cell[2]);
 
       if (!isValidCellCoordinate(should_be_cell)) {
-        std::cout << (*it)->getX()[0] << ", " << (*it)->getX()[1] << ", " << (*it)->getX()[2] << std::endl;
+        std::cout << (*it)->getX()[0] << ", " << (*it)->getX()[1] << ", "
+                  << (*it)->getX()[2] << std::endl;
       }
       cells_[shouldBeIndex].push_back(*it);
       it = cells_[index].erase(it);
@@ -322,8 +323,7 @@ void LinkedCellsContainer::pairIterator(
         f(*cell_particles[i], *cell_particles[j]);
         // SpdWrapper::get()->info("Index pair {}/{}", cellParticles[i].getId(),
         //                        cellParticles[j].getId());
-        DEBUG_PRINT_FMT("Intra cell pair: ({}, {})",
-                        cell_particles[i]->getId(),
+        DEBUG_PRINT_FMT("Intra cell pair: ({}, {})", cell_particles[i]->getId(),
                         cell_particles[j]->getId());
       }
     }
@@ -392,8 +392,8 @@ void LinkedCellsContainer::haloIterator(
   }
 }
 
-void LinkedCellsContainer::computeInteractiveForces(const
-    std::vector<std::unique_ptr<InteractiveForce>>& interactive_forces) {
+void LinkedCellsContainer::computeInteractiveForces(
+    const std::vector<std::unique_ptr<InteractiveForce>> &interactive_forces) {
   constexpr std::array<ivec3, 13> offsets = {{
       // 9 x facing
       {{1, -1, -1}},
@@ -414,9 +414,9 @@ void LinkedCellsContainer::computeInteractiveForces(const
   }};
 
   for (auto &colour : c18_colours_) {
-    #ifdef _OPENMP
-    #pragma omp parallel for schedule(dynamic)
-    #endif
+#ifdef _OPENMP
+#pragma omp parallel for schedule(dynamic)
+#endif
     for (const std::size_t cell_index : colour) {
       if (cells_[cell_index].empty()) {
         continue;
@@ -426,8 +426,9 @@ void LinkedCellsContainer::computeInteractiveForces(const
 
       // iterate over particles inside cell
       for (std::size_t p1 = 0; p1 < cell.size(); p1++) {
+        const auto p = cell[p1];
+        dvec3 force_accum = {0, 0, 0};
         for (std::size_t p2 = p1 + 1; p2 < cell.size(); p2++) {
-          const auto p = cell[p1];
           const auto q = cell[p2];
           const dvec3 p_X = p->getX();
           const dvec3 q_X = q->getX();
@@ -438,11 +439,13 @@ void LinkedCellsContainer::computeInteractiveForces(const
           for (auto &force : interactive_forces) {
             neighbour_force = neighbour_force + force->directionalForce(*p, *q);
           }
-          p->addF(neighbour_force);
+          force_accum = force_accum + neighbour_force;
+          // p->addF(neighbour_force);
           q->subF(neighbour_force);
           DEBUG_PRINT_FMT("Intra cell pair: ({}, {})", p->getType(),
                           q->getType());
         }
+        p->addF(force_accum);
       }
 
       // iterate over neighbouring newton3 cells
@@ -470,6 +473,7 @@ void LinkedCellsContainer::computeInteractiveForces(const
         if (neighbour_particles.empty()) continue;
 
         for (auto &cell_particle : cell) {
+          dvec3 force_accum = {0, 0, 0};
           for (auto &neighbour_particle : neighbour_particles) {
             auto p = cell_particle->getX();
             auto q = neighbour_particle->getX();
@@ -483,16 +487,18 @@ void LinkedCellsContainer::computeInteractiveForces(const
                   neighbour_force +
                   force->directionalForce(*cell_particle, *neighbour_particle);
             }
-            cell_particle->addF(neighbour_force);
+            force_accum = force_accum + neighbour_force;
+            // cell_particle->addF(neighbour_force);
             neighbour_particle->subF(neighbour_force);
             // f(cell_particle, neighbour_particle);
             DEBUG_PRINT_FMT("Cross cell pair: ({}, {})", cell_particle->getId(),
                             neighbour_particle->getId())
           }
+          cell_particle->addF(force_accum);
         }
       }
     }
-    #pragma omp barrier
+#pragma omp barrier
   }
 }
 
