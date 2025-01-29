@@ -26,7 +26,7 @@ TEST(SingularGravity, y_direction) {
 }
 
 TEST(SingularGravity, z_direction) {
-  SingularGravity sg(-12.44, 1);
+  SingularGravity sg(-12.44, 2);
   Particle p({0, 0, 0}, {0, 0, 0}, 1, 1, 1);
   p.addF(sg.applyForce(p));
   DVEC3_NEAR(p.getF(), {0,0, -12.44}, "Singular Gravity not equal");
