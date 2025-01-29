@@ -9,7 +9,7 @@
 #include "debug/debug_print.h"
 #include "testUtil.h"
 
-/*
+/**
  * TruncatedLennardJones with distance >= sigma * c
  */
 TEST(TruncatedLennardJones, attractive_part) {
@@ -21,7 +21,7 @@ TEST(TruncatedLennardJones, attractive_part) {
   DVEC3_NEAR(f, {0, 0, 0}, "Directional force wrong", 1e-5);
 }
 
-/*
+/**
  * TruncatedLennardJones with a distance < sigma * c
  */
 TEST(TruncatedLennardJones, repulsive_part) {
@@ -33,7 +33,7 @@ TEST(TruncatedLennardJones, repulsive_part) {
   DVEC3_NEAR(f, {-120, 0, 0}, "Directional force wrong", 1e-5);
 }
 
-/*
+/**
  * TruncatedLennardJones at almost the cutoff
  */
 TEST(TruncatedLennardJones, cutoff_part) {

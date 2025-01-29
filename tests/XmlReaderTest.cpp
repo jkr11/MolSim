@@ -90,10 +90,16 @@ TEST(XmlReader, testCuboidSpheroidLinkedCells) {
 
 namespace fs = std::filesystem;
 
+/**
+ * checks if the extension is xml
+ */
 [[nodiscard]] bool isXMLFile(const fs::path& filePath) noexcept {
   return filePath.extension() == ".xml";
 }
 
+/**
+ * collects all files in the input directory for further testing
+ */
 void processXMLFilesInInput(std::vector<fs::path>& paths) {
   const std::string inputDir = "../../input";
 
@@ -115,8 +121,7 @@ void processXMLFilesInInput(std::vector<fs::path>& paths) {
   }
 }
 
-
-/*
+/**
  * This tests that all our current and past input files can still be read
  */
 TEST(XmlReader, all_inputs_no_error) {
