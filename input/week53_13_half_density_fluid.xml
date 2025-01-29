@@ -34,10 +34,7 @@
         </container>
         <force>
             <LennardJones/>
-            <SingularGravity>
-                <g>-0.8</g>
-                <axis>1</axis>
-            </SingularGravity>
+            <SingularGravity g="-0.8"/>
         </force>
         <delta_t>0.0005</delta_t>
         <t_end>500</t_end>
@@ -107,9 +104,9 @@
                 <z>0.6</z>
             </corner>
             <dimensions>
-                <x>20</x>
-                <y>25</y>
-                <z>10</z>
+                <x>10</x>
+                <y>12</y>
+                <z>5</z>
             </dimensions>
             <type>1</type>
             <h>2.4</h>
