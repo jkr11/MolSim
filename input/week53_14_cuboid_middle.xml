@@ -34,7 +34,10 @@
         </container>
         <force>
             <LennardJones/>
-            <SingularGravity g="-0.8"/>
+            <SingularGravity>
+                <g>-0.8</g>
+                <axis>1</axis>
+            </SingularGravity>
         </force>
         <delta_t>0.0005</delta_t>
         <t_end>500</t_end>
@@ -100,12 +103,12 @@
                 <z>0</z>
             </velocity>
             <corner>
-                <x>10</x>
-                <y>10.5</y>
+                <x>6.</x>
+                <y>10.</y>
                 <z>0.5</z>
             </corner>
             <dimensions>
-                <x>5</x>
+                <x>18</x>
                 <y>5</y>
                 <z>12</z>
             </dimensions>
@@ -130,7 +133,30 @@
             </corner>
             <dimensions>
                 <x>20</x>
-                <y>25</y>
+                <y>8</y>
+                <z>10</z>
+            </dimensions>
+            <type>1</type>
+            <h>1.2</h>
+            <mass>1.0</mass>
+            <epsilon>1.0</epsilon>
+            <sigma>1.0</sigma>
+            <mv>0.0</mv>
+        </cuboid>
+        <cuboid>
+            <velocity>
+                <x>0.0</x>
+                <y>0.0</y>
+                <z>0.0</z>
+            </velocity>
+            <corner>
+                <x>3.2</x>
+                <y>15</y>
+                <z>0.6</z>
+            </corner>
+            <dimensions>
+                <x>20</x>
+                <y>13</y>
                 <z>10</z>
             </dimensions>
             <type>1</type>
