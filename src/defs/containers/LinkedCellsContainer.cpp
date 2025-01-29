@@ -519,9 +519,9 @@ void LinkedCellsContainer::computeInteractiveForces(
 
 
   int max_threads = omp_get_max_threads();
-  int num_threads = (max_threads > 14) ? 4 : 1;
+  int used_threads = (max_threads > 14) ? 4 : 1;
 
-    #pragma omp parallel for collapse(2) num_threads(num_threads)
+    #pragma omp parallel for collapse(2) schedule(static) num_threads(used_threads)
   for (size_t j = 0; j < particle_count_; j++) {
     for (size_t i = 1; i < num_threads; i++) {
 #pragma omp critical
