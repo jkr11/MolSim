@@ -5,6 +5,7 @@
 #include "XmlReader.h"
 
 #include <filesystem>
+#include <iostream>
 
 #include "debug/debug_print.h"
 #include "defs/Generators/CuboidGenerator.h"
@@ -108,8 +109,20 @@ void XmlReader::read(std::vector<Particle>& particles,
       simulation_parameters.index_force_configs.push_back(index_force_config);
     }
     INFO("Checking if checkpoint is  present ...")
-    if (metadata.checkpoint().present()) {
-      loadCheckpoint(metadata.checkpoint().get(), particles);
+    //if (metadata.checkpoint().present()) {
+    //  loadCheckpoint(metadata.checkpoint().get(), particles);
+    //}
+    if (metadata.checkpoint_1().present()) {
+      INFO("Membrane checkpoint present")
+      auto name =
+          static_cast<std::string>(metadata.checkpoint_1()->name());
+      if (bool is_membrane = metadata.checkpoint_1()->is_membrane()) {
+        ivec3 dimensions = unwrapVec<Ivec3Type, ivec3>(
+            metadata.checkpoint_1()->domain(), "domain of membrane checkpoint");
+        loadCheckpointMembrane(name, dimensions, particles);
+      } else {
+        loadCheckpoint(name, particles);
+      }
     }
 
     StatisticsConfig statistics_config;
@@ -197,6 +210,7 @@ void XmlReader::read(std::vector<Particle>& particles,
     }
 
     if (config->membranes() != nullptr) {
+      std::cout << "membrane_config found" << std::endl;
       for (const auto& membranes : config->membranes()->membrane()) {
         SpdWrapper::get()->info("Generating membranes");
         const auto& _corner = membranes.corner();
@@ -288,6 +302,81 @@ void XmlReader::loadCheckpoint(const std::string& _filepath,
     particles.reserve(particles.size() + temp_particles.size());
     particles.insert(particles.end(), temp_particles.begin(),
                      temp_particles.end());
+  } catch (const std::exception& e) {
+    SpdWrapper::get()->error("Error reading checkpoint file: {}", e.what());
+  }
+}
+
+void XmlReader::loadCheckpointMembrane(const std::string& _filepath,
+                                       const ivec3& dimensions,
+                                       std::vector<Particle>& particles) {
+  INFO("Loading membrane checkpoint")
+  const std::filesystem::path filepath(_filepath);
+  validate_path(filepath, ".xml", "checkpoint");
+  try {
+    DEBUG_PRINT("Found checkpoint file");
+    const std::unique_ptr<::CheckpointType> checkpoint = Checkpoint(filepath);
+    INFO("Reading checkpoint particles");
+    std::vector<Particle> temp_particles;
+    for (const auto& p : checkpoint->Particles().Particle()) {
+      auto position =
+          unwrapVec<const CDvec3Type, dvec3>(p.Position(), "position");
+      auto velocity =
+          unwrapVec<const CDvec3Type, dvec3>(p.Velocity(), "position");
+      auto force = unwrapVec<const CDvec3Type, dvec3>(p.Force(), "force");
+      auto old_force =
+          unwrapVec<const CDvec3Type, dvec3>(p.OldForce(), "old_force");
+      double mass = p.mass();
+      double epsilon = p.epsilon();
+      double sigma = p.sigma();
+      int type = p.type();
+      temp_particles.emplace_back(position, velocity, force, old_force, mass,
+                                  type, epsilon, sigma);
+    }
+    INFO_FMT("Read {} particles from checkpoint", temp_particles.size());
+    std::size_t previous_size = particles.size();
+    particles.reserve(previous_size + temp_particles.size());
+    particles.insert(particles.end(), temp_particles.begin(),
+                     temp_particles.end());
+
+    for (int i = 0; i < dimensions[0]; i++) {
+      for (int j = 0; j < dimensions[1]; j++) {
+        for (int k = 0; k < dimensions[2]; k++) {
+          const std::size_t current_index =
+              i * dimensions[1] * dimensions[2] + j * dimensions[2] + k;
+
+          // Iterate over all neighbors including diagonals
+          for (int di = -1; di <= 1; di++) {
+            for (int dj = -1; dj <= 1; dj++) {
+              for (int dk = -1; dk <= 1; dk++) {
+                if (di == 0 && dj == 0 && dk == 0) {
+                  continue;
+                }
+
+                const long ni = i + di;
+                const long nj = j + dj;
+                const long nk = k + dk;
+
+                if (ni >= 0 && ni < dimensions[0] && nj >= 0 &&
+                    nj < dimensions[1] && nk >= 0 && nk < dimensions[2]) {
+                  const long neighbor_index =
+                      ni * dimensions[1] * dimensions[2] + nj * dimensions[2] +
+                      nk;
+                  const bool is_diagonal =
+                      (di != 0) + (dj != 0) + (dk != 0) > 1;
+                  Particle* neighbor_particle =
+                      &particles[previous_size + neighbor_index];
+                  particles[previous_size + current_index].pushBackNeighbour(
+                      is_diagonal, reinterpret_cast<size_t>(neighbor_particle));
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    DEBUG_PRINT("particles: " + std::to_string(particles.size()));
+
   } catch (const std::exception& e) {
     SpdWrapper::get()->error("Error reading checkpoint file: {}", e.what());
   }

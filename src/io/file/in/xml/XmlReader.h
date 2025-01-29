@@ -43,19 +43,28 @@ class XmlReader {
    */
   static void loadCheckpoint(const std::string& filepath,
                              std::vector<Particle>& particles);
+
+  static void loadCheckpointMembrane(const std::string& filepath,
+                                     const ivec3& dimensions,
+                                     std::vector<Particle>& particles);
 };
 
 /**
- * @brief validates that the number of bins are correct and not smaller than 1 and the output time is larger than 0
+ * @brief validates that the number of bins are correct and not smaller than 1
+ * and the output time is larger than 0
  */
 inline void validateStatisticsInput(const StatisticsConfig& stats) {
   if (stats.x_bins < 1 || stats.y_bins < 1) {
-    SpdWrapper::get()->error("Number of x-bins ({}) or y-bins ({}) is too small", stats.x_bins, stats.y_bins);
+    SpdWrapper::get()->error(
+        "Number of x-bins ({}) or y-bins ({}) is too small", stats.x_bins,
+        stats.y_bins);
     throw std::runtime_error("Number of x-bins or y-bins is too small");
   }
 
   if (stats.output_interval < 1) {
-    SpdWrapper::get()->error("Output interval for the statistics is too small ({})", stats.output_interval);
+    SpdWrapper::get()->error(
+        "Output interval for the statistics is too small ({})",
+        stats.output_interval);
     throw std::runtime_error("Output interval for the statistics is too small");
   }
 }

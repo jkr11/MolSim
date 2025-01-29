@@ -38,6 +38,14 @@
         <delta_t>0.0005</delta_t>
         <t_end>0</t_end>
         <twoD>true</twoD>
-        <checkpoint>../../input/checkpoint_test.xml</checkpoint>
+        <checkpoint_>
+            <name>../../input/checkpoint_test.xml</name>
+            <is_membrane>false</is_membrane>
+            <domain>
+                <x>0</x>
+                <y>0</y>
+                <z>0</z>
+            </domain>
+        </checkpoint_>
     </metadata>
 </simulation>

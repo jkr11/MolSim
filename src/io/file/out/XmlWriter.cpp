@@ -41,6 +41,7 @@ void XmlWriter::writeFile(ParticleContainer& particle_container,
     ParticlesType xml_particles;
     SpdWrapper::get()->info("Writing {} particles to {}",
                             particle_container.size(), filepath.c_str());
+
     particle_container.singleIterator(
         [&xml_particles](const Particle& particle) {
           const ParticleType xml_particle = wrapParticle(particle);

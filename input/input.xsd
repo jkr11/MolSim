@@ -42,7 +42,16 @@
             <xs:element name="t_end" type="xs:double"/>
             <xs:element name="twoD" type="xs:boolean"/>
             <xs:element name="checkpoint" type="xs:string" minOccurs="0"/>
+            <xs:element name="checkpoint_" type="CheckpointWrapperType" minOccurs="0"/>
             <xs:element name="statistics" type="StatisticsType" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="CheckpointWrapperType">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="is_membrane" type="xs:boolean"/>
+            <xs:element name="domain" type="Ivec3Type"/>
         </xs:sequence>
     </xs:complexType>
 
