@@ -135,6 +135,53 @@ void MetadataType::statistics(::std::auto_ptr<statistics_type> x) {
   this->statistics_.set(x);
 }
 
+// CheckpointWrapperType
+//
+
+const CheckpointWrapperType::name_type& CheckpointWrapperType::name() const {
+  return this->name_.get();
+}
+
+CheckpointWrapperType::name_type& CheckpointWrapperType::name() {
+  return this->name_.get();
+}
+
+void CheckpointWrapperType::name(const name_type& x) { this->name_.set(x); }
+
+void CheckpointWrapperType::name(::std::auto_ptr<name_type> x) {
+  this->name_.set(x);
+}
+
+const CheckpointWrapperType::is_membrane_type&
+CheckpointWrapperType::is_membrane() const {
+  return this->is_membrane_.get();
+}
+
+CheckpointWrapperType::is_membrane_type& CheckpointWrapperType::is_membrane() {
+  return this->is_membrane_.get();
+}
+
+void CheckpointWrapperType::is_membrane(const is_membrane_type& x) {
+  this->is_membrane_.set(x);
+}
+
+const CheckpointWrapperType::domain_type& CheckpointWrapperType::domain()
+    const {
+  return this->domain_.get();
+}
+
+CheckpointWrapperType::domain_type& CheckpointWrapperType::domain() {
+  return this->domain_.get();
+}
+
+void CheckpointWrapperType::domain(const domain_type& x) {
+  this->domain_.set(x);
+}
+
+void CheckpointWrapperType::domain(::std::auto_ptr<domain_type> x) {
+  this->domain_.set(x);
+}
+
 // StatisticsType
 //
 
@@ -1298,6 +1345,119 @@ MetadataType& MetadataType::operator=(const MetadataType& x) {
 }
 
 MetadataType::~MetadataType() {}
+
+// CheckpointWrapperType
+//
+
+CheckpointWrapperType::CheckpointWrapperType(
+    const name_type& name, const is_membrane_type& is_membrane,
+    const domain_type& domain)
+    : ::xml_schema::type(),
+      name_(name, this),
+      is_membrane_(is_membrane, this),
+      domain_(domain, this) {}
+
+CheckpointWrapperType::CheckpointWrapperType(
+    const name_type& name, const is_membrane_type& is_membrane,
+    ::std::auto_ptr<domain_type> domain)
+    : ::xml_schema::type(),
+      name_(name, this),
+      is_membrane_(is_membrane, this),
+      domain_(domain, this) {}
+
+CheckpointWrapperType::CheckpointWrapperType(const CheckpointWrapperType& x,
+                                             ::xml_schema::flags f,
+                                             ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c),
+      name_(x.name_, f, this),
+      is_membrane_(x.is_membrane_, f, this),
+      domain_(x.domain_, f, this) {}
+
+CheckpointWrapperType::CheckpointWrapperType(const ::xercesc::DOMElement& e,
+                                             ::xml_schema::flags f,
+                                             ::xml_schema::container* c)
+    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c),
+      name_(this),
+      is_membrane_(this),
+      domain_(this) {
+  if ((f & ::xml_schema::flags::base) == 0) {
+    ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
+    this->parse(p, f);
+  }
+}
+
+void CheckpointWrapperType::parse(::xsd::cxx::xml::dom::parser<char>& p,
+                                  ::xml_schema::flags f) {
+  for (; p.more_content(); p.next_content(false)) {
+    const ::xercesc::DOMElement& i(p.cur_element());
+    const ::xsd::cxx::xml::qualified_name<char> n(
+        ::xsd::cxx::xml::dom::name<char>(i));
+
+    // name
+    //
+    if (n.name() == "name" && n.namespace_().empty()) {
+      ::std::auto_ptr<name_type> r(name_traits::create(i, f, this));
+
+      if (!name_.present()) {
+        this->name_.set(r);
+        continue;
+      }
+    }
+
+    // is_membrane
+    //
+    if (n.name() == "is_membrane" && n.namespace_().empty()) {
+      if (!is_membrane_.present()) {
+        this->is_membrane_.set(is_membrane_traits::create(i, f, this));
+        continue;
+      }
+    }
+
+    // domain
+    //
+    if (n.name() == "domain" && n.namespace_().empty()) {
+      ::std::auto_ptr<domain_type> r(domain_traits::create(i, f, this));
+
+      if (!domain_.present()) {
+        this->domain_.set(r);
+        continue;
+      }
+    }
+
+    break;
+  }
+
+  if (!name_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("name", "");
+  }
+
+  if (!is_membrane_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("is_membrane", "");
+  }
+
+  if (!domain_.present()) {
+    throw ::xsd::cxx::tree::expected_element<char>("domain", "");
+  }
+}
+
+CheckpointWrapperType* CheckpointWrapperType::_clone(
+    ::xml_schema::flags f, ::xml_schema::container* c) const {
+  return new class CheckpointWrapperType(*this, f, c);
+}
+
+CheckpointWrapperType& CheckpointWrapperType::operator=(
+    const CheckpointWrapperType& x) {
+  if (this != &x) {
+    static_cast< ::xml_schema::type&>(*this) = x;
+    this->name_ = x.name_;
+    this->is_membrane_ = x.is_membrane_;
+    this->domain_ = x.domain_;
+  }
+
+  return *this;
+}
+
+CheckpointWrapperType::~CheckpointWrapperType() {}
 
 // StatisticsType
 //
@@ -4028,6 +4188,35 @@ void operator<<(::xercesc::DOMElement& e, const MetadataType& i) {
         ::xsd::cxx::xml::dom::create_element("statistics", e));
 
     s << *i.statistics();
+  }
+}
+
+void operator<<(::xercesc::DOMElement& e, const CheckpointWrapperType& i) {
+  e << static_cast<const ::xml_schema::type&>(i);
+
+  // name
+  //
+  {
+    ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("name", e));
+
+    s << i.name();
+  }
+
+  // is_membrane
+  //
+  {
+    ::xercesc::DOMElement& s(
+        ::xsd::cxx::xml::dom::create_element("is_membrane", e));
+
+    s << i.is_membrane();
+  }
+
+  // domain
+  //
+  {
+    ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("domain", e));
+
+    s << i.domain();
   }
 }
 

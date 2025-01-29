@@ -34,10 +34,7 @@
         </container>
         <force>
             <LennardJones/>
-            <SingularGravity>
-                <g>-0.8</g>
-                <axis>1</axis>
-            </SingularGravity>
+            <SingularGravity g="-0.8"/>
         </force>
         <delta_t>0.0005</delta_t>
         <t_end>500</t_end>
@@ -103,13 +100,36 @@
                 <z>0</z>
             </velocity>
             <corner>
-                <x>6.</x>
-                <y>10.</y>
+                <x>3</x>
+                <y>15.5</y>
                 <z>0.5</z>
             </corner>
             <dimensions>
-                <x>18</x>
-                <y>5</y>
+                <x>10</x>
+                <y>3</y>
+                <z>12</z>
+            </dimensions>
+            <type>-1</type>
+            <h>1.0</h>
+            <mass>1.0</mass>
+            <epsilon>2.0</epsilon>
+            <sigma>1.1</sigma>
+            <mv>0.0</mv>
+        </cuboid>
+        <cuboid>
+            <velocity>
+                <x>0</x>
+                <y>0</y>
+                <z>0</z>
+            </velocity>
+            <corner>
+                <x>16.2</x>
+                <y>20.5</y>
+                <z>0.5</z>
+            </corner>
+            <dimensions>
+                <x>10</x>
+                <y>3</y>
                 <z>12</z>
             </dimensions>
             <type>-1</type>
@@ -133,30 +153,7 @@
             </corner>
             <dimensions>
                 <x>20</x>
-                <y>8</y>
-                <z>10</z>
-            </dimensions>
-            <type>1</type>
-            <h>1.2</h>
-            <mass>1.0</mass>
-            <epsilon>1.0</epsilon>
-            <sigma>1.0</sigma>
-            <mv>0.0</mv>
-        </cuboid>
-        <cuboid>
-            <velocity>
-                <x>0.0</x>
-                <y>0.0</y>
-                <z>0.0</z>
-            </velocity>
-            <corner>
-                <x>3.2</x>
-                <y>15</y>
-                <z>0.6</z>
-            </corner>
-            <dimensions>
-                <x>20</x>
-                <y>13</y>
+                <y>25</y>
                 <z>10</z>
             </dimensions>
             <type>1</type>
