@@ -8,6 +8,7 @@
 #include "defs/containers/ParticleContainer.h"
 #include "forces/IndexForce.h"
 #include "forces/InteractiveForce.h"
+#include "debug/debug_print.h"
 
 /**
  * @brief a particle container with linked cells
@@ -29,6 +30,14 @@ class LinkedCellsContainer final : public ParticleContainer {
   std::vector<std::vector<Particle*>> cells_;
 
   // std::vector<std::vector<Particle*>> cell_orders_;
+
+  std::vector<std::vector<std::size_t>> c18_colours_;
+
+  std::vector<ivec3> c_18_schema_ = {
+    {-1, -1, -1}, {-1, -1, 0}, {-1, -1, 1}, {-1, 0, -1}, {-1, 0, 0},
+    {-1, 0, 1},   {-1, 1, -1}, {-1, 1, 0},  {-1, 1, 1},  {0, -1, -1},
+    {0, -1, 0},   {0, -1, 1},  {0, 0, -1},  {0, 0, 0},   {0, 0, 1},
+    {0, 1, -1},   {0, 1, 0},   {0, 1, 1}};
 
   /**
    * @brief current number of particles
@@ -472,7 +481,31 @@ class LinkedCellsContainer final : public ParticleContainer {
    * set them again
    */
   void setNeighbourReferences();
+
+  void initializeC18Schema() {
+    INFO_FMT("Cells_size : {}", cells_.size());
+
+    for (auto start_offset : c_18_schema_) {
+      // std::vector<std::vector<Particle*>*> iterators;
+      std::vector<std::size_t> iterators;
+      for (int cx = start_offset[0]; cx <= cell_count_[0]; cx += 2) {
+        for (int cy = start_offset[1]; cy <= cell_count_[1]; cy += 3) {
+          for (int cz = start_offset[2]; cz <= cell_count_[2]; cz += 3) {
+            // INFO_FMT("Cell index {} {} {}", cx, cy, cz);
+            if (!isValidCellCoordinate({cx, cy, cz})) {
+              continue;
+            }
+            auto cell_index = cellCoordToIndex({cx, cy, cz});
+            iterators.push_back(cell_index);
+            // iterators.push_back(&cells_.at(cellCoordToIndex({cx, cy, cz})));
+          }
+        }
+      }
+      c18_colours_.push_back(iterators);
+    }
+  }
 };
+
 
 /**
  * @brief directions for better readability; implicitly cast
