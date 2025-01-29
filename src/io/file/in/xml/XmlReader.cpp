@@ -109,16 +109,12 @@ void XmlReader::read(std::vector<Particle>& particles,
       simulation_parameters.index_force_configs.push_back(index_force_config);
     }
     INFO("Checking if checkpoint is  present ...")
-    //if (metadata.checkpoint().present()) {
-    //  loadCheckpoint(metadata.checkpoint().get(), particles);
-    //}
-    if (metadata.checkpoint_1().present()) {
+    if (metadata.checkpoint().present()) {
       INFO("Membrane checkpoint present")
-      auto name =
-          static_cast<std::string>(metadata.checkpoint_1()->name());
-      if (bool is_membrane = metadata.checkpoint_1()->is_membrane()) {
+      auto name = static_cast<std::string>(metadata.checkpoint()->name());
+      if (bool is_membrane = metadata.checkpoint()->is_membrane()) {
         ivec3 dimensions = unwrapVec<Ivec3Type, ivec3>(
-            metadata.checkpoint_1()->domain(), "domain of membrane checkpoint");
+            metadata.checkpoint()->domain(), "domain of membrane checkpoint");
         loadCheckpointMembrane(name, dimensions, particles);
       } else {
         loadCheckpoint(name, particles);

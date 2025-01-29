@@ -115,26 +115,6 @@ void MetadataType::checkpoint(::std::auto_ptr<checkpoint_type> x) {
   this->checkpoint_.set(x);
 }
 
-const MetadataType::checkpoint__optional& MetadataType::checkpoint_1() const {
-  return this->checkpoint__;
-}
-
-MetadataType::checkpoint__optional& MetadataType::checkpoint_1() {
-  return this->checkpoint__;
-}
-
-void MetadataType::checkpoint_1(const checkpoint__type& x) {
-  this->checkpoint__.set(x);
-}
-
-void MetadataType::checkpoint_1(const checkpoint__optional& x) {
-  this->checkpoint__ = x;
-}
-
-void MetadataType::checkpoint_1(::std::auto_ptr<checkpoint__type> x) {
-  this->checkpoint__.set(x);
-}
-
 const MetadataType::statistics_optional& MetadataType::statistics() const {
   return this->statistics_;
 }
@@ -1200,7 +1180,6 @@ MetadataType::MetadataType(const container_type& container,
       t_end_(t_end, this),
       twoD_(twoD, this),
       checkpoint_(this),
-      checkpoint__(this),
       statistics_(this) {}
 
 MetadataType::MetadataType(::std::auto_ptr<container_type> container,
@@ -1214,7 +1193,6 @@ MetadataType::MetadataType(::std::auto_ptr<container_type> container,
       t_end_(t_end, this),
       twoD_(twoD, this),
       checkpoint_(this),
-      checkpoint__(this),
       statistics_(this) {}
 
 MetadataType::MetadataType(const MetadataType& x, ::xml_schema::flags f,
@@ -1226,7 +1204,6 @@ MetadataType::MetadataType(const MetadataType& x, ::xml_schema::flags f,
       t_end_(x.t_end_, f, this),
       twoD_(x.twoD_, f, this),
       checkpoint_(x.checkpoint_, f, this),
-      checkpoint__(x.checkpoint__, f, this),
       statistics_(x.statistics_, f, this) {}
 
 MetadataType::MetadataType(const ::xercesc::DOMElement& e,
@@ -1238,7 +1215,6 @@ MetadataType::MetadataType(const ::xercesc::DOMElement& e,
       t_end_(this),
       twoD_(this),
       checkpoint_(this),
-      checkpoint__(this),
       statistics_(this) {
   if ((f & ::xml_schema::flags::base) == 0) {
     ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
@@ -1313,18 +1289,6 @@ void MetadataType::parse(::xsd::cxx::xml::dom::parser<char>& p,
       }
     }
 
-    // checkpoint_
-    //
-    if (n.name() == "checkpoint_" && n.namespace_().empty()) {
-      ::std::auto_ptr<checkpoint__type> r(
-          checkpoint__traits::create(i, f, this));
-
-      if (!this->checkpoint__) {
-        this->checkpoint__.set(r);
-        continue;
-      }
-    }
-
     // statistics
     //
     if (n.name() == "statistics" && n.namespace_().empty()) {
@@ -1374,7 +1338,6 @@ MetadataType& MetadataType::operator=(const MetadataType& x) {
     this->t_end_ = x.t_end_;
     this->twoD_ = x.twoD_;
     this->checkpoint_ = x.checkpoint_;
-    this->checkpoint__ = x.checkpoint__;
     this->statistics_ = x.statistics_;
   }
 
@@ -4216,15 +4179,6 @@ void operator<<(::xercesc::DOMElement& e, const MetadataType& i) {
         ::xsd::cxx::xml::dom::create_element("checkpoint", e));
 
     s << *i.checkpoint();
-  }
-
-  // checkpoint_
-  //
-  if (i.checkpoint_1()) {
-    ::xercesc::DOMElement& s(
-        ::xsd::cxx::xml::dom::create_element("checkpoint_", e));
-
-    s << *i.checkpoint_1();
   }
 
   // statistics

@@ -38,7 +38,7 @@
         <delta_t>0.0005</delta_t>
         <t_end>0</t_end>
         <twoD>true</twoD>
-        <checkpoint_>
+        <checkpoint>
             <name>../../input/checkpoint_membrane_test.xml</name>
             <is_membrane>true</is_membrane>
             <domain>
@@ -46,6 +46,6 @@
                 <y>50</y>
                 <z>1</z>
             </domain>
-        </checkpoint_>
+        </checkpoint>
     </metadata>
 </simulation>

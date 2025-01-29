@@ -41,8 +41,7 @@
             <xs:element name="delta_t" type="xs:decimal"/>
             <xs:element name="t_end" type="xs:double"/>
             <xs:element name="twoD" type="xs:boolean"/>
-            <xs:element name="checkpoint" type="xs:string" minOccurs="0"/>
-            <xs:element name="checkpoint_" type="CheckpointWrapperType" minOccurs="0"/>
+            <xs:element name="checkpoint" type="CheckpointWrapperType" minOccurs="0"/>
             <xs:element name="statistics" type="StatisticsType" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>

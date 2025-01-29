@@ -343,7 +343,7 @@ class MetadataType : public ::xml_schema::type {
 
   // checkpoint
   //
-  typedef ::xml_schema::string checkpoint_type;
+  typedef ::CheckpointWrapperType checkpoint_type;
   typedef ::xsd::cxx::tree::optional<checkpoint_type> checkpoint_optional;
   typedef ::xsd::cxx::tree::traits<checkpoint_type, char> checkpoint_traits;
 
@@ -356,22 +356,6 @@ class MetadataType : public ::xml_schema::type {
   void checkpoint(const checkpoint_optional& x);
 
   void checkpoint(::std::auto_ptr<checkpoint_type> p);
-
-  // checkpoint_
-  //
-  typedef ::CheckpointWrapperType checkpoint__type;
-  typedef ::xsd::cxx::tree::optional<checkpoint__type> checkpoint__optional;
-  typedef ::xsd::cxx::tree::traits<checkpoint__type, char> checkpoint__traits;
-
-  const checkpoint__optional& checkpoint_1() const;
-
-  checkpoint__optional& checkpoint_1();
-
-  void checkpoint_1(const checkpoint__type& x);
-
-  void checkpoint_1(const checkpoint__optional& x);
-
-  void checkpoint_1(::std::auto_ptr<checkpoint__type> p);
 
   // statistics
   //
@@ -422,7 +406,6 @@ class MetadataType : public ::xml_schema::type {
   ::xsd::cxx::tree::one<t_end_type> t_end_;
   ::xsd::cxx::tree::one<twoD_type> twoD_;
   checkpoint_optional checkpoint_;
-  checkpoint__optional checkpoint__;
   statistics_optional statistics_;
 };
 
