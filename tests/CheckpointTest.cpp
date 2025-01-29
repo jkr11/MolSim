@@ -26,7 +26,6 @@ TEST(Checkpoint, cuboid) {
   char arg2[] = "../../tests/checkpoint_input_test.xml";
   char* argv[] = {arg0, arg1, arg2};
   auto [name, step, write_checkpoint] = CLArgumentParser::parse(3, argv);
-  // const char * name = arg2;
 
   Arguments arguments;
   std::vector<Particle> particles;
@@ -50,14 +49,6 @@ TEST(Checkpoint, cuboid) {
   container->imposeInvariant();
 
   std::cout << particles.size() << " particles" << std::endl;
-  std::vector<std::unique_ptr<InteractiveForce>> interactive_forces;
-  interactive_forces.push_back(std::make_unique<LennardJones>());
-
-  std::vector<std::unique_ptr<SingularForce>> singular_forces;
-  std::vector<std::unique_ptr<IndexForce>> index_forces;
-
-  VerletIntegrator verlet_integrator(interactive_forces, singular_forces,
-                                     index_forces, 0.1);
 
   XmlWriter::writeFile(*container, "../../input/checkpoint_test.xml");
 
@@ -74,7 +65,6 @@ TEST(Checkpoint, cuboid) {
   XmlReader::read(particles1, name1, arguments1);
 
   ASSERT_EQ(particles.size(), particles1.size());
-  // DVEC3 because of slight rounding in velocity
   for (size_t i = 0; i < particles.size(); ++i) {
     ASSERT_EQ_VEC3(particles[i].getX(), particles1[i].getX(),
                    "Vectors not equal at index " + std::to_string(i));
@@ -83,13 +73,16 @@ TEST(Checkpoint, cuboid) {
   }
 }
 
+/*
+ * Test whether membranes (and especially the particle neighbours) are correctly
+ * translated into a checkpoint
+ */
 TEST(Checkpoint, membrane) {
   char arg0[] = "./MolSim";
   char arg1[] = "-f";
   char arg2[] = "../../tests/checkpoint_input_membrane_test.xml";
   char* argv[] = {arg0, arg1, arg2};
   auto [name, step, write_checkpoint] = CLArgumentParser::parse(3, argv);
-  // const char * name = arg2;
 
   Arguments arguments;
   std::vector<Particle> particles;
@@ -131,7 +124,7 @@ TEST(Checkpoint, membrane) {
   for (size_t i = 0; i < particles.size(); ++i) {
     ASSERT_EQ_VEC3(particles[i].getX(), particles1[i].getX(),
                    "Vectors not equal at index " + std::to_string(i));
-    DVEC3_NEAR(particles[i].getV(), particles1[i].getV(),
-               "Vector velocity not near at index " + std::to_string(i));
+    ASSERT_EQ_VEC3(particles[i].getV(), particles1[i].getV(),
+                   "Vector velocity not near at index " + std::to_string(i));
   }
 }
