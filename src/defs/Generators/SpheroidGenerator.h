@@ -11,13 +11,13 @@
  */
 class SpheroidGenerator final : public ParticleGenerator {
  private:
-  dvec3 origin{};
+  dvec3 origin_{};
   /**
    * @brief this is an integer as it's the number of particles possible along
    * the radius of the spheroid, so we move along the radii in increments of h
    */
-  const int radius;
-  double h{};
+  const int radius_;
+  double h_{};
   double m{};
   const dvec3 initial_velocity;
   double epsilon{};

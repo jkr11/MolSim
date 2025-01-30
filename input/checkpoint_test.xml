@@ -81,32 +81,6 @@
     </Particle>
     <Particle>
       <Position>
-        <x>0</x>
-        <y>3.3675</y>
-        <z>0</z>
-      </Position>
-      <Velocity>
-        <x>0</x>
-        <y>0</y>
-        <z>0</z>
-      </Velocity>
-      <Force>
-        <x>0</x>
-        <y>0</y>
-        <z>0</z>
-      </Force>
-      <OldForce>
-        <x>0</x>
-        <y>0</y>
-        <z>0</z>
-      </OldForce>
-      <mass>1</mass>
-      <epsilon>5</epsilon>
-      <sigma>1</sigma>
-      <type>1</type>
-    </Particle>
-    <Particle>
-      <Position>
         <x>1.1225</x>
         <y>0</y>
         <z>0</z>
@@ -185,32 +159,6 @@
     </Particle>
     <Particle>
       <Position>
-        <x>1.1225</x>
-        <y>3.3675</y>
-        <z>0</z>
-      </Position>
-      <Velocity>
-        <x>0</x>
-        <y>0</y>
-        <z>0</z>
-      </Velocity>
-      <Force>
-        <x>0</x>
-        <y>0</y>
-        <z>0</z>
-      </Force>
-      <OldForce>
-        <x>0</x>
-        <y>0</y>
-        <z>0</z>
-      </OldForce>
-      <mass>1</mass>
-      <epsilon>5</epsilon>
-      <sigma>1</sigma>
-      <type>1</type>
-    </Particle>
-    <Particle>
-      <Position>
         <x>2.245</x>
         <y>0</y>
         <z>0</z>
@@ -265,6 +213,58 @@
       <Position>
         <x>2.245</x>
         <y>2.245</y>
+        <z>0</z>
+      </Position>
+      <Velocity>
+        <x>0</x>
+        <y>0</y>
+        <z>0</z>
+      </Velocity>
+      <Force>
+        <x>0</x>
+        <y>0</y>
+        <z>0</z>
+      </Force>
+      <OldForce>
+        <x>0</x>
+        <y>0</y>
+        <z>0</z>
+      </OldForce>
+      <mass>1</mass>
+      <epsilon>5</epsilon>
+      <sigma>1</sigma>
+      <type>1</type>
+    </Particle>
+    <Particle>
+      <Position>
+        <x>0</x>
+        <y>3.3675</y>
+        <z>0</z>
+      </Position>
+      <Velocity>
+        <x>0</x>
+        <y>0</y>
+        <z>0</z>
+      </Velocity>
+      <Force>
+        <x>0</x>
+        <y>0</y>
+        <z>0</z>
+      </Force>
+      <OldForce>
+        <x>0</x>
+        <y>0</y>
+        <z>0</z>
+      </OldForce>
+      <mass>1</mass>
+      <epsilon>5</epsilon>
+      <sigma>1</sigma>
+      <type>1</type>
+    </Particle>
+    <Particle>
+      <Position>
+        <x>1.1225</x>
+        <y>3.3675</y>
         <z>0</z>
       </Position>
       <Velocity>

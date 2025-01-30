@@ -7,11 +7,15 @@
 #pragma once
 
 #include <variant>
+#ifdef _OPENMP
 #include <omp.h>
-
+#endif
 #include "defs/types.h"
 #include "forces/SingularForce.h"
 #include "utils/SpdWrapper.h"
+
+enum ParallelStrategy { STRATEGY_1, STRATEGY_2 };
+
 
 struct IndexForceConfig {
   std::vector<ivec3> indeces{};
@@ -157,6 +161,7 @@ struct Arguments {
   SphereoidGeneratorConfig spheroid_generator_config;
   CuboidGeneratorConfig cuboid_generator_config;
   MembraneGeneratorConfig membrane_generator_config;
+  ParallelStrategy strategy;
 };
 
 /**
@@ -226,8 +231,9 @@ inline void printConfiguration(const Arguments& args) {
   } else {
     logger->info("Container Type: Direct Sum");
   }
+#ifdef _OPENMP
   logger->info("Number of Threads: {}", omp_get_max_threads());
-
+#endif
   logger->info("============================");
 }
 
