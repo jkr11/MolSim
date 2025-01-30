@@ -10,7 +10,7 @@
 #include "defs/types.h"
 #include "testUtil.h"
 
-/*
+/**
  * @brief small helper function to create particles
  * @param x x coordinate of particle
  * @param y y coordinate of particle
@@ -21,7 +21,7 @@ Particle createParticle(double x, double y, double z) {
   return Particle({x, y, z}, {0, 0, 0}, 1, 1, 1);
 }
 
-/*
+/**
  * Container creates the right amount of cells and correct cell dimensions
  */
 TEST(LinkedCellsContainer, constructor) {
@@ -47,7 +47,7 @@ TEST(LinkedCellsContainer, constructor) {
   EXPECT_NEAR(container.getCellDim()[2], 3, 1e-5) << "Z dim wrong.";
 }
 
-/*
+/**
  * .isBoundary(...) is correct for some examples
  */
 TEST(LinkedCellsContainer, isBoudary) {
@@ -79,7 +79,7 @@ TEST(LinkedCellsContainer, isBoudary) {
   EXPECT_FALSE(container.isBoundary(49));
 }
 
-/*
+/**
  * .isHalo(...) is correct for some examples
  */
 TEST(LinkedCellsContainer, isHalo) {
@@ -112,7 +112,7 @@ TEST(LinkedCellsContainer, isHalo) {
   EXPECT_FALSE(container.isHalo(31));
 }
 
-/*
+/**
  * .cellIndexToCoord(...) works for some examples
  * .cellCoordToIndex(...) works for some exmaples
  * .isValidCellCoordinate(...) works for some examples
@@ -162,7 +162,7 @@ TEST(LinkedCellsContainer,
       << ".isValidCellCoordinate(...) produced wrong result";
 }
 
-/*
+/**
  * if new container, then container.size() == 0
  * .addParticle(...) increments .size()
  * .removeParticle(...) decrements .size()
@@ -196,7 +196,7 @@ TEST(LinkedCellsContainer, Size_addParticle_and_removeParticle) {
       << ".removeParticle() did not decrease .size() by 1.";
 }
 
-/*
+/**
  * .singleIterator() iterates over all particles
  */
 TEST(LinkedCellsContainer, singleIterator) {
@@ -224,26 +224,30 @@ TEST(LinkedCellsContainer, singleIterator) {
   EXPECT_EQ(container.size(), 3)
       << "container particle count not matching after adding 3 particles.";
 
-  std::vector<Particle> vec = {};
-  container.singleIterator([&vec](Particle& p) { vec.push_back(p); });
+  std::vector<int> vec = {};
+  container.singleIterator(
+      [&vec](const Particle& p) { vec.push_back(p.getId()); });
 
   EXPECT_EQ(vec.size(), 3)
       << "Single iterator traversed less particles than in the container.";
 
-  EXPECT_TRUE(vec[0] == p1 || vec[1] == p1 || vec[2] == p1)
+  EXPECT_TRUE(vec[0] == p1.getId() || vec[1] == p1.getId() ||
+              vec[2] == p1.getId())
       << "Particle was not iterated over.";
-  EXPECT_TRUE(vec[0] == p2 || vec[1] == p2 || vec[2] == p2)
+  EXPECT_TRUE(vec[0] == p2.getId() || vec[1] == p2.getId() ||
+              vec[2] == p2.getId())
       << "Particle was not iterated over.";
-  EXPECT_TRUE(vec[0] == p3 || vec[1] == p3 || vec[2] == p3)
+  EXPECT_TRUE(vec[0] == p3.getId() || vec[1] == p3.getId() ||
+              vec[2] == p3.getId())
       << "Particle was not iterated over.";
 }
 
-/*
-  Test pairIterator by running the O(n^2) algorithm and checking if
-  the count of pairs and the pairs themselves match
-  Note: does not test if all pairs produces are distinct (only matters
-        if total generated pair count is the same as in reference impl)
-*/
+/**
+ * Test pairIterator by running the O(n^2) algorithm and checking if
+ * the count of pairs and the pairs themselves match
+ * Note: does not test if all pairs produces are distinct (only matters
+ *       if total generated pair count is the same as in reference impl)
+ */
 TEST(LinkedCellsContainer, pairIterator) {
   constexpr LinkedCellsConfig config = {
       .domain = {10, 10, 10},
@@ -337,8 +341,8 @@ TEST(LinkedCellsContainer, boundaryIterator) {
   });
 }
 
-/*
- * haloIterator(...) goes over all particles in halo
+/**
+ * @brief haloIterator(...) goes over all particles in halo
  */
 TEST(LinkedCellsContainer, haloIterator) {
   LinkedCellsConfig config = {.domain = {10, 10, 10},
@@ -369,6 +373,9 @@ TEST(LinkedCellsContainer, haloIterator) {
   });
 }
 
+/**
+ * @brief Tests if the C18 strategy is equal
+ */
 TEST(LinkedCellsContainer, C18Strategy) {
   LinkedCellsConfig config = {.domain = {20, 20, 20},
                               .cutoff_radius = 3,
