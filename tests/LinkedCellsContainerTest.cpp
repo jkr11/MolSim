@@ -424,18 +424,10 @@ TEST(LinkedCellsContainer, C18Strategy) {
   });
 
   for (int j = 0; j < particles.size(); j++) {
-    // DVEC3_NEAR(container.getParticlesObjects()[j].getX(),
-    //            container2.getParticlesObjects()[j].getX(),
-    //            "Position not equal C18 scheme");
     InfoVec("F: ", container.getParticlesObjects()[j].getF());
-    InfoVec("F: ", container.getParticlesObjects()[j].getF());
+    InfoVec("F: ", container2.getParticlesObjects()[j].getF());
     DVEC3_NEAR(container.getParticlesObjects()[j].getF(),
-               container2.getParticlesObjects()[j].getF(), "F not equal C18");
-    //  DVEC3_NEAR(particles[j].getV(), expected[j].getV(),
-    //             "Velocity not equal C18 ");
-    //  InfoVec("F : ", particles[j].getF());
-    //  InfoVec("F : ", expected[j].getF());
-    //  DVEC3_NEAR(particles[j].getF(), expected[j].getF(), "Forces not equal
-    //  C18");
+               container2.getParticlesObjects()[j].getF(), "F not equal C18",
+               10e-13);
   }
 }
