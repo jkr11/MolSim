@@ -75,7 +75,7 @@ inline void validateStatisticsInput(const StatisticsConfig& stats) {
  * @param extension the desired file extension
  * @param type the type of file you are checking (Input, checkpoint, etc)
  */
-inline void validate_path(const std::filesystem::path& path,
+inline void validatePath(const std::filesystem::path& path,
                           const std::string& extension,
                           const std::string& type) {
   if (!exists(path)) {
@@ -96,8 +96,8 @@ inline void validate_path(const std::filesystem::path& path,
  * specification
  * @return the enum type for arguments
  */
-template <typename BT>
-LinkedCellsConfig::BoundaryType toBoundaryType(const BT& boundary_type);
+template <typename Bt>
+LinkedCellsConfig::BoundaryType toBoundaryType(const Bt& boundary_type);
 
 /**
  * @brief translates a vector from the xml parser to a valid "standard" c++ type

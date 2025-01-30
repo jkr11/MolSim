@@ -138,25 +138,8 @@ int main(const int argc, char* argv[]) {
       output_directory + arguments.statistics_config.density_output_location,
       output_directory + arguments.statistics_config.velocity_output_location);
 #endif
-  // auto p2 = container->getParticles()[1];
-  // for (auto [diag, ref] : p2->getNeighbours()) {
-  //   auto dings = reinterpret_cast<Particle*>(ref);
-  //   if (dings->getId() == 0) {
-  //     SpdWrapper::get()->info(
-  //         "Neighbour 0 from Particle 1 has reference location {}", ref);
-  //   }
-  // }
 
   while (current_time <= arguments.t_end) {
-    // TODO REMOVE
-    // if (iteration == 100) {
-    //   SpdWrapper::get()->info("test test");
-    //   std::cout << "ahhh" << std::endl;
-    //   container->singleIterator([](Particle& p) {
-    //     // SpdWrapper::get()->info("particle {} at [{}, {}, {}]", p.getId(),
-    //     //                         p.getX()[0], p.getX()[1], p.getX()[2]);
-    //   });
-    // }
 
     verlet_integrator.step(*container);
     if (arguments.use_thermostat) {
@@ -184,30 +167,6 @@ int main(const int argc, char* argv[]) {
 #endif
 
     particle_updates += container->getParticleCount();
-    /*
-    if (iteration % 100 == 0) {
-      container->singleIterator([](Particle& p) {
-        if (p.getId() == 0) {
-          InfoVec("0 Position", p.getX());
-          InfoVec("0 Velocity", p.getV());
-          InfoVec("0 Force", p.getF());
-        }
-        if (p.getId() == 823) {
-          InfoVec("823 Position", p.getX());
-          InfoVec("823 Velocity", p.getV());
-          InfoVec("823 Force", p.getF());
-        }
-
-        if (p.getId() == 874) {
-          InfoVec("874 Position", p.getX());
-          InfoVec("874 Velocity", p.getV());
-          InfoVec("874 Force", p.getF());
-          SpdWrapper::get()->info(
-              "---------------------------------------------");
-        }
-      });
-    }
-    */
 
 #ifndef BENCHMARK
     if (current_time >= next_output_time) {

@@ -40,7 +40,8 @@ std::tuple<std::filesystem::path, double, bool> CLArgumentParser::parse(
         throw std::invalid_argument("invalid argument for option -" +
                                     std::string(1, static_cast<char>(opt)));
       }
-      SpdWrapper::get()->info("Parsing -{} opt, {} optind", (char)opt, option_index);
+      SpdWrapper::get()->info("Parsing -{} opt, {} optind",
+                              static_cast<char>(opt), option_index);
       switch (opt) {
         case 'h':
           printUsage("Display Help page, no execution", argv[0]);
@@ -80,8 +81,7 @@ std::tuple<std::filesystem::path, double, bool> CLArgumentParser::parse(
 
   SpdWrapper::get()->info("Resetting getopt vars ... ");
 
-  optind =
-      0;  // Reset position for GNU - so techically this should work everywhere
+  optind = 0;        // Reset position
   optarg = nullptr;  // Reset argument pointer
   optopt = 0;        // Reset last option character
 
@@ -90,7 +90,6 @@ std::tuple<std::filesystem::path, double, bool> CLArgumentParser::parse(
 
 void CLArgumentParser::validateInputFile(
     const std::filesystem::path &file_path) {
-
   SpdWrapper::get()->warn("Validating input file: {}", file_path.string());
 
   if (!exists(file_path) || is_directory(file_path)) {
