@@ -171,7 +171,7 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @param p Particle to be added
    * @note Does not impose the invariant automatically!
    */
-  void addParticle(Particle& p);
+  void addParticle(const Particle& p);
 
  public:
   /**
@@ -500,22 +500,21 @@ class LinkedCellsContainer final : public ParticleContainer {
    */
   void setNeighbourReferences();
 
+  /**
+   * @brief initializes the C18 schema colours, os their directions, onto the
+   * cells_ vector. With stride {2,3,3}.
+   */
   void initializeC18Schema() {
-    INFO_FMT("Cells_size : {}", cells_.size());
-
     for (auto start_offset : c_18_schema_) {
-      // std::vector<std::vector<Particle*>*> iterators;
       std::vector<std::size_t> iterators;
       for (int cx = start_offset[0]; cx <= cell_count_[0]; cx += 2) {
         for (int cy = start_offset[1]; cy <= cell_count_[1]; cy += 3) {
           for (int cz = start_offset[2]; cz <= cell_count_[2]; cz += 3) {
-            // INFO_FMT("Cell index {} {} {}", cx, cy, cz);
             if (!isValidCellCoordinate({cx, cy, cz})) {
               continue;
             }
             auto cell_index = cellCoordToIndex({cx, cy, cz});
             iterators.push_back(cell_index);
-            // iterators.push_back(&cells_.at(cellCoordToIndex({cx, cy, cz})));
           }
         }
       }

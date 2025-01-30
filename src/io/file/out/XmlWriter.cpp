@@ -15,7 +15,7 @@ XmlWriter::XmlWriter() = default;
 XmlWriter::~XmlWriter() = default;
 
 template <typename VecType, typename XmlType>
-inline XmlType wrapVec(const VecType& vec) {
+XmlType wrapVec(const VecType& vec) {
   XmlType xml_vec{vec[0], vec[1], vec[2]};
   return xml_vec;
 }

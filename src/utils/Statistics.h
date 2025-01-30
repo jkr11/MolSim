@@ -3,7 +3,6 @@
 //
 #pragma once
 
-
 #include <defs/containers/ParticleContainer.h>
 
 #include "io/file/out/CSVWriter.h"

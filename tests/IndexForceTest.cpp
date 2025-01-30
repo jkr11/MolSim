@@ -25,14 +25,14 @@ TEST(IndexForce, single_index) {
     DVEC3_NEAR(particle.getF(), {0, 0, 0}, "force not zero");
   }
   for (Particle &particle : particles) {
-    for (const auto index : index_force.getIndeces()) {
+    for (const auto index : index_force.getIndices()) {
       if (particle.getId() == index) {
         particle.addF(index_force.applyForce(particle, time));
       }
     }
   }
   for (Particle &particle : particles) {
-    for (const auto index : index_force.getIndeces()) {
+    for (const auto index : index_force.getIndices()) {
       if (particle.getId() == index) {
         DVEC3_NEAR(particle.getF(), {0.8, 0, 0}, "force");
       } else {

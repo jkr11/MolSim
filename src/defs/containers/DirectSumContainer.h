@@ -33,7 +33,7 @@ class DirectSumContainer final : public ParticleContainer {
    * @brief Add a particle to the container
    * @param p Particle to be added
    */
-  void addParticle(Particle& p);
+  void addParticle(const Particle& p);
 
   /**
    * @brief Add a vector of particles to the container
@@ -112,6 +112,10 @@ class DirectSumContainer final : public ParticleContainer {
   void computeSingularForces(const std::vector<std::unique_ptr<SingularForce>>&
                                  singular_forces) override {}
 
+  /**
+   * Calculates the kinetic energy of the system 1/2 sum m_i abs(v_i^2)
+   * @return kinetic energy of the system
+   */
   double getKineticEnergy() override;
 
   size_t getParticleCount() override { return particles_.size(); }

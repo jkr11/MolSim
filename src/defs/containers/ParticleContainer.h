@@ -91,6 +91,11 @@ class ParticleContainer {
   virtual void computeSingularForces(
       const std::vector<std::unique_ptr<SingularForce>>& singular_forces) = 0;
 
+  /**
+   * @brief Returns the kinetic energy of the system, E_kin = 1/2 \sum_i^n m_i *
+   * <v_i | v_i>
+   * @return kinetic energy of the system
+   */
   virtual double getKineticEnergy() = 0;
 
   virtual void incrementTime() { this->current_time++; }
@@ -104,7 +109,7 @@ class ParticleContainer {
   [[nodiscard]] virtual size_t getParticleCount() = 0;
 
   /**
-   * @brief the exact number of current speical particles, updated accordingly
+   * @brief the exact number of current special particles, updated accordingly
    * @return the current count of special particles left in the simulation
    */
   [[nodiscard]] virtual size_t getSpecialParticleCount() = 0;
