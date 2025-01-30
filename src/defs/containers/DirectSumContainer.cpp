@@ -101,7 +101,7 @@ ivec3 DirectSumContainer::getDomain() {
   return {-1, -1, -1};
 }
 
-void DirectSumContainer::computeInteractiveForces(
+void DirectSumContainer::computeInteractiveForcesC18(
     const std::vector<std::unique_ptr<InteractiveForce>>& interactive_forces) {
   // note that the upper tri-diag matrix is iterated over
   for (size_t i = 0; i < particles_.size(); ++i) {

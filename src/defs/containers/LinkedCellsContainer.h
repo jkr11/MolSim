@@ -230,8 +230,6 @@ class LinkedCellsContainer final : public ParticleContainer {
    */
   [[nodiscard]] std::size_t size() const override;
 
-  void setIndexForce(const IndexForce& index_force);
-
   /**
    * applies the periodic boundary conditions to the given dimension
    * @param dimension the dimension that the periodic boundary should be applied
@@ -278,7 +276,7 @@ class LinkedCellsContainer final : public ParticleContainer {
   /**
    * @brief Compute interactive forces
    */
-  void computeInteractiveForces(
+  void computeInteractiveForcesC18(
       const std::vector<std::unique_ptr<InteractiveForce>>& interactive_forces)
       override;
 

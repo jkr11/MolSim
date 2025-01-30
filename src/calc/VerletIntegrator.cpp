@@ -42,7 +42,7 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
   });
 
   // Lennard Jones (or truncated)
-  particle_container.computeInteractiveForces(interactive_forces_);
+  particle_container.computeInteractiveForcesC18(interactive_forces_);
 
   // Gravity and or Membrane
   particle_container.computeSingularForces(singular_forces_);

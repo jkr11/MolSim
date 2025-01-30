@@ -73,7 +73,7 @@ class ParticleContainer {
   /**
    * @brief Compute interactive forces
    */
-  virtual void computeInteractiveForces(
+  virtual void computeInteractiveForcesC18(
       const std::vector<std::unique_ptr<InteractiveForce>>&
           interactive_forces) = 0;
 

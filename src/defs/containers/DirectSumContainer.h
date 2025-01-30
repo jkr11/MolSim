@@ -88,7 +88,7 @@ class DirectSumContainer final : public ParticleContainer {
       const std::function<void(Particle&, Particle&)>& f) override;
 
   //TODO: implement?
-  void computeInteractiveForces(
+  void computeInteractiveForcesC18(
       const std::vector<std::unique_ptr<InteractiveForce>>& interactive_forces) override;
   //TODO: implement?
   void computeSingularForces(const std::vector<std::unique_ptr<SingularForce>>&

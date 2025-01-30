@@ -3,7 +3,7 @@
 //
 #include "LinkedCellsContainer.h"
 
-#include <omp.h>
+#include <omp.h>  // Needs to stay, clion doesnt recognize flags
 
 #include <algorithm>
 #include <cmath>
@@ -96,12 +96,9 @@ LinkedCellsContainer::LinkedCellsContainer(
       linked_cells_config.boundary_config.z_low,
       linked_cells_config.boundary_config.z_high,
   };
+
   is_membrane = linked_cells_config.is_membrane;
-  INFO_FMT("Using membranes is {}", is_membrane);
-  // TODO
-  // const auto &[ids, time, force_values, dims] =
-  // linked_cells_config.index_force_config; index_force = IndexForce(ids, time,
-  // force_values);
+  INFO_FMT("Using membranes is {}", is_membrane)
 
   SpdWrapper::get()->info("cell dim: {}, {}, {}; cell count: {}, {}, {}",
                           cell_dim_[0], cell_dim_[1], cell_dim_[2],
@@ -262,15 +259,11 @@ void LinkedCellsContainer::imposeInvariant() {
 
 void LinkedCellsContainer::singleIterator(
     const std::function<void(Particle &)> &f) {
-  for (const auto cell : cells_) {
+  for (const auto &cell : cells_) {
     for (const auto p : cell) {
       f(*p);
     }
   }
-}
-
-void LinkedCellsContainer::setIndexForce(const IndexForce &index_force) {
-  this->index_force = index_force;
 }
 
 // TODO: this is now unused => could be removed, are we allowed to? I guess
@@ -375,7 +368,7 @@ void LinkedCellsContainer::boundaryIterator(
   for (std::size_t index = 0; index < cells_.size(); index++) {
     if (!isBoundary(index)) continue;
 
-    for (auto &p : cells_[index]) {
+    for (const auto &p : cells_[index]) {
       f(*p);
     }
   }
@@ -392,7 +385,7 @@ void LinkedCellsContainer::haloIterator(
   }
 }
 
-void LinkedCellsContainer::computeInteractiveForces(
+void LinkedCellsContainer::computeInteractiveForcesC18(
     const std::vector<std::unique_ptr<InteractiveForce>> &interactive_forces) {
   constexpr std::array<ivec3, 13> offsets = {{
       // 9 x facing
@@ -430,9 +423,9 @@ void LinkedCellsContainer::computeInteractiveForces(
         dvec3 force_accum = {0, 0, 0};
         for (std::size_t p2 = p1 + 1; p2 < cell.size(); p2++) {
           const auto q = cell[p2];
-          const dvec3 p_X = p->getX();
-          const dvec3 q_X = q->getX();
-          if (dvec3 d = {p_X[0] - q_X[0], p_X[1] - q_X[1], p_X[2] - q_X[2]};
+          const dvec3 p_x = p->getX();
+          const dvec3 q_x = q->getX();
+          if (dvec3 d = {p_x[0] - q_x[0], p_x[1] - q_x[1], p_x[2] - q_x[2]};
               d[0] * d[0] + d[1] * d[1] + d[2] * d[2] > cutoff_ * cutoff_)
             continue;
           dvec3 neighbour_force = {0, 0, 0};
@@ -451,17 +444,17 @@ void LinkedCellsContainer::computeInteractiveForces(
       // iterate over neighbouring newton3 cells
       for (auto &offset : offsets) {
         // compute neighbourCoord and check if it is valid
-        const ivec3 neighbourCoord = {cell_coordinate[0] + offset[0],
-                                      cell_coordinate[1] + offset[1],
-                                      cell_coordinate[2] + offset[2]};
+        const ivec3 neighbour_coord = {cell_coordinate[0] + offset[0],
+                                       cell_coordinate[1] + offset[1],
+                                       cell_coordinate[2] + offset[2]};
 
-        if (!isValidCellCoordinate(neighbourCoord)) {
+        if (!isValidCellCoordinate(neighbour_coord)) {
           DEBUG_PRINT_FMT("Invalid coord: ({}, {}, {})", neighbourCoord[0],
                           neighbourCoord[1], neighbourCoord[2])
           continue;
         }
 
-        const size_t neighbourIndex = cellCoordToIndex(neighbourCoord);
+        const size_t neighbourIndex = cellCoordToIndex(neighbour_coord);
         DEBUG_PRINT_FMT(
             "Checking cell i={}; c=({}, {}, {}) for pairs (offset = ({}, {}, "
             "{}))",
@@ -472,9 +465,9 @@ void LinkedCellsContainer::computeInteractiveForces(
         auto &neighbour_particles = cells_[neighbourIndex];
         if (neighbour_particles.empty()) continue;
 
-        for (auto &cell_particle : cell) {
+        for (const auto &cell_particle : cell) {
           dvec3 force_accum = {0, 0, 0};
-          for (auto &neighbour_particle : neighbour_particles) {
+          for (const auto &neighbour_particle : neighbour_particles) {
             auto p = cell_particle->getX();
             auto q = neighbour_particle->getX();
 
@@ -490,7 +483,6 @@ void LinkedCellsContainer::computeInteractiveForces(
             force_accum = force_accum + neighbour_force;
             // cell_particle->addF(neighbour_force);
             neighbour_particle->subF(neighbour_force);
-            // f(cell_particle, neighbour_particle);
             DEBUG_PRINT_FMT("Cross cell pair: ({}, {})", cell_particle->getId(),
                             neighbour_particle->getId())
           }
@@ -676,7 +668,7 @@ void LinkedCellsContainer::applyPeriodicBoundary(const size_t dimension) {
   // the right place
   const std::size_t problematic_dimension = dimension / 2;
   const std::size_t problematic_dimension_direction = dimension % 2;
-
+  // TODO #pragma omp parallel for schedule(static)
   for (const std::size_t cell_index : halo_direction_cells_[dimension]) {
     int counter = 0;
     for (auto it = cells_[cell_index].begin(); it < cells_[cell_index].end();
@@ -689,11 +681,14 @@ void LinkedCellsContainer::applyPeriodicBoundary(const size_t dimension) {
       const std::size_t shouldBeIndex = dvec3ToCellIndex(new_pos);
 
       (*it)->setX(new_pos);
+      // TODO #pragma omp critical
       cells_[shouldBeIndex].push_back(*it);
     }
-
-    cells_[cell_index].clear();
-    cells_[cell_index].shrink_to_fit();
+    // TODO #pragma omp critical
+    {
+      cells_[cell_index].clear();
+      cells_[cell_index].shrink_to_fit();
+    }
   }
 
   // skip force calculation for lower side of the axis
@@ -702,6 +697,7 @@ void LinkedCellsContainer::applyPeriodicBoundary(const size_t dimension) {
   }
 
   // iterate over all 9 / 3 cells on the other end
+  // TODO #pragma omp parallel for schedule(static)
   for (const std::size_t cell_index : boundary_direction_cells_[dimension]) {
     ivec3 cell_coordinates = cellIndexToCoord(cell_index);
 
@@ -743,8 +739,11 @@ void LinkedCellsContainer::applyPeriodicBoundary(const size_t dimension) {
 
           const dvec3 applied_force = LennardJones::directionalForceWithOffset(
               *p, *q, accounted_particle_distance);
-          p->setF(p->getF() + applied_force);
-          q->setF(q->getF() - applied_force);
+          // TODO #pragma omp critical
+          p->addF(applied_force);
+
+          // TODO #pragma omp critical
+          q->subF(applied_force);
         }
       }
     }
