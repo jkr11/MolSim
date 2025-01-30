@@ -59,6 +59,23 @@ void MetadataType::container(::std::auto_ptr<container_type> x) {
   this->container_.set(x);
 }
 
+const MetadataType::use_c18_strategy_optional& MetadataType::use_c18_strategy()
+    const {
+  return this->use_c18_strategy_;
+}
+
+MetadataType::use_c18_strategy_optional& MetadataType::use_c18_strategy() {
+  return this->use_c18_strategy_;
+}
+
+void MetadataType::use_c18_strategy(const use_c18_strategy_type& x) {
+  this->use_c18_strategy_.set(x);
+}
+
+void MetadataType::use_c18_strategy(const use_c18_strategy_optional& x) {
+  this->use_c18_strategy_ = x;
+}
+
 const MetadataType::force_type& MetadataType::force() const {
   return this->force_.get();
 }
@@ -134,6 +151,9 @@ void MetadataType::statistics(const statistics_optional& x) {
 void MetadataType::statistics(::std::auto_ptr<statistics_type> x) {
   this->statistics_.set(x);
 }
+
+// StrategyType
+//
 
 // CheckpointWrapperType
 //
@@ -1175,6 +1195,7 @@ MetadataType::MetadataType(const container_type& container,
                            const t_end_type& t_end, const twoD_type& twoD)
     : ::xml_schema::type(),
       container_(container, this),
+      use_c18_strategy_(this),
       force_(force, this),
       delta_t_(delta_t, this),
       t_end_(t_end, this),
@@ -1188,6 +1209,7 @@ MetadataType::MetadataType(::std::auto_ptr<container_type> container,
                            const twoD_type& twoD)
     : ::xml_schema::type(),
       container_(container, this),
+      use_c18_strategy_(this),
       force_(force, this),
       delta_t_(delta_t, this),
       t_end_(t_end, this),
@@ -1199,6 +1221,7 @@ MetadataType::MetadataType(const MetadataType& x, ::xml_schema::flags f,
                            ::xml_schema::container* c)
     : ::xml_schema::type(x, f, c),
       container_(x.container_, f, this),
+      use_c18_strategy_(x.use_c18_strategy_, f, this),
       force_(x.force_, f, this),
       delta_t_(x.delta_t_, f, this),
       t_end_(x.t_end_, f, this),
@@ -1210,6 +1233,7 @@ MetadataType::MetadataType(const ::xercesc::DOMElement& e,
                            ::xml_schema::flags f, ::xml_schema::container* c)
     : ::xml_schema::type(e, f | ::xml_schema::flags::base, c),
       container_(this),
+      use_c18_strategy_(this),
       force_(this),
       delta_t_(this),
       t_end_(this),
@@ -1236,6 +1260,16 @@ void MetadataType::parse(::xsd::cxx::xml::dom::parser<char>& p,
 
       if (!container_.present()) {
         this->container_.set(r);
+        continue;
+      }
+    }
+
+    // use_c18_strategy
+    //
+    if (n.name() == "use_c18_strategy" && n.namespace_().empty()) {
+      if (!this->use_c18_strategy_) {
+        this->use_c18_strategy_.set(
+            use_c18_strategy_traits::create(i, f, this));
         continue;
       }
     }
@@ -1333,6 +1367,7 @@ MetadataType& MetadataType::operator=(const MetadataType& x) {
   if (this != &x) {
     static_cast< ::xml_schema::type&>(*this) = x;
     this->container_ = x.container_;
+    this->use_c18_strategy_ = x.use_c18_strategy_;
     this->force_ = x.force_;
     this->delta_t_ = x.delta_t_;
     this->t_end_ = x.t_end_;
@@ -1345,6 +1380,35 @@ MetadataType& MetadataType::operator=(const MetadataType& x) {
 }
 
 MetadataType::~MetadataType() {}
+
+// StrategyType
+//
+
+StrategyType::StrategyType() : ::xml_schema::type() {}
+
+StrategyType::StrategyType(const StrategyType& x, ::xml_schema::flags f,
+                           ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c) {}
+
+StrategyType::StrategyType(const ::xercesc::DOMElement& e,
+                           ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::type(e, f, c) {}
+
+StrategyType::StrategyType(const ::xercesc::DOMAttr& a, ::xml_schema::flags f,
+                           ::xml_schema::container* c)
+    : ::xml_schema::type(a, f, c) {}
+
+StrategyType::StrategyType(const ::std::string& s,
+                           const ::xercesc::DOMElement* e,
+                           ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::type(s, e, f, c) {}
+
+StrategyType* StrategyType::_clone(::xml_schema::flags f,
+                                   ::xml_schema::container* c) const {
+  return new class StrategyType(*this, f, c);
+}
+
+StrategyType::~StrategyType() {}
 
 // CheckpointWrapperType
 //
@@ -4139,6 +4203,15 @@ void operator<<(::xercesc::DOMElement& e, const MetadataType& i) {
     s << i.container();
   }
 
+  // use_c18_strategy
+  //
+  if (i.use_c18_strategy()) {
+    ::xercesc::DOMElement& s(
+        ::xsd::cxx::xml::dom::create_element("use_c18_strategy", e));
+
+    s << *i.use_c18_strategy();
+  }
+
   // force
   //
   {
@@ -4190,6 +4263,14 @@ void operator<<(::xercesc::DOMElement& e, const MetadataType& i) {
     s << *i.statistics();
   }
 }
+
+void operator<<(::xercesc::DOMElement& e, const StrategyType& i) {
+  e << static_cast<const ::xml_schema::type&>(i);
+}
+
+void operator<<(::xercesc::DOMAttr&, const StrategyType&) {}
+
+void operator<<(::xml_schema::list_stream&, const StrategyType&) {}
 
 void operator<<(::xercesc::DOMElement& e, const CheckpointWrapperType& i) {
   e << static_cast<const ::xml_schema::type&>(i);

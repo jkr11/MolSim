@@ -14,8 +14,7 @@
 #include "forces/SingularForce.h"
 #include "utils/SpdWrapper.h"
 
-enum ParallelStrategy { STRATEGY_1, STRATEGY_2 };
-
+enum ParallelStrategy { STRATEGY_1, STRATEGY_2, STRATEGY_3 };
 
 struct IndexForceConfig {
   std::vector<ivec3> indeces{};

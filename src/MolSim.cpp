@@ -107,7 +107,8 @@ int main(const int argc, char* argv[]) {
   }
 
   VerletIntegrator verlet_integrator(interactive_forces, singular_forces,
-                                     index_forces, arguments.delta_t);
+                                     index_forces, arguments.delta_t,
+                                     arguments.strategy);
   outputWriter::VTKWriter writer;
   std::unique_ptr<Thermostat> thermostat;
   if (arguments.use_thermostat) {
