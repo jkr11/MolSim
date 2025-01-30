@@ -242,7 +242,7 @@ void XmlReader::read(std::vector<Particle>& particles,
             membranes.epsilon(), membranes.sigma(), membranes.type(), twoD,
             simulation_parameters.index_force_configs[0].indeces);
         mg.generate(particles);
-        std::vector<int> ids = mg.getIndeces();
+        std::vector<int> ids = mg.getIndices();
         simulation_parameters.index_force_configs[0].ids = ids;
         if (std::holds_alternative<LinkedCellsConfig>(
                 simulation_parameters.container_data)) {

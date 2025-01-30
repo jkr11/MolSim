@@ -30,7 +30,7 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
   particle_container.singleIterator([this](Particle& p) {
     dvec3 f = {0, 0, 0};
     for (const auto& index_force : index_forces_) {
-      for (const int id : index_force->getIndeces()) {
+      for (const int id : index_force->getIndices()) {
         if (p.getId() == id) {
           f = f + index_force->applyForce(p, current_time_);
         }

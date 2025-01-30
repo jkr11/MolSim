@@ -18,18 +18,12 @@ class CuboidGenerator final : public ParticleGenerator {
   double m_;
   const dvec3 initial_velocity_;
   double mv_;
-  /**
-   * technically these are only relevant for week 4 but here they dont really
-   * matter right now
-   */
   double epsilon_;
   double sigma_;
-  const int type_{};
-  /**
-   * here this just describes the behaviour of the brownian motion
-   * initialization
-   */
-  const bool two_d_{};
+  const int type_;
+  // two_d_ is the dimensions of the entire simulation and here it is used in
+  // brownian motion init
+  const bool two_d_;
 
  public:
   /**
@@ -38,8 +32,8 @@ class CuboidGenerator final : public ParticleGenerator {
    * @param dimensions number of particles in each unit direction
    * @param h distance between pairwise particles
    * @param m mass of the particles in the cuboid
-   * @param initial_velocity velocity (imagine this as a net-zero movement of all
-   * particles) given by the predefined maxwell-boltzmann generator
+   * @param initial_velocity velocity (imagine this as a net-zero movement of
+   * all particles) given by the predefined maxwell-boltzmann generator
    * @param epsilon lj - epsilon
    * @param sigma lj - sigma
    * @param mv temperature of our system
