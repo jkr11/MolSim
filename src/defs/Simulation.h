@@ -86,6 +86,7 @@ struct ThermostatConfig {
   int n_thermostat{};
   bool use_relative{};
   bool use_thermal_motion{};
+  bool two_d{};
 };
 
 struct StatisticsConfig {
