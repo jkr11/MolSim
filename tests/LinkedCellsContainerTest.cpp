@@ -431,3 +431,52 @@ TEST(LinkedCellsContainer, C18Strategy) {
                10e-13);
   }
 }
+
+TEST(LinkedCellsContainer, ForceBufferIteration) {
+  LinkedCellsConfig config = {.domain = {20, 20, 20},
+                              .cutoff_radius = 3,
+                              .boundary_config = {
+                                  .x_high = LinkedCellsConfig::Outflow,
+                                  .x_low = LinkedCellsConfig::Outflow,
+                                  .y_high = LinkedCellsConfig::Outflow,
+                                  .y_low = LinkedCellsConfig::Outflow,
+                                  .z_high = LinkedCellsConfig::Outflow,
+                                  .z_low = LinkedCellsConfig::Outflow,
+                              }};
+  constexpr double delta_t = 0.001;
+  LinkedCellsContainer container(config);
+  std::vector<Particle> particles;
+  CuboidGenerator cg({0, 0, 0}, {3, 3, 3}, 1.1225, 1, {0.2, 0.2, 0}, 0.1, 1.0,
+                     1.0, 1, false);
+  cg.generate(particles);
+  container.addParticles(particles);
+  std::vector<std::unique_ptr<InteractiveForce>> forces;
+  forces.push_back(std::make_unique<LennardJones>());
+
+  container.imposeInvariant();
+
+  container.computeInteractiveForcesForceBuffer(forces);
+
+  LinkedCellsContainer container2(config);
+  std::vector<Particle> expected;
+  cg.generate(expected);
+  container2.addParticles(expected);
+
+  container2.pairIterator([&forces](Particle& p, Particle& q) {
+    dvec3 f = {0, 0, 0};
+    for (const auto& force : forces) {
+      f = f + force->directionalForce(p, q);
+    }
+    // InfoVec("In PI: ", f);
+    p.addF(f);
+    q.subF(f);
+  });
+
+  for (int j = 0; j < particles.size(); j++) {
+    InfoVec("F: ", container.getParticlesObjects()[j].getF());
+    InfoVec("F: ", container2.getParticlesObjects()[j].getF());
+    DVEC3_NEAR(container.getParticlesObjects()[j].getF(),
+               container2.getParticlesObjects()[j].getF(), "F not equal C18",
+               10e-13);
+  }
+}
