@@ -280,6 +280,8 @@ class LinkedCellsContainer final : public ParticleContainer {
 
   /**
    * @brief Compute interactive forces using the Force Buffer method
+   * Uses more pragmas than necessary to accommodate single threaded testing
+   * when openmp is not available
    * @param interactive_forces
    */
   void computeInteractiveForcesForceBuffer(

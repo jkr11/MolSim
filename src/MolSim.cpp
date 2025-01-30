@@ -141,12 +141,12 @@ int main(const int argc, char* argv[]) {
     }
 
 #ifdef BENCHMARK  // these are the first 1000 iterations for the contest
-    if (iteration == 10000) {
+    if (iteration == 1000) {
       const auto first_1_k = std::chrono::high_resolution_clock::now();
       const std::chrono::duration<double> elapsed = first_1_k - start_time;
       std::cout << "First 10k iterations took: " << elapsed.count()
                 << " seconds" << std::endl;
-      const auto mups = static_cast<double>(number_of_particles) * 10000 *
+      const auto mups = static_cast<double>(number_of_particles) * 1000 *
                         (1.0 / elapsed.count());
       std::cout << "MMUPS for first 10k iterations: " << mups * (1.0 / 1e6)
                 << std::endl;
