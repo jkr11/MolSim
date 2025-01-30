@@ -42,10 +42,8 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
 #ifdef _OPENMP
   // INFO("Using openmp")
   if (strategy_ == ParallelStrategy::STRATEGY_2) {
-    INFO("Using C18")
     particle_container.computeInteractiveForcesC18(interactive_forces_);
   } else if (strategy_ == ParallelStrategy::STRATEGY_1) {
-    INFO("Using Force Buffer")
     particle_container.computeInteractiveForcesForceBuffer(interactive_forces_);
   } else {  // TODO change maybe
     particle_container.pairIterator([this](Particle& p, Particle& q) {
