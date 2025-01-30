@@ -11,15 +11,15 @@
  */
 class SpheroidGenerator final : public ParticleGenerator {
  private:
-  dvec3 origin{};
+  dvec3 origin_{};
   /**
    * @brief this is an integer as it's the number of particles possible along
    * the radius of the spheroid, so we move along the radii in increments of h
    */
-  const int radius;
-  double h{};
+  const int radius_;
+  double h_{};
   double m{};
-  const dvec3 initialVelocity;
+  const dvec3 initial_velocity;
   double epsilon{};
   double sigma{};
   const int type{};
@@ -27,12 +27,12 @@ class SpheroidGenerator final : public ParticleGenerator {
   /**
    * only if this is passed with true, spheres will be two Dimensional
    */
-  const bool twoD{};
+  const bool two_d{};
 
  public:
   SpheroidGenerator(const dvec3 &origin, int radius, double h, double m,
-                    const dvec3 &initialVelocity, double epsilon, double sigma,
-                    int type, double mv, bool twoD);
+                    const dvec3 &initial_velocity, double epsilon, double sigma,
+                    int type, double mv, bool two_d);
 
   /**
    * @brief generates a 1 or 2 sphere of particles, vector size is approximated

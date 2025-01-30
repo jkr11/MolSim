@@ -30,11 +30,11 @@ class CLArgumentParser {
 
   /**
    * @brief print usage
-   * @param additionalNote additional info to customize printout
-   * @param programName name of the program (argv[0])
+   * @param additional_note additional info to customize printout
+   * @param program_name name of the program (argv[0])
    */
-  static void printUsage(const std::string &additionalNote,
-                         const std::string &programName);
+  static void printUsage(const std::string &additional_note,
+                         const std::string &program_name);
 
   /**
    * @brief Validates the existence and validity of an input file.

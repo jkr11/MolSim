@@ -9,7 +9,14 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_compile_options(-O3 -ffast-math -march=native -std=c++17 -Wno-deprecated-declarations)
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    add_compile_options(-O3 -ffast-math -march=native -std=c++17 -Wno-deprecated-declarations)
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    add_compile_options(-O3 -ffast-math -march=native -std=c++17 -Wno-deprecated-declarations)
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
+    message("Using intel compile options")
+    add_compile_options(-xHost -ipo -qopenmp -O3 -fp-model fast=2)
+endif ()
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
 include(googletest)
@@ -37,11 +44,12 @@ endif ()
 
 # Enable DEBUG macro
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_compile_options(-ggdb3)
     add_compile_definitions(DEBUG)
     message("Debug mode is enabled")
 endif ()
 
-option(ENABLE_BENCHMARK "Enable benchmark mode" ON)
+option(ENABLE_BENCHMARK "Enable benchmark mode" OFF)
 
 if (ENABLE_BENCHMARK)
     message("Benchmark mode is enabled")

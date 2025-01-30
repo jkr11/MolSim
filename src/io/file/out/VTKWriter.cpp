@@ -21,8 +21,8 @@ VTKWriter::VTKWriter() = default;
 
 VTKWriter::~VTKWriter() = default;
 
-void VTKWriter::initializeOutput(int numParticles) {
-  vtkFile = new VTKFile_t("UnstructuredGrid");
+void VTKWriter::initializeOutput(int num_particles) {
+  vtk_file_ = new VTKFile_t("UnstructuredGrid");
 
   // per point, we add type, position, velocity and force
   PointData pointData;
@@ -48,9 +48,9 @@ void VTKWriter::initializeOutput(int numParticles) {
   cells.DataArray().push_back(cells_data);
 
   PieceUnstructuredGrid_t piece(pointData, cellData, points, cells,
-                                numParticles, 0);
+                                num_particles, 0);
   UnstructuredGrid_t unstructuredGrid(piece);
-  vtkFile->UnstructuredGrid(unstructuredGrid);
+  vtk_file_->UnstructuredGrid(unstructuredGrid);
 }
 
 void VTKWriter::writeFile(const std::string &filename, int iteration) const {
@@ -59,13 +59,13 @@ void VTKWriter::writeFile(const std::string &filename, int iteration) const {
          << ".vtu";
 
   std::ofstream file(strstr.str().c_str());
-  VTKFile(file, *vtkFile);
-  delete vtkFile;
+  VTKFile(file, *vtk_file_);
+  delete vtk_file_;
 }
 
 void VTKWriter::plotParticle(const Particle &p) const {
 #ifdef DEBUG
-  if (vtkFile->UnstructuredGrid().present()) {
+  if (vtk_file_->UnstructuredGrid().present()) {
     // DEBUG_PRINT("UnstructuredGrid is present");
   } else {
     DEBUG_PRINT("No UnstructuredGrid present");
@@ -73,7 +73,7 @@ void VTKWriter::plotParticle(const Particle &p) const {
 #endif
 
   PointData::DataArray_sequence &pointDataSequence =
-      vtkFile->UnstructuredGrid()->Piece().PointData().DataArray();
+      vtk_file_->UnstructuredGrid()->Piece().PointData().DataArray();
   PointData::DataArray_iterator dataIterator = pointDataSequence.begin();
 
   dataIterator->push_back(p.getM());
@@ -95,7 +95,7 @@ void VTKWriter::plotParticle(const Particle &p) const {
   dataIterator->push_back(p.getType());
 
   Points::DataArray_sequence &pointsSequence =
-      vtkFile->UnstructuredGrid()->Piece().Points().DataArray();
+      vtk_file_->UnstructuredGrid()->Piece().Points().DataArray();
   const Points::DataArray_iterator pointsIterator = pointsSequence.begin();
   pointsIterator->push_back(p.getX()[0]);
   pointsIterator->push_back(p.getX()[1]);

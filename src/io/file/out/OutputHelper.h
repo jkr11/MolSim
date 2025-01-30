@@ -11,45 +11,45 @@
 
 /**
  * @brief prints the current state of the system to viewable files
- * @param outputDirectory specifies the base for the output folders, on which
+ * @param output_directory specifies the base for the output folders, on which
  * other folders named after date are saved
  * @param iteration the current iteration from the main simulation loop
- * @param vtkWriter writes a .vtu a file
+ * @param vtk_writer writes a .vtu a file
  * @param particle_container contains the entirety of the current particles
  */
-inline void plotParticles(const std::string &outputDirectory,
+inline void plotParticles(const std::string &output_directory,
                           const int iteration,
-                          outputWriter::VTKWriter &vtkWriter,
+                          outputWriter::VTKWriter &vtk_writer,
                           ParticleContainer &particle_container) {
-  vtkWriter.initializeOutput(static_cast<int>(particle_container.size()));
+  vtk_writer.initializeOutput(static_cast<int>(particle_container.size()));
 
   particle_container.singleIterator(
-      [&vtkWriter](const Particle &p) { vtkWriter.plotParticle(p); });
+      [&vtk_writer](const Particle &p) { vtk_writer.plotParticle(p); });
 
-  vtkWriter.writeFile(outputDirectory + "/MD_vtk", iteration);
+  vtk_writer.writeFile(output_directory + "/MD_vtk", iteration);
 }
 
 /**
  * @brief creates a timestamped directory in ./output/ containing the files at
  * the currents timestep and the specification used to attain the result.
- * @param outputDirectory the output directory named after the date
+ * @param output_directory the output directory named after the date
  * @param argc argc passed from main
  * @param argv argv passed from main
  * @return name of the output directory path
  */
-inline std::string createOutputDirectory(const std::string &outputDirectory,
+inline std::string createOutputDirectory(const std::string &output_directory,
                                          int argc, char *argv[]) {
   // source for getting time:
   // https://stackoverflow.com/questions/997946/how-to-get-current-time-and-date-in-c
-  const auto currentTime = std::chrono::high_resolution_clock::now();
-  const std::time_t now = std::chrono::system_clock::to_time_t(currentTime);
-  const std::tm localTime = *std::localtime(&now);
-  std::ostringstream timeString;
+  const auto current_time = std::chrono::high_resolution_clock::now();
+  const std::time_t now = std::chrono::system_clock::to_time_t(current_time);
+  const std::tm local_time = *std::localtime(&now);
+  std::ostringstream time_string;
 
   // output into 'outputDirectory/current_time/'
-  timeString << std::put_time(&localTime, "%Y-%m-%d %H:%M:%S/");
+  time_string << std::put_time(&local_time, "%Y-%m-%d %H:%M:%S/");
   const std::filesystem::path output_directory_path =
-      outputDirectory + timeString.str();
+      output_directory + time_string.str();
 
   if (!is_directory(output_directory_path)) {
     create_directories(output_directory_path);

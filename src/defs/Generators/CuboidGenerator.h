@@ -12,24 +12,24 @@
  */
 class CuboidGenerator final : public ParticleGenerator {
  private:
-  dvec3 corner;
-  ivec3 dimensions;
-  double h;
-  double m;
-  const dvec3 initialVelocity;
-  double mv;
+  dvec3 corner_;
+  ivec3 dimensions_;
+  double h_;
+  double m_;
+  const dvec3 initial_velocity_;
+  double mv_;
   /**
    * technically these are only relevant for week 4 but here they dont really
    * matter right now
    */
-  double epsilon;
-  double sigma;
-  const int type{};
+  double epsilon_;
+  double sigma_;
+  const int type_{};
   /**
    * here this just describes the behaviour of the brownian motion
    * initialization
    */
-  const bool twoD{};
+  const bool two_d_{};
 
  public:
   /**
@@ -38,18 +38,18 @@ class CuboidGenerator final : public ParticleGenerator {
    * @param dimensions number of particles in each unit direction
    * @param h distance between pairwise particles
    * @param m mass of the particles in the cuboid
-   * @param initialVelocity velocity (imagine this as a net-zero movement of all
+   * @param initial_velocity velocity (imagine this as a net-zero movement of all
    * particles) given by the predefined maxwell-boltzmann generator
    * @param epsilon lj - epsilon
    * @param sigma lj - sigma
    * @param mv temperature of our system
    * @param type type of the particle in the system
-   * @param twoD dimension of velocity vector of brownian motion
+   * @param two_d dimension of velocity vector of brownian motion
    */
   CuboidGenerator(const dvec3 &corner, const std::array<int, 3> &dimensions,
                   double h, double m,
-                  const std::array<double, 3> &initialVelocity, double mv,
-                  double epsilon, double sigma, int type, bool twoD);
+                  const std::array<double, 3> &initial_velocity, double mv,
+                  double epsilon, double sigma, int type, bool two_d);
 
   /**
    * @brief generates particles in the shape of a cuboid

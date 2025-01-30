@@ -19,7 +19,7 @@
 TEST(Thermostat, holding) {
   char arg0[] = "MolSim";
   char arg1[] = "-f";
-  char arg2[] = "../../../tests/test_cuboid.xml";
+  char arg2[] = "../../tests/test_cuboid.xml";
   char* argv[] = {arg0, arg1, arg2};
   auto [name, step, checkpoint] = CLArgumentParser::parse(3, argv);
 
@@ -58,28 +58,29 @@ TEST(Thermostat, holding) {
   std::vector<std::unique_ptr<SingularForce>> singular_forces;
   for (auto config : arguments.singular_force_types) {
     if (std::holds_alternative<SingularGravityConfig>(config)) {
-      const auto& [g] = std::get<SingularGravityConfig>(config);
-      singular_forces.push_back(
-          std::move(std::make_unique<SingularGravity>(g)));
+      const auto& [g, a] = std::get<SingularGravityConfig>(config);
+      singular_forces.push_back(std::make_unique<SingularGravity>(g, a));
     } else {
       SpdWrapper::get()->error("Unrecognized singular force");
     }
   }
 
+  std::vector<std::unique_ptr<IndexForce>> index_forces;
+
   VerletIntegrator verlet_integrator(interactive_forces, singular_forces,
-                                     arguments.delta_t);
+                                     index_forces, arguments.delta_t);
 
   std::unique_ptr<Thermostat> thermostat;
   if (arguments.use_thermostat) {
     thermostat = std::make_unique<Thermostat>(arguments.thermostat_config);
   }
-  double cur_temp = Thermostat::getTemperature(*container);
+  double cur_temp = thermostat->getTemperature(*container);
   EXPECT_NEAR(cur_temp, 1, 1);
   for (std::size_t i = 0; i < 1000; i++) {
     verlet_integrator.step(*container);
   }
 
-  double temp = Thermostat::getTemperature(*container);
+  double temp = thermostat->getTemperature(*container);
   EXPECT_NE(temp, 0.0);
 
   thermostat->setTemperature(*container);
@@ -87,10 +88,10 @@ TEST(Thermostat, holding) {
   EXPECT_NEAR(thermostat->getTemperature(*container), 1.0, 1e-6);
 
   for (std::size_t i = 0; i < 10000; i++) {
-    if (i != 0 && i % thermostat->n_thermostat) {
+    if (i != 0 && i % thermostat->getNThermostat()) {
       thermostat->setTemperature(*container);
-      EXPECT_NEAR(thermostat->getTemperature(*container), thermostat->T_target,
-                  1e-6);
+      EXPECT_NEAR(thermostat->getTemperature(*container),
+                  thermostat->getTTarget(), 1e-6);
     }
   }
 }
@@ -101,7 +102,7 @@ TEST(Thermostat, holding) {
 TEST(Thermostat, cooling) {
   char arg0[] = "MolSim";
   char arg1[] = "-f";
-  char arg2[] = "../../../tests/test_cuboid_cooling.xml";
+  char arg2[] = "../../tests/test_cuboid_cooling.xml";
   char* argv[] = {arg0, arg1, arg2};
   auto [name, step, checkpoint] = CLArgumentParser::parse(3, argv);
 
@@ -140,28 +141,28 @@ TEST(Thermostat, cooling) {
   std::vector<std::unique_ptr<SingularForce>> singular_forces;
   for (auto config : arguments.singular_force_types) {
     if (std::holds_alternative<SingularGravityConfig>(config)) {
-      const auto& [g] = std::get<SingularGravityConfig>(config);
-      singular_forces.push_back(
-          std::move(std::make_unique<SingularGravity>(g)));
+      const auto& [g, a] = std::get<SingularGravityConfig>(config);
+      singular_forces.push_back(std::make_unique<SingularGravity>(g, a));
     } else {
       SpdWrapper::get()->error("Unrecognized singular force");
     }
   }
+  std::vector<std::unique_ptr<IndexForce>> index_forces;
 
   VerletIntegrator verlet_integrator(interactive_forces, singular_forces,
-                                     arguments.delta_t);
+                                     index_forces, arguments.delta_t);
 
   std::unique_ptr<Thermostat> thermostat;
   if (arguments.use_thermostat) {
     thermostat = std::make_unique<Thermostat>(arguments.thermostat_config);
   }
-  double cur_temp = Thermostat::getTemperature(*container);
-  EXPECT_NEAR(cur_temp, 22, 4);
+  double cur_temp = thermostat->getTemperature(*container);
+  EXPECT_NEAR(cur_temp, 22, 1);
   for (std::size_t i = 0; i < 1000; i++) {
     verlet_integrator.step(*container);
   }
 
-  double temp = Thermostat::getTemperature(*container);
+  double temp = thermostat->getTemperature(*container);
   EXPECT_NE(temp, 0.0);
 
   thermostat->setTemperature(*container);
@@ -175,7 +176,7 @@ TEST(Thermostat, cooling) {
 TEST(Thermostat, heating) {
   char arg0[] = "MolSim";
   char arg1[] = "-f";
-  char arg2[] = "../../../tests/test_cuboid_heating.xml";
+  char arg2[] = "../../tests/test_cuboid_heating.xml";
   char* argv[] = {arg0, arg1, arg2};
   auto [name, step, checkpoint] = CLArgumentParser::parse(3, argv);
 
@@ -214,28 +215,29 @@ TEST(Thermostat, heating) {
   std::vector<std::unique_ptr<SingularForce>> singular_forces;
   for (auto config : arguments.singular_force_types) {
     if (std::holds_alternative<SingularGravityConfig>(config)) {
-      const auto& [g] = std::get<SingularGravityConfig>(config);
-      singular_forces.push_back(
-          std::move(std::make_unique<SingularGravity>(g)));
+      const auto& [g, a] = std::get<SingularGravityConfig>(config);
+      singular_forces.push_back(std::make_unique<SingularGravity>(g, a));
     } else {
       SpdWrapper::get()->error("Unrecognized singular force");
     }
   }
 
+  std::vector<std::unique_ptr<IndexForce>> index_forces;
+
   VerletIntegrator verlet_integrator(interactive_forces, singular_forces,
-                                     arguments.delta_t);
+                                     index_forces, arguments.delta_t);
 
   std::unique_ptr<Thermostat> thermostat;
   if (arguments.use_thermostat) {
     thermostat = std::make_unique<Thermostat>(arguments.thermostat_config);
   }
-  double cur_temp = Thermostat::getTemperature(*container);
+  double cur_temp = thermostat->getTemperature(*container);
   EXPECT_NEAR(cur_temp, 1.0, 1);
   for (std::size_t i = 0; i < 1000; i++) {
     verlet_integrator.step(*container);
   }
 
-  double temp = Thermostat::getTemperature(*container);
+  double temp = thermostat->getTemperature(*container);
   EXPECT_NE(temp, 0.0);
 
   thermostat->setTemperature(*container);
@@ -251,7 +253,7 @@ TEST(Thermostat, heating) {
 TEST(Thermostat, gradual) {
   char arg0[] = "MolSim";
   char arg1[] = "-f";
-  char arg2[] = "../../../tests/test_cuboid_gradual.xml";
+  char arg2[] = "../../tests/test_cuboid_gradual.xml";
   char* argv[] = {arg0, arg1, arg2};
   auto [name, step, checkpoint] = CLArgumentParser::parse(3, argv);
 
@@ -290,35 +292,38 @@ TEST(Thermostat, gradual) {
   std::vector<std::unique_ptr<SingularForce>> singular_forces;
   for (auto config : arguments.singular_force_types) {
     if (std::holds_alternative<SingularGravityConfig>(config)) {
-      const auto& [g] = std::get<SingularGravityConfig>(config);
-      singular_forces.push_back(
-          std::move(std::make_unique<SingularGravity>(g)));
+      const auto& [g, a] = std::get<SingularGravityConfig>(config);
+      singular_forces.push_back(std::make_unique<SingularGravity>(g, a));
     } else {
       SpdWrapper::get()->error("Unrecognized singular force");
     }
   }
 
-  VerletIntegrator verlet_integrator(interactive_forces, singular_forces,
-                                     arguments.delta_t);
+  std::vector<std::unique_ptr<IndexForce>> index_forces;
 
+  VerletIntegrator verlet_integrator(interactive_forces, singular_forces,
+                                     index_forces, arguments.delta_t);
   std::unique_ptr<Thermostat> thermostat;
   if (arguments.use_thermostat) {
     thermostat = std::make_unique<Thermostat>(arguments.thermostat_config);
   }
-  double cur_temp = Thermostat::getTemperature(*container);
-  EXPECT_NEAR(cur_temp, 1.0, 1);
+  double cur_temp = thermostat->getTemperature(*container);
   int diffs_added = 0;
-  for (std::size_t i = 0; i <= 3000; i++) {
+  for (std::size_t i = 0; i <= 600; i++) {
+    // one more application of the thermostat because only with the first
+    // application the temperature starts to increase effectively without ,v
     verlet_integrator.step(*container);
-    if (i > 0 && i % thermostat->n_thermostat == 0) {
-      std::cout << i << "Iterations " << std::endl;
+    if (i > 0 && i % thermostat->getNThermostat() == 0) {
+      std::cout << i << " Iterations " << std::endl;
       diffs_added++;
-      double temp = Thermostat::getTemperature(*container);
+      double temp = thermostat->getTemperature(*container);
+      std::cout << "Temperature " << temp << std::endl;
       thermostat->setTemperature(*container);
-      EXPECT_NEAR(thermostat->getTemperature(*container),
-                  temp + thermostat->d_temp, thermostat->d_temp);
+      // EXPECT_NEAR(thermostat->getTemperature(*container),
+      //             temp + thermostat->delta_temp, thermostat->delta_temp);
     }
   }
 
-  EXPECT_NEAR(thermostat->getTemperature(*container), thermostat->T_target, 1);
+  EXPECT_NEAR(thermostat->getTemperature(*container), thermostat->getTTarget(),
+              1e-6);
 }

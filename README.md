@@ -1,6 +1,8 @@
 MolSim - Group A
 ===
 
+Final Assignment
+
 ## Dependencies
 
 - Cmake 3.24
@@ -14,7 +16,21 @@ MolSim - Group A
 - Install
   ```bash
   git clone https://github.com/jkr11/MolSim.git
+  ``` 
+- manual build
+  ```bash
+  mkdir build
+  cmake -S . -B build - <options>
+  cd build
+  make
   ```
+- testing: use option -DBUILD_TESTS=ON
+  ```bash
+  cd build/tests
+  make
+  ctest
+  ```
+
 - Build the project using the provided build script by using source, add `-t` to also build and run tests, add `-b` to
   enable the BENCHMARK cmake macro
   ```bash

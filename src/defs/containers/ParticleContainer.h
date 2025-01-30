@@ -8,6 +8,8 @@
 #include <vector>
 
 #include "defs/Particle.h"
+#include "forces/InteractiveForce.h"
+#include "forces/SingularForce.h"
 
 /**
  * @brief Interface for an object storing particles while providing single and
@@ -20,15 +22,10 @@ class ParticleContainer {
    */
   virtual ~ParticleContainer() = default;
 
-  /**
-   * @brief Add a particle to the particle system.
-   * @param p Particle to be added.
-   */
-  virtual void addParticle(const Particle& p) = 0;
-
   virtual void addParticles(const std::vector<Particle>& particles) = 0;
   /**
    * @brief Remove a particle from the particle system.
+   * DO NOT USE, JUST FOR TESTING!
    * @param p Particle to be removed.
    */
   virtual void removeParticle(const Particle& p) = 0;
@@ -72,5 +69,49 @@ class ParticleContainer {
   virtual void pairIterator(
       const std::function<void(Particle&, Particle&)>& f) = 0;
 
+  /**
+   * @brief Compute interactive forces using the C18 coloring scheme
+   * (Parallelization strategy 1)
+   */
+  virtual void computeInteractiveForcesC18(
+      const std::vector<std::unique_ptr<InteractiveForce>>&
+          interactive_forces) = 0;
+
+  /**
+   * @brief Compute interactive forces using Force Buffers (Parallalization
+   * strategy 2)
+   */
+  virtual void computeInteractiveForcesForceBuffer(
+      const std::vector<std::unique_ptr<InteractiveForce>>&
+          interactive_forces) = 0;
+
+  /**
+   * @brief Compute singular forces
+   */
+  virtual void computeSingularForces(
+      const std::vector<std::unique_ptr<SingularForce>>& singular_forces) = 0;
+
   virtual double getKineticEnergy() = 0;
+
+  virtual void incrementTime() { this->current_time++; }
+
+  double current_time = 0;
+
+  /**
+   * @brief the exact number of current particles, updated accordingly
+   * @return the current count of particles left in the simulation
+   */
+  [[nodiscard]] virtual size_t getParticleCount() = 0;
+
+  /**
+   * @brief the exact number of current speical particles, updated accordingly
+   * @return the current count of special particles left in the simulation
+   */
+  [[nodiscard]] virtual size_t getSpecialParticleCount() = 0;
+
+  /**
+   * @brief returns the domain of the container
+   * @return the domain of the container
+   */
+  virtual ivec3 getDomain() = 0;
 };

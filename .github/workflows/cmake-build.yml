@@ -41,4 +41,3 @@ jobs:
 
     - name: Test
       run: cd buildDir/tests && ctest
-

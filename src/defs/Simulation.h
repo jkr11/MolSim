@@ -7,11 +7,21 @@
 #pragma once
 
 #include <variant>
-
+#ifdef _OPENMP
+#include <omp.h>
+#endif
 #include "defs/types.h"
-#include "forces/InteractiveForce.h"
 #include "forces/SingularForce.h"
 #include "utils/SpdWrapper.h"
+
+enum ParallelStrategy { STRATEGY_1, STRATEGY_2, STRATEGY_3 };
+
+struct IndexForceConfig {
+  std::vector<ivec3> indeces{};
+  std::vector<int> ids{};
+  double end_time{};
+  dvec3 force_values{};
+};
 
 /**
  * @brief holds the specification for the LinkedCellsContainer
@@ -28,6 +38,7 @@ struct LinkedCellsConfig {
     BoundaryType z_high;
     BoundaryType z_low;
   } boundary_config;
+  bool is_membrane = false;
 };
 
 /**
@@ -37,44 +48,120 @@ struct LinkedCellsConfig {
  */
 struct DirectSumConfig {};
 
+/**
+ * @brief holds the specification for the SingularGravity force
+ */
 struct SingularGravityConfig {
   double g{};
+  int axis{};
 };
 
-struct HarmonicForceConfig {};
+/**
+ * @brief holds the harmonic force parameters
+ */
+struct HarmonicForceConfig {
+  double r_0{};
+  double k{};
+};
 
+/**
+ * @brief holds the LennardJones force parameters
+ */
 struct LennardJonesConfig {};
 
+struct TruncatedLennardJonesConfig {};
+
+/**
+ * @brief holds the interactive gravity parameters
+ */
 struct GravityConfig {};
 
 /**
  * @brief holds instance data for Thermostat
  */
 struct ThermostatConfig {
-  double T_init{};
-  double T_target{};
-  double deltaT{};
+  double t_init{};
+  double t_target{};
+  double delta_t{};
   int n_thermostat{};
   bool use_relative{};
+  bool use_thermal_motion{};
+  bool two_d{};
+};
+
+struct StatisticsConfig {
+  bool calc_stats{};
+  int x_bins{};
+  int y_bins{};
+  int output_interval{};
+  std::string velocity_output_location{};
+  std::string density_output_location{};
+};
+
+struct SphereoidGeneratorConfig {
+  dvec3 origin{};
+  const int radius{};
+  double h{};
+  double m{};
+  const dvec3 initial_velocity{};
+  double epsilon{};
+  double sigma{};
+  const int type{};
+  double mv{};
+  const bool two_d{};
+  SphereoidGeneratorConfig() = default;
+};
+
+struct CuboidGeneratorConfig {
+  dvec3 corner{};
+  ivec3 dimensions{};
+  double h{};
+  double m{};
+  const dvec3 initial_velocity{};
+  double mv{};
+  double epsilon{};
+  double sigma{};
+  const int type{};
+  const bool two_d{};
+  CuboidGeneratorConfig() = default;
+};
+
+struct MembraneGeneratorConfig {
+  dvec3 corner{};
+  ivec3 dimensions{};
+  double h{};
+  double m{};
+  const dvec3 initial_velocity{};
+  double mv{};
+  double epsilon{};
+  double sigma{};
+  const int type{};
+  const bool two_d{};
+  std::vector<int> ids{};
+  std::vector<ivec3> indeces{};
 };
 
 /**
  * @brief struct to hold command line arguments
  */
-
+using SingularForceTypes =
+    std::variant<SingularGravityConfig, HarmonicForceConfig>;
+using InteractiveForceTypes = std::variant<LennardJonesConfig, GravityConfig,
+                                           TruncatedLennardJonesConfig>;
 struct Arguments {
-  using SingularForceTypes =
-      std::variant<SingularGravityConfig, HarmonicForceConfig>;
-  using InteractiveForceTypes = std::variant<LennardJonesConfig, GravityConfig>;
   double t_end;
   double delta_t;
-  enum ForceType { LennardJones, Gravity } force_type;
-  enum SingularForceType { SingularGravity } singular_force_type;
   ThermostatConfig thermostat_config;
   bool use_thermostat;
   std::variant<LinkedCellsConfig, DirectSumConfig> container_data;
   std::vector<SingularForceTypes> singular_force_types;
   std::vector<InteractiveForceTypes> interactive_force_types;
+  std::vector<IndexForceConfig> index_force_configs;
+  StatisticsConfig statistics_config;
+  SphereoidGeneratorConfig spheroid_generator_config;
+  CuboidGeneratorConfig cuboid_generator_config;
+  MembraneGeneratorConfig membrane_generator_config;
+  ParallelStrategy strategy;
 };
 
 /**
@@ -117,19 +204,19 @@ inline void printConfiguration(const Arguments& args) {
   logger->info("delta_t: {}", args.delta_t);
   logger->info("Singular Forces:");
   if (args.use_thermostat) {
-    logger->info("Thermostat: T_init {}", args.thermostat_config.T_init);
-    logger->info("--- T_target: {}", args.thermostat_config.T_target);
-    logger->info("--- deltaT: {}", args.thermostat_config.deltaT);
+    logger->info("Thermostat: T_init {}", args.thermostat_config.t_init);
+    logger->info("--- T_target: {}", args.thermostat_config.t_target);
+    logger->info("--- deltaT: {}", args.thermostat_config.delta_t);
   }
 
   if (std::holds_alternative<LinkedCellsConfig>(args.container_data)) {
     logger->info("Container Type: Linked Cells");
 
-    const auto& [domain, cutoff_radius, boundary_type, boundary_config] =
+    const auto& [domain, cutoff_radius, boundary_type, boundary_config,
+                 is_membrane] =
         std::get<LinkedCellsConfig>(args.container_data);
     logger->info("-- Domain: ({}, {}, {})", domain[0], domain[1], domain[2]);
     logger->info("-- Cutoff Radius: {}", cutoff_radius);
-
     logger->info("Boundary Configuration:");
     logger->info("------------------------");
 
@@ -144,7 +231,9 @@ inline void printConfiguration(const Arguments& args) {
   } else {
     logger->info("Container Type: Direct Sum");
   }
-
+#ifdef _OPENMP
+  logger->info("Number of Threads: {}", omp_get_max_threads());
+#endif
   logger->info("============================");
 }
 

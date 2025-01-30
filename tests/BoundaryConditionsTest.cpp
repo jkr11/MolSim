@@ -44,67 +44,67 @@ TEST(BoundaryConditions, Precalculations) {
   dvec3 left_center = {-2, -2, 1};
   dvec3 left_bottom = {-2, -2, 1};
 
-  EXPECT_EQ(container.isBoundary_testing(
+  EXPECT_EQ(container.isBoundaryTesting(
                 container.dvec3ToCellIndex_testing(center_center)),
             true);
-  EXPECT_EQ(container.isHalo_testing(
+  EXPECT_EQ(container.isHaloTesting(
                 container.dvec3ToCellIndex_testing(center_center)),
             false);
 
-  EXPECT_EQ(container.isBoundary_testing(
+  EXPECT_EQ(container.isBoundaryTesting(
                 container.dvec3ToCellIndex_testing(center_top)),
             false);
   EXPECT_EQ(
-      container.isHalo_testing(container.dvec3ToCellIndex_testing(center_top)),
+      container.isHaloTesting(container.dvec3ToCellIndex_testing(center_top)),
       true);
 
-  EXPECT_EQ(container.isBoundary_testing(
+  EXPECT_EQ(container.isBoundaryTesting(
                 container.dvec3ToCellIndex_testing(center_bottom)),
             false);
-  EXPECT_EQ(container.isHalo_testing(
+  EXPECT_EQ(container.isHaloTesting(
                 container.dvec3ToCellIndex_testing(center_bottom)),
             true);
 
-  EXPECT_EQ(container.isBoundary_testing(
+  EXPECT_EQ(container.isBoundaryTesting(
                 container.dvec3ToCellIndex_testing(right_top)),
             false);
   EXPECT_EQ(
-      container.isHalo_testing(container.dvec3ToCellIndex_testing(right_top)),
+      container.isHaloTesting(container.dvec3ToCellIndex_testing(right_top)),
       true);
 
-  EXPECT_EQ(container.isBoundary_testing(
+  EXPECT_EQ(container.isBoundaryTesting(
                 container.dvec3ToCellIndex_testing(right_center)),
             false);
-  EXPECT_EQ(container.isHalo_testing(
+  EXPECT_EQ(container.isHaloTesting(
                 container.dvec3ToCellIndex_testing(right_center)),
             true);
 
-  EXPECT_EQ(container.isBoundary_testing(
+  EXPECT_EQ(container.isBoundaryTesting(
                 container.dvec3ToCellIndex_testing(right_bottom)),
             false);
-  EXPECT_EQ(container.isHalo_testing(
+  EXPECT_EQ(container.isHaloTesting(
                 container.dvec3ToCellIndex_testing(right_bottom)),
             true);
 
-  EXPECT_EQ(container.isBoundary_testing(
+  EXPECT_EQ(container.isBoundaryTesting(
                 container.dvec3ToCellIndex_testing(left_top)),
             false);
   EXPECT_EQ(
-      container.isHalo_testing(container.dvec3ToCellIndex_testing(left_top)),
+      container.isHaloTesting(container.dvec3ToCellIndex_testing(left_top)),
       true);
 
-  EXPECT_EQ(container.isBoundary_testing(
+  EXPECT_EQ(container.isBoundaryTesting(
                 container.dvec3ToCellIndex_testing(left_center)),
             false);
   EXPECT_EQ(
-      container.isHalo_testing(container.dvec3ToCellIndex_testing(left_center)),
+      container.isHaloTesting(container.dvec3ToCellIndex_testing(left_center)),
       true);
 
-  EXPECT_EQ(container.isBoundary_testing(
+  EXPECT_EQ(container.isBoundaryTesting(
                 container.dvec3ToCellIndex_testing(left_bottom)),
             false);
   EXPECT_EQ(
-      container.isHalo_testing(container.dvec3ToCellIndex_testing(left_bottom)),
+      container.isHaloTesting(container.dvec3ToCellIndex_testing(left_bottom)),
       true);
 }
 
@@ -123,13 +123,13 @@ TEST(BoundaryConditions, Idempotence_Outflow) {
                                       LinkedCellsConfig::BoundaryType::Outflow,
                                   }});
 
-  const Particle p({1, 1, 1}, {0, 0, 0}, 1, 1, 1);
+  Particle p({1, 1, 1}, {0, 0, 0}, 1, 1, 1);
   EXPECT_EQ(container.size(), 0) << "Number of Particles is not 0";
 
   container.imposeInvariant();
   EXPECT_EQ(container.size(), 0) << "Number of Particles is not 0";
 
-  container.addParticle(p);
+  container.addParticles({p});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 1";
   container.imposeInvariant();
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 1";
@@ -151,8 +151,8 @@ TEST(BoundaryConditions, xhigh_Outflow) {
            LinkedCellsConfig::BoundaryType::Reflective,
        }});
 
-  const Particle p({1, 1, 1}, {0, 0, 0}, 1, 1, 1);
-  container.addParticle(p);
+  Particle p({1, 1, 1}, {0, 0, 0}, 1, 1, 1);
+  container.addParticles({p});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
 
   container.singleIterator([this](Particle& p) { p.setX({4, 1, 1}); });
@@ -178,8 +178,8 @@ TEST(BoundaryConditions, xlow_Outflow) {
            LinkedCellsConfig::BoundaryType::Reflective,
        }});
 
-  const Particle p({1, 1, 1}, {0, 0, 0}, 1, 1, 1);
-  container.addParticle(p);
+  Particle p({1, 1, 1}, {0, 0, 0}, 1, 1, 1);
+  container.addParticles({p});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
 
   container.singleIterator([this](Particle& p) { p.setX({-1, 1, 1}); });
@@ -205,8 +205,8 @@ TEST(BoundaryConditions, yhigh_Outflow) {
            LinkedCellsConfig::BoundaryType::Reflective,
        }});
 
-  const Particle p({1, 1, 1}, {0, 0, 0}, 1, 1, 1);
-  container.addParticle(p);
+  Particle p({1, 1, 1}, {0, 0, 0}, 1, 1, 1);
+  container.addParticles({p});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
 
   container.singleIterator([this](Particle& p) { p.setX({1, 4, 1}); });
@@ -232,11 +232,65 @@ TEST(BoundaryConditions, ylow_Outflow) {
            LinkedCellsConfig::BoundaryType::Reflective,
        }});
 
-  const Particle p({1, 1, 1}, {0, 0, 0}, 1, 1, 1);
-  container.addParticle(p);
+  Particle p({1, 1, 1}, {0, 0, 0}, 1, 1, 1);
+  container.addParticles({p});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
 
   container.singleIterator([this](Particle& p) { p.setX({1, -1, 1}); });
+  EXPECT_EQ(container.size(), 1) << "Number of Particles is not 1";
+
+  container.imposeInvariant();
+  EXPECT_EQ(container.size(), 0) << "Particle was not deleted";
+}
+
+/**
+ * test zhigh outflow
+ */
+TEST(BoundaryConditions, zhigh_Outflow) {
+  LinkedCellsContainer container(
+      {.domain = {3, 3, 3},
+       .cutoff_radius = 3,
+       .boundary_config = {
+           LinkedCellsConfig::BoundaryType::Reflective,
+           LinkedCellsConfig::BoundaryType::Reflective,
+           LinkedCellsConfig::BoundaryType::Reflective,
+           LinkedCellsConfig::BoundaryType::Reflective,
+           LinkedCellsConfig::BoundaryType::Outflow,
+           LinkedCellsConfig::BoundaryType::Reflective,
+       }});
+
+  Particle p({1, 1, 1}, {0, 0, 0}, 1, 1, 1);
+  container.addParticles({p});
+  EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
+
+  container.singleIterator([this](Particle& p) { p.setX({1, 1, 4}); });
+  EXPECT_EQ(container.size(), 1) << "Number of Particles is not 1";
+
+  container.imposeInvariant();
+  EXPECT_EQ(container.size(), 0) << "Particle was not deleted";
+}
+
+/**
+ * test zlow outflow
+ */
+TEST(BoundaryConditions, zlow_Outflow) {
+  LinkedCellsContainer container(
+      {.domain = {3, 3, 3},
+       .cutoff_radius = 3,
+       .boundary_config = {
+           LinkedCellsConfig::BoundaryType::Reflective,
+           LinkedCellsConfig::BoundaryType::Reflective,
+           LinkedCellsConfig::BoundaryType::Reflective,
+           LinkedCellsConfig::BoundaryType::Reflective,
+           LinkedCellsConfig::BoundaryType::Reflective,
+           LinkedCellsConfig::BoundaryType::Outflow,
+       }});
+
+  Particle p({1, 1, 1}, {0, 0, 0}, 1, 1, 1);
+  container.addParticles({p});
+  EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
+
+  container.singleIterator([this](Particle& p) { p.setX({1, 1, -1}); });
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 1";
 
   container.imposeInvariant();
@@ -259,8 +313,8 @@ TEST(BoundaryConditions, xlow_Reflective) {
            LinkedCellsConfig::BoundaryType::Outflow,
        }});
 
-  const Particle p({0.7, 1, 1}, {-1, 0, 0}, 1, 1, 1);
-  container.addParticle(p);
+  Particle p({0.7, 1, 1}, {-1, 0, 0}, 1, 1, 1);
+  container.addParticles({p});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
 
   // simulate 10.000 steps for a specific delta t to assure that it turned around
@@ -304,8 +358,8 @@ TEST(BoundaryConditions, xhigh_Reflective) {
            LinkedCellsConfig::BoundaryType::Outflow,
        }});
 
-  const Particle p({89.3, 1, 1}, {1, 0, 0}, 1, 1, 1);
-  container.addParticle(p);
+  Particle p({89.3, 1, 1}, {1, 0, 0}, 1, 1, 1);
+  container.addParticles({p});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
 
   // simulate 10.000 steps for a specific delta t to assure that it turned around
@@ -349,8 +403,8 @@ TEST(BoundaryConditions, ylow_Reflective) {
            LinkedCellsConfig::BoundaryType::Outflow,
        }});
 
-  const Particle p({1, 0.7, 1}, {0, -1, 0}, 1, 1, 1);
-  container.addParticle(p);
+  Particle p({1, 0.7, 1}, {0, -1, 0}, 1, 1, 1);
+  container.addParticles({p});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
 
   // simulate 10.000 steps for a specific delta t to assure that it turned around
@@ -394,8 +448,8 @@ TEST(BoundaryConditions, yhigh_Reflective) {
            LinkedCellsConfig::BoundaryType::Outflow,
        }});
 
-  const Particle p({1, 89.3, 1}, {0, 1, 0}, 1, 1, 1);
-  container.addParticle(p);
+  Particle p({1, 89.3, 1}, {0, 1, 0}, 1, 1, 1);
+  container.addParticles({p});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
 
   // simulate 10.000 steps for a specific delta t to assure that it turned around
@@ -420,5 +474,95 @@ TEST(BoundaryConditions, yhigh_Reflective) {
 
   container.singleIterator([this](Particle& p) {
     DVEC3_NEAR(p.getV(), {0.0, -1.0, 0.0}, "Violated the law of conservation of energy", 1e-5);
+  });
+}
+
+/**
+ *  test zlow Reflective boundary and that no energy is gained
+ */
+TEST(BoundaryConditions, zlow_Reflective) {
+  LinkedCellsContainer container(
+      {.domain = {3, 90, 3},  // better safe than sorry
+       .cutoff_radius = 3,
+       .boundary_config = {
+           LinkedCellsConfig::BoundaryType::Outflow,
+           LinkedCellsConfig::BoundaryType::Outflow,
+           LinkedCellsConfig::BoundaryType::Outflow,
+           LinkedCellsConfig::BoundaryType::Outflow,
+           LinkedCellsConfig::BoundaryType::Outflow,
+           LinkedCellsConfig::BoundaryType::Reflective,
+       }});
+
+  Particle p({1, 1, 0.7}, {0, 0, -1}, 1, 1, 1);
+  container.addParticles({p});
+  EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
+
+  // simulate 10.000 steps for a specific delta t to assure that it turned around
+  for (int i = 0; i < 10000; i++) {
+    double delta_t = 0.00005;
+    container.singleIterator([this, delta_t](Particle& p) {
+      const dvec3 new_x = p.getX() + delta_t * p.getV() +
+                          (delta_t * delta_t / (2 * p.getM())) * (p.getF());
+      p.setX(new_x);
+    });
+
+    container.singleIterator([](Particle& p) { p.updateForceInTime(); });
+
+    container.imposeInvariant();
+
+    container.singleIterator([this, delta_t](Particle& p) {
+      const dvec3 new_v =
+          p.getV() + (delta_t / (2 * p.getM()) * (p.getOldF() + p.getF()));
+      p.setV(new_v);
+    });
+  }
+
+  container.singleIterator([this](Particle& p) {
+    DVEC3_NEAR(p.getV(), {0.0, 0, 1.0}, "Violated the law of conservation of energy", 1e-5);
+  });
+}
+
+/**
+ *  test zhigh Reflective boundary and that no energy is gained
+ */
+TEST(BoundaryConditions, zhigh_Reflective) {
+  LinkedCellsContainer container(
+      {.domain = {3, 3, 3},  // better safe than sorry
+       .cutoff_radius = 1,
+       .boundary_config = {
+           LinkedCellsConfig::BoundaryType::Outflow,
+           LinkedCellsConfig::BoundaryType::Outflow,
+           LinkedCellsConfig::BoundaryType::Outflow,
+           LinkedCellsConfig::BoundaryType::Outflow,
+           LinkedCellsConfig::BoundaryType::Reflective,
+           LinkedCellsConfig::BoundaryType::Outflow,
+       }});
+
+  Particle p({1, 1, 2.3}, {0, 0, 1}, 1, 1, 1);
+  container.addParticles({p});
+  EXPECT_EQ(container.size(), 1) << "Number of Particles is not 0";
+
+  // simulate 10.000 steps for a specific delta t to assure that it turned around
+  for (int i = 0; i < 10000; i++) {
+    double delta_t = 0.00005;
+    container.singleIterator([this, delta_t](Particle& particle) {
+      const dvec3 new_x = particle.getX() + delta_t * particle.getV() +
+                          (delta_t * delta_t / (2 * particle.getM())) * (particle.getF());
+      particle.setX(new_x);
+    });
+
+    container.singleIterator([](Particle& particle) { particle.updateForceInTime(); });
+
+    container.imposeInvariant();
+
+    container.singleIterator([this, delta_t](Particle& particle) {
+      const dvec3 new_v =
+          particle.getV() + (delta_t / (2 * particle.getM()) * (particle.getOldF() + particle.getF()));
+      particle.setV(new_v);
+    });
+  }
+
+  container.singleIterator([this](const Particle& particle) {
+    DVEC3_NEAR(particle.getV(), {0.0, 0.0, -1.0}, "Violated the law of conservation of energy", 1e-5);
   });
 }
