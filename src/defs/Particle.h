@@ -16,7 +16,7 @@
 
 class Particle final {
  private:
-  static int global_id_counter;
+  static int global_id_counter_;
   /**
    * Position of the particle
    */
@@ -50,7 +50,7 @@ class Particle final {
   int type_{};
 
   /**
-   * depth of the potential well
+   * depth of the potential-well
    * used in the caluclation of lennard-jones force
    */
   double epsilon_{};
@@ -67,31 +67,24 @@ class Particle final {
   int id_{};
 
   /**
-   * neighbouring cells for the membranes
+   * neighbouring cells for the membranes, saved as [diagonal, address]
    */
-  std::vector<std::pair<bool, size_t>> neighbours;
+  std::vector<std::pair<bool, size_t>> neighbours_;
 
  public:
   explicit Particle(int type = 0);
 
   Particle(const Particle &other);
 
-  Particle(
-      // for visualization, we need always 3 coordinates
-      // -> in case of 2d, we use only the first and the second
-      const std::array<double, 3> &x_arg, const std::array<double, 3> &v_arg,
-      double m_arg, double epsilon, double sigma, int type = 0);
-
+  Particle(const std::array<double, 3> &x_arg,
+           const std::array<double, 3> &v_arg, double m_arg, double epsilon,
+           double sigma, int type = 0);
 
   explicit Particle(const std::array<double, 3> &x_arg,
                     const std::array<double, 3> &v_arg,
                     const std::array<double, 3> &f_arg,
                     const std::array<double, 3> &old_f_arg, double m_arg,
                     int type_arg, double epsilon_arg, double sigma_arg);
-  // ambiguous overload?
-  // Particle()
-  //    : neighbours(std::vector<std::pair<bool, std::shared_ptr<Particle>>>())
-  //    {}
 
   ~Particle();
 
@@ -111,7 +104,7 @@ class Particle final {
 
   [[nodiscard]] double getSigma() const { return sigma_; }
 
-  [[nodiscard]] const std::vector<std::pair<bool,size_t>> &getNeighbours()
+  [[nodiscard]] const std::vector<std::pair<bool, size_t>> &getNeighbours()
       const;
 
   void setF(const std::array<double, 3> &f) { f_ = f; }
@@ -142,10 +135,10 @@ class Particle final {
 
   void setNeighbours(
       const std::vector<std::pair<bool, size_t>> &new_neighbours) {
-    neighbours = new_neighbours;
+    neighbours_ = new_neighbours;
   }
 
-  void resetNeighbours() { neighbours = {}; }
+  void resetNeighbours() { neighbours_ = {}; }
 
   [[nodiscard]] int getId() const;
 
@@ -164,12 +157,11 @@ class Particle final {
       id_ = other.id_;
       epsilon_ = other.epsilon_;
       sigma_ = other.sigma_;
-      neighbours = other.neighbours;  // Shallow copy of shared_ptr
+      neighbours_ = other.neighbours_;  // Shallow copy of shared_ptr
     }
     return *this;
   }
 
-  // Move assignment operator
   Particle &operator=(Particle &&other) noexcept {
     if (this != &other) {
       x_ = other.x_;
@@ -181,8 +173,8 @@ class Particle final {
       id_ = other.id_;
       epsilon_ = other.epsilon_;
       sigma_ = other.sigma_;
-      neighbours =
-          std::move(other.neighbours);  // Transfer ownership of shared_ptr
+      neighbours_ =
+          std::move(other.neighbours_);  // Transfer ownership of shared_ptr
     }
     return *this;
   }

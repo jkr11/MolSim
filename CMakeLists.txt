@@ -9,8 +9,14 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_compile_options(-O3 -ffast-math -march=native -std=c++17 -lstdc++
-        -Wno-deprecated-declarations)
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    add_compile_options(-O3 -ffast-math -march=native -std=c++17 -Wno-deprecated-declarations)
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    add_compile_options(-O3 -ffast-math -march=native -std=c++17 -Wno-deprecated-declarations)
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
+    message("Using intel compile options")
+    add_compile_options(-xHost -ipo -qopenmp -O3 -fp-model fast=2)
+endif ()
 
 #add_compile_options(-xHost -O3 -fp-model fast=2)
 

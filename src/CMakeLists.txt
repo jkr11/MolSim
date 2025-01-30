@@ -1,9 +1,10 @@
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-set(XERCESC_DIR /dss/dsshome1/lxc0B/di34miq/xercesc)
-include_directories(${XERCESC_DIR}/include)
-link_directories(${XERCESC_DIR}/lib64)
 
-find_package(OpenMP REQUIRED)
+option(ENABLE_OPENMP "Enable OpenMP support" OFF)
+
+if (ENABLE_OPENMP)
+    find_package(OpenMP REQUIRED)
+endif ()
 
 ##### Collect all cpp files except MolSim.cpp #####
 file(GLOB_RECURSE MY_SRC
@@ -24,11 +25,15 @@ add_library(MolSimLib
         forces/IndexForce.h
 )
 
+
 target_link_libraries(MolSimLib
         PUBLIC
         spdlog::spdlog
-        OpenMP::OpenMP_CXX
 )
+
+if (ENABLE_OPENMP AND OpenMP_CXX_FOUND)
+    target_link_libraries(MolSimLib PUBLIC OpenMP::OpenMP_CXX)
+endif ()
 
 target_link_libraries(MolSimLib PRIVATE xerces-c)
 
@@ -70,11 +75,10 @@ set_source_files_properties(${FILES_TO_DISABLE_WARNINGS}
         COMPILE_OPTIONS "-w"
 )
 
-find_package(OpenMP REQUIRED)
 
-if (OpenMP_CXX_FOUND)
+if (ENABLE_OPENMP AND OpenMP_CXX_FOUND)
     target_link_libraries(MolSimLib PUBLIC OpenMP::OpenMP_CXX)
-endif()
+endif ()
 
 target_link_libraries(MolSim PUBLIC MolSimLib)
 

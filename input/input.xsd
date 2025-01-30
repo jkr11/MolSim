@@ -37,6 +37,7 @@
     <xs:complexType name="MetadataType">
         <xs:sequence>
             <xs:element name="container" type="ContainerType"/>
+            <xs:element name="use_c18_strategy" type="xs:boolean" minOccurs="0"/>
             <xs:element name="force" type="ForceType"/>
             <xs:element name="delta_t" type="xs:decimal"/>
             <xs:element name="t_end" type="xs:double"/>
@@ -44,6 +45,9 @@
             <xs:element name="checkpoint" type="CheckpointWrapperType" minOccurs="0"/>
             <xs:element name="statistics" type="StatisticsType" minOccurs="0"/>
         </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="StrategyType">
     </xs:complexType>
 
     <xs:complexType name="CheckpointWrapperType">

@@ -1,7 +1,6 @@
 //
 // Created by jkr on 12/23/24.
 //
-
 #ifndef HARMONICFORCE_H
 #define HARMONICFORCE_H
 #include <cmath>

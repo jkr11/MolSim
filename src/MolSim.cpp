@@ -1,6 +1,5 @@
 #include <filesystem>
 #include <iostream>
-#include <omp.h>
 
 #include "calc/VerletIntegrator.h"
 #include "debug/debug_print.h"
@@ -21,7 +20,7 @@
 #include "spdlog/stopwatch.h"
 #include "utils/SpdWrapper.h"
 #include "utils/Statistics.h"
-#undef BENCHMARK
+
 int main(const int argc, char* argv[]) {
   Arguments arguments = {};
 
@@ -35,7 +34,6 @@ int main(const int argc, char* argv[]) {
   printConfiguration(arguments);
   SpdWrapper::get()->info("Step size: {}", step_size);
 
-  // TODO: delte in config
   std::vector<std::unique_ptr<IndexForce>> index_forces;
   for (const auto& config : arguments.index_force_configs) {
     const auto& [coords, ids, time, force_values] = config;
@@ -48,18 +46,10 @@ int main(const int argc, char* argv[]) {
   if (std::holds_alternative<LinkedCellsConfig>(arguments.container_data)) {
     auto& linked_cells_data =
         std::get<LinkedCellsConfig>(arguments.container_data);
-    // TODO what is this is it necessary?
-    // linked_cells_data.particle_count = particles.size();
-    // linked_cells_data.special_particle_count =
-    //     std::count_if(particles.begin(), particles.end(),
-    //                   [](const Particle& p) { return p.getType() < 0; });
+
     container = std::make_unique<LinkedCellsContainer>(linked_cells_data);
 
-    // auto q = particles[0];
-    // std::cout << "Particle " << q.getId() << " is at mem " << q << std::endl;
     container->addParticles(particles);
-    // auto p = container->getParticles()[0];
-    // std::cout << "Particle " << p->getId() << " is at mem " << p << std::endl;
 
     container->imposeInvariant();
   } else if (std::holds_alternative<DirectSumConfig>(
@@ -107,7 +97,8 @@ int main(const int argc, char* argv[]) {
   }
 
   VerletIntegrator verlet_integrator(interactive_forces, singular_forces,
-                                     index_forces, arguments.delta_t);
+                                     index_forces, arguments.delta_t,
+                                     arguments.strategy);
   outputWriter::VTKWriter writer;
   std::unique_ptr<Thermostat> thermostat;
   if (arguments.use_thermostat) {
@@ -127,57 +118,35 @@ int main(const int argc, char* argv[]) {
   int writes = 0;
   int percentage = 0;
   double next_output_time = 0;
-  spdlog::stopwatch stopwatch;  // TODO whats up with this?
+  spdlog::stopwatch stopwatch;
   auto time_of_last_mups = start_time;
-  // TODO breaks sometimes i think it has to do with paths?
 
   Statistics statistics(
       arguments.statistics_config.x_bins, arguments.statistics_config.y_bins,
       *container,
-      output_directory +
-          arguments.statistics_config.density_output_location,
-      output_directory +
-          arguments.statistics_config.velocity_output_location);
+      output_directory + arguments.statistics_config.density_output_location,
+      output_directory + arguments.statistics_config.velocity_output_location);
 #endif
-  // auto p2 = container->getParticles()[1];
-  // for (auto [diag, ref] : p2->getNeighbours()) {
-  //   auto dings = reinterpret_cast<Particle*>(ref);
-  //   if (dings->getId() == 0) {
-  //     SpdWrapper::get()->info(
-  //         "Neighbour 0 from Particle 1 has reference location {}", ref);
-  //   }
-  // }
 
   while (current_time <= arguments.t_end) {
-    // TODO REMOVE
-    // if (iteration == 100) {
-    //   SpdWrapper::get()->info("test test");
-    //   std::cout << "ahhh" << std::endl;
-    //   container->singleIterator([](Particle& p) {
-    //     // SpdWrapper::get()->info("particle {} at [{}, {}, {}]", p.getId(),
-    //     //                         p.getX()[0], p.getX()[1], p.getX()[2]);
-    //   });
-    // }
-
     verlet_integrator.step(*container);
     if (arguments.use_thermostat) {
-      if (iteration % thermostat->n_thermostat == 0 && iteration > 0) {
+      if (iteration % thermostat->getNThermostat() == 0 && iteration > 0) {
         thermostat->setTemperature(*container);
       }
     }
-
 
     if (iteration % 100 == 0) {
       SpdWrapper::get()->info("Iteration {}", iteration);
     }
 
 #ifdef BENCHMARK  // these are the first 1000 iterations for the contest
-    if (iteration == 10000) {
+    if (iteration == 1000) {
       const auto first_1_k = std::chrono::high_resolution_clock::now();
       const std::chrono::duration<double> elapsed = first_1_k - start_time;
-      std::cout << "First 10k iterations took: " << elapsed.count() << " seconds"
-                << std::endl;
-      const auto mups = static_cast<double>(number_of_particles) * 10000 *
+      std::cout << "First 10k iterations took: " << elapsed.count()
+                << " seconds" << std::endl;
+      const auto mups = static_cast<double>(number_of_particles) * 1000 *
                         (1.0 / elapsed.count());
       std::cout << "MMUPS for first 10k iterations: " << mups * (1.0 / 1e6)
                 << std::endl;
@@ -186,30 +155,6 @@ int main(const int argc, char* argv[]) {
 #endif
 
     particle_updates += container->getParticleCount();
-    /*
-    if (iteration % 100 == 0) {
-      container->singleIterator([](Particle& p) {
-        if (p.getId() == 0) {
-          InfoVec("0 Position", p.getX());
-          InfoVec("0 Velocity", p.getV());
-          InfoVec("0 Force", p.getF());
-        }
-        if (p.getId() == 823) {
-          InfoVec("823 Position", p.getX());
-          InfoVec("823 Velocity", p.getV());
-          InfoVec("823 Force", p.getF());
-        }
-
-        if (p.getId() == 874) {
-          InfoVec("874 Position", p.getX());
-          InfoVec("874 Velocity", p.getV());
-          InfoVec("874 Force", p.getF());
-          SpdWrapper::get()->info(
-              "---------------------------------------------");
-        }
-      });
-    }
-    */
 
 #ifndef BENCHMARK
     if (current_time >= next_output_time) {
@@ -239,7 +184,6 @@ int main(const int argc, char* argv[]) {
                 current_time_hrc - time_of_last_mups)
                 .count();
 
-        // TODO can we solve narrowing conversion? i dont think so
         double mmups =
             particle_updates * (1.0 / static_cast<double>(microseconds));
         time_of_last_mups = current_time_hrc;
@@ -255,7 +199,6 @@ int main(const int argc, char* argv[]) {
         percentage++;
       }
     }
-    // TODO breaks on membrane branch idk why
 
     if (arguments.statistics_config.calc_stats &&
         iteration % arguments.statistics_config.output_interval == 0) {
@@ -264,7 +207,6 @@ int main(const int argc, char* argv[]) {
 #endif
     iteration++;
     current_time = arguments.delta_t * iteration;
-    // SpdWrapper::get()->info("Iteration {}", iteration);
   }
 
   // Writes the finished simulations particle state into a checkpoint file
@@ -287,7 +229,6 @@ int main(const int argc, char* argv[]) {
   std::cout << "MMUPS: " << mmups << std::endl;
 
 #ifndef BENCHMARK
-  // TODO
   statistics.closeFiles();
 #endif
   SpdWrapper::get()->info("Output written. Terminating...");

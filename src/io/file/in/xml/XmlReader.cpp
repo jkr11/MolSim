@@ -22,7 +22,7 @@ void XmlReader::read(std::vector<Particle>& particles,
                      const std::string& filepath,
                      Arguments& simulation_parameters) {
   const std::filesystem::path path(filepath);
-  validate_path(path, ".xml", "Simulation input");
+  validatePath(path, ".xml", "Simulation input");
   try {
     const std::unique_ptr<::simulation> config = simulation_(filepath);
     INFO_FMT("Reading XML file {}", filepath);
@@ -139,6 +139,17 @@ void XmlReader::read(std::vector<Particle>& particles,
           .density_output_location = "density.csv",
       };
     }
+    if (metadata.use_c18_strategy().present()) {
+      if (metadata.use_c18_strategy().get()) {
+        INFO("Using c18 strategy")
+        simulation_parameters.strategy = ParallelStrategy::STRATEGY_2;
+      } else {
+        INFO("Using force buffers reader")
+        simulation_parameters.strategy = ParallelStrategy::STRATEGY_1;
+      }
+    } else {
+      simulation_parameters.strategy = ParallelStrategy::STRATEGY_3;
+    }
     simulation_parameters.statistics_config = statistics_config;
 
     INFO("Checking for thermostat ...")
@@ -157,6 +168,7 @@ void XmlReader::read(std::vector<Particle>& particles,
           .n_thermostat = thermostat->n_thermostat(),
           .use_thermal_motion =
               static_cast<bool>(thermostat->use_thermal_motion()),
+          .two_d = static_cast<bool>(config->metadata().twoD()),
       };
 
       if (thermostat->deltaT().present()) {
@@ -230,7 +242,7 @@ void XmlReader::read(std::vector<Particle>& particles,
             membranes.epsilon(), membranes.sigma(), membranes.type(), twoD,
             simulation_parameters.index_force_configs[0].indeces);
         mg.generate(particles);
-        std::vector<int> ids = mg.getIndeces();
+        std::vector<int> ids = mg.getIndices();
         simulation_parameters.index_force_configs[0].ids = ids;
         if (std::holds_alternative<LinkedCellsConfig>(
                 simulation_parameters.container_data)) {
@@ -273,7 +285,7 @@ void XmlReader::read(std::vector<Particle>& particles,
 void XmlReader::loadCheckpoint(const std::string& _filepath,
                                std::vector<Particle>& particles) {
   const std::filesystem::path filepath(_filepath);
-  validate_path(filepath, ".xml", "checkpoint");
+  validatePath(filepath, ".xml", "checkpoint");
   try {
     DEBUG_PRINT("Found checkpoint file");
     const std::unique_ptr<::CheckpointType> checkpoint = Checkpoint(filepath);
@@ -308,7 +320,7 @@ void XmlReader::loadCheckpointMembrane(const std::string& _filepath,
                                        std::vector<Particle>& particles) {
   INFO("Loading membrane checkpoint")
   const std::filesystem::path filepath(_filepath);
-  validate_path(filepath, ".xml", "checkpoint");
+  validatePath(filepath, ".xml", "checkpoint");
   try {
     DEBUG_PRINT("Found checkpoint file");
     const std::unique_ptr<::CheckpointType> checkpoint = Checkpoint(filepath);

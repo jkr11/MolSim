@@ -10,6 +10,7 @@
 #include "defs/Generators/MembraneGenerator.h"
 #include "defs/containers/LinkedCellsContainer.h"
 #include "forces/HarmonicForce.h"
+#include "forces/IndexForce.h"
 #include "forces/InteractiveForce.h"
 #include "forces/SingularGravity.h"
 #include "forces/TruncatedLennardJones.h"
@@ -188,7 +189,7 @@ TEST(Membrane, LC4x4) {
   //    .force_values = {0, 0, 0.8},
   // };
   // index_forces.push_back(std::make_unique<IndexForce>());
-  std::cout << "global id counter "  << std::endl;
+  std::cout << "global id counter " << std::endl;
   MembraneGenerator membrane_generator({0, 0, 0}, {4, 4, 1}, 2.5, 1.0,
                                        {0, 0, 0}, 0.0, 1.0, 1.0, 1, true, {});
 
@@ -199,7 +200,8 @@ TEST(Membrane, LC4x4) {
       << "Particle 3 has wrong amount of neighbours";
 
   for (int i = 0; i < 3; ++i) {
-    Particle* neighbourParticle = reinterpret_cast<Particle*>(particles[3].getNeighbours()[i].second);
+    Particle* neighbourParticle =
+        reinterpret_cast<Particle*>(particles[3].getNeighbours()[i].second);
     int idN = neighbourParticle->getId();
     bool diag = particles[3].getNeighbours()[i].first;
     switch (idN) {
@@ -222,9 +224,9 @@ TEST(Membrane, LC4x4) {
   }
 
   for (int i = 0; i < 3; i++) {
-    Particle* neighbourParticle = reinterpret_cast<Particle*>(particles[5].getNeighbours()[i].second);
+    Particle* neighbourParticle =
+        reinterpret_cast<Particle*>(particles[5].getNeighbours()[i].second);
     int idN = neighbourParticle->getId();
-
 
     bool diag = particles[5].getNeighbours()[i].first;
     switch (idN) {

@@ -11,7 +11,7 @@
 #include "utils/ArrayUtils.h"
 #include "utils/SpdWrapper.h"
 
-int Particle::global_id_counter = 0;
+int Particle::global_id_counter_ = 0;
 
 Particle::Particle(const int type) {
   type_ = type;
@@ -19,7 +19,6 @@ Particle::Particle(const int type) {
   old_f_ = {0., 0., 0.};
 }
 
-// TODO default?
 Particle::Particle(const Particle &other) {
   x_ = other.x_;
   v_ = other.v_;
@@ -30,7 +29,7 @@ Particle::Particle(const Particle &other) {
   epsilon_ = other.epsilon_;
   sigma_ = other.sigma_;
   id_ = other.id_;
-  neighbours = std::move(other.neighbours);
+  neighbours_ = other.neighbours_;
 }
 
 Particle::Particle(const std::array<double, 3> &x_arg,
@@ -44,7 +43,7 @@ Particle::Particle(const std::array<double, 3> &x_arg,
   old_f_ = {0., 0., 0.};
   sigma_ = sigma;
   epsilon_ = epsilon;
-  id_ = global_id_counter++;
+  id_ = global_id_counter_++;
 }
 
 Particle::Particle(const std::array<double, 3> &x_arg,
@@ -61,18 +60,16 @@ Particle::Particle(const std::array<double, 3> &x_arg,
       type_(type_arg),
       epsilon_(epsilon_arg),
       sigma_(sigma_arg),
-      id_(global_id_counter++) {}
-
+      id_(global_id_counter_++) {}
 
 Particle::~Particle() = default;
 
-const std::vector<std::pair<bool, size_t>> &Particle::getNeighbours()
-    const {
-  return neighbours;
+const std::vector<std::pair<bool, size_t>> &Particle::getNeighbours() const {
+  return neighbours_;
 }
 
 void Particle::pushBackNeighbour(bool diag, long particle) {
-  neighbours.emplace_back(diag, particle);
+  neighbours_.emplace_back(diag, particle);
 }
 
 void Particle::updateForceInTime() {
@@ -91,7 +88,8 @@ std::string Particle::toString() const {
 
 bool Particle::operator==(const Particle &other) const {
   return (x_ == other.x_) and (v_ == other.v_) and (f_ == other.f_) and
-         (type_ == other.type_) and (m_ == other.m_) and (old_f_ == other.old_f_);
+         (type_ == other.type_) and (m_ == other.m_) and
+         (old_f_ == other.old_f_);
 }
 
 std::ostream &operator<<(std::ostream &stream, const Particle &p) {

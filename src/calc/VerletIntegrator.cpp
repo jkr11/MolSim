@@ -26,13 +26,11 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
 
   particle_container.imposeInvariant();
 
-  // TODO: refactor in lower iterator? maybe pass time to all? just get the
-  // global var?
-  // Pull Up
+  // TODO: refactor into container
   particle_container.singleIterator([this](Particle& p) {
     dvec3 f = {0, 0, 0};
     for (const auto& index_force : index_forces_) {
-      for (const int id : index_force->getIndeces()) {
+      for (const int id : index_force->getIndices()) {
         if (p.getId() == id) {
           f = f + index_force->applyForce(p, current_time_);
         }
@@ -41,10 +39,34 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
     p.addF(f);
   });
 
-  // Lennard Jones (or truncated)
-  particle_container.computeInteractiveForces(interactive_forces_);
+#ifdef _OPENMP
+  // INFO("Using openmp")
+  if (strategy_ == ParallelStrategy::STRATEGY_2) {
+    particle_container.computeInteractiveForcesC18(interactive_forces_);
+  } else if (strategy_ == ParallelStrategy::STRATEGY_1) {
+    particle_container.computeInteractiveForcesForceBuffer(interactive_forces_);
+  } else {  // TODO change maybe
+    particle_container.pairIterator([this](Particle& p, Particle& q) {
+      dvec3 f = {0, 0, 0};
+      for (const auto& interactive_force : interactive_forces_) {
+        f = f + interactive_force->directionalForce(p, q);
+      }
+      p.addF(f);
+      q.subF(f);
+    });
+  }
+#else
+  // INFO("Not using openmp")
+  particle_container.pairIterator([this](Particle& p, Particle& q) {
+    dvec3 f = {0, 0, 0};
+    for (const auto& interactive_force : interactive_forces_) {
+      f = f + interactive_force->directionalForce(p, q);
+    }
+    p.addF(f);
+    q.subF(f);
+  });
+#endif
 
-  // Gravity and or Membrane
   particle_container.computeSingularForces(singular_forces_);
 
   // Velocity Update
@@ -52,7 +74,6 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
     if (p.getType() < 0) {
       return;  // ignore velocity update for walls, theoretically
     }
-
     const dvec3 new_v =
         p.getV() + (delta_t_ / (2 * p.getM()) * (p.getOldF() + p.getF()));
     p.setV(new_v);

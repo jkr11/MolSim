@@ -3,11 +3,10 @@
 //
 #include "LennardJones.h"
 
-#include "utils/ArrayUtils.h"  // do not remove this even if clion copes about it
+#include "utils/ArrayUtils.h"
 #include "utils/SpdWrapper.h"
 
 dvec3 LennardJones::directionalForce(Particle& p1, Particle& p2) const {
-  //SpdWrapper::get()->error("huhu");
   const dvec3 r = p2.getX() - p1.getX();
   const double r_squared = r[0] * r[0] + r[1] * r[1] + r[2] * r[2];
   const double sigma_squared_div_r_squared =

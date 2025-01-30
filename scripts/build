@@ -14,6 +14,7 @@ help() {
 RELEASE_TYPE="Release"
 RUN_TESTS="OFF"
 ENABLE_BENCHMARK="OFF"
+ENABLE_OPENMP="OFF"
 
 # parse args
 for arg in "$@"; do
@@ -29,6 +30,10 @@ for arg in "$@"; do
   then
     ENABLE_BENCHMARK="ON"
     echo "enabled benchmarking"
+  elif [[ $arg == "-p" || $arg == "--parallel" ]]
+    then
+      ENABLE_OPENMP="ON"
+      echo "enabled omp"
   else
     RELEASE_TYPE="$arg"
     printf "changed Release Type to %s\n" "$RELEASE_TYPE"
@@ -55,7 +60,7 @@ echo ""
 start_time=$(date +%s%N)
 cd "$BUILD_DIR" || exit 1
 cmake ../CMakeLists.txt
-cmake -DCMAKE_BUILD_TYPE="$RELEASE_TYPE" -DBUILD_TESTS="$RUN_TESTS" -DENABLE_BENCHMARK="$ENABLE_BENCHMARK" .
+cmake -DCMAKE_BUILD_TYPE="$RELEASE_TYPE" -DBUILD_TESTS="$RUN_TESTS" -DENABLE_BENCHMARK="$ENABLE_BENCHMARK" -DENABLE_OPENMP="$ENABLE_OPENMP" .
 
 echo ""
 printf "\033[32m--- BUILDING: ---\033[0m\n"

@@ -63,8 +63,16 @@ TEST(Checkpoint, cuboid) {
   Arguments arguments1;
   std::vector<Particle> particles1;
   XmlReader::read(particles1, name1, arguments1);
-
   ASSERT_EQ(particles.size(), particles1.size());
+  // Sort to fix cells_ ordering by container
+  std::sort(
+      particles.begin(), particles.end(),
+      [](const Particle& a, const Particle& b) { return a.getX() < b.getX(); });
+  std::sort(
+      particles1.begin(), particles1.end(),
+      [](const Particle& a, const Particle& b) { return a.getX() < b.getX(); });
+  ;
+
   for (size_t i = 0; i < particles.size(); ++i) {
     ASSERT_EQ_VEC3(particles[i].getX(), particles1[i].getX(),
                    "Vectors not equal at index " + std::to_string(i));
@@ -120,6 +128,14 @@ TEST(Checkpoint, membrane) {
     ASSERT_EQ(particles[i].getNeighbours().size(),
               particles1[i].getNeighbours().size());
   }
+
+  std::sort(
+      particles.begin(), particles.end(),
+      [](const Particle& a, const Particle& b) { return a.getX() < b.getX(); });
+  std::sort(
+      particles1.begin(), particles1.end(),
+      [](const Particle& a, const Particle& b) { return a.getX() < b.getX(); });
+  ;
 
   for (size_t i = 0; i < particles.size(); ++i) {
     ASSERT_EQ_VEC3(particles[i].getX(), particles1[i].getX(),

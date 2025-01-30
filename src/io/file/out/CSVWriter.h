@@ -7,10 +7,17 @@
 
 #include "utils/SpdWrapper.h"
 
+/**
+ * Writes to any csv file
+ */
 class CSVWriter {
   std::ofstream file_;
 
  public:
+  /**
+   * Checks if the given file is open
+   * @param file_name the target file
+   */
   explicit CSVWriter(const std::string& file_name) {
     SpdWrapper::get()->info("Opening {}...", file_name);
     file_.open(file_name);
@@ -20,10 +27,13 @@ class CSVWriter {
     }
   }
 
-  ~CSVWriter() {
-    closeFile();
-  }
+  ~CSVWriter() { closeFile(); }
 
+  /**
+   * @brief writes a vector of data into a csv
+   * @param time timestamp for data in the 0th column
+   * @param data the data that is written
+   */
   void writeLine(const double time, const std::vector<std::string>& data) {
     file_ << time << ",";
     for (size_t i = 0; i < data.size(); ++i) {
@@ -36,7 +46,8 @@ class CSVWriter {
     file_.flush();
   }
 
-  void closeFile() {
-    file_.close();
-  }
+  /**
+   * closes the specified file
+   */
+  void closeFile() { file_.close(); }
 };

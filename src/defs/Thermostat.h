@@ -13,14 +13,16 @@
  * adjusts the temperature of the system at a given periodic frequency
  */
 class Thermostat {
- public:
-  double t_init{};
-  double t_target{};
-  double delta_temp{};
-  int n_thermostat{};
-  bool use_relative{};
-  bool use_thermal_motion{};
+ private:
+  double t_init_;
+  double t_target_;
+  double delta_temp_;
+  int n_thermostat_;
+  bool use_relative_;
+  bool use_thermal_motion_;
+  int dimension_;
 
+ public:
   explicit Thermostat(const ThermostatConfig& config);
 
   /**
@@ -28,7 +30,7 @@ class Thermostat {
    * @param particle_container container with the particle system
    * @return the temperature calculated as (2 * E_kin) / 2 * (#dim * #particles)
    */
-  static double getTemperature(ParticleContainer& particle_container);
+  double getTemperature(ParticleContainer& particle_container) const;
 
   /**
    * @calculates the average global velocity
@@ -73,7 +75,11 @@ class Thermostat {
    * @param avg_velocity average velocity of particles
    * @return the temperature according to the thermal motion
    */
-  static double getThermalTemperature(ParticleContainer& particle_container,
-                                      dvec3 avg_velocity);
+  double getThermalTemperature(ParticleContainer& particle_container,
+                               dvec3 avg_velocity) const;
+
+  [[nodiscard]] int getNThermostat() const;
+
+  [[nodiscard]] double getTTarget() const;
 };
 #endif  // THERMOSTAT_H
