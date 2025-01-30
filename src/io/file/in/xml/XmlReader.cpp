@@ -139,6 +139,17 @@ void XmlReader::read(std::vector<Particle>& particles,
           .density_output_location = "density.csv",
       };
     }
+    if (metadata.use_c18_strategy().present()) {
+      if (metadata.use_c18_strategy().get()) {
+        INFO("Using c18 strategy")
+        simulation_parameters.strategy = ParallelStrategy::STRATEGY_2;
+      } else {
+        INFO("Using force buffers reader")
+        simulation_parameters.strategy = ParallelStrategy::STRATEGY_1;
+      }
+    } else {
+      simulation_parameters.strategy = ParallelStrategy::STRATEGY_3;
+    }
     simulation_parameters.statistics_config = statistics_config;
 
     INFO("Checking for thermostat ...")
@@ -157,6 +168,7 @@ void XmlReader::read(std::vector<Particle>& particles,
           .n_thermostat = thermostat->n_thermostat(),
           .use_thermal_motion =
               static_cast<bool>(thermostat->use_thermal_motion()),
+          .two_d = static_cast<bool>(config->metadata().twoD()),
       };
 
       if (thermostat->deltaT().present()) {

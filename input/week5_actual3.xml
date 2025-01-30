@@ -32,6 +32,7 @@
                 </boundary>
             </linkedCells>
         </container>
+        <use_c18_strategy>true</use_c18_strategy> <!-- change later to 1 2 3 etc -->
         <force>
             <LennardJones/>
             <SingularGravity>
@@ -70,7 +71,7 @@
             <mass>1.0</mass>
             <epsilon>1.0</epsilon>
             <sigma>1.2</sigma>
-            <mv>0.1</mv>
+            <mv>0.0</mv>
         </cuboid>
         <cuboid>
             <velocity>

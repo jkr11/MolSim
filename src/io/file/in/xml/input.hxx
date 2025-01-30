@@ -241,6 +241,7 @@ const XMLCh* const tree_node_key = ::xsd::cxx::tree::user_data_keys::node;
 // Forward declarations.
 //
 class MetadataType;
+class StrategyType;
 class CheckpointWrapperType;
 class StatisticsType;
 class cuboidType;
@@ -290,6 +291,22 @@ class MetadataType : public ::xml_schema::type {
   void container(const container_type& x);
 
   void container(::std::auto_ptr<container_type> p);
+
+  // use_c18_strategy
+  //
+  typedef ::xml_schema::boolean use_c18_strategy_type;
+  typedef ::xsd::cxx::tree::optional<use_c18_strategy_type>
+      use_c18_strategy_optional;
+  typedef ::xsd::cxx::tree::traits<use_c18_strategy_type, char>
+      use_c18_strategy_traits;
+
+  const use_c18_strategy_optional& use_c18_strategy() const;
+
+  use_c18_strategy_optional& use_c18_strategy();
+
+  void use_c18_strategy(const use_c18_strategy_type& x);
+
+  void use_c18_strategy(const use_c18_strategy_optional& x);
 
   // force
   //
@@ -401,12 +418,37 @@ class MetadataType : public ::xml_schema::type {
 
  protected:
   ::xsd::cxx::tree::one<container_type> container_;
+  use_c18_strategy_optional use_c18_strategy_;
   ::xsd::cxx::tree::one<force_type> force_;
   ::xsd::cxx::tree::one<delta_t_type> delta_t_;
   ::xsd::cxx::tree::one<t_end_type> t_end_;
   ::xsd::cxx::tree::one<twoD_type> twoD_;
   checkpoint_optional checkpoint_;
   statistics_optional statistics_;
+};
+
+class StrategyType : public ::xml_schema::type {
+ public:
+  // Constructors.
+  //
+  StrategyType();
+
+  StrategyType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0,
+               ::xml_schema::container* c = 0);
+
+  StrategyType(const ::xercesc::DOMAttr& a, ::xml_schema::flags f = 0,
+               ::xml_schema::container* c = 0);
+
+  StrategyType(const ::std::string& s, const ::xercesc::DOMElement* e,
+               ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+  StrategyType(const StrategyType& x, ::xml_schema::flags f = 0,
+               ::xml_schema::container* c = 0);
+
+  virtual StrategyType* _clone(::xml_schema::flags f = 0,
+                               ::xml_schema::container* c = 0) const;
+
+  virtual ~StrategyType();
 };
 
 class CheckpointWrapperType : public ::xml_schema::type {
@@ -2380,6 +2422,12 @@ void simulation_(::xercesc::DOMDocument& d, const ::simulation& x,
     ::xml_schema::flags f = 0);
 
 void operator<<(::xercesc::DOMElement&, const MetadataType&);
+
+void operator<<(::xercesc::DOMElement&, const StrategyType&);
+
+void operator<<(::xercesc::DOMAttr&, const StrategyType&);
+
+void operator<<(::xml_schema::list_stream&, const StrategyType&);
 
 void operator<<(::xercesc::DOMElement&, const CheckpointWrapperType&);
 

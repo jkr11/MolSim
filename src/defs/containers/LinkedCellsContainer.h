@@ -3,10 +3,10 @@
 #include <functional>
 #include <vector>
 
+#include "debug/debug_print.h"
 #include "defs/Particle.h"
 #include "defs/Simulation.h"
 #include "defs/containers/ParticleContainer.h"
-#include "forces/IndexForce.h"
 #include "forces/InteractiveForce.h"
 
 /**
@@ -28,7 +28,72 @@ class LinkedCellsContainer final : public ParticleContainer {
 
   std::vector<std::vector<Particle*>> cells_;
 
-  // std::vector<std::vector<Particle*>> cell_orders_;
+  std::vector<std::vector<std::size_t>> c18_colours_;
+
+  const std::vector<ivec3> c_18_schema_ = {
+      {-1, -1, -1}, {-1, -1, 0}, {-1, -1, 1}, {-1, 0, -1}, {-1, 0, 0},
+      {-1, 0, 1},   {-1, 1, -1}, {-1, 1, 0},  {-1, 1, 1},  {0, -1, -1},
+      {0, -1, 0},   {0, -1, 1},  {0, 0, -1},  {0, 0, 0},   {0, 0, 1},
+      {0, 1, -1},   {0, 1, 0},   {0, 1, 1}};
+
+  const std::array<ivec3, 13> no3_offsets_ = {{
+      // 9 x facing
+      {{1, -1, -1}},
+      {{1, -1, 0}},
+      {{1, -1, 1}},
+      {{1, 0, -1}},
+      {{1, 0, 0}},
+      {{1, 0, 1}},
+      {{1, 1, -1}},
+      {{1, 1, 0}},
+      {{1, 1, 1}},
+      // 3 y
+      {{0, 1, -1}},
+      {{0, 1, 0}},
+      {{0, 1, 1}},
+      // last z
+      {{0, 0, 1}},
+  }};
+
+  // Maybe move these back for constexpr
+  /**
+   * @brief index offsets orthogonal to a cell for each dimension, optimized
+   * for 2D simulations
+   */
+  const std::array<std::array<ivec3, 9>, 3> index_offsets_ = {{
+      // x
+      {{{1, 1, 0},
+        {1, 0, 0},
+        {1, -1, 0},
+        // optional for 3D
+        {1, 1, 1},
+        {1, 0, 1},
+        {1, -1, 1},
+        {1, 1, -1},
+        {1, 0, -1},
+        {1, -1, -1}}},
+      // y
+      {{{1, 1, 0},
+        {0, 1, 0},
+        {-1, 1, 0},
+        // optional for 3D
+        {1, 1, 1},
+        {0, 1, 1},
+        {-1, 1, 1},
+        {1, 1, -1},
+        {0, 1, -1},
+        {-1, 1, -1}}},
+      // z, order irrelevant for 2D
+      {{{1, 1, 1},
+        {1, 0, 1},
+        {1, -1, 1},
+        {0, 1, 1},
+        {0, 0, 1},
+        {0, -1, 1},
+        {-1, 1, 1},
+        {-1, 0, 1},
+        {-1, -1, 1}}},
+  }};
 
   /**
    * @brief current number of particles
@@ -43,7 +108,7 @@ class LinkedCellsContainer final : public ParticleContainer {
   /**
    * @brief enables the neighbour calculation for membranes
    */
-  bool is_membrane{};
+  bool is_membrane_{};
 
   /**
    * @brief
@@ -101,53 +166,11 @@ class LinkedCellsContainer final : public ParticleContainer {
    */
   inline void applyReflectiveBoundary(size_t dimension);
 
-  IndexForce index_force{};
-
   /**
-   *@brief index offsets orthogonal to a cell for each dimension, optimized for
-   *2D simulations
-   *
+   * @brief Add a particle to the container
+   * @param p Particle to be added
+   * @note Does not impose the invariant automatically!
    */
-  std::array<std::array<ivec3, 9>, 3> index_offsets_ = {{
-      // x
-      {{{1, 1, 0},
-        {1, 0, 0},
-        {1, -1, 0},
-        // optional for 3D
-        {1, 1, 1},
-        {1, 0, 1},
-        {1, -1, 1},
-        {1, 1, -1},
-        {1, 0, -1},
-        {1, -1, -1}}},
-      // y
-      {{{1, 1, 0},
-        {0, 1, 0},
-        {-1, 1, 0},
-        // optional for 3D
-        {1, 1, 1},
-        {0, 1, 1},
-        {-1, 1, 1},
-        {1, 1, -1},
-        {0, 1, -1},
-        {-1, 1, -1}}},
-      // z, order irrelevant for 2D
-      {{{1, 1, 1},
-        {1, 0, 1},
-        {1, -1, 1},
-        {0, 1, 1},
-        {0, 0, 1},
-        {0, -1, 1},
-        {-1, 1, 1},
-        {-1, 0, 1},
-        {-1, -1, 1}}},
-  }};
-
-  /**
- * @brief Add a particle to the container
- * @param p Particle to be added
- * @note Does not impose the invariant automatically!
- */
   void addParticle(Particle& p);
 
  public:
@@ -172,8 +195,6 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @brief Destructor
    */
   ~LinkedCellsContainer() override = default;
-
-
 
   /**
    * @brief Add a vector of particles to the container
@@ -221,8 +242,6 @@ class LinkedCellsContainer final : public ParticleContainer {
    */
   [[nodiscard]] std::size_t size() const override;
 
-  void setIndexForce(const IndexForce& index_force);
-
   /**
    * applies the periodic boundary conditions to the given dimension
    * @param dimension the dimension that the periodic boundary should be applied
@@ -253,6 +272,21 @@ class LinkedCellsContainer final : public ParticleContainer {
       const std::function<void(Particle&, Particle&)>& f) override;
 
   /**
+   * @brief Compute interactive forces using the C18 scheme + no3
+   */
+  void computeInteractiveForcesC18(
+      const std::vector<std::unique_ptr<InteractiveForce>>& interactive_forces)
+      override;
+
+  /**
+   * @brief Compute interactive forces using the Force Buffer method
+   * @param interactive_forces
+   */
+  void computeInteractiveForcesForceBuffer(
+      const std::vector<std::unique_ptr<InteractiveForce>>& interactive_forces)
+      override;
+
+  /**
    * @brief Single iterator over all particles in the boundary of the container
    * @param f Function to be applied
    * @note Does not impose the invariant automatically!
@@ -265,13 +299,6 @@ class LinkedCellsContainer final : public ParticleContainer {
    * @note Does not impose the invariant automatically!
    */
   void haloIterator(const std::function<void(Particle&)>& f);
-
-  /**
-   * @brief Compute interactive forces
-   */
-  void computeInteractiveForces(
-      const std::vector<std::unique_ptr<InteractiveForce>>& interactive_forces)
-      override;
 
   /**
    * @brief Compute singular forces
@@ -472,6 +499,29 @@ class LinkedCellsContainer final : public ParticleContainer {
    * set them again
    */
   void setNeighbourReferences();
+
+  void initializeC18Schema() {
+    INFO_FMT("Cells_size : {}", cells_.size());
+
+    for (auto start_offset : c_18_schema_) {
+      // std::vector<std::vector<Particle*>*> iterators;
+      std::vector<std::size_t> iterators;
+      for (int cx = start_offset[0]; cx <= cell_count_[0]; cx += 2) {
+        for (int cy = start_offset[1]; cy <= cell_count_[1]; cy += 3) {
+          for (int cz = start_offset[2]; cz <= cell_count_[2]; cz += 3) {
+            // INFO_FMT("Cell index {} {} {}", cx, cy, cz);
+            if (!isValidCellCoordinate({cx, cy, cz})) {
+              continue;
+            }
+            auto cell_index = cellCoordToIndex({cx, cy, cz});
+            iterators.push_back(cell_index);
+            // iterators.push_back(&cells_.at(cellCoordToIndex({cx, cy, cz})));
+          }
+        }
+      }
+      c18_colours_.push_back(iterators);
+    }
+  }
 };
 
 /**

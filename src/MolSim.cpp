@@ -1,6 +1,5 @@
 #include <filesystem>
 #include <iostream>
-#include <omp.h>
 
 #include "calc/VerletIntegrator.h"
 #include "debug/debug_print.h"
@@ -21,7 +20,7 @@
 #include "spdlog/stopwatch.h"
 #include "utils/SpdWrapper.h"
 #include "utils/Statistics.h"
-#undef BENCHMARK
+
 int main(const int argc, char* argv[]) {
   Arguments arguments = {};
 
@@ -59,7 +58,8 @@ int main(const int argc, char* argv[]) {
     // std::cout << "Particle " << q.getId() << " is at mem " << q << std::endl;
     container->addParticles(particles);
     // auto p = container->getParticles()[0];
-    // std::cout << "Particle " << p->getId() << " is at mem " << p << std::endl;
+    // std::cout << "Particle " << p->getId() << " is at mem " << p <<
+    // std::endl;
 
     container->imposeInvariant();
   } else if (std::holds_alternative<DirectSumConfig>(
@@ -107,7 +107,8 @@ int main(const int argc, char* argv[]) {
   }
 
   VerletIntegrator verlet_integrator(interactive_forces, singular_forces,
-                                     index_forces, arguments.delta_t);
+                                     index_forces, arguments.delta_t,
+                                     arguments.strategy);
   outputWriter::VTKWriter writer;
   std::unique_ptr<Thermostat> thermostat;
   if (arguments.use_thermostat) {
@@ -134,10 +135,8 @@ int main(const int argc, char* argv[]) {
   Statistics statistics(
       arguments.statistics_config.x_bins, arguments.statistics_config.y_bins,
       *container,
-      output_directory +
-          arguments.statistics_config.density_output_location,
-      output_directory +
-          arguments.statistics_config.velocity_output_location);
+      output_directory + arguments.statistics_config.density_output_location,
+      output_directory + arguments.statistics_config.velocity_output_location);
 #endif
   // auto p2 = container->getParticles()[1];
   // for (auto [diag, ref] : p2->getNeighbours()) {
@@ -161,11 +160,10 @@ int main(const int argc, char* argv[]) {
 
     verlet_integrator.step(*container);
     if (arguments.use_thermostat) {
-      if (iteration % thermostat->n_thermostat == 0 && iteration > 0) {
+      if (iteration % thermostat->getNThermostat() == 0 && iteration > 0) {
         thermostat->setTemperature(*container);
       }
     }
-
 
     if (iteration % 100 == 0) {
       SpdWrapper::get()->info("Iteration {}", iteration);
@@ -175,8 +173,8 @@ int main(const int argc, char* argv[]) {
     if (iteration == 10000) {
       const auto first_1_k = std::chrono::high_resolution_clock::now();
       const std::chrono::duration<double> elapsed = first_1_k - start_time;
-      std::cout << "First 10k iterations took: " << elapsed.count() << " seconds"
-                << std::endl;
+      std::cout << "First 10k iterations took: " << elapsed.count()
+                << " seconds" << std::endl;
       const auto mups = static_cast<double>(number_of_particles) * 10000 *
                         (1.0 / elapsed.count());
       std::cout << "MMUPS for first 10k iterations: " << mups * (1.0 / 1e6)

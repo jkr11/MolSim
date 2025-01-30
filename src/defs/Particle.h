@@ -82,7 +82,6 @@ class Particle final {
       const std::array<double, 3> &x_arg, const std::array<double, 3> &v_arg,
       double m_arg, double epsilon, double sigma, int type = 0);
 
-
   explicit Particle(const std::array<double, 3> &x_arg,
                     const std::array<double, 3> &v_arg,
                     const std::array<double, 3> &f_arg,
@@ -111,7 +110,7 @@ class Particle final {
 
   [[nodiscard]] double getSigma() const { return sigma_; }
 
-  [[nodiscard]] const std::vector<std::pair<bool,size_t>> &getNeighbours()
+  [[nodiscard]] const std::vector<std::pair<bool, size_t>> &getNeighbours()
       const;
 
   void setF(const std::array<double, 3> &f) { f_ = f; }

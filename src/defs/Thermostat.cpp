@@ -9,20 +9,19 @@
 #include "utils/ArrayUtils.h"
 
 Thermostat::Thermostat(const ThermostatConfig &config) {
-  this->t_init = config.t_init;
-  this->t_target = config.t_target;
-  this->delta_temp = config.delta_t;
-  this->n_thermostat = config.n_thermostat;
-  this->use_relative = config.use_relative;
-  this->use_thermal_motion = config.use_thermal_motion;
+  this->t_init_ = config.t_init;
+  this->t_target_ = config.t_target;
+  this->delta_temp_ = config.delta_t;
+  this->n_thermostat_ = config.n_thermostat;
+  this->use_relative_ = config.use_relative;
+  this->use_thermal_motion_ = config.use_thermal_motion;
+  this->dimension_ = config.two_d ? 2 : 3;
 }
 
-double Thermostat::getTemperature(ParticleContainer &particle_container) {
-  constexpr double dimension = 2;  // TODO: make global so its 3D -> we did
-                                   // indeed not but should this Assignment
+double Thermostat::getTemperature(ParticleContainer &particle_container) const {
   const auto e_kin = particle_container.getKineticEnergy();
   return (2 * e_kin) /
-         (dimension *
+         (dimension_ *
           static_cast<double>(particle_container.getParticles().size()));
 }
 
@@ -64,8 +63,7 @@ dvec3 Thermostat::getAverageVelocity(ParticleContainer &particle_container) {
 }
 
 double Thermostat::getThermalTemperature(ParticleContainer &particle_container,
-                                         dvec3 avg_velocity) {
-  constexpr double dimension = 3;
+                                         dvec3 avg_velocity) const {
   double e_kin = 0.0;
   particle_container.singleIterator([&e_kin, avg_velocity](const Particle &p) {
     if (p.getType() < 0) return;  // exclude walls
@@ -73,7 +71,7 @@ double Thermostat::getThermalTemperature(ParticleContainer &particle_container,
   });
 
   return e_kin /
-         (dimension *
+         (dimension_ *
           static_cast<double>(particle_container.getParticleCount() -
                               particle_container.getSpecialParticleCount()));
 }
@@ -82,18 +80,18 @@ void Thermostat::setTemperature(ParticleContainer &particle_container) const {
   dvec3 average_velocity;
   double current_temp = 0;
 
-  if (use_thermal_motion) {
+  if (use_thermal_motion_) {
     average_velocity = getAverageVelocity(particle_container);
     current_temp = getThermalTemperature(particle_container, average_velocity);
   } else {
     current_temp = getTemperature(particle_container);
   }
   DEBUG_PRINT_FMT("current temperature is {}", current_temp);
-  const double d_t = t_target - current_temp;
+  const double d_t = t_target_ - current_temp;
 
   double adjustment = 0;
-  if (std::abs(d_t) > delta_temp) {
-    adjustment = (d_t / std::abs(d_t)) * delta_temp;
+  if (std::abs(d_t) > delta_temp_) {
+    adjustment = (d_t / std::abs(d_t)) * delta_temp_;
   } else {
     adjustment = d_t;
   }
@@ -102,7 +100,7 @@ void Thermostat::setTemperature(ParticleContainer &particle_container) const {
   DEBUG_PRINT_FMT("new_temp is {}", new_temp);
   const double beta = std::sqrt(new_temp / current_temp);
   DEBUG_PRINT_FMT("beta is {}", beta);
-  if (use_thermal_motion) {
+  if (use_thermal_motion_) {
     applyThermalBeta(particle_container, beta, average_velocity);
   } else {
     applyBeta(particle_container, beta);
@@ -115,3 +113,7 @@ void Thermostat::setTemperature(ParticleContainer &particle_container) const {
 #endif
 #endif
 }
+
+int Thermostat::getNThermostat() const { return n_thermostat_; }
+
+double Thermostat::getTTarget() const { return t_target_; }

@@ -69,11 +69,19 @@ class ParticleContainer {
   virtual void pairIterator(
       const std::function<void(Particle&, Particle&)>& f) = 0;
 
+  /**
+   * @brief Compute interactive forces using the C18 coloring scheme
+   * (Parallelization strategy 1)
+   */
+  virtual void computeInteractiveForcesC18(
+      const std::vector<std::unique_ptr<InteractiveForce>>&
+          interactive_forces) = 0;
 
   /**
-   * @brief Compute interactive forces
+   * @brief Compute interactive forces using Force Buffers (Parallalization
+   * strategy 2)
    */
-  virtual void computeInteractiveForces(
+  virtual void computeInteractiveForcesForceBuffer(
       const std::vector<std::unique_ptr<InteractiveForce>>&
           interactive_forces) = 0;
 
@@ -82,7 +90,6 @@ class ParticleContainer {
    */
   virtual void computeSingularForces(
       const std::vector<std::unique_ptr<SingularForce>>& singular_forces) = 0;
-
 
   virtual double getKineticEnergy() = 0;
 
@@ -101,7 +108,6 @@ class ParticleContainer {
    * @return the current count of special particles left in the simulation
    */
   [[nodiscard]] virtual size_t getSpecialParticleCount() = 0;
-
 
   /**
    * @brief returns the domain of the container

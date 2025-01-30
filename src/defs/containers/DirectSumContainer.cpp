@@ -31,7 +31,6 @@ DirectSumContainer::DirectSumContainer(const std::vector<Particle>& particles)
 
 void DirectSumContainer::addParticle(Particle& p) { particles_.push_back(p); }
 
-
 void DirectSumContainer::addParticles(const std::vector<Particle>& particles) {
   for (Particle p : particles) {
     addParticle(p);
@@ -40,8 +39,8 @@ void DirectSumContainer::addParticles(const std::vector<Particle>& particles) {
 
 void DirectSumContainer::removeParticle(const Particle& p) {
   particles_.erase(std::remove_if(particles_.begin(), particles_.end(),
-                                 [&p](const Particle& q) { return p == q; }),
-                  particles_.end());
+                                  [&p](const Particle& q) { return p == q; }),
+                   particles_.end());
 }
 
 std::vector<Particle*> DirectSumContainer::getParticles() {
@@ -101,22 +100,23 @@ ivec3 DirectSumContainer::getDomain() {
   return {-1, -1, -1};
 }
 
-void DirectSumContainer::computeInteractiveForces(
+void DirectSumContainer::computeInteractiveForcesC18(
     const std::vector<std::unique_ptr<InteractiveForce>>& interactive_forces) {
   // note that the upper tri-diag matrix is iterated over
+  SpdWrapper::get()->warn("DirectSumContainer does not parallelize");
   for (size_t i = 0; i < particles_.size(); ++i) {
+    dvec3 force_accum = {0.0, 0.0, 0.0};
     for (size_t j = i + 1; j < particles_.size(); ++j) {
       dvec3 f12 = {0.0, 0.0, 0.0};
-      for (auto &force : interactive_forces) {
-        // INFO("IN LOOOOPS")
-        dvec3 ftmp =
-            force->directionalForce(particles_[i], particles_[j]);
+      for (auto& force : interactive_forces) {
+        dvec3 ftmp = force->directionalForce(particles_[i], particles_[j]);
         // InfoVec("computed force ", ftmp);
         f12 = f12 + ftmp;
       }
-      particles_[i].addF(f12);
+      // particles_[i].addF(f12);
+      force_accum = force_accum + f12;
       particles_[j].subF(f12);
     }
+    particles_[i].addF(force_accum);
   }
 }
-
