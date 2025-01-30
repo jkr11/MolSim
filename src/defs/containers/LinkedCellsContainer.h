@@ -8,6 +8,7 @@
 #include "defs/Simulation.h"
 #include "defs/containers/ParticleContainer.h"
 #include "forces/InteractiveForce.h"
+#include "debug/debug_print.h"
 
 /**
  * @brief a particle container with linked cells
@@ -94,6 +95,14 @@ class LinkedCellsContainer final : public ParticleContainer {
         {-1, 0, 1},
         {-1, -1, 1}}},
   }};
+
+  std::vector<std::vector<std::size_t>> c18_colours_;
+
+  std::vector<ivec3> c_18_schema_ = {
+    {-1, -1, -1}, {-1, -1, 0}, {-1, -1, 1}, {-1, 0, -1}, {-1, 0, 0},
+    {-1, 0, 1},   {-1, 1, -1}, {-1, 1, 0},  {-1, 1, 1},  {0, -1, -1},
+    {0, -1, 0},   {0, -1, 1},  {0, 0, -1},  {0, 0, 0},   {0, 0, 1},
+    {0, 1, -1},   {0, 1, 0},   {0, 1, 1}};
 
   /**
    * @brief current number of particles
@@ -508,6 +517,7 @@ class LinkedCellsContainer final : public ParticleContainer {
    */
   void initializeC18Schema() {
     for (auto start_offset : c_18_schema_) {
+
       std::vector<std::size_t> iterators;
       for (int cx = start_offset[0]; cx <= cell_count_[0]; cx += 2) {
         for (int cy = start_offset[1]; cy <= cell_count_[1]; cy += 3) {
@@ -524,6 +534,7 @@ class LinkedCellsContainer final : public ParticleContainer {
     }
   }
 };
+
 
 /**
  * @brief directions for better readability; implicitly cast
