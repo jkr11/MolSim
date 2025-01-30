@@ -348,10 +348,12 @@ void LinkedCellsContainer::pairIterator(
 
 void LinkedCellsContainer::computeInteractiveForcesForceBuffer(
     const std::vector<std::unique_ptr<InteractiveForce>> &interactive_forces) {
-#ifdef _OPENMP
   // parallelization type 1: Force buffers
-
+#ifdef _OPENMP
   int num_threads = omp_get_max_threads();
+#else
+  int num_threads = 1;
+#endif
   // SpdWrapper::get()->critical("num threads: {}", num_threads);
   std::vector<std::vector<dvec3>> force_buffers(
       num_threads, std::vector<dvec3>(particles_.size(), {0, 0, 0}));
@@ -361,11 +363,12 @@ void LinkedCellsContainer::computeInteractiveForcesForceBuffer(
   for (std::size_t cell_index = 0; cell_index < cells_.size(); cell_index++) {
     std::vector<Particle *> &cell_particles = cells_[cell_index];
     if (cell_particles.empty()) continue;
-
+#ifdef _OPENMP
     int thread_id = omp_get_thread_num();
-
+#else
+    int thread_id = 0;
     std::vector<dvec3> &force_buffer = force_buffers[thread_id];
-
+#endif
     // SpdWrapper::get()->critical("threadid: {}", thread_id);
 
     ivec3 cell_coordinate = cellIndexToCoord(cell_index);
@@ -477,8 +480,6 @@ void LinkedCellsContainer::computeInteractiveForcesForceBuffer(
     p.addF(f);
   }
 #pragma omp barrier
-
-#endif
 }
 
 void LinkedCellsContainer::boundaryIterator(
