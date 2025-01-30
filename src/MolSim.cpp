@@ -34,7 +34,6 @@ int main(const int argc, char* argv[]) {
   printConfiguration(arguments);
   SpdWrapper::get()->info("Step size: {}", step_size);
 
-  // TODO: delte in config
   std::vector<std::unique_ptr<IndexForce>> index_forces;
   for (const auto& config : arguments.index_force_configs) {
     const auto& [coords, ids, time, force_values] = config;
@@ -47,19 +46,10 @@ int main(const int argc, char* argv[]) {
   if (std::holds_alternative<LinkedCellsConfig>(arguments.container_data)) {
     auto& linked_cells_data =
         std::get<LinkedCellsConfig>(arguments.container_data);
-    // TODO what is this is it necessary?
-    // linked_cells_data.particle_count = particles.size();
-    // linked_cells_data.special_particle_count =
-    //     std::count_if(particles.begin(), particles.end(),
-    //                   [](const Particle& p) { return p.getType() < 0; });
+
     container = std::make_unique<LinkedCellsContainer>(linked_cells_data);
 
-    // auto q = particles[0];
-    // std::cout << "Particle " << q.getId() << " is at mem " << q << std::endl;
     container->addParticles(particles);
-    // auto p = container->getParticles()[0];
-    // std::cout << "Particle " << p->getId() << " is at mem " << p <<
-    // std::endl;
 
     container->imposeInvariant();
   } else if (std::holds_alternative<DirectSumConfig>(
@@ -128,9 +118,8 @@ int main(const int argc, char* argv[]) {
   int writes = 0;
   int percentage = 0;
   double next_output_time = 0;
-  spdlog::stopwatch stopwatch;  // TODO whats up with this?
+  spdlog::stopwatch stopwatch;
   auto time_of_last_mups = start_time;
-  // TODO breaks sometimes i think it has to do with paths?
 
   Statistics statistics(
       arguments.statistics_config.x_bins, arguments.statistics_config.y_bins,
@@ -140,7 +129,6 @@ int main(const int argc, char* argv[]) {
 #endif
 
   while (current_time <= arguments.t_end) {
-
     verlet_integrator.step(*container);
     if (arguments.use_thermostat) {
       if (iteration % thermostat->getNThermostat() == 0 && iteration > 0) {
@@ -196,7 +184,6 @@ int main(const int argc, char* argv[]) {
                 current_time_hrc - time_of_last_mups)
                 .count();
 
-        // TODO can we solve narrowing conversion? i dont think so
         double mmups =
             particle_updates * (1.0 / static_cast<double>(microseconds));
         time_of_last_mups = current_time_hrc;
@@ -212,7 +199,6 @@ int main(const int argc, char* argv[]) {
         percentage++;
       }
     }
-    // TODO breaks on membrane branch idk why
 
     if (arguments.statistics_config.calc_stats &&
         iteration % arguments.statistics_config.output_interval == 0) {
@@ -221,7 +207,6 @@ int main(const int argc, char* argv[]) {
 #endif
     iteration++;
     current_time = arguments.delta_t * iteration;
-    // SpdWrapper::get()->info("Iteration {}", iteration);
   }
 
   // Writes the finished simulations particle state into a checkpoint file
@@ -244,7 +229,6 @@ int main(const int argc, char* argv[]) {
   std::cout << "MMUPS: " << mmups << std::endl;
 
 #ifndef BENCHMARK
-  // TODO
   statistics.closeFiles();
 #endif
   SpdWrapper::get()->info("Output written. Terminating...");
