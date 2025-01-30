@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include "defs/Generators/CuboidGenerator.h"
 #include "defs/Simulation.h"
 #include "defs/containers/LinkedCellsContainer.cpp"
 #include "defs/containers/LinkedCellsContainer.h"
@@ -244,29 +245,24 @@ TEST(LinkedCellsContainer, singleIterator) {
         if total generated pair count is the same as in reference impl)
 */
 TEST(LinkedCellsContainer, pairIterator) {
-  constexpr LinkedCellsConfig config = {.domain = {10, 10, 10},
-                              .cutoff_radius = 5,
-                              .boundary_config = {
-                                  .x_high = LinkedCellsConfig::Outflow,
-                                  .x_low = LinkedCellsConfig::Outflow,
-                                  .y_high = LinkedCellsConfig::Outflow,
-                                  .y_low = LinkedCellsConfig::Outflow,
-                                  .z_high = LinkedCellsConfig::Outflow,
-                                  .z_low = LinkedCellsConfig::Outflow,
-                              }};
+  constexpr LinkedCellsConfig config = {
+      .domain = {10, 10, 10},
+      .cutoff_radius = 5,
+      .boundary_config = {
+          .x_high = LinkedCellsConfig::Outflow,
+          .x_low = LinkedCellsConfig::Outflow,
+          .y_high = LinkedCellsConfig::Outflow,
+          .y_low = LinkedCellsConfig::Outflow,
+          .z_high = LinkedCellsConfig::Outflow,
+          .z_low = LinkedCellsConfig::Outflow,
+      }};
 
   LinkedCellsContainer container(config);
 
   std::vector<Particle> particles = {
-      createParticle(1, 1, 1),
-      createParticle(5, 1, 6),
-      createParticle(7, 7, 8),
-      createParticle(4, 3, 0),
-      createParticle(5, 0, 5),
-      createParticle(1, 5, 2),
-      createParticle(9, 6, 4),
-      createParticle(2, 1, 1),
-      createParticle(3, 0, 0),
+      createParticle(1, 1, 1), createParticle(5, 1, 6), createParticle(7, 7, 8),
+      createParticle(4, 3, 0), createParticle(5, 0, 5), createParticle(1, 5, 2),
+      createParticle(9, 6, 4), createParticle(2, 1, 1), createParticle(3, 0, 0),
       createParticle(0, 6, 1)};
 
   container.addParticles(particles);
@@ -295,13 +291,14 @@ TEST(LinkedCellsContainer, pairIterator) {
                                           const Particle& q) {
     count++;
 
-    for (auto & pair : pairs) {
+    for (auto& pair : pairs) {
       if ((pair[0]->getId() == p.getId() && pair[1]->getId() == q.getId()) ||
           (pair[0]->getId() == q.getId() && pair[1]->getId() == p.getId()))
         return;
     }
 
-    FAIL() << "Pair Iterator produced an invalid pair " << p.getId() << " and " << q.getId();
+    FAIL() << "Pair Iterator produced an invalid pair " << p.getId() << " and "
+           << q.getId();
   });
 
   EXPECT_EQ(count, pairs.size())
@@ -370,4 +367,75 @@ TEST(LinkedCellsContainer, haloIterator) {
   container.haloIterator([&p1, &p2, &p3, &p4](Particle& p) {
     EXPECT_TRUE(p == p1 || p == p2 || p == p3 || !(p == p4));
   });
+}
+
+TEST(LinkedCellsContainer, C18Strategy) {
+  LinkedCellsConfig config = {.domain = {20, 20, 20},
+                              .cutoff_radius = 3,
+                              .boundary_config = {
+                                  .x_high = LinkedCellsConfig::Outflow,
+                                  .x_low = LinkedCellsConfig::Outflow,
+                                  .y_high = LinkedCellsConfig::Outflow,
+                                  .y_low = LinkedCellsConfig::Outflow,
+                                  .z_high = LinkedCellsConfig::Outflow,
+                                  .z_low = LinkedCellsConfig::Outflow,
+                              }};
+  constexpr double delta_t = 0.001;
+  LinkedCellsContainer container(config);
+  std::vector<Particle> particles;
+  CuboidGenerator cg({0, 0, 0}, {3, 3, 3}, 1.1225, 1, {0.2, 0.2, 0}, 0.1, 1.0,
+                     1.0, 1, false);
+  cg.generate(particles);
+  container.addParticles(particles);
+  std::vector<std::unique_ptr<InteractiveForce>> forces;
+  forces.push_back(std::make_unique<LennardJones>());
+
+  container.imposeInvariant();
+
+  container.computeInteractiveForcesC18(forces);
+
+  LinkedCellsConfig config2 = {.domain = {20, 20, 20},
+                               .cutoff_radius = 3,
+                               .boundary_config = {
+                                   .x_high = LinkedCellsConfig::Outflow,
+                                   .x_low = LinkedCellsConfig::Outflow,
+                                   .y_high = LinkedCellsConfig::Outflow,
+                                   .y_low = LinkedCellsConfig::Outflow,
+                                   .z_high = LinkedCellsConfig::Outflow,
+                                   .z_low = LinkedCellsConfig::Outflow,
+                               }};
+
+  std::vector<std::unique_ptr<InteractiveForce>> forces2;
+  forces2.push_back(std::make_unique<LennardJones>());
+  LinkedCellsContainer container2(config2);
+  std::vector<Particle> expected;
+  cg.generate(expected);
+  container2.addParticles(expected);
+  container2.imposeInvariant();
+
+  container2.pairIterator([&forces2](Particle& p, Particle& q) {
+    dvec3 f = {0, 0, 0};
+    for (const auto& force : forces2) {
+      f = f + force->directionalForce(p, q);
+    }
+    // InfoVec("In PI: ", f);
+    p.addF(f);
+    q.subF(f);
+  });
+
+  for (int j = 0; j < particles.size(); j++) {
+    // DVEC3_NEAR(container.getParticlesObjects()[j].getX(),
+    //            container2.getParticlesObjects()[j].getX(),
+    //            "Position not equal C18 scheme");
+    InfoVec("F: ", container.getParticlesObjects()[j].getF());
+    InfoVec("F: ", container.getParticlesObjects()[j].getF());
+    DVEC3_NEAR(container.getParticlesObjects()[j].getF(),
+               container2.getParticlesObjects()[j].getF(), "F not equal C18");
+    //  DVEC3_NEAR(particles[j].getV(), expected[j].getV(),
+    //             "Velocity not equal C18 ");
+    //  InfoVec("F : ", particles[j].getF());
+    //  InfoVec("F : ", expected[j].getF());
+    //  DVEC3_NEAR(particles[j].getF(), expected[j].getF(), "Forces not equal
+    //  C18");
+  }
 }
