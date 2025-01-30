@@ -126,7 +126,7 @@ void LinkedCellsContainer::addParticle(const Particle &p) {
 void LinkedCellsContainer::addParticles(
     const std::vector<Particle> &particles) {
   particles_.reserve(particles.size());
-  for (const Particle& p : particles) {
+  for (const Particle &p : particles) {
     addParticle(p);
   }
 
@@ -340,8 +340,8 @@ void LinkedCellsContainer::computeInteractiveForcesForceBuffer(
     int thread_id = omp_get_thread_num();
 #else
     int thread_id = 0;
-    std::vector<dvec3> &force_buffer = force_buffers[thread_id];
 #endif
+    std::vector<dvec3> &force_buffer = force_buffers[thread_id];
     ivec3 cell_coordinate = cellIndexToCoord(cell_index);
     DEBUG_PRINT_FMT("cell index: {}; coord = ({}, {}, {}); halo? = {}",
                     cell_index, cell_coordinate[0], cell_coordinate[1],
@@ -424,7 +424,7 @@ void LinkedCellsContainer::computeInteractiveForcesForceBuffer(
   // approach is used
   // #pragma omp parallel for collapse(2)
   for (size_t j = 0; j < particle_count_; j++) {
-    for (size_t i = 1; i < num_threads; i++) {
+    for (int i = 1; i < num_threads; i++) {
       // #pragma omp critical
       { force_buffers[0][j] = force_buffers[0][j] + force_buffers[i][j]; }
     }

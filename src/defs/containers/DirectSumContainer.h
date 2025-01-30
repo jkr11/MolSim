@@ -87,16 +87,16 @@ class DirectSumContainer final : public ParticleContainer {
       const std::function<void(Particle&, Particle&)>& f) override;
 
   /**
-   * @brief does not use parallelization nor c18 coloring
+   * @brief does not use parallelization nor c18 coloring, done because of
+   * pattern and inheritance
    * @param interactive_forces
    */
   [[deprecated]] void computeInteractiveForcesC18(
       const std::vector<std::unique_ptr<InteractiveForce>>& interactive_forces)
       override;
 
-  // TODO
   /**
-   * does not use parallelization
+   * does not use parallelization, done because of inheritance and pattern
    * @param interactive_forces
    */
   [[deprecated]] void computeInteractiveForcesForceBuffer(

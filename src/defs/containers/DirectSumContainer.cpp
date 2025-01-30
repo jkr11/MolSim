@@ -34,7 +34,7 @@ void DirectSumContainer::addParticle(const Particle& p) {
 }
 
 void DirectSumContainer::addParticles(const std::vector<Particle>& particles) {
-  for (Particle p : particles) {
+  for (const Particle& p : particles) {
     addParticle(p);
   }
 }
@@ -104,7 +104,8 @@ ivec3 DirectSumContainer::getDomain() {
 
 void DirectSumContainer::computeInteractiveForcesC18(
     const std::vector<std::unique_ptr<InteractiveForce>>& interactive_forces) {
-  SpdWrapper::get()->warn("DirectSumContainer does not parallelize");
+  SpdWrapper::get()->warn(
+      "DirectSumContainer does not parallelize and does not use C18");
   for (size_t i = 0; i < particles_.size(); ++i) {
     dvec3 force_accum = {0.0, 0.0, 0.0};
     for (size_t j = i + 1; j < particles_.size(); ++j) {
