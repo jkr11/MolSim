@@ -168,6 +168,7 @@ void XmlReader::read(std::vector<Particle>& particles,
           .n_thermostat = thermostat->n_thermostat(),
           .use_thermal_motion =
               static_cast<bool>(thermostat->use_thermal_motion()),
+          .two_d = static_cast<bool>(config->metadata().twoD()),
       };
 
       if (thermostat->deltaT().present()) {

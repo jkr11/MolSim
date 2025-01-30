@@ -157,7 +157,7 @@ TEST(Thermostat, cooling) {
     thermostat = std::make_unique<Thermostat>(arguments.thermostat_config);
   }
   double cur_temp = thermostat->getTemperature(*container);
-  EXPECT_NEAR(cur_temp, 20, 1);
+  EXPECT_NEAR(cur_temp, 22, 1);
   for (std::size_t i = 0; i < 1000; i++) {
     verlet_integrator.step(*container);
   }

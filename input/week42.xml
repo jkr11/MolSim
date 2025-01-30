@@ -94,6 +94,5 @@
     <thermostat>
         <T_init>40</T_init>
         <n_thermostat>1000</n_thermostat>
-        <use_thermal_motion>false</use_thermal_motion>
     </thermostat>
 </simulation>
