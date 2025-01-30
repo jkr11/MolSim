@@ -3,12 +3,10 @@
 #include <functional>
 #include <vector>
 
-#include "debug/debug_print.h"
 #include "defs/Particle.h"
 #include "defs/Simulation.h"
 #include "defs/containers/ParticleContainer.h"
 #include "forces/InteractiveForce.h"
-#include "debug/debug_print.h"
 
 /**
  * @brief a particle container with linked cells
@@ -95,14 +93,6 @@ class LinkedCellsContainer final : public ParticleContainer {
         {-1, 0, 1},
         {-1, -1, 1}}},
   }};
-
-  std::vector<std::vector<std::size_t>> c18_colours_;
-
-  std::vector<ivec3> c_18_schema_ = {
-    {-1, -1, -1}, {-1, -1, 0}, {-1, -1, 1}, {-1, 0, -1}, {-1, 0, 0},
-    {-1, 0, 1},   {-1, 1, -1}, {-1, 1, 0},  {-1, 1, 1},  {0, -1, -1},
-    {0, -1, 0},   {0, -1, 1},  {0, 0, -1},  {0, 0, 0},   {0, 0, 1},
-    {0, 1, -1},   {0, 1, 0},   {0, 1, 1}};
 
   /**
    * @brief current number of particles
@@ -324,7 +314,7 @@ class LinkedCellsContainer final : public ParticleContainer {
   [[nodiscard]] std::array<int, 3> getCellCount() const { return cell_count_; }
 
   /**
-   * @brief Get the dimensions of a all cells in the container
+   * @brief Get the dimensions of all cells in the container
    * @return dvec3 of the dimensions of all cells
    */
   [[nodiscard]] dvec3 getCellDim() const { return cell_dim_; }
