@@ -119,9 +119,9 @@ class DirectSumContainer final : public ParticleContainer {
   double getKineticEnergy() override;
 
   /**
-   * TODO: this is giga redundant because size exists
    * @brief Get particle count
    * @return particle in the container
+   * @note this is technically unnecessary as its just size
    */
   size_t getParticleCount() override { return particles_.size(); }
 

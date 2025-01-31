@@ -22,9 +22,15 @@
 #define INFO(msg) SpdWrapper::get()->info(msg);
 #define INFO_FMT(msg, ...) SpdWrapper::get()->info(msg, __VA_ARGS__);
 
-// TODO: move or rename
+/**
+ * @brief Info prints any vector of type T and length 3
+ * @tparam T any type that's in vector (double and int here)
+ * @param msg The message in front of the vector, or the debug information
+ * @param vec the vector to be printed
+ */
 template <typename T>
-inline void InfoVec(std::string msg, std::array<T, 3> vec) {
+void InfoVec(std::string msg, std::array<T, 3> vec) {
   INFO_FMT("{} -- [{},{},{}]", msg, vec[0], vec[1], vec[2]);
 }
+
 #endif  // DEBUG_H
