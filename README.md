@@ -14,43 +14,67 @@ Final Assignment
 ### Configuration
 
 - Install
-  ```bash
+
+```bash
   git clone https://github.com/jkr11/MolSim.git
-  ``` 
-- manual build
-  ```bash
+``` 
+
+- manual build (I would recommend using make with -j $(nproc) as this is pretty slow)
+
+```bash
   mkdir build
-  cmake -S . -B build - <options>
+  cmake -S . -B build -<options>
   cd build
-  make
-  ```
-- testing: use option -DBUILD_TESTS=ON
-  ```bash
+  make -j $(nproc)
+```
+
+- Testing:
+
+```bash
+  cmake -S . -B build -DBUILD_TESTS=ON 
+```
+
+To build with Intel's C++ compiler (```icx```/```icpx```), set the following options:
+
+```bash
+  cmake -S . -B build -DCMAKE_C_COMPILER=icx -DCMAKE_CXX_COMPILER=icpx
+```
+
+```bash
   cd build/tests
-  make
+  make -j $(nproc)
   ctest
-  ```
+```
+
+Using the build script in /script/
 
 - Build the project using the provided build script by using source, add `-t` to also build and run tests, add `-b` to
   enable the BENCHMARK cmake macro
-  ```bash
+
+```bash
   cd MolSim/scripts
   source build <CMAKE_BUILD_TYPE= Release (default) | Debug | asan | asan-quiet>  [-t|--test] [-b|--benchmark]
-  ```
+```
+
 - Set the Input file by selecting the corresponding number during the script execution
-  ```bash
+
+```bash
   source set-input
-  ```
+```
 
 - Creating documentation when doxygen is installed (has to be executed in the specific `buildDir/<CMAKE_BUILD_TYPE>`)
-  ```bash
+
+```bash
   (cd ../buildDir/<CMAKE_BUILD_TYPE> when starting from /scripts)
   make doc_doxygen 
-  ```
+```
+
 - Running the program
-  ```bash
+
+```bash
   $BUILD -f $INPUT <options>
-  ``` 
+ ``` 
+
 - `$BUILD` contains the location of the last compiled executable
 - `$INPUT` contains the location of the selected input file
 - Please note that `$BUILD` and `$INPUT` are only available if the scripts are executed via source.
@@ -64,21 +88,40 @@ Final Assignment
   [--step_size | -s <double>]     Specify how often the output will be written wrt. time(step_size), default=1
                                     Note that this is independent of the time resolution (t_delta) and dependent on the simulation time
   [--loglevel | -l <level>]       Specify the log level, default=info, valid=[off, error, warn, info, debug, trace]
-  [--checkpoint | -c ]            Specifies if the final particle state will be saved to a checkpoint file.
+  [--checkpoint | -c <path>]      Specifies the path the final state of the particles will be saved to.
   Example usage:
   $BUILD -f $INPUT -l <loglevel> -s <number>
   ```
 
 - Output is located in `./output/<current_time>`
-- Checkpoint is currently fixed to `checkpoint.xml` also in `./output/`
+- Checkpoints as an input have to be explicitely stated in the input ```.xml``` file. I would recommend putting
+  checkpoint into `/input/`.
+    - Example:
+
+```xml
+
+<checkpoint>../input/checkpoint.xml/</checkpoint>
+```
+
 - `--step_size` is relative to the passed simulation time and not the number of iterations
 - `--loglevel debug` is only available if compiled with CMAKE_BUILD_TYPE=Debug
 - all other options are specified in the .xml input file
 - old inputs have been migrated to xml and support this pipeline
 
+## Parallelization strategies
+
+First, compile with `-DENABLE_OPENMP=ON` to support using OpenMP.
+
+Then, use the xml tag `<use_c18_strategy>` in `<metadata>`, write true to use the c18 travesal, false to use the force
+buffer
+method or remove the thing entirely to use no parallelization at all (even if this is active). If OpenMP is not used,
+this does nothing.
+
 ## LinkedCells vs DirectSum performance
 
 ### Running benchmark.py
+
+Note this is a remnant from week 3 and 4, but this technically could be rewritten to test 5
 
 For optimal performance run scripts/build with -b for benchmarking
 The python script uses the generated executable in buildDir/Release/src for execution.
