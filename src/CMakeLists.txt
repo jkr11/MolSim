@@ -1,5 +1,7 @@
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
+find_package(XercesC REQUIRED)
+
 option(ENABLE_OPENMP "Enable OpenMP support" OFF)
 
 if (ENABLE_OPENMP)
@@ -28,6 +30,7 @@ add_library(MolSimLib
 target_link_libraries(MolSimLib
         PUBLIC
         spdlog::spdlog
+        XercesC::XercesC
 )
 
 if (ENABLE_OPENMP AND OpenMP_CXX_FOUND)
