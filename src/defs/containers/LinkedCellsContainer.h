@@ -23,18 +23,34 @@ class LinkedCellsContainer final : public ParticleContainer {
    * position = x * (cellsY * cellsZ) + y * (cellsZ) + z
    */
 
+  /**
+   * Vector where particles are stored
+   * @note quasi immutable, particles are just ignored, but not removed
+   */
   std::vector<Particle> particles_;
 
+  /**
+   * Mapping in which cell which particles are
+   */
   std::vector<std::vector<Particle*>> cells_;
 
+  /**
+   * TODO
+   */
   std::vector<std::vector<std::size_t>> c18_colours_;
 
+  /**
+   * Colours for C18 schema
+   */
   const std::vector<ivec3> c_18_schema_ = {
       {-1, -1, -1}, {-1, -1, 0}, {-1, -1, 1}, {-1, 0, -1}, {-1, 0, 0},
       {-1, 0, 1},   {-1, 1, -1}, {-1, 1, 0},  {-1, 1, 1},  {0, -1, -1},
       {0, -1, 0},   {0, -1, 1},  {0, 0, -1},  {0, 0, 0},   {0, 0, 1},
       {0, 1, -1},   {0, 1, 0},   {0, 1, 1}};
 
+  /**
+   * Offsets for newton 3 scheme
+   */
   const std::array<ivec3, 13> no3_offsets_ = {{
       // 9 x facing
       {{1, -1, -1}},

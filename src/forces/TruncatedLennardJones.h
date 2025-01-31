@@ -7,10 +7,13 @@
 #include "InteractiveForce.h"
 
 /**
- * Repulsive Lennard Jones force that is truncated at 2^(1/6) * sigma
+ * @brief Repulsive Lennard Jones force that is truncated at 2^(1/6) * sigma
  */
 class TruncatedLennardJones final : public InteractiveForce {
  public:
+  /**
+   * @brief Default construtor for truncated Lennard Jones force
+   */
   explicit TruncatedLennardJones() = default;
 
   /**
