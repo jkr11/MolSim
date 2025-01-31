@@ -82,7 +82,7 @@ TEST(Checkpoint, cuboid) {
   }
 }
 
-/*
+/**
  * Test whether membranes (and especially the particle neighbours) are correctly
  * translated into a checkpoint
  */
@@ -117,7 +117,6 @@ TEST(Checkpoint, membrane) {
   char arg01[] = "MolSim";
   char arg11[] = "-f";
   char arg21[] = "../../tests/checkpoint_output_membrane_test.xml";
-  // char arg31[] = "-c";
   char* argv1[] = {arg01, arg11, arg21};
   auto [name1, step1, write_checkpoint1] = CLArgumentParser::parse(3, argv1);
 

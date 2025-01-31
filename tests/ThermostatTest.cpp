@@ -245,7 +245,7 @@ TEST(Thermostat, heating) {
   EXPECT_NEAR(thermostat->getTemperature(*container), 10, 1e-6);
 }
 
-/*
+/**
  * this test the gradual thermostat, so when deltaT is set. In this case its 2.0
  * as specified, so we would expect that it converges after at 3k iterations (a
  * lot earlier actually but this is good enough) if n_thermostat is 100
@@ -319,8 +319,6 @@ TEST(Thermostat, gradual) {
       double temp = thermostat->getTemperature(*container);
       std::cout << "Temperature " << temp << std::endl;
       thermostat->setTemperature(*container);
-      // EXPECT_NEAR(thermostat->getTemperature(*container),
-      //             temp + thermostat->delta_temp, thermostat->delta_temp);
     }
   }
 

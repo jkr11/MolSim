@@ -309,7 +309,7 @@ TEST(LinkedCellsContainer, pairIterator) {
       << "Pair count does not match reference implementation";
 }
 
-/*
+/**
  * boundaryIterator(...) goes over all particles in boundary
  */
 TEST(LinkedCellsContainer, boundaryIterator) {
@@ -374,7 +374,7 @@ TEST(LinkedCellsContainer, haloIterator) {
 }
 
 /**
- * @brief Tests if the C18 strategy is equal
+ * @brief Tests if the C18 strategy is equal to the standard pair iterator
  */
 TEST(LinkedCellsContainer, C18Strategy) {
   LinkedCellsConfig config = {.domain = {20, 20, 20},
@@ -425,7 +425,6 @@ TEST(LinkedCellsContainer, C18Strategy) {
     for (const auto& force : forces2) {
       f = f + force->directionalForce(p, q);
     }
-    // InfoVec("In PI: ", f);
     p.addF(f);
     q.subF(f);
   });
@@ -439,6 +438,9 @@ TEST(LinkedCellsContainer, C18Strategy) {
   }
 }
 
+/**
+ * Checks if Force Buffer calculates the same result as the standard pair iterator
+ */
 TEST(LinkedCellsContainer, ForceBufferIteration) {
   LinkedCellsConfig config = {.domain = {20, 20, 20},
                               .cutoff_radius = 3,
@@ -474,7 +476,6 @@ TEST(LinkedCellsContainer, ForceBufferIteration) {
     for (const auto& force : forces) {
       f = f + force->directionalForce(p, q);
     }
-    // InfoVec("In PI: ", f);
     p.addF(f);
     q.subF(f);
   });

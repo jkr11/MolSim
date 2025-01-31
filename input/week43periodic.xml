@@ -43,7 +43,7 @@
         <t_end>40</t_end>
         <twoD>true</twoD>
         <checkpoint>
-            <name>../scripts/output/test.xml</name>
+            <name>../input/testcheckpointdelete.xml</name>
             <is_membrane>false</is_membrane>
             <domain>
                 <x>0</x>

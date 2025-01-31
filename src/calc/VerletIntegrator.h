@@ -37,7 +37,7 @@ class VerletIntegrator {
    */
   double current_time_;
   /**
-   * Parallelization strategy used
+   * Parallelisation strategy used, default is 3 so no parallelisation
    */
   ParallelStrategy strategy_ = ParallelStrategy::STRATEGY_3;
 

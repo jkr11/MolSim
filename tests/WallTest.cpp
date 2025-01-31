@@ -49,6 +49,9 @@ TEST(Wall, immovable) {
   });
 }
 
+/**
+ * Tests that walls are excluded from Thermostats
+ */
 TEST(Wall, excludedFromThermostat) {
   LinkedCellsContainer container(
       {.domain = {3, 3, 3},  // better safe than sorry

@@ -6,7 +6,6 @@
 #define MEMBRANEGENERATOR_H
 #pragma once
 #include "ParticleGenerator.h"
-#include "utils/SpdWrapper.h"
 
 /**
  * @brief Generates Particles to a container in the shape of a cuboid [dim1,

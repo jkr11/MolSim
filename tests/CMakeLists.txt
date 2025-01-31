@@ -19,7 +19,8 @@ if (BUILD_TESTS)
             XmlReaderTest.cpp
             TruncatedLennardJones.cpp
             IndexForceTest.cpp
-            SingularGravityTest.cpp)
+            SingularGravityTest.cpp
+            MixingTest.cpp)
 
     target_link_libraries(MolSimTest MolSimLib GTest::gtest_main)
     include(GoogleTest)

@@ -6,7 +6,7 @@
 
 #include "../src/io/CLArgumentParser.h"
 
-/*
+/**
  * @brief Parse example CLI arguments correctly
  */
 TEST(CLArgumentParser, parse) {

@@ -27,8 +27,6 @@ DirectSumContainer::DirectSumContainer(const std::vector<Particle>& particles)
   }
 }
 
-// DirectSumContainer::~DirectSumContainer();
-
 void DirectSumContainer::addParticle(const Particle& p) {
   particles_.push_back(p);
 }

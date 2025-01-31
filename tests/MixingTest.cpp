@@ -9,7 +9,7 @@
 #include "../src/forces/TruncatedLennardJones.h"
 
 
-/*
+/**
  * LennardJones directional force, mixing 1
  */
 TEST(LennardJones, mixing) {
@@ -22,7 +22,7 @@ TEST(LennardJones, mixing) {
              "Directional force wrong", 1e-5);
 }
 
-/*
+/**
  * TruncatedLennardJones directional force, mixing 1
  */
 TEST(TruncatedLennardJones, mixing1) {
