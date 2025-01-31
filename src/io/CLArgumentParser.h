@@ -6,7 +6,7 @@
 #define CLARGUMENTPARSER_H
 
 #include <algorithm>
-#include <filesystem>
+//#include <filesystem>
 #include <tuple>
 
 #include "defs/Simulation.h"
@@ -25,7 +25,7 @@ class CLArgumentParser {
    * @param argv Directly from main
    * @returns path to the input file
    */
-  static std::tuple<std::filesystem::path, double, bool> parse(int argc,
+  static std::tuple<std::string, double, bool> parse(int argc,
                                                                char *argv[]);
 
   /**
@@ -43,7 +43,7 @@ class CLArgumentParser {
    * or is empty.
    * @note verification that this is actually an xml file is done in XmlReader.
    */
-  static void validateInputFile(const std::filesystem::path &file_path);
+  static void validateInputFile(const std::string &file_path);
 };
 
 /**

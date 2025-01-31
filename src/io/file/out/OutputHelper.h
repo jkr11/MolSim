@@ -45,26 +45,17 @@ inline std::string createOutputDirectory(const std::string &output_directory,
   const std::time_t now = std::chrono::system_clock::to_time_t(current_time);
   const std::tm local_time = *std::localtime(&now);
   std::ostringstream time_string;
-
-  // output into 'outputDirectory/current_time/'
-  time_string << std::put_time(&local_time, "%Y-%m-%d %H:%M:%S/");
-  const std::filesystem::path output_directory_path =
-      output_directory + time_string.str();
-
-  if (!is_directory(output_directory_path)) {
-    create_directories(output_directory_path);
-    SpdWrapper::get()->info("Output at {}", output_directory_path.string());
-  }
+  std::string output_directory_path = "./output";
 
   // save configuration (input) for future use
-  std::ofstream config(output_directory_path.string() + "/configuration.txt");
+  std::ofstream config(output_directory_path + "/configuration.txt");
   for (int i = 0; i < argc; i++) {
     config << argv[i] << " ";
   }
   config << std::endl;
   config.close();
 
-  return output_directory_path.string();
+  return output_directory_path;
 }
 
 #endif  // OUTPUTHELPER_H

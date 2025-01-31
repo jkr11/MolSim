@@ -4,7 +4,7 @@
 
 #include "XmlReader.h"
 
-#include <filesystem>
+//#include <filesystem>
 #include <iostream>
 
 #include "debug/debug_print.h"
@@ -21,7 +21,7 @@
 void XmlReader::read(std::vector<Particle>& particles,
                      const std::string& filepath,
                      Arguments& simulation_parameters) {
-  const std::filesystem::path path(filepath);
+  const std::string path = filepath;
   validatePath(path, ".xml", "Simulation input");
   try {
     const std::unique_ptr<::simulation> config = simulation_(filepath);
@@ -284,7 +284,7 @@ void XmlReader::read(std::vector<Particle>& particles,
 
 void XmlReader::loadCheckpoint(const std::string& _filepath,
                                std::vector<Particle>& particles) {
-  const std::filesystem::path filepath(_filepath);
+  const std::string filepath(_filepath);
   validatePath(filepath, ".xml", "checkpoint");
   try {
     DEBUG_PRINT("Found checkpoint file");
@@ -319,7 +319,7 @@ void XmlReader::loadCheckpointMembrane(const std::string& _filepath,
                                        const ivec3& dimensions,
                                        std::vector<Particle>& particles) {
   INFO("Loading membrane checkpoint")
-  const std::filesystem::path filepath(_filepath);
+  const std::string filepath(_filepath);
   validatePath(filepath, ".xml", "checkpoint");
   try {
     DEBUG_PRINT("Found checkpoint file");

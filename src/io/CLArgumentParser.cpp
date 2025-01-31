@@ -6,7 +6,7 @@
 
 #include <getopt.h>
 
-#include <filesystem>
+//#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <tuple>
@@ -14,7 +14,7 @@
 #include "spdlog/fmt/bundled/chrono.h"
 #include "utils/SpdWrapper.h"
 
-std::tuple<std::filesystem::path, double, bool> CLArgumentParser::parse(
+std::tuple<std::string, double, bool> CLArgumentParser::parse(
     const int argc, char *argv[]) {
   SpdWrapper::get()->info("Parsing arguments");
   const option long_options[] = {{"help", no_argument, nullptr, 'h'},
@@ -27,7 +27,7 @@ std::tuple<std::filesystem::path, double, bool> CLArgumentParser::parse(
   int opt;
   int option_index = 0;
 
-  std::filesystem::path input_file{};
+  std::string input_file{};
   double step_size = 0.5;
   bool write_checkpoint = false;
 
@@ -89,14 +89,8 @@ std::tuple<std::filesystem::path, double, bool> CLArgumentParser::parse(
 }
 
 void CLArgumentParser::validateInputFile(
-    const std::filesystem::path &file_path) {
-  SpdWrapper::get()->warn("Validating input file: {}", file_path.string());
+    const std::string &file_path) {
 
-  if (!exists(file_path) || is_directory(file_path)) {
-    printUsage("File does not exist", file_path);
-    throw std::invalid_argument("Input file '" + std::string(file_path) +
-                                "' does not exist or is a directory");
-  }
   SpdWrapper::get()->info("Check if empty");
   if (std::ifstream iss(file_path);
       iss.peek() == std::ifstream::traits_type::eof()) {

@@ -75,19 +75,10 @@ inline void validateStatisticsInput(const StatisticsConfig& stats) {
  * @param extension the desired file extension
  * @param type the type of file you are checking (Input, checkpoint, etc)
  */
-inline void validatePath(const std::filesystem::path& path,
+inline void validatePath(const std::string& path,
                           const std::string& extension,
                           const std::string& type) {
-  if (!exists(path)) {
-    throw std::runtime_error(type + " file not found: " + path.string());
-  }
-  if (path.extension() != extension) {
-    throw std::invalid_argument(
-        type + " file extension is not supported: " + path.string());
-  }
-  if (std::filesystem::is_empty(path)) {
-    throw std::runtime_error(type + "file is empty " + path.string());
-  }
+    return;
 }
 
 /**
