@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include "defs/Generators/CuboidGenerator.h"
 #include "defs/Simulation.h"
 #include "defs/containers/LinkedCellsContainer.cpp"
 #include "defs/containers/LinkedCellsContainer.h"
@@ -9,7 +10,7 @@
 #include "defs/types.h"
 #include "testUtil.h"
 
-/*
+/**
  * @brief small helper function to create particles
  * @param x x coordinate of particle
  * @param y y coordinate of particle
@@ -20,7 +21,7 @@ Particle createParticle(double x, double y, double z) {
   return Particle({x, y, z}, {0, 0, 0}, 1, 1, 1);
 }
 
-/*
+/**
  * Container creates the right amount of cells and correct cell dimensions
  */
 TEST(LinkedCellsContainer, constructor) {
@@ -46,7 +47,7 @@ TEST(LinkedCellsContainer, constructor) {
   EXPECT_NEAR(container.getCellDim()[2], 3, 1e-5) << "Z dim wrong.";
 }
 
-/*
+/**
  * .isBoundary(...) is correct for some examples
  */
 TEST(LinkedCellsContainer, isBoudary) {
@@ -78,7 +79,7 @@ TEST(LinkedCellsContainer, isBoudary) {
   EXPECT_FALSE(container.isBoundary(49));
 }
 
-/*
+/**
  * .isHalo(...) is correct for some examples
  */
 TEST(LinkedCellsContainer, isHalo) {
@@ -111,7 +112,7 @@ TEST(LinkedCellsContainer, isHalo) {
   EXPECT_FALSE(container.isHalo(31));
 }
 
-/*
+/**
  * .cellIndexToCoord(...) works for some examples
  * .cellCoordToIndex(...) works for some exmaples
  * .isValidCellCoordinate(...) works for some examples
@@ -161,7 +162,7 @@ TEST(LinkedCellsContainer,
       << ".isValidCellCoordinate(...) produced wrong result";
 }
 
-/*
+/**
  * if new container, then container.size() == 0
  * .addParticle(...) increments .size()
  * .removeParticle(...) decrements .size()
@@ -183,19 +184,19 @@ TEST(LinkedCellsContainer, Size_addParticle_and_removeParticle) {
       << "Freshly instantiated LinkedCellsContainer is not empty.";
 
   Particle p = createParticle(1, 1, 1);
-  container.addParticle(p);
+  container.addParticles({p});
   EXPECT_EQ(container.size(), 1)
       << ".addParticle() did not increase .size() by 1.";
 
-  Particle pr;
-  container.singleIterator([&pr](Particle& q) { pr = q; });
+  Particle pr{{}};
+  container.singleIterator([&pr](const Particle& q) { pr = q; });
 
   container.removeParticle(pr);
   EXPECT_EQ(container.size(), 0)
       << ".removeParticle() did not decrease .size() by 1.";
 }
 
-/*
+/**
  * .singleIterator() iterates over all particles
  */
 TEST(LinkedCellsContainer, singleIterator) {
@@ -216,56 +217,59 @@ TEST(LinkedCellsContainer, singleIterator) {
   Particle p2 = createParticle(5, 1, 6);
   Particle p3 = createParticle(7, 7, 8);
 
-  container.addParticle(p1);
-  container.addParticle(p2);
-  container.addParticle(p3);
+  container.addParticles({p1});
+  container.addParticles({p2});
+  container.addParticles({p3});
 
   EXPECT_EQ(container.size(), 3)
       << "container particle count not matching after adding 3 particles.";
 
-  std::vector<Particle> vec = {};
-  container.singleIterator([&vec](Particle& p) { vec.push_back(p); });
+  std::vector<int> vec = {};
+  container.singleIterator(
+      [&vec](const Particle& p) { vec.push_back(p.getId()); });
 
   EXPECT_EQ(vec.size(), 3)
       << "Single iterator traversed less particles than in the container.";
 
-  EXPECT_TRUE(vec[0] == p1 || vec[1] == p1 || vec[2] == p1)
+  EXPECT_TRUE(vec[0] == p1.getId() || vec[1] == p1.getId() ||
+              vec[2] == p1.getId())
       << "Particle was not iterated over.";
-  EXPECT_TRUE(vec[0] == p2 || vec[1] == p2 || vec[2] == p2)
+  EXPECT_TRUE(vec[0] == p2.getId() || vec[1] == p2.getId() ||
+              vec[2] == p2.getId())
       << "Particle was not iterated over.";
-  EXPECT_TRUE(vec[0] == p3 || vec[1] == p3 || vec[2] == p3)
+  EXPECT_TRUE(vec[0] == p3.getId() || vec[1] == p3.getId() ||
+              vec[2] == p3.getId())
       << "Particle was not iterated over.";
 }
 
-/*
-  Test pairIterator by running the O(n^2) algorithm and checking if
-  the count of pairs and the pairs themselves match
-  Note: does not test if all pairs produces are distinct (only matters
-        if total generated pair count is the same as in reference impl)
-*/
+/**
+ * Test pairIterator by running the O(n^2) algorithm and checking if
+ * the count of pairs and the pairs themselves match
+ * Note: does not test if all pairs produces are distinct (only matters
+ *       if total generated pair count is the same as in reference impl)
+ */
 TEST(LinkedCellsContainer, pairIterator) {
-  LinkedCellsConfig config = {.domain = {10, 10, 10},
-                              .cutoff_radius = 5,
-                              .boundary_config = {
-                                  .x_high = LinkedCellsConfig::Outflow,
-                                  .x_low = LinkedCellsConfig::Outflow,
-                                  .y_high = LinkedCellsConfig::Outflow,
-                                  .y_low = LinkedCellsConfig::Outflow,
-                                  .z_high = LinkedCellsConfig::Outflow,
-                                  .z_low = LinkedCellsConfig::Outflow,
-                              }};
+  constexpr LinkedCellsConfig config = {
+      .domain = {10, 10, 10},
+      .cutoff_radius = 5,
+      .boundary_config = {
+          .x_high = LinkedCellsConfig::Outflow,
+          .x_low = LinkedCellsConfig::Outflow,
+          .y_high = LinkedCellsConfig::Outflow,
+          .y_low = LinkedCellsConfig::Outflow,
+          .z_high = LinkedCellsConfig::Outflow,
+          .z_low = LinkedCellsConfig::Outflow,
+      }};
 
   LinkedCellsContainer container(config);
 
-  std::array<Particle, 10> particles = {
+  std::vector<Particle> particles = {
       createParticle(1, 1, 1), createParticle(5, 1, 6), createParticle(7, 7, 8),
       createParticle(4, 3, 0), createParticle(5, 0, 5), createParticle(1, 5, 2),
       createParticle(9, 6, 4), createParticle(2, 1, 1), createParticle(3, 0, 0),
       createParticle(0, 6, 1)};
 
-  for (std::size_t i = 0; i < particles.size(); i++) {
-    container.addParticle(particles[i]);
-  }
+  container.addParticles(particles);
 
   EXPECT_EQ(container.size(), particles.size())
       << "container particle count not matching after adding 4 particles.";
@@ -287,23 +291,25 @@ TEST(LinkedCellsContainer, pairIterator) {
   }
 
   int count = 0;
-  container.pairIterator([&pairs, &count](Particle& p, Particle& q) {
+  container.pairIterator([&pairs, &count](const Particle& p,
+                                          const Particle& q) {
     count++;
 
-    for (auto it = pairs.begin(); it != pairs.end(); ++it) {
-      if ((*(*it)[0] == p && *(*it)[1] == q) ||
-          (*(*it)[0] == q && *(*it)[1] == p))
+    for (auto& pair : pairs) {
+      if ((pair[0]->getId() == p.getId() && pair[1]->getId() == q.getId()) ||
+          (pair[0]->getId() == q.getId() && pair[1]->getId() == p.getId()))
         return;
     }
 
-    EXPECT_TRUE(false) << "Pair Iterator produced a invalid pair";
+    FAIL() << "Pair Iterator produced an invalid pair " << p.getId() << " and "
+           << q.getId();
   });
 
   EXPECT_EQ(count, pairs.size())
       << "Pair count does not match reference implementation";
 }
 
-/*
+/**
  * boundaryIterator(...) goes over all particles in boundary
  */
 TEST(LinkedCellsContainer, boundaryIterator) {
@@ -325,18 +331,18 @@ TEST(LinkedCellsContainer, boundaryIterator) {
   Particle p3 = createParticle(0, 9, 3);
   Particle p4 = createParticle(4, 4, 4);
 
-  container.addParticle(p1);
-  container.addParticle(p2);
-  container.addParticle(p3);
-  container.addParticle(p4);
+  container.addParticles({p1});
+  container.addParticles({p2});
+  container.addParticles({p3});
+  container.addParticles({p4});
 
   container.boundaryIterator([&p1, &p2, &p3, &p4](Particle& p) {
     EXPECT_TRUE(p == p1 || p == p2 || p == p3 || !(p == p4));
   });
 }
 
-/*
- * haloIterator(...) goes over all particles in halo
+/**
+ * @brief haloIterator(...) goes over all particles in halo
  */
 TEST(LinkedCellsContainer, haloIterator) {
   LinkedCellsConfig config = {.domain = {10, 10, 10},
@@ -357,12 +363,128 @@ TEST(LinkedCellsContainer, haloIterator) {
   Particle p3 = createParticle(0, 11, 0);
   Particle p4 = createParticle(0, 0, 0);
 
-  container.addParticle(p1);
-  container.addParticle(p2);
-  container.addParticle(p3);
-  container.addParticle(p4);
+  container.addParticles({p1});
+  container.addParticles({p2});
+  container.addParticles({p3});
+  container.addParticles({p4});
 
   container.haloIterator([&p1, &p2, &p3, &p4](Particle& p) {
     EXPECT_TRUE(p == p1 || p == p2 || p == p3 || !(p == p4));
   });
+}
+
+/**
+ * @brief Tests if the C18 strategy is equal to the standard pair iterator
+ */
+TEST(LinkedCellsContainer, C18Strategy) {
+  LinkedCellsConfig config = {.domain = {20, 20, 20},
+                              .cutoff_radius = 3,
+                              .boundary_config = {
+                                  .x_high = LinkedCellsConfig::Outflow,
+                                  .x_low = LinkedCellsConfig::Outflow,
+                                  .y_high = LinkedCellsConfig::Outflow,
+                                  .y_low = LinkedCellsConfig::Outflow,
+                                  .z_high = LinkedCellsConfig::Outflow,
+                                  .z_low = LinkedCellsConfig::Outflow,
+                              }};
+  constexpr double delta_t = 0.001;
+  LinkedCellsContainer container(config);
+  std::vector<Particle> particles;
+  CuboidGenerator cg({0, 0, 0}, {3, 3, 3}, 1.1225, 1, {0.2, 0.2, 0}, 0.1, 1.0,
+                     1.0, 1, false);
+  cg.generate(particles);
+  container.addParticles(particles);
+  std::vector<std::unique_ptr<InteractiveForce>> forces;
+  forces.push_back(std::make_unique<LennardJones>());
+
+  container.imposeInvariant();
+
+  container.computeInteractiveForcesC18(forces);
+
+  LinkedCellsConfig config2 = {.domain = {20, 20, 20},
+                               .cutoff_radius = 3,
+                               .boundary_config = {
+                                   .x_high = LinkedCellsConfig::Outflow,
+                                   .x_low = LinkedCellsConfig::Outflow,
+                                   .y_high = LinkedCellsConfig::Outflow,
+                                   .y_low = LinkedCellsConfig::Outflow,
+                                   .z_high = LinkedCellsConfig::Outflow,
+                                   .z_low = LinkedCellsConfig::Outflow,
+                               }};
+
+  std::vector<std::unique_ptr<InteractiveForce>> forces2;
+  forces2.push_back(std::make_unique<LennardJones>());
+  LinkedCellsContainer container2(config2);
+  std::vector<Particle> expected;
+  cg.generate(expected);
+  container2.addParticles(expected);
+  container2.imposeInvariant();
+
+  container2.pairIterator([&forces2](Particle& p, Particle& q) {
+    dvec3 f = {0, 0, 0};
+    for (const auto& force : forces2) {
+      f = f + force->directionalForce(p, q);
+    }
+    p.addF(f);
+    q.subF(f);
+  });
+
+  for (int j = 0; j < particles.size(); j++) {
+    InfoVec("F: ", container.getParticlesObjects()[j].getF());
+    InfoVec("F: ", container2.getParticlesObjects()[j].getF());
+    DVEC3_NEAR(container.getParticlesObjects()[j].getF(),
+               container2.getParticlesObjects()[j].getF(), "F not equal C18",
+               10e-13);
+  }
+}
+
+/**
+ * Checks if Force Buffer calculates the same result as the standard pair iterator
+ */
+TEST(LinkedCellsContainer, ForceBufferIteration) {
+  LinkedCellsConfig config = {.domain = {20, 20, 20},
+                              .cutoff_radius = 3,
+                              .boundary_config = {
+                                  .x_high = LinkedCellsConfig::Outflow,
+                                  .x_low = LinkedCellsConfig::Outflow,
+                                  .y_high = LinkedCellsConfig::Outflow,
+                                  .y_low = LinkedCellsConfig::Outflow,
+                                  .z_high = LinkedCellsConfig::Outflow,
+                                  .z_low = LinkedCellsConfig::Outflow,
+                              }};
+  constexpr double delta_t = 0.001;
+  LinkedCellsContainer container(config);
+  std::vector<Particle> particles;
+  CuboidGenerator cg({0, 0, 0}, {3, 3, 3}, 1.1225, 1, {0.2, 0.2, 0}, 0.1, 1.0,
+                     1.0, 1, false);
+  cg.generate(particles);
+  container.addParticles(particles);
+  std::vector<std::unique_ptr<InteractiveForce>> forces;
+  forces.push_back(std::make_unique<LennardJones>());
+
+  container.imposeInvariant();
+
+  container.computeInteractiveForcesForceBuffer(forces);
+
+  LinkedCellsContainer container2(config);
+  std::vector<Particle> expected;
+  cg.generate(expected);
+  container2.addParticles(expected);
+
+  container2.pairIterator([&forces](Particle& p, Particle& q) {
+    dvec3 f = {0, 0, 0};
+    for (const auto& force : forces) {
+      f = f + force->directionalForce(p, q);
+    }
+    p.addF(f);
+    q.subF(f);
+  });
+
+  for (int j = 0; j < particles.size(); j++) {
+    InfoVec("F: ", container.getParticlesObjects()[j].getF());
+    InfoVec("F: ", container2.getParticlesObjects()[j].getF());
+    DVEC3_NEAR(container.getParticlesObjects()[j].getF(),
+               container2.getParticlesObjects()[j].getF(), "F not equal C18",
+               10e-13);
+  }
 }

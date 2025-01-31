@@ -8,23 +8,28 @@
 
 /**
  * @brief Globally acts on each particle using the gravitational constant g in
- * the y direction
+ * the specified axis direction [0 : x, 1 : y, 2 : z]
  */
 class SingularGravity final : public SingularForce {
  private:
-  double g{};
+  /**
+   * The gravitational scaling constant
+   */
+  double g_{};
+  /**
+   * The axis on which the force is applied {0 : x, 1 : y, 2 : z}
+   */
+  int axis_{};
 
  public:
   /**
-   *
    * @param g the gravitational coefficient
+   * @param axis the axis 0 - 2 x - z on which gravity acts
    */
-  explicit SingularGravity(double g);
+  explicit SingularGravity(double g, int axis);
 
-  // TODO: do we need to do this modular over the axis? or is it only in y
-  // direction?
   /**
-   * @calculates f_i = p_i.mass * [0,g,0]
+   * @calculates f_i = p_i.mass * g * 1_{axis}
    * @param p the particle to act on
    * @return the force to be added to the particles force
    */

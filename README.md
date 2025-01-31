@@ -1,10 +1,12 @@
 MolSim - Group A
 ===
 
+Final Assignment
+
 ## Dependencies
 
-- Cmake 3.24
-- Doygen 1.9.8 (`sudo apt install doxygen`)
+- Cmake 3.28.3
+- Doxygen 1.9.8 (`sudo apt install doxygen`)
 - Libxerces (`sudo apt install libxerces-c-dev`)
 
 ## Build
@@ -12,34 +14,83 @@ MolSim - Group A
 ### Configuration
 
 - Install
-  ```bash
+
+```bash
   git clone https://github.com/jkr11/MolSim.git
-  ```
+``` 
+
+- manual build (I would recommend using make with -j $(nproc) as this is pretty slow)
+
+```bash
+  mkdir build
+  cmake -S . -B build -<options>
+  cd build
+  make -j $(nproc)
+```
+
+- Testing:
+
+```bash
+  cmake -S . -B build -DBUILD_TESTS=ON 
+```
+
+To build with Intel's C++ compiler (```icx```/```icpx```), set the following options (currently this is on the [
+`coolmuc_test`](https://github.com/jkr11/MolSim/tree/coolmuc_test) branch, but it works locally)
+
+```bash
+  cmake -S . -B build -DCMAKE_C_COMPILER=icx -DCMAKE_CXX_COMPILER=icpx
+```
+
+for other compilers add the necessary compiler id to the options.
+
+```bash
+  cd build/tests
+  make -j $(nproc)
+  ctest
+```
+
+Using the build script in `/script/`
+
 - Build the project using the provided build script by using source, add `-t` to also build and run tests, add `-b` to
-  enable the BENCHMARK cmake macro
-  ```bash
+  enable the BENCHMARK cmake macro and `-p` to enable OpenMP.
+
+```bash
   cd MolSim/scripts
-  source build <CMAKE_BUILD_TYPE= Release (default) | Debug | asan | asan-quiet>  [-t|--test] [-b|--benchmark]
-  ```
+  source build <CMAKE_BUILD_TYPE= Release (default) | Debug | asan | asan-quiet>  [-t|--test] [-b|--benchmark] [-p|--parallel] 
+```
+
 - Set the Input file by selecting the corresponding number during the script execution
-  ```bash
+
+```bash
   source set-input
-  ```
+```
 
 - Creating documentation when doxygen is installed (has to be executed in the specific `buildDir/<CMAKE_BUILD_TYPE>`)
-  ```bash
+
+```bash
   (cd ../buildDir/<CMAKE_BUILD_TYPE> when starting from /scripts)
   make doc_doxygen 
-  ```
+```
+
 - Running the program
-  ```bash
+
+```bash
   $BUILD -f $INPUT <options>
-  ``` 
+ ``` 
+
 - `$BUILD` contains the location of the last compiled executable
 - `$INPUT` contains the location of the selected input file
 - Please note that `$BUILD` and `$INPUT` are only available if the scripts are executed via source.
 
-### Options
+### CMake Options
+
+```console
+  - ENABLE_BENCHMARK : enables benchmark mode with no printing of info and writing to files
+  - BUILD_TESTS : enables and builds the tests/ directory in the build directory
+  - ENABLE_OPENMP : enables OpenMP and support for multithreading
+```
+
+### Executable Options
 
   ```console
   Options:
@@ -48,21 +99,61 @@ MolSim - Group A
   [--step_size | -s <double>]     Specify how often the output will be written wrt. time(step_size), default=1
                                     Note that this is independent of the time resolution (t_delta) and dependent on the simulation time
   [--loglevel | -l <level>]       Specify the log level, default=info, valid=[off, error, warn, info, debug, trace]
-  [--checkpoint | -c ]            Specifies if the final particle state will be saved to a checkpoint file.
+  [--checkpoint | -c <path>]      Specifies the path the final state of the particles will be saved to.
   Example usage:
   $BUILD -f $INPUT -l <loglevel> -s <number>
   ```
 
 - Output is located in `./output/<current_time>`
-- Checkpoint is currently fixed to `checkpoint.xml` also in `./output/`
+- Checkpoints as an input have to be explicitely stated in the input ```.xml``` file. In order to verify against the
+  checkpoint schema, all checkpoint files must point to the valid schema. As this location is hardcoded, all checkpoints
+  work out of the box if they are in the `/input/` directory. If they are somewhere else, you have to adjust the schema
+  path in the header of the checkpoint file.
+
+- A quick example for checkpointing in Assignment 4 task 3: (in `build/src`)
+
+```bash
+  ./MolSim -f ../../input/week43checkpoint.xml -c ../../input/<name_of_your_choice.xml>
+  ..... This eventually writes the checkpoint after running ----------
+```
+
+the add the following to week43.xml:
+
+```xml
+
+<checkpoint>
+    <name>../../input/
+        <name_of_your_choice.xml>
+    </name>
+    ...
+</checkpoint>
+```
+
+and run
+
+```bash
+  ./MolSim -f ../../input/week43.xml
+```
+
 - `--step_size` is relative to the passed simulation time and not the number of iterations
 - `--loglevel debug` is only available if compiled with CMAKE_BUILD_TYPE=Debug
 - all other options are specified in the .xml input file
 - old inputs have been migrated to xml and support this pipeline
 
+## Parallelization strategies
+
+First, compile with `-DENABLE_OPENMP=ON` to support using OpenMP.
+
+Then, use the xml tag `<use_c18_strategy>` in `<metadata>`, write true to use the c18 travesal, false to use the force
+buffer
+method or remove the thing entirely to use no parallelization at all (even if this is active). If OpenMP is not used,
+this does nothing.
+
 ## LinkedCells vs DirectSum performance
 
 ### Running benchmark.py
+
+Note this is a remnant from week 3 and 4, but this technically could be rewritten to test 5
 
 For optimal performance run scripts/build with -b for benchmarking
 The python script uses the generated executable in buildDir/Release/src for execution.

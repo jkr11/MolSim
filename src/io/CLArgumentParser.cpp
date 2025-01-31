@@ -8,36 +8,41 @@
 
 #include <filesystem>
 #include <fstream>
+#include <iostream>
+#include <optional>
 #include <tuple>
 
 #include "spdlog/fmt/bundled/chrono.h"
 #include "utils/SpdWrapper.h"
 
-std::tuple<std::filesystem::path, double, bool> CLArgumentParser::parse(
-    const int argc, char *argv[]) {
-  const option long_options[] = {{"help", no_argument, nullptr, 'h'},
-                                 {"file", required_argument, nullptr, 'f'},
-                                 {"step_size", required_argument, nullptr, 's'},
-                                 {"loglevel", required_argument, nullptr, 'l'},
-                                 {"checkpoint", no_argument, nullptr, 'c'},
-                                 {nullptr, 0, nullptr, 0}};
+std::tuple<std::filesystem::path, double, std::optional<std::filesystem::path>>
+CLArgumentParser::parse(const int argc, char *argv[]) {
+  SpdWrapper::get()->info("Parsing arguments");
+  const option long_options[] = {
+      {"help", no_argument, nullptr, 'h'},
+      {"file", required_argument, nullptr, 'f'},
+      {"step_size", required_argument, nullptr, 's'},
+      {"loglevel", required_argument, nullptr, 'l'},
+      {"checkpoint", required_argument, nullptr, 'c'},
+      {nullptr, 0, nullptr, 0}};
 
   int opt;
   int option_index = 0;
 
   std::filesystem::path input_file{};
   double step_size = 0.5;
-  bool write_checkpoint = false;
-
-  while ((opt = getopt_long(argc, argv, "hf:s:l:c", long_options,
+  std::optional<std::filesystem::path> checkpoint_file{};
+  while ((opt = getopt_long(argc, argv, "hf:s:l:c:", long_options,
                             &option_index)) != -1) {
+    SpdWrapper::get()->info("Parsing options");
     try {
-      if ((opt == 'f' || opt == 't' || opt == 'd' || opt == 's') &&
+      if ((opt == 'f' || opt == 's' || opt == 'l' || opt == 'c') &&
           optarg == nullptr) {
         throw std::invalid_argument("invalid argument for option -" +
                                     std::string(1, static_cast<char>(opt)));
       }
-
+      SpdWrapper::get()->info("Parsing -{} opt, {} optind",
+                              static_cast<char>(opt), option_index);
       switch (opt) {
         case 'h':
           printUsage("Display Help page, no execution", argv[0]);
@@ -55,7 +60,7 @@ std::tuple<std::filesystem::path, double, bool> CLArgumentParser::parse(
           }
           break;
         case 'c':
-          write_checkpoint = true;
+          checkpoint_file = optarg;
           break;
         default:
           throw std::invalid_argument("Unsupported option: -" +
@@ -66,6 +71,7 @@ std::tuple<std::filesystem::path, double, bool> CLArgumentParser::parse(
       exit(EXIT_FAILURE);
     }
   }
+  SpdWrapper::get()->info("Parsing");
 
   try {
     validateInputFile(input_file);
@@ -73,17 +79,26 @@ std::tuple<std::filesystem::path, double, bool> CLArgumentParser::parse(
     printUsage(e.what(), argv[0]);
     exit(EXIT_FAILURE);
   }
-  return {input_file, step_size, write_checkpoint};
+
+  SpdWrapper::get()->info("Resetting getopt vars ... ");
+
+  optind = 0;        // Reset position
+  optarg = nullptr;  // Reset argument pointer
+  optopt = 0;        // Reset last option character
+
+  return {input_file, step_size, checkpoint_file};
 }
 
 void CLArgumentParser::validateInputFile(
     const std::filesystem::path &file_path) {
+  SpdWrapper::get()->warn("Validating input file: {}", file_path.string());
+
   if (!exists(file_path) || is_directory(file_path)) {
     printUsage("File does not exist", file_path);
     throw std::invalid_argument("Input file '" + std::string(file_path) +
                                 "' does not exist or is a directory");
   }
-
+  SpdWrapper::get()->info("Check if empty");
   if (std::ifstream iss(file_path);
       iss.peek() == std::ifstream::traits_type::eof()) {
     throw std::invalid_argument("Input file '" + std::string(file_path) +
@@ -91,10 +106,10 @@ void CLArgumentParser::validateInputFile(
   }
 }
 
-void CLArgumentParser::printUsage(const std::string &additionalNote,
-                                  const std::string &programName) {
+void CLArgumentParser::printUsage(const std::string &additional_note,
+                                  const std::string &program_name) {
   SpdWrapper::get()->set_level(spdlog::level::err);
-  SpdWrapper::get()->error(additionalNote);
+  SpdWrapper::get()->error(additional_note);
   SpdWrapper::get()->error(
       "Usage: {} [options]\n"
       "Options:\n"
@@ -113,5 +128,5 @@ void CLArgumentParser::printUsage(const std::string &additionalNote,
       "Example:\n"
       "  {} -f <relative input location>.xml --loglevel info --step_size "
       "0.01\n",
-      programName, programName);
+      program_name, program_name);
 }

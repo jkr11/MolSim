@@ -25,7 +25,7 @@ class VTKWriter final {
   /**
    * set up internal data structures and prepare to plot a particle.
    */
-  void initializeOutput(int numParticles);
+  void initializeOutput(int num_particles);
 
   /**
    * plot type, mass, position, velocity and force of a particle.
@@ -44,7 +44,7 @@ class VTKWriter final {
   void writeFile(const std::string &filename, int iteration) const;
 
  private:
-  VTKFile_t *vtkFile{};
+  VTKFile_t *vtk_file_{};
 };
 
 }  // namespace outputWriter

@@ -7,6 +7,7 @@
 
 #include <algorithm>
 #include <filesystem>
+#include <optional>
 #include <tuple>
 
 #include "defs/Simulation.h"
@@ -23,18 +24,20 @@ class CLArgumentParser {
    * @note prints usage if failed
    * @param argc Directly from main
    * @param argv Directly from main
-   * @returns path to the input file
+   * @returns tuple of (path to the input file, the step size, and if given, the
+   * path to the checkpoint)
    */
-  static std::tuple<std::filesystem::path, double, bool> parse(int argc,
-                                                               char *argv[]);
+  static std::tuple<std::filesystem::path, double,
+                    std::optional<std::filesystem::path>>
+  parse(int argc, char *argv[]);
 
   /**
    * @brief print usage
-   * @param additionalNote additional info to customize printout
-   * @param programName name of the program (argv[0])
+   * @param additional_note additional info to customize printout
+   * @param program_name name of the program (argv[0])
    */
-  static void printUsage(const std::string &additionalNote,
-                         const std::string &programName);
+  static void printUsage(const std::string &additional_note,
+                         const std::string &program_name);
 
   /**
    * @brief Validates the existence and validity of an input file.

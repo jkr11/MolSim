@@ -33,29 +33,49 @@ class XmlReader {
    * @param boundary the boundary configuration
    */
   static inline void validateBoundaries(
-      const LinkedCellsConfig::BoundaryConfig& boundary) {
-    if (boundary.x_high != boundary.x_low &&
-        (boundary.x_high == LinkedCellsConfig::Periodic ||
-         boundary.x_low == LinkedCellsConfig::Periodic)) {
-      throw std::runtime_error("x dimension has incompatible boundaries");
-    }
+      const LinkedCellsConfig::BoundaryConfig& boundary);
 
-    if (boundary.y_high != boundary.y_low &&
-        (boundary.y_high == LinkedCellsConfig::Periodic ||
-         boundary.y_low == LinkedCellsConfig::Periodic)) {
-      throw std::runtime_error("y dimension has incompatible boundaries");
-    }
-
-    if (boundary.z_high != boundary.z_low &&
-        (boundary.z_high == LinkedCellsConfig::Periodic ||
-         boundary.z_low == LinkedCellsConfig::Periodic)) {
-      throw std::runtime_error("z dimension has incompatible boundaries");
-    }
-  }
-
+  /**
+   * @brief Reads a xml checkpoint file as specified in
+   * MolSim/src/io/file/out/checkpoint-schema.xsd
+   * @param filepath path pointing to checkpoint
+   * @param particles particles to which the checkpoint is read
+   */
   static void loadCheckpoint(const std::string& filepath,
                              std::vector<Particle>& particles);
+
+  /**
+   * @brief Reads a checkpoint file
+   * @param filepath path pointing to checkpoint containing membrane
+   * @param dimensions the dimensions of the original membrane cuboid / membrane
+   * generator
+   * @param particles particles to which the checkpoint is read
+   */
+  static void loadCheckpointMembrane(const std::string& filepath,
+                                     const ivec3& dimensions,
+                                     std::vector<Particle>& particles);
 };
+
+/**
+ * @brief validates that the number of bins are correct and not smaller than 1
+ * and the output time is larger than 0
+ * @param stats Statistics config to validate
+ */
+inline void validateStatisticsInput(const StatisticsConfig& stats) {
+  if (stats.x_bins < 1 || stats.y_bins < 1) {
+    SpdWrapper::get()->error(
+        "Number of x-bins ({}) or y-bins ({}) is too small", stats.x_bins,
+        stats.y_bins);
+    throw std::runtime_error("Number of x-bins or y-bins is too small");
+  }
+
+  if (stats.output_interval < 1) {
+    SpdWrapper::get()->error(
+        "Output interval for the statistics is too small ({})",
+        stats.output_interval);
+    throw std::runtime_error("Output interval for the statistics is too small");
+  }
+}
 
 /**
  * @brief ensures the input files are valid (not empty, extension, path)
@@ -63,9 +83,9 @@ class XmlReader {
  * @param extension the desired file extension
  * @param type the type of file you are checking (Input, checkpoint, etc)
  */
-inline void validate_path(const std::filesystem::path& path,
-                          const std::string& extension,
-                          const std::string& type) {
+inline void validatePath(const std::filesystem::path& path,
+                         const std::string& extension,
+                         const std::string& type) {
   if (!exists(path)) {
     throw std::runtime_error(type + " file not found: " + path.string());
   }
@@ -84,8 +104,8 @@ inline void validate_path(const std::filesystem::path& path,
  * specification
  * @return the enum type for arguments
  */
-template <typename BT>
-LinkedCellsConfig::BoundaryType toBoundaryType(const BT& boundary_type);
+template <typename Bt>
+LinkedCellsConfig::BoundaryType toBoundaryType(const Bt& boundary_type);
 
 /**
  * @brief translates a vector from the xml parser to a valid "standard" c++ type

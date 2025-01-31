@@ -5,12 +5,12 @@
 #include "../src/defs/containers/DirectSumContainer.cpp"
 #include "testUtil.h"
 
-/*
+/**
  * Add particle changes internal vector length
  */
 TEST(DirectSumContainer, addParticleAndSize) {
   DirectSumContainer container;
-  Particle particle;
+ Particle particle;
 
   ASSERT_EQ(container.size(), 0)
       << "ParticleContainer particle count not 0 after init.";
@@ -20,7 +20,7 @@ TEST(DirectSumContainer, addParticleAndSize) {
       << "ParticleContainer particle count not matching after addParticle.";
 }
 
-/*
+/**
  * singleIterator iterates over each distinct particle exactly once
  */
 TEST(DirectSumContainer, singleIterator) {
@@ -42,7 +42,7 @@ TEST(DirectSumContainer, singleIterator) {
   EXPECT_VECTOR_EQ(vec, {p1, p2, p3});
 }
 
-/*
+/**
  * pair_iterator iterates over each distinct pair of particles exactly once
  */
 TEST(DirectSumContainer, pair_iterator) {

@@ -73,7 +73,7 @@ TEST(PeriodicBoundary, warpingBothPeriodicForX) {
 
   // ee
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(ee, xhigh);
+      container.reflectiveWarpAroundTesting(ee, xhigh);
   constexpr dvec3 expected_offset1 = {9, 9, 0};
   EXPECT_EQ(is_adjacent, true);
   EXPECT_IVEC3_EQ(new_coordinates, bb);
@@ -81,7 +81,7 @@ TEST(PeriodicBoundary, warpingBothPeriodicForX) {
 
   // de
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(de, xhigh);
+      container.reflectiveWarpAroundTesting(de, xhigh);
   constexpr dvec3 expected_offset2 = {9, 0, 0};
   EXPECT_EQ(is_adjacent, true);
   EXPECT_IVEC3_EQ(new_coordinates, db);
@@ -89,7 +89,7 @@ TEST(PeriodicBoundary, warpingBothPeriodicForX) {
 
   // ce
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(ce, xhigh);
+      container.reflectiveWarpAroundTesting(ce, xhigh);
   constexpr dvec3 expected_offset3 = {9, 0, 0};
   EXPECT_EQ(is_adjacent, true);
   EXPECT_IVEC3_EQ(new_coordinates, cb);
@@ -97,7 +97,7 @@ TEST(PeriodicBoundary, warpingBothPeriodicForX) {
 
   // be
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(be, xhigh);
+      container.reflectiveWarpAroundTesting(be, xhigh);
   constexpr dvec3 expected_offset4 = {9, 0, 0};
   EXPECT_EQ(is_adjacent, true);
   EXPECT_IVEC3_EQ(new_coordinates, bb);
@@ -105,7 +105,7 @@ TEST(PeriodicBoundary, warpingBothPeriodicForX) {
 
   // ae
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(ae, xhigh);
+      container.reflectiveWarpAroundTesting(ae, xhigh);
   constexpr dvec3 expected_offset5 = {9, -9, 0};
   EXPECT_EQ(is_adjacent, true);
   EXPECT_IVEC3_EQ(new_coordinates, db);
@@ -134,12 +134,12 @@ TEST(PeriodicBoundary, warpingBothPeriodicForY) {
 
   // ea
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(ea, yhigh);
+      container.reflectiveWarpAroundTesting(ea, yhigh);
   EXPECT_EQ(is_adjacent, false) << "wrong adjacency1";
 
   // eb
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(eb, yhigh);
+      container.reflectiveWarpAroundTesting(eb, yhigh);
   constexpr dvec3 expected_offset2 = {0, 9, 0};
   EXPECT_EQ(is_adjacent, true) << "wrong adjacency2";
   EXPECT_IVEC3_EQ(new_coordinates, bb);
@@ -147,7 +147,7 @@ TEST(PeriodicBoundary, warpingBothPeriodicForY) {
 
   // ec
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(ec, yhigh);
+      container.reflectiveWarpAroundTesting(ec, yhigh);
   constexpr dvec3 expected_offset3 = {0, 9, 0};
   EXPECT_EQ(is_adjacent, true) << "wrong adjacency3";
   EXPECT_IVEC3_EQ(new_coordinates, bc);
@@ -155,7 +155,7 @@ TEST(PeriodicBoundary, warpingBothPeriodicForY) {
 
   // ed
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(ed, yhigh);
+      container.reflectiveWarpAroundTesting(ed, yhigh);
   constexpr dvec3 expected_offset4 = {0, 9, 0};
   EXPECT_EQ(is_adjacent, true) << "wrong adjacency4";
   EXPECT_IVEC3_EQ(new_coordinates, bd);
@@ -163,7 +163,7 @@ TEST(PeriodicBoundary, warpingBothPeriodicForY) {
 
   // ee
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(ee, yhigh);
+      container.reflectiveWarpAroundTesting(ee, yhigh);
   EXPECT_EQ(is_adjacent, false) << "wrong adjacency5";
 }
 
@@ -189,12 +189,12 @@ TEST(PeriodicBoundary, warpingXPeriodicForX) {
 
   // ee
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(ee, xhigh);
+      container.reflectiveWarpAroundTesting(ee, xhigh);
   EXPECT_EQ(is_adjacent, false);
 
   // de
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(de, xhigh);
+      container.reflectiveWarpAroundTesting(de, xhigh);
   constexpr dvec3 expected_offset2 = {9, 0, 0};
   EXPECT_EQ(is_adjacent, true);
   EXPECT_IVEC3_EQ(new_coordinates, db);
@@ -202,7 +202,7 @@ TEST(PeriodicBoundary, warpingXPeriodicForX) {
 
   // ce
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(ce, xhigh);
+      container.reflectiveWarpAroundTesting(ce, xhigh);
   constexpr dvec3 expected_offset3 = {9, 0, 0};
   EXPECT_EQ(is_adjacent, true);
   EXPECT_IVEC3_EQ(new_coordinates, cb);
@@ -210,7 +210,7 @@ TEST(PeriodicBoundary, warpingXPeriodicForX) {
 
   // be
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(be, xhigh);
+      container.reflectiveWarpAroundTesting(be, xhigh);
   constexpr dvec3 expected_offset4 = {9, 0, 0};
   EXPECT_EQ(is_adjacent, true);
   EXPECT_IVEC3_EQ(new_coordinates, bb);
@@ -218,7 +218,7 @@ TEST(PeriodicBoundary, warpingXPeriodicForX) {
 
   // ae
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(ae, xhigh);
+      container.reflectiveWarpAroundTesting(ae, xhigh);
   EXPECT_EQ(is_adjacent, false);
 }
 
@@ -244,12 +244,12 @@ TEST(PeriodicBoundary, warpingYPeriodicForY) {
 
   // ea
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(ea, yhigh);
+      container.reflectiveWarpAroundTesting(ea, yhigh);
   EXPECT_EQ(is_adjacent, false) << "wrong adjacency1";
 
   // eb
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(eb, yhigh);
+      container.reflectiveWarpAroundTesting(eb, yhigh);
   constexpr dvec3 expected_offset2 = {0, 9, 0};
   EXPECT_EQ(is_adjacent, true) << "wrong adjacency2";
   EXPECT_IVEC3_EQ(new_coordinates, bb);
@@ -257,7 +257,7 @@ TEST(PeriodicBoundary, warpingYPeriodicForY) {
 
   // ec
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(ec, yhigh);
+      container.reflectiveWarpAroundTesting(ec, yhigh);
   constexpr dvec3 expected_offset3 = {0, 9, 0};
   EXPECT_EQ(is_adjacent, true) << "wrong adjacency3";
   EXPECT_IVEC3_EQ(new_coordinates, bc);
@@ -265,7 +265,7 @@ TEST(PeriodicBoundary, warpingYPeriodicForY) {
 
   // ed
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(ed, yhigh);
+      container.reflectiveWarpAroundTesting(ed, yhigh);
   constexpr dvec3 expected_offset4 = {0, 9, 0};
   EXPECT_EQ(is_adjacent, true) << "wrong adjacency4";
   EXPECT_IVEC3_EQ(new_coordinates, bd);
@@ -273,7 +273,7 @@ TEST(PeriodicBoundary, warpingYPeriodicForY) {
 
   // ee
   std::tie(is_adjacent, new_coordinates, offset) =
-      container.reflective_warp_around_testing(ee, yhigh);
+      container.reflectiveWarpAroundTesting(ee, yhigh);
   EXPECT_EQ(is_adjacent, false) << "wrong adjacency5";
 }
 
@@ -304,7 +304,7 @@ TEST(PeriodicBoundaryForce, offsetX) {
   const auto test = new Particle({-1, 1, 1}, {0, 0, 0}, 1, 5.0, 1);
 
   auto [is_adjacent, new_coordinates, particle_offset] =
-      container.reflective_warp_around_testing(be, xhigh);
+      container.reflectiveWarpAroundTesting(be, xhigh);
   constexpr dvec3 expected_offset = {9, 0, 0};
   EXPECT_EQ(is_adjacent, true) << "wrong adjacency";
   EXPECT_IVEC3_EQ(new_coordinates, bb);
@@ -343,10 +343,54 @@ TEST(PeriodicBoundaryForce, offsetY) {
   const auto test = new Particle({1, -1, 1}, {0, 0, 0}, 1, 5.0, 1);
 
   auto [is_adjacent, new_coordinates, particle_offset] =
-      container.reflective_warp_around_testing(eb, yhigh);
+      container.reflectiveWarpAroundTesting(eb, yhigh);
   constexpr dvec3 expected_offset = {0, 9, 0};
   EXPECT_EQ(is_adjacent, true) << "wrong adjacency";
   EXPECT_IVEC3_EQ(new_coordinates, bb);
+  DVEC3_NEAR(particle_offset, expected_offset, "Offset wrong", 1e-5);
+
+  // compare that the force with offset is equal to what is the force in theory
+  const dvec3 accounted_particle_distance =
+      q->getX() - p->getX() + particle_offset;
+  ASSERT_EQ(LennardJones::directionalForceWithOffset(
+                *p, *q, accounted_particle_distance),
+            f.directionalForce(*test, *q));
+}
+
+/**
+ * tests that the correct force ist calculated for a periodic boundary in the z
+ * dimension
+ */
+TEST(PeriodicBoundaryForce, offsetZ) {
+  const LinkedCellsContainer container(
+      {.domain = {9, 9, 9},
+       .cutoff_radius = 3,
+       .boundary_config = {
+           LinkedCellsConfig::BoundaryType::Outflow,
+           LinkedCellsConfig::BoundaryType::Outflow,
+           LinkedCellsConfig::BoundaryType::Outflow,
+           LinkedCellsConfig::BoundaryType::Outflow,
+           LinkedCellsConfig::BoundaryType::Periodic,
+           LinkedCellsConfig::BoundaryType::Periodic,
+       }});
+
+  const LennardJones f{};
+
+  // distance of 2, test particle is in theoretical position
+  const auto p = new Particle({1, 1, 8}, {0, 0, 0}, 1, 5.0, 1);  // in bd
+  const auto q = new Particle({1, 1, 1}, {0, 0, 0}, 1, 5.0, 1);  // in bb
+  const auto test = new Particle({1, 1, -1}, {0, 0, 0}, 1, 5.0, 1);
+
+  auto [is_adjacent, new_coordinates, particle_offset] =
+      container.reflectiveWarpAroundTesting({0, 0, 3}, zhigh);
+  constexpr dvec3 expected_offset = {0, 0, 9};
+
+  SpdWrapper::get()->info("{}, [{}, {}, {}], [{}, {}, {}]", is_adjacent,
+                          new_coordinates[0], new_coordinates[1],
+                          new_coordinates[2], particle_offset[0],
+                          particle_offset[1], particle_offset[2]);
+  EXPECT_EQ(is_adjacent, true) << "wrong adjacency";
+  EXPECT_IVEC3_EQ(new_coordinates, {0, 0, 0});
   DVEC3_NEAR(particle_offset, expected_offset, "Offset wrong", 1e-5);
 
   // compare that the force with offset is equal to what is the force in theory
@@ -382,7 +426,7 @@ TEST(PeriodicBoundaryForce, offsetXY1) {
   const auto test = new Particle({-1, -1, 1}, {0, 0, 0}, 1, 5.0, 1);
 
   auto [is_adjacent, new_coordinates, particle_offset] =
-      container.reflective_warp_around_testing(
+      container.reflectiveWarpAroundTesting(
           ee,
           xhigh);  // xhigh and not yhigh because corners are invalid for yhigh
                    // if both boundaries are periodic to avoid double matching
@@ -394,9 +438,10 @@ TEST(PeriodicBoundaryForce, offsetXY1) {
   // compare that the force with offset is equal to what is the force in theory
   const dvec3 accounted_particle_distance =
       q->getX() - p->getX() + particle_offset;
-  ASSERT_EQ(LennardJones::directionalForceWithOffset(
-                *p, *q, accounted_particle_distance),
-            f.directionalForce(*test, *q));
+  DVEC3_NEAR(LennardJones::directionalForceWithOffset(
+                 *p, *q, accounted_particle_distance),
+             f.directionalForce(*test, *q), "not equal to theoretical force",
+             1e-8);
 }
 
 /**
@@ -424,7 +469,7 @@ TEST(PeriodicBoundaryForce, offsetXY2) {
   const auto test = new Particle({-1, 10, 1}, {0, 0, 0}, 1, 5.0, 1);
 
   auto [is_adjacent, new_coordinates, particle_offset] =
-      container.reflective_warp_around_testing(
+      container.reflectiveWarpAroundTesting(
           ae,
           xhigh);  // xhigh and not yhigh because corners are invalid for yhigh
   // if both boundaries are periodic to avoid double matching
@@ -436,9 +481,61 @@ TEST(PeriodicBoundaryForce, offsetXY2) {
   // compare that the force with offset is equal to what is the force in theory
   const dvec3 accounted_particle_distance =
       q->getX() - p->getX() + particle_offset;
-  ASSERT_EQ(LennardJones::directionalForceWithOffset(
-                *p, *q, accounted_particle_distance),
-            f.directionalForce(*test, *q));
+  DVEC3_NEAR(LennardJones::directionalForceWithOffset(
+                 *p, *q, accounted_particle_distance),
+             f.directionalForce(*test, *q), "not equal to theoretical force",
+             1e-8);
+}
+
+/**
+ * note that the offset tests do not add any real value over the warp tests,
+ * therefore, for the extension to 3D, these will include fewer examples for Z.
+ * It only has to be tested that the directionalForceWithOffset accepts a Z
+ * offset
+ */
+
+/**
+ * tests that the correct force ist calculated for a periodic boundary in the x,
+ * y and z dimension
+ */
+TEST(PeriodicBoundaryForce, offsetXYZ) {
+  const LinkedCellsContainer container(
+      {.domain = {9, 9, 9},
+       .cutoff_radius = 3,
+       .boundary_config = {
+           LinkedCellsConfig::BoundaryType::Periodic,
+           LinkedCellsConfig::BoundaryType::Periodic,
+           LinkedCellsConfig::BoundaryType::Periodic,
+           LinkedCellsConfig::BoundaryType::Periodic,
+           LinkedCellsConfig::BoundaryType::Periodic,
+           LinkedCellsConfig::BoundaryType::Periodic,
+       }});
+
+  const LennardJones f{};
+
+  // distance of 2, test particle is in theoretical position
+  const auto p = new Particle({8, 8, 8}, {0, 0, 0}, 1, 5.0, 1);  // in bd
+  const auto q = new Particle({1, 1, 1}, {0, 0, 0}, 1, 5.0, 1);  // in bb
+  const auto test = new Particle({-1, -1, -1}, {0, 0, 0}, 1, 5.0, 1);
+
+  auto [is_adjacent, new_coordinates, particle_offset] =
+      container.reflectiveWarpAroundTesting(
+          {3, 3, 3},
+          xhigh);  // xhigh and not yhigh or zhigh because corners are invalid
+                   // for yhigh and zhigh
+  // if all three boundaries are periodic to avoid double matching
+  constexpr dvec3 expected_offset = {9, 9, 9};
+  EXPECT_EQ(is_adjacent, true) << "wrong adjacency";
+  EXPECT_IVEC3_EQ(new_coordinates, {0, 0, 0});
+  DVEC3_NEAR(particle_offset, expected_offset, "Offset wrong", 1e-5);
+
+  // compare that the force with offset is equal to what is the force in theory
+  const dvec3 accounted_particle_distance =
+      q->getX() - p->getX() + particle_offset;
+  DVEC3_NEAR(LennardJones::directionalForceWithOffset(
+                 *p, *q, accounted_particle_distance),
+             f.directionalForce(*test, *q), "not equal to theoretical force",
+             1e-8);
 }
 
 //[[======================== moving test =====================================]]
@@ -461,9 +558,9 @@ TEST(PeriodicBoundaryMoving, moveXLeft) {
   const LennardJones f{};
 
   // move to other end
-  const Particle one({1, 1, 1}, {-2, 0, 0}, 1, 5.0, 1);  // in bb
+  Particle one({1, 1, 1}, {-2, 0, 0}, 1, 5.0, 1);  // in bb
 
-  container.addParticle(one);
+  container.addParticles({one});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 2";
 
   double delta_t = 1;
@@ -490,9 +587,9 @@ TEST(PeriodicBoundaryMoving, moveXLeft) {
 
   // test that particle is registered in its true cell
   const auto old_cell =
-      container.getCells()[container.cellCoordToIndex_testing({0, 0, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({0, 0, 0})];
   const auto new_cell =
-      container.getCells()[container.cellCoordToIndex_testing({2, 0, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({2, 0, 0})];
 
   EXPECT_EQ(old_cell.size(), 0);
   EXPECT_EQ(new_cell.size(), 1);
@@ -516,9 +613,10 @@ TEST(PeriodicBoundaryMoving, moveXRight) {
   const LennardJones f{};
 
   // move to other end
-  const Particle one({8, 1, 1}, {2, 0, 0}, 1, 5.0, 1);  // in bb
 
-  container.addParticle(one);
+  Particle one({8, 1, 1}, {2, 0, 0}, 1, 5.0, 1);  // in bb
+
+  container.addParticles({one});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 2";
 
   double delta_t = 1;
@@ -545,9 +643,9 @@ TEST(PeriodicBoundaryMoving, moveXRight) {
 
   // test that particle is registered in its true cell
   const auto old_cell =
-      container.getCells()[container.cellCoordToIndex_testing({2, 0, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({2, 0, 0})];
   const auto new_cell =
-      container.getCells()[container.cellCoordToIndex_testing({0, 0, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({0, 0, 0})];
 
   EXPECT_EQ(old_cell.size(), 0);
   EXPECT_EQ(new_cell.size(), 1);
@@ -557,7 +655,7 @@ TEST(PeriodicBoundaryMoving, moveXRight) {
  * tests that particles can move through the x periodic boundary
  */
 TEST(PeriodicBoundaryMoving, moveXDiagonal1) {
-  LinkedCellsContainer container({.domain = {9, 9, 3},
+  LinkedCellsContainer container({.domain = {9, 9, 9},
                                   .cutoff_radius = 3,
                                   .boundary_config = {
                                       LinkedCellsConfig::BoundaryType::Periodic,
@@ -571,32 +669,39 @@ TEST(PeriodicBoundaryMoving, moveXDiagonal1) {
   const LennardJones f{};
 
   // move to other end
-  const Particle one({8, 8, 1}, {2, 2, 0}, 1, 5.0, 1);
-  const Particle two({8, 1, 1}, {2, -2, 0}, 1, 5.0, 1);
+  Particle one({8, 8, 1}, {2, 2, 0}, 1, 5.0, 1);
+  Particle two({8, 1, 1}, {2, -2, 0}, 1, 5.0, 1);
 
-  container.addParticle(one);
-  container.addParticle(two);
+  std::cout << "Adding Particles" << std::endl;
+  container.addParticles({one, two});
   EXPECT_EQ(container.size(), 2) << "Number of Particles is not 2";
+
+  SpdWrapper::get()->info("Starting test");
+  std::cout << "Starting Test" << std::endl;
 
   double delta_t = 1;
   container.singleIterator([this, delta_t](Particle& p) {
     const dvec3 new_x = p.getX() + delta_t * p.getV() +
                         (delta_t * delta_t / (2 * p.getM())) * (p.getF());
     p.setX(new_x);
+    std::cout << "setting p " << p.getId() << " new_x [" << new_x[0] << ","
+              << new_x[1] << "," << new_x[2] << "]" << std::endl;
   });
 
-  container.singleIterator([](Particle& p) { p.updateForceInTime(); });
+  SpdWrapper::get()->info("Positions Updated");
+  std::cout << "Positions Updated" << std::endl;
 
   container.imposeInvariant();
+  SpdWrapper::get()->info("Invariant Imposed");
+  std::cout << "Invariant Imposed" << std::endl;
 
-  container.singleIterator([this, delta_t](Particle& p) {
-    const dvec3 new_v =
-        p.getV() + (delta_t / (2 * p.getM()) * (p.getOldF() + p.getF()));
-    p.setV(new_v);
-  });
-
-  container.singleIterator(
-      [this](Particle& p) { FAIL() << "Particle should have been deleted"; });
+  for (const auto& c : container.getCells()) {
+    for (const auto p : c) {
+      SpdWrapper::get()->info("p {} is at [{}, {}, {}]", p->getId(),
+                              p->getX()[0], p->getX()[1], p->getX()[2]);
+      FAIL() << "Particle should have been deleted";
+    }
+  }
 }
 
 /**
@@ -617,11 +722,10 @@ TEST(PeriodicBoundaryMoving, moveXDiagonal2) {
   const LennardJones f{};
 
   // move to other end
-  const Particle one({1, 1, 1}, {-2, -2, 0}, 1, 5.0, 1);
-  const Particle two({1, 8, 1}, {-2, 2, 0}, 1, 5.0, 1);
+  Particle one({1, 1, 1}, {-2, -2, 0}, 1, 5.0, 1);
+  Particle two({1, 8, 1}, {-2, 2, 0}, 1, 5.0, 1);
 
-  container.addParticle(one);
-  container.addParticle(two);
+  container.addParticles({one, two});
   EXPECT_EQ(container.size(), 2) << "Number of Particles is not 2";
 
   double delta_t = 1;
@@ -641,8 +745,13 @@ TEST(PeriodicBoundaryMoving, moveXDiagonal2) {
     p.setV(new_v);
   });
 
-  container.singleIterator(
-      [this](Particle& p) { FAIL() << "Particle should have been deleted"; });
+  for (const auto& c : container.getCells()) {
+    for (const auto p : c) {
+      SpdWrapper::get()->info("p {} is at [{}, {}, {}]", p->getId(),
+                              p->getX()[0], p->getX()[1], p->getX()[2]);
+      FAIL() << "Particle should have been deleted";
+    }
+  }
 }
 
 /**
@@ -663,11 +772,10 @@ TEST(PeriodicBoundaryMoving, moveYDiagonal1) {
   const LennardJones f{};
 
   // move to other end
-  const Particle one({8, 8, 1}, {2, 2, 0}, 1, 5.0, 1);
-  const Particle two({8, 1, 1}, {2, -2, 0}, 1, 5.0, 1);
+  Particle one({8, 8, 1}, {2, 2, 0}, 1, 5.0, 1);
+  Particle two({8, 1, 1}, {2, -2, 0}, 1, 5.0, 1);
 
-  container.addParticle(one);
-  container.addParticle(two);
+  container.addParticles({one, two});
   EXPECT_EQ(container.size(), 2) << "Number of Particles is not 2";
 
   double delta_t = 1;
@@ -687,8 +795,13 @@ TEST(PeriodicBoundaryMoving, moveYDiagonal1) {
     p.setV(new_v);
   });
 
-  container.singleIterator(
-      [this](Particle& p) { FAIL() << "Particle should have been deleted"; });
+  for (const auto& c : container.getCells()) {
+    for (const auto p : c) {
+      SpdWrapper::get()->info("p {} is at [{}, {}, {}]", p->getId(),
+                              p->getX()[0], p->getX()[1], p->getX()[2]);
+      FAIL() << "Particle should have been deleted";
+    }
+  }
 }
 
 /**
@@ -709,11 +822,10 @@ TEST(PeriodicBoundaryMoving, moveYDiagonal2) {
   const LennardJones f{};
 
   // move to other end
-  const Particle one({1, 1, 1}, {-2, -2, 0}, 1, 5.0, 1);
-  const Particle two({1, 8, 1}, {-2, 2, 0}, 1, 5.0, 1);
+  Particle one({1, 1, 1}, {-2, -2, 0}, 1, 5.0, 1);
+  Particle two({1, 8, 1}, {-2, 2, 0}, 1, 5.0, 1);
 
-  container.addParticle(one);
-  container.addParticle(two);
+  container.addParticles({one, two});
   EXPECT_EQ(container.size(), 2) << "Number of Particles is not 2";
 
   double delta_t = 1;
@@ -733,8 +845,13 @@ TEST(PeriodicBoundaryMoving, moveYDiagonal2) {
     p.setV(new_v);
   });
 
-  container.singleIterator(
-      [this](Particle& p) { FAIL() << "Particle should have been deleted"; });
+  for (const auto& c : container.getCells()) {
+    for (const auto p : c) {
+      SpdWrapper::get()->info("p {} is at [{}, {}, {}]", p->getId(),
+                              p->getX()[0], p->getX()[1], p->getX()[2]);
+      FAIL() << "Particle should have been deleted";
+    }
+  }
 }
 
 /**
@@ -755,9 +872,9 @@ TEST(PeriodicBoundaryMoving, moveYDown) {
   const LennardJones f{};
 
   // move to other end
-  const Particle one({1, 1, 1}, {0, -2, 0}, 1, 5.0, 1);  // in bb
+  Particle one({1, 1, 1}, {0, -2, 0}, 1, 5.0, 1);  // in bb
 
-  container.addParticle(one);
+  container.addParticles({one});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 2";
 
   double delta_t = 1;
@@ -784,9 +901,9 @@ TEST(PeriodicBoundaryMoving, moveYDown) {
 
   // test that particle is registered in its true cell
   const auto old_cell =
-      container.getCells()[container.cellCoordToIndex_testing({0, 0, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({0, 0, 0})];
   const auto new_cell =
-      container.getCells()[container.cellCoordToIndex_testing({0, 2, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({0, 2, 0})];
 
   EXPECT_EQ(old_cell.size(), 0);
   EXPECT_EQ(new_cell.size(), 1);
@@ -810,9 +927,9 @@ TEST(PeriodicBoundaryMoving, moveYUp) {
   const LennardJones f{};
 
   // move to other end
-  const Particle one({1, 8, 1}, {0, 2, 0}, 1, 5.0, 1);  // in bb
+  Particle one({1, 8, 1}, {0, 2, 0}, 1, 5.0, 1);  // in bb
 
-  container.addParticle(one);
+  container.addParticles({one});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 2";
 
   double delta_t = 1;
@@ -839,9 +956,9 @@ TEST(PeriodicBoundaryMoving, moveYUp) {
 
   // test that particle is registered in its true cell
   const auto old_cell =
-      container.getCells()[container.cellCoordToIndex_testing({0, 2, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({0, 2, 0})];
   const auto new_cell =
-      container.getCells()[container.cellCoordToIndex_testing({0, 0, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({0, 0, 0})];
 
   EXPECT_EQ(old_cell.size(), 0);
   EXPECT_EQ(new_cell.size(), 1);
@@ -865,9 +982,9 @@ TEST(PeriodicBoundaryMoving, moveXYDiagonal1) {
   const LennardJones f{};
 
   // move to other end
-  const Particle one({1, 1, 1}, {-2, -2, 0}, 1, 5.0, 1);
+  Particle one({1, 1, 1}, {-2, -2, 0}, 1, 5.0, 1);
 
-  container.addParticle(one);
+  container.addParticles({one});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 1";
 
   double delta_t = 1;
@@ -894,9 +1011,9 @@ TEST(PeriodicBoundaryMoving, moveXYDiagonal1) {
 
   // test that particle is registered in its true cell
   const auto old_cell =
-      container.getCells()[container.cellCoordToIndex_testing({0, 0, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({0, 0, 0})];
   const auto new_cell =
-      container.getCells()[container.cellCoordToIndex_testing({2, 2, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({2, 2, 0})];
 
   EXPECT_EQ(old_cell.size(), 0);
   EXPECT_EQ(new_cell.size(), 1);
@@ -920,9 +1037,9 @@ TEST(PeriodicBoundaryMoving, moveXYDiagonal2) {
   const LennardJones f{};
 
   // move to other end
-  const Particle one({8, 1, 1}, {2, -2, 0}, 1, 5.0, 1);
+  Particle one({8, 1, 1}, {2, -2, 0}, 1, 5.0, 1);
 
-  container.addParticle(one);
+  container.addParticles({one});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 2";
 
   double delta_t = 1;
@@ -949,9 +1066,9 @@ TEST(PeriodicBoundaryMoving, moveXYDiagonal2) {
 
   // test that particle is registered in its true cell
   const auto old_cell =
-      container.getCells()[container.cellCoordToIndex_testing({2, 0, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({2, 0, 0})];
   const auto new_cell =
-      container.getCells()[container.cellCoordToIndex_testing({0, 2, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({0, 2, 0})];
 
   EXPECT_EQ(old_cell.size(), 0);
   EXPECT_EQ(new_cell.size(), 1);
@@ -975,9 +1092,9 @@ TEST(PeriodicBoundaryMoving, moveXYDiagonal3) {
   const LennardJones f{};
 
   // move to other end
-  const Particle one({1, 8, 1}, {-2, 2, 0}, 1, 5.0, 1);
+  Particle one({1, 8, 1}, {-2, 2, 0}, 1, 5.0, 1);
 
-  container.addParticle(one);
+  container.addParticles({one});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 1";
 
   double delta_t = 1;
@@ -1004,9 +1121,9 @@ TEST(PeriodicBoundaryMoving, moveXYDiagonal3) {
 
   // test that particle is registered in its true cell
   const auto old_cell =
-      container.getCells()[container.cellCoordToIndex_testing({0, 2, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({0, 2, 0})];
   const auto new_cell =
-      container.getCells()[container.cellCoordToIndex_testing({2, 0, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({2, 0, 0})];
 
   EXPECT_EQ(old_cell.size(), 0);
   EXPECT_EQ(new_cell.size(), 1);
@@ -1030,9 +1147,9 @@ TEST(PeriodicBoundaryMoving, moveXYDiagonal4) {
   const LennardJones f{};
 
   // move to other end
-  const Particle one({8, 8, 1}, {2, 2, 0}, 1, 5.0, 1);
+  Particle one({8, 8, 1}, {2, 2, 0}, 1, 5.0, 1);
 
-  container.addParticle(one);
+  container.addParticles({one});
   EXPECT_EQ(container.size(), 1) << "Number of Particles is not 2";
 
   double delta_t = 1;
@@ -1059,9 +1176,174 @@ TEST(PeriodicBoundaryMoving, moveXYDiagonal4) {
 
   // test that particle is registered in its true cell
   const auto old_cell =
-      container.getCells()[container.cellCoordToIndex_testing({2, 2, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({2, 2, 0})];
   const auto new_cell =
-      container.getCells()[container.cellCoordToIndex_testing({0, 0, 0})];
+      container.getCells()[container.cellCoordToIndexTesting({0, 0, 0})];
+
+  EXPECT_EQ(old_cell.size(), 0);
+  EXPECT_EQ(new_cell.size(), 1);
+}
+
+/**
+ * tests that particles can move through the y periodic boundary
+ */
+TEST(PeriodicBoundaryMoving, moveZForward) {
+  LinkedCellsContainer container({.domain = {9, 9, 9},
+                                  .cutoff_radius = 3,
+                                  .boundary_config = {
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                  }});
+
+  const LennardJones f{};
+
+  // move to other end
+  Particle one({1, 1, 1}, {0, 0, -2}, 1, 5.0, 1);  // in bb
+
+  container.addParticles({one});
+  EXPECT_EQ(container.size(), 1) << "Number of Particles is not 2";
+
+  double delta_t = 1;
+  container.singleIterator([this, delta_t](Particle& p) {
+    const dvec3 new_x = p.getX() + delta_t * p.getV() +
+                        (delta_t * delta_t / (2 * p.getM())) * (p.getF());
+    p.setX(new_x);
+  });
+
+  container.singleIterator([](Particle& p) { p.updateForceInTime(); });
+
+  container.imposeInvariant();
+
+  container.singleIterator([this, delta_t](Particle& p) {
+    const dvec3 new_v =
+        p.getV() + (delta_t / (2 * p.getM()) * (p.getOldF() + p.getF()));
+    p.setV(new_v);
+  });
+
+  container.singleIterator([this](Particle& p) {
+    DVEC3_NEAR(p.getV(), {0.0, 0.0, -2.0}, "wrong velocity", 1e-5);
+    DVEC3_NEAR(p.getX(), {1, 1, 8}, "wrong position", 1e-5);
+  });
+
+  // test that particle is registered in its true cell
+  const auto old_cell =
+      container.getCells()[container.cellCoordToIndexTesting({0, 0, 0})];
+  const auto new_cell =
+      container.getCells()[container.cellCoordToIndexTesting({0, 0, 2})];
+
+  EXPECT_EQ(old_cell.size(), 0);
+  EXPECT_EQ(new_cell.size(), 1);
+}
+
+/**
+ * tests that particles can move through the z periodic boundary
+ */
+TEST(PeriodicBoundaryMoving, moveZBackward) {
+  LinkedCellsContainer container({.domain = {9, 9, 9},
+                                  .cutoff_radius = 3,
+                                  .boundary_config = {
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Outflow,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                  }});
+
+  const LennardJones f{};
+
+  // move to other end
+  Particle one({1, 1, 8}, {0, 0, 2}, 1, 5.0, 1);  // in bb
+
+  container.addParticles({one});
+  EXPECT_EQ(container.size(), 1) << "Number of Particles is not 1";
+
+  double delta_t = 1;
+  container.singleIterator([this, delta_t](Particle& p) {
+    const dvec3 new_x = p.getX() + delta_t * p.getV() +
+                        (delta_t * delta_t / (2 * p.getM())) * (p.getF());
+    p.setX(new_x);
+  });
+
+  container.singleIterator([](Particle& p) { p.updateForceInTime(); });
+
+  container.imposeInvariant();
+
+  container.singleIterator([this, delta_t](Particle& p) {
+    const dvec3 new_v =
+        p.getV() + (delta_t / (2 * p.getM()) * (p.getOldF() + p.getF()));
+    p.setV(new_v);
+  });
+
+  container.singleIterator([this](Particle& p) {
+    DVEC3_NEAR(p.getV(), {0.0, 0.0, 2.0}, "wrong velocity", 1e-5);
+    DVEC3_NEAR(p.getX(), {1, 1, 1}, "wrong position", 1e-5);
+  });
+
+  // test that particle is registered in its true cell
+  const auto old_cell =
+      container.getCells()[container.cellCoordToIndexTesting({0, 0, 2})];
+  const auto new_cell =
+      container.getCells()[container.cellCoordToIndexTesting({0, 0, 0})];
+
+  EXPECT_EQ(old_cell.size(), 0);
+  EXPECT_EQ(new_cell.size(), 1);
+}
+
+/**
+ * tests that particles can move through the x, y and z periodic boundary
+ */
+TEST(PeriodicBoundaryMoving, moveXYZDiagonal) {
+  LinkedCellsContainer container({.domain = {9, 9, 9},
+                                  .cutoff_radius = 3,
+                                  .boundary_config = {
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                      LinkedCellsConfig::BoundaryType::Periodic,
+                                  }});
+
+  const LennardJones f{};
+
+  // move to other end
+  Particle one({8, 8, 8}, {2, 2, 2}, 1, 5.0, 1);  // in bb
+
+  container.addParticles({one});
+  EXPECT_EQ(container.size(), 1) << "Number of Particles is not 1";
+
+  double delta_t = 1;
+  container.singleIterator([this, delta_t](Particle& p) {
+    const dvec3 new_x = p.getX() + delta_t * p.getV() +
+                        (delta_t * delta_t / (2 * p.getM())) * (p.getF());
+    p.setX(new_x);
+  });
+
+  container.singleIterator([](Particle& p) { p.updateForceInTime(); });
+
+  container.imposeInvariant();
+
+  container.singleIterator([this, delta_t](Particle& p) {
+    const dvec3 new_v =
+        p.getV() + (delta_t / (2 * p.getM()) * (p.getOldF() + p.getF()));
+    p.setV(new_v);
+  });
+
+  container.singleIterator([this](Particle& p) {
+    DVEC3_NEAR(p.getV(), {2.0, 2.0, 2.0}, "wrong velocity", 1e-5);
+    DVEC3_NEAR(p.getX(), {1, 1, 1}, "wrong position", 1e-5);
+  });
+
+  // test that particle is registered in its true cell
+  const auto old_cell =
+      container.getCells()[container.cellCoordToIndexTesting({2, 2, 2})];
+  const auto new_cell =
+      container.getCells()[container.cellCoordToIndexTesting({0, 0, 0})];
 
   EXPECT_EQ(old_cell.size(), 0);
   EXPECT_EQ(new_cell.size(), 1);

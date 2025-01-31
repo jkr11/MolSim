@@ -7,47 +7,50 @@
 
 #include "io/CLArgumentParser.h"
 
-std::shared_ptr<spdlog::logger> SpdWrapper::instance = configure();
+std::shared_ptr<spdlog::logger> SpdWrapper::instance_ = configure();
 
-std::shared_ptr<spdlog::logger> SpdWrapper::get() { return instance; }
+std::shared_ptr<spdlog::logger> SpdWrapper::get() { return instance_; }
 
 std::shared_ptr<spdlog::logger> SpdWrapper::configure() {
-  auto colorConsoleSink =
+  auto color_console_sink =
       std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-  colorConsoleSink->set_color(spdlog::level::info, colorConsoleSink->blue);
-  colorConsoleSink->set_color(spdlog::level::warn, colorConsoleSink->yellow);
-  colorConsoleSink->set_color(spdlog::level::err, colorConsoleSink->red);
-  colorConsoleSink->set_color(spdlog::level::critical, colorConsoleSink->red);
-  colorConsoleSink->set_color(spdlog::level::trace, colorConsoleSink->green);
+  color_console_sink->set_color(spdlog::level::info, color_console_sink->blue);
+  color_console_sink->set_color(spdlog::level::warn,
+                                color_console_sink->yellow);
+  color_console_sink->set_color(spdlog::level::err, color_console_sink->red);
+  color_console_sink->set_color(spdlog::level::critical,
+                                color_console_sink->red);
+  color_console_sink->set_color(spdlog::level::trace,
+                                color_console_sink->green);
   spdlog::init_thread_pool(8192, 1);
-  auto asyncLogger = std::make_shared<spdlog::async_logger>(
-      "asyncLogger", spdlog::sinks_init_list{colorConsoleSink},
+  auto async_logger = std::make_shared<spdlog::async_logger>(
+      "asyncLogger", spdlog::sinks_init_list{color_console_sink},
       spdlog::thread_pool(), spdlog::async_overflow_policy::block);
-  asyncLogger->set_level(spdlog::level::info);
-  spdlog::register_logger(asyncLogger);
-  return asyncLogger;
+  async_logger->set_level(spdlog::level::info);
+  spdlog::register_logger(async_logger);
+  return async_logger;
 }
 
 int SpdWrapper::setLogLevel(std::string level) {
   level = toLower(level);
 
   if (level == "trace") {
-    instance->set_level(spdlog::level::trace);
+    instance_->set_level(spdlog::level::trace);
     return 0;
   } else if (level == "debug") {
-    instance->set_level(spdlog::level::debug);
+    instance_->set_level(spdlog::level::debug);
     return 0;
   } else if (level == "info") {
-    instance->set_level(spdlog::level::info);
+    instance_->set_level(spdlog::level::info);
     return 0;
   } else if (level == "warn") {
-    instance->set_level(spdlog::level::warn);
+    instance_->set_level(spdlog::level::warn);
     return 0;
   } else if (level == "error") {
-    instance->set_level(spdlog::level::err);
+    instance_->set_level(spdlog::level::err);
     return 0;
   } else if (level == "off") {
-    instance->set_level(spdlog::level::off);
+    instance_->set_level(spdlog::level::off);
     return 0;
   }
 

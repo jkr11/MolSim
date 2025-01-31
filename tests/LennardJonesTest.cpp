@@ -33,20 +33,6 @@ TEST(LennardJones, directionalForce2) {
 }
 
 /*
- * LennardJones directional force, arbitrary example 3
- */
-/* removed because this never happens in an actual simulation
-TEST(LennardJones, directionalForce3) {
-  Particle p({0, 0, 0}, {0, 0, 0}, 0, 0, 0);
-  Particle q({0, 0, 0}, {0, 0, 0}, 0, 0, 0);
-  LennardJones lj;
-
-  dvec3 f = lj.directionalForce(p, q);
-  DVEC3_NEAR(f, {0.0, 0.0, 0.0}, "Directional force wrong", 1e-5);
-}
-*/
-
-/*
  * LennardJones directional force, arbitrary example 4
  */
 TEST(LennardJones, directionalForce4) {

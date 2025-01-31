@@ -5,12 +5,19 @@
 #define SINGULARFORCE_H
 #pragma once
 #include "defs/Particle.h"
+
 /**
  * @brief instance of forces that are global and not an interaction force
  */
 class SingularForce {
  public:
+  /**
+   * @brief Default constructor of a singular force
+   */
   SingularForce() = default;
+  /**
+   * @brief Default destructor of a singular force
+   */
   virtual ~SingularForce() = default;
 
   /**

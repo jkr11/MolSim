@@ -184,6 +184,28 @@ auto L2InnerProduct(const Container &c) {
   return std::accumulate(std::cbegin(c), std::cend(c), 0.0,
                          [](auto a, auto b) { return a + b * b; });
 }
+
+/**
+ * @brief returns the signs of the vectors
+ * @tparam Container
+ * @param c
+ * @return vector of length of c containing the sings of the elements
+ */
+template <class Container>
+auto getSigns(const Container &c) {
+  std::vector<int> signs;
+  for (size_t i = 0; i < c.size(); ++i) {
+    if (c[i] > 0) {
+      signs[i] = 1;
+    } else if (c[i] < 0) {
+      signs[i] = -1;
+    } else {
+      signs[i] = 0;
+    }
+  }
+  return signs;
+}
+
 }  // namespace ArrayUtils
 
 /**

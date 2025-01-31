@@ -7,27 +7,91 @@
 #pragma once
 
 #include <variant>
-
+#ifdef _OPENMP
+#include <omp.h>
+#endif
 #include "defs/types.h"
-#include "forces/InteractiveForce.h"
 #include "forces/SingularForce.h"
 #include "utils/SpdWrapper.h"
+
+/**
+ * @brief Parallelization Strategy
+ */
+enum ParallelStrategy { STRATEGY_1, STRATEGY_2, STRATEGY_3 };
+
+/**
+ * @brief Index Force config struct
+ */
+struct IndexForceConfig {
+  /**
+   * Cuboid coordinates to be targetted
+   */
+  std::vector<ivec3> indeces{};
+  /**
+   * Indices to be targetted
+   */
+  std::vector<int> ids{};
+
+  /**
+   * End time of the force application
+   */
+  double end_time{};
+  /**
+   * force vector applied
+   */
+  dvec3 force_values{};
+};
 
 /**
  * @brief holds the specification for the LinkedCellsContainer
  */
 struct LinkedCellsConfig {
-  ivec3 domain;  // size of the dimensions
+  /**
+   * Domain size
+   */
+  ivec3 domain;
+  /**
+   * Cutoff radius of the Linked-Cells algorithm
+   */
   double cutoff_radius;
+  /**
+   * Boundary Type enum for different boundary conditions
+   */
   enum BoundaryType { Outflow, Reflective, Periodic } boundary_type;
+  /**
+   * Struct which holds the boundary config for the linked cells container
+   */
   struct BoundaryConfig {
+    /**
+     * high x boundary type
+     */
     BoundaryType x_high;
+    /**
+     * low x boundary type
+     */
     BoundaryType x_low;
+    /**
+     * high y boundary type
+     */
     BoundaryType y_high;
+    /**
+     * low y boundary type
+     */
     BoundaryType y_low;
+    /**
+     * high z boundary type
+     */
     BoundaryType z_high;
+    /**
+     * low z boundary type
+     */
     BoundaryType z_low;
   } boundary_config;
+
+  /**
+   * Whether the simulation uses membranes or not
+   */
+  bool is_membrane = false;
 };
 
 /**
@@ -37,44 +101,170 @@ struct LinkedCellsConfig {
  */
 struct DirectSumConfig {};
 
+/**
+ * @brief holds the specification for the SingularGravity force
+ */
 struct SingularGravityConfig {
+  /**
+   * "gravitational" force applied
+   */
   double g{};
+  /**
+   * axis in which the force is applied
+   */
+  int axis{};
 };
 
-struct HarmonicForceConfig {};
+/**
+ * @brief holds the harmonic force parameters
+ */
+struct HarmonicForceConfig {
+  /**
+   * average bond length
+   */
+  double r_0{};
+  /**
+   * Spring/stiffness constant
+   */
+  double k{};
+};
 
+/**
+ * @brief holds the LennardJones force parameters
+ */
 struct LennardJonesConfig {};
 
+/**
+ * @brief hold the Truncated LennardJones force parameters
+ */
+struct TruncatedLennardJonesConfig {};
+
+/**
+ * @brief holds the interactive gravity parameters
+ */
 struct GravityConfig {};
 
 /**
  * @brief holds instance data for Thermostat
  */
 struct ThermostatConfig {
-  double T_init{};
-  double T_target{};
-  double deltaT{};
+  /**
+   * init temperature
+   */
+  double t_init{};
+  /**
+   * target temperature
+   */
+  double t_target{};
+  /**
+   * delta time
+   */
+  double delta_t{};
+  /**
+   * periodicity of application
+   */
   int n_thermostat{};
+  /**
+   * Whether thermostat is relative
+   */
   bool use_relative{};
+  /**
+   * Whether thermostat uses thermal motion
+   */
+  bool use_thermal_motion{};
+  /**
+   * Whether thermostat is 2D or 3D
+   */
+  bool two_d{};
 };
 
 /**
- * @brief struct to hold command line arguments
+ * @brief Statistics configuration struct
  */
+struct StatisticsConfig {
+  /**
+   * Inicates whether to write statistics to a file
+   */
+  bool calc_stats{};
+  /**
+   * Number of x bins
+   */
+  int x_bins{};
+  /**
+   * Number of y bins
+   */
+  int y_bins{};
+  /**
+   * Periodicity of outputting to files
+   */
+  int output_interval{};
+  /**
+   * Path to the csv containing the velocity information
+   */
+  std::string velocity_output_location{};
+  /**
+   * Path to the csv containing the density information
+   */
+  std::string density_output_location{};
+};
 
+/**
+ * @brief Supertype for all Singular Forces
+ */
+using SingularForceTypes =
+    std::variant<SingularGravityConfig, HarmonicForceConfig>;
+
+/**
+ * @brief Supertype for all Interactive Forces
+ */
+using InteractiveForceTypes = std::variant<LennardJonesConfig, GravityConfig,
+                                           TruncatedLennardJonesConfig>;
+
+/**
+ * @brief Struct which hold the simulation arguments
+ */
 struct Arguments {
-  using SingularForceTypes =
-      std::variant<SingularGravityConfig, HarmonicForceConfig>;
-  using InteractiveForceTypes = std::variant<LennardJonesConfig, GravityConfig>;
+  /**
+   * simulation end time
+   */
   double t_end;
+  /**
+   * simulation delta time
+   */
   double delta_t;
-  enum ForceType { LennardJones, Gravity } force_type;
-  enum SingularForceType { SingularGravity } singular_force_type;
+  /**
+   * Thermostat config
+   */
   ThermostatConfig thermostat_config;
+  /**
+   * Whether to use the thermostat
+   */
   bool use_thermostat;
+  /**
+   * Which container to use
+   */
   std::variant<LinkedCellsConfig, DirectSumConfig> container_data;
+  /**
+   * Vector of applied singular forces
+   */
   std::vector<SingularForceTypes> singular_force_types;
+  /**
+   * Vector of applied interactive forces
+   */
   std::vector<InteractiveForceTypes> interactive_force_types;
+  /**
+   * Vector of applied index forces
+   */
+  std::vector<IndexForceConfig> index_force_configs;
+  /**
+   * Statistics configuration
+   */
+  StatisticsConfig statistics_config;
+
+  /**
+   * Parallelization strategy
+   */
+  ParallelStrategy strategy;
 };
 
 /**
@@ -117,19 +307,19 @@ inline void printConfiguration(const Arguments& args) {
   logger->info("delta_t: {}", args.delta_t);
   logger->info("Singular Forces:");
   if (args.use_thermostat) {
-    logger->info("Thermostat: T_init {}", args.thermostat_config.T_init);
-    logger->info("--- T_target: {}", args.thermostat_config.T_target);
-    logger->info("--- deltaT: {}", args.thermostat_config.deltaT);
+    logger->info("Thermostat: T_init {}", args.thermostat_config.t_init);
+    logger->info("--- T_target: {}", args.thermostat_config.t_target);
+    logger->info("--- deltaT: {}", args.thermostat_config.delta_t);
   }
 
   if (std::holds_alternative<LinkedCellsConfig>(args.container_data)) {
     logger->info("Container Type: Linked Cells");
 
-    const auto& [domain, cutoff_radius, boundary_type, boundary_config] =
+    const auto& [domain, cutoff_radius, boundary_type, boundary_config,
+                 is_membrane] =
         std::get<LinkedCellsConfig>(args.container_data);
     logger->info("-- Domain: ({}, {}, {})", domain[0], domain[1], domain[2]);
     logger->info("-- Cutoff Radius: {}", cutoff_radius);
-
     logger->info("Boundary Configuration:");
     logger->info("------------------------");
 
@@ -144,7 +334,9 @@ inline void printConfiguration(const Arguments& args) {
   } else {
     logger->info("Container Type: Direct Sum");
   }
-
+#ifdef _OPENMP
+  logger->info("Number of Threads: {}", omp_get_max_threads());
+#endif
   logger->info("============================");
 }
 
