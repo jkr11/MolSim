@@ -3,10 +3,8 @@
 //
 #include "VerletIntegrator.h"
 
-#include <iostream>
 
 #include "../utils/ArrayUtils.h"
-#include "debug/debug_print.h"
 #include "utils/SpdWrapper.h"
 
 void VerletIntegrator::step(ParticleContainer& particle_container) {
@@ -26,7 +24,6 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
 
   particle_container.imposeInvariant();
 
-  // TODO: refactor into container
   particle_container.singleIterator([this](Particle& p) {
     dvec3 f = {0, 0, 0};
     for (const auto& index_force : index_forces_) {
@@ -40,15 +37,11 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
   });
 
 #ifdef _OPENMP
-  // INFO("Using openmp")
   if (strategy_ == ParallelStrategy::STRATEGY_2) {
-    INFO("Using C18")
     particle_container.computeInteractiveForcesC18(interactive_forces_);
   } else if (strategy_ == ParallelStrategy::STRATEGY_1) {
-    INFO("Using Force Buffer")
     particle_container.computeInteractiveForcesForceBuffer(interactive_forces_);
   } else {
-    INFO("Using default strategy (no parallelization)")
     particle_container.pairIterator([this](Particle& p, Particle& q) {
       dvec3 f = {0, 0, 0};
       for (const auto& interactive_force : interactive_forces_) {
@@ -59,7 +52,6 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
     });
   }
 #else
-  // INFO("Not using openmp")
   particle_container.pairIterator([this](Particle& p, Particle& q) {
     dvec3 f = {0, 0, 0};
     for (const auto& interactive_force : interactive_forces_) {
@@ -82,6 +74,5 @@ void VerletIntegrator::step(ParticleContainer& particle_container) {
     p.setV(new_v);
   });
 
-  // TODO: move to container (specify const again)
   incrementTime();
 }
