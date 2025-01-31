@@ -32,7 +32,7 @@
                 </boundary>
             </linkedCells>
         </container>
-        <use_c18_strategy>true</use_c18_strategy> <!-- change later to 1 2 3 etc -->
+        <!--<use_c18_strategy>true</use_c18_strategy> --> <!-- change later to 1 2 3 etc -->
         <force>
             <LennardJones/>
             <SingularGravity>
