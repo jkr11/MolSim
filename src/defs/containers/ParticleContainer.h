@@ -98,8 +98,14 @@ class ParticleContainer {
    */
   virtual double getKineticEnergy() = 0;
 
+  /**
+   * @brief Increment Time for index forces
+   */
   virtual void incrementTime() { this->current_time++; }
 
+  /**
+   * Current time for index forces
+   */
   double current_time = 0;
 
   /**

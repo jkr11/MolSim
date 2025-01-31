@@ -119,8 +119,16 @@ class Particle final {
 
   void setSigma(const double &sigma) { sigma_ = sigma; }
 
+  /**
+   * @brief Push Neighbour reference to a particle
+   * @param diag Whether neighbour is diagonal
+   * @param particle Particle reference in form of an long
+   */
   void pushBackNeighbour(bool diag, long particle);
 
+  /**
+   * @brief OldF = F; F = 0
+   */
   void updateForceInTime();
 
   void subV(const dvec3 &v) { v_ = v_ - v; }
@@ -133,19 +141,43 @@ class Particle final {
 
   void subF(const dvec3 &f) { f_ = f_ - f; }
 
+  /**
+   * @brief Directly set neighbours of a particle
+   * @param new_neighbours Vector of neighbours (bool == diagonal, size_t ==
+   * address)
+   */
   void setNeighbours(
       const std::vector<std::pair<bool, size_t>> &new_neighbours) {
     neighbours_ = new_neighbours;
   }
 
+  /**
+   * @brief Clear neighbour references
+   */
   void resetNeighbours() { neighbours_ = {}; }
 
+  /**
+   * @brief Retrieve particle id
+   * @return particle id
+   */
   [[nodiscard]] int getId() const;
 
+  /**
+   * @brief Comparison operator
+   * @param other Other particle to be compare against
+   * @return Whether particle is seen as equivalent
+   */
   bool operator==(const Particle &other) const;
 
+  /**
+   * @brief Get debug string from particle
+   * @return String
+   */
   [[nodiscard]] std::string toString() const;
 
+  /**
+   * TODO
+   */
   Particle &operator=(const Particle &other) {
     if (this != &other) {
       x_ = other.x_;
@@ -162,6 +194,9 @@ class Particle final {
     return *this;
   }
 
+  /**
+   * TODO
+   */
   Particle &operator=(Particle &&other) noexcept {
     if (this != &other) {
       x_ = other.x_;
@@ -180,4 +215,10 @@ class Particle final {
   }
 };
 
+/**
+ * @brief Write Particle to stream
+ * @param stream Output stream
+ * @param p particle to be written
+ * @return passed in stream
+ */
 std::ostream &operator<<(std::ostream &stream, const Particle &p);

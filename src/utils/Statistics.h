@@ -25,10 +25,11 @@ class Statistics {
  public:
   /**
    * @brief Initialize Statistics object
-   * @param x_bins
-   * @param y_bins
-   * @param container
-   * 
+   * @param x_bins TODO
+   * @param y_bins TODO
+   * @param container TODO
+   * @param density_profile_output_location TODO
+   * @param velocity_profile_output_location TODO
    */
   Statistics(const int x_bins, const int y_bins, ParticleContainer& container,
              const std::string& density_profile_output_location,

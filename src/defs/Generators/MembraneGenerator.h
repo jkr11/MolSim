@@ -45,7 +45,7 @@ class MembraneGenerator final : public ParticleGenerator {
    * @param mv temperature of our system
    * @param type type of the particle in the system
    * @param two_d dimension of velocity vector of brownian motion
-   * @param indices
+   * @param indices Grid coordinates TODO
    */
   MembraneGenerator(const dvec3 &corner, const std::array<int, 3> &dimensions,
                     double h, double m,

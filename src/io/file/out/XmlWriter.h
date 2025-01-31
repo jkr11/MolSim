@@ -8,14 +8,17 @@
 #include "defs/containers/ParticleContainer.h"
 
 /**
- * writes particles to a checkpoint file in xml format
+ * @brief writes particles to a checkpoint file in xml format
  */
 class XmlWriter {
  public:
   /**
-   * constructs an XML Writer
+   * @brief constructs an XML Writer
    */
   XmlWriter();
+  /**
+   * @brief Destructor for XmlWrither
+   */
   ~XmlWriter();
 
   /**

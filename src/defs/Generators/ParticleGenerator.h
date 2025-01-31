@@ -12,6 +12,9 @@
  */
 class ParticleGenerator {
  public:
+  /**
+   * @brief Virtual destructor of Particle generator
+   */
   virtual ~ParticleGenerator() = default;
 
   /**
