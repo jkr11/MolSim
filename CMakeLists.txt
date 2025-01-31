@@ -16,6 +16,8 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
     message("Using intel compile options")
     add_compile_options(-xHost -ipo -qopenmp -O3 -fp-model fast=2)
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "IntelLLVM")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 endif ()
 
 #add_compile_options(-xHost -O3 -fp-model fast=2)
