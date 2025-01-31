@@ -23,6 +23,10 @@ class Thermostat {
   int dimension_;
 
  public:
+  /**
+   * @brief Instantiate a thermostat
+   * @param config Thermostat config to be used
+   */
   explicit Thermostat(const ThermostatConfig& config);
 
   /**
@@ -78,8 +82,16 @@ class Thermostat {
   double getThermalTemperature(ParticleContainer& particle_container,
                                dvec3 avg_velocity) const;
 
+  /**
+   * @brief Get periodicity of thermostat application
+   * @return periodicity of thermostat application
+   */
   [[nodiscard]] int getNThermostat() const;
 
+  /**
+   * @brief Get target temperature
+   * @return Target temperature
+   */
   [[nodiscard]] double getTTarget() const;
 };
 #endif  // THERMOSTAT_H

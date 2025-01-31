@@ -118,9 +118,22 @@ class DirectSumContainer final : public ParticleContainer {
    */
   double getKineticEnergy() override;
 
+  /**
+   * TODO: this is giga redundant because size exists
+   * @brief Get particle count
+   * @return particle in the container
+   */
   size_t getParticleCount() override { return particles_.size(); }
 
+  /**
+   * @brief Get fixed particle count
+   * @return number of fixed particles
+   */
   size_t getSpecialParticleCount() override { return 0; };
 
+  /**
+   * @brief Get simulation domain
+   * @return domain of the simulation
+   */
   ivec3 getDomain() override;
 };

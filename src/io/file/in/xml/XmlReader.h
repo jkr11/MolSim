@@ -44,6 +44,12 @@ class XmlReader {
   static void loadCheckpoint(const std::string& filepath,
                              std::vector<Particle>& particles);
 
+  /**
+   * @brief TODO
+   * @param filepath TODO
+   * @param dimensions TODO
+   * @param particles TODO
+   */
   static void loadCheckpointMembrane(const std::string& filepath,
                                      const ivec3& dimensions,
                                      std::vector<Particle>& particles);
@@ -52,6 +58,7 @@ class XmlReader {
 /**
  * @brief validates that the number of bins are correct and not smaller than 1
  * and the output time is larger than 0
+ * @param stats TODO
  */
 inline void validateStatisticsInput(const StatisticsConfig& stats) {
   if (stats.x_bins < 1 || stats.y_bins < 1) {

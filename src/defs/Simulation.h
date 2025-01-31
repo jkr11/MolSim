@@ -14,12 +14,31 @@
 #include "forces/SingularForce.h"
 #include "utils/SpdWrapper.h"
 
+/**
+ * @brief Parallelization Strategy
+ */
 enum ParallelStrategy { STRATEGY_1, STRATEGY_2, STRATEGY_3 };
 
+/**
+ * @brief Index Force config struct
+ */
 struct IndexForceConfig {
+  /**
+   * Cuboid coordinates to be targetted
+   */
   std::vector<ivec3> indeces{};
+  /**
+   * Indices to be targetted
+   */
   std::vector<int> ids{};
+
+  /**
+   * End time of the force application
+   */
   double end_time{};
+  /**
+   * force vector applied
+   */
   dvec3 force_values{};
 };
 
@@ -27,17 +46,51 @@ struct IndexForceConfig {
  * @brief holds the specification for the LinkedCellsContainer
  */
 struct LinkedCellsConfig {
-  ivec3 domain;  // size of the dimensions
+  /**
+   * Domain size
+   */
+  ivec3 domain;
+  /**
+   * Cutoff radius of the Linked-Cells algorithm
+   */
   double cutoff_radius;
+  /**
+   * Boundary Type enum for different boundary conditions
+   */
   enum BoundaryType { Outflow, Reflective, Periodic } boundary_type;
+  /**
+   * Struct which holds the boundary config for the linked cells container
+   */
   struct BoundaryConfig {
+    /**
+     * high x boundary type
+     */
     BoundaryType x_high;
+    /**
+     * low x boundary type
+     */
     BoundaryType x_low;
+    /**
+     * high y boundary type
+     */
     BoundaryType y_high;
+    /**
+     * low y boundary type
+     */
     BoundaryType y_low;
+    /**
+     * high z boundary type
+     */
     BoundaryType z_high;
+    /**
+     * low z boundary type
+     */
     BoundaryType z_low;
   } boundary_config;
+
+  /**
+   * Whether the simulation uses membranes or not
+   */
   bool is_membrane = false;
 };
 
@@ -52,7 +105,13 @@ struct DirectSumConfig {};
  * @brief holds the specification for the SingularGravity force
  */
 struct SingularGravityConfig {
+  /**
+   * "gravitational" force applied
+   */
   double g{};
+  /**
+   * axis in which the force is applied
+   */
   int axis{};
 };
 
@@ -60,7 +119,13 @@ struct SingularGravityConfig {
  * @brief holds the harmonic force parameters
  */
 struct HarmonicForceConfig {
+  /**
+   * average bond length
+   */
   double r_0{};
+  /**
+   * Spring/stiffness constant
+   */
   double k{};
 };
 
@@ -69,6 +134,9 @@ struct HarmonicForceConfig {
  */
 struct LennardJonesConfig {};
 
+/**
+ * @brief hold the Truncated LennardJones force parameters
+ */
 struct TruncatedLennardJonesConfig {};
 
 /**
@@ -80,24 +148,67 @@ struct GravityConfig {};
  * @brief holds instance data for Thermostat
  */
 struct ThermostatConfig {
+  /**
+   * init temperature
+   */
   double t_init{};
+  /**
+   * target temperature
+   */
   double t_target{};
+  /**
+   * delta time
+   */
   double delta_t{};
+  /**
+   * periodicity of application
+   */
   int n_thermostat{};
+  /**
+   * Whether thermostat is relative
+   */
   bool use_relative{};
+  /**
+   * Whether thermostat uses thermal motion
+   */
   bool use_thermal_motion{};
+  /**
+   * Whether thermostat is 2D or 3D
+   */
   bool two_d{};
 };
 
+/**
+ * @brief Statistics configuration struct
+ */
 struct StatisticsConfig {
+  /**
+   * TODO ?
+   */
   bool calc_stats{};
+  /**
+   * Number of x bins
+   */
   int x_bins{};
+  /**
+   * Number of y bins
+   */
   int y_bins{};
+  /**
+   * TODO ?
+   */
   int output_interval{};
+  /**
+   * TODO ?
+   */
   std::string velocity_output_location{};
+  /**
+   * TODO ?
+   */
   std::string density_output_location{};
 };
 
+//TODO: delete?
 struct SphereoidGeneratorConfig {
   dvec3 origin{};
   const int radius{};
@@ -112,6 +223,7 @@ struct SphereoidGeneratorConfig {
   SphereoidGeneratorConfig() = default;
 };
 
+//TODO: delete?
 struct CuboidGeneratorConfig {
   dvec3 corner{};
   ivec3 dimensions{};
@@ -126,6 +238,7 @@ struct CuboidGeneratorConfig {
   CuboidGeneratorConfig() = default;
 };
 
+//TODO: delete?
 struct MembraneGeneratorConfig {
   dvec3 corner{};
   ivec3 dimensions{};
@@ -148,19 +261,58 @@ using SingularForceTypes =
     std::variant<SingularGravityConfig, HarmonicForceConfig>;
 using InteractiveForceTypes = std::variant<LennardJonesConfig, GravityConfig,
                                            TruncatedLennardJonesConfig>;
+
+/**
+ * @brief Struct which hold the simulation arguments
+ */
 struct Arguments {
+  /**
+   * simulation end time
+   */
   double t_end;
+  /**
+   * simulation delta time
+   */
   double delta_t;
+  /**
+   * Thermostat config
+   */
   ThermostatConfig thermostat_config;
+  /**
+   * Whether to use the thermostat
+   */
   bool use_thermostat;
+  /**
+   * Which container to use
+   */
   std::variant<LinkedCellsConfig, DirectSumConfig> container_data;
+  /**
+   * Vector of applied singular forces
+   */
   std::vector<SingularForceTypes> singular_force_types;
+  /**
+   * Vector of applied interactive forces
+   */
   std::vector<InteractiveForceTypes> interactive_force_types;
+  /**
+   * Vector of applied index forces
+   */
   std::vector<IndexForceConfig> index_force_configs;
+  /**
+   * Statistics configuration
+   */
   StatisticsConfig statistics_config;
+
+  //TODO
   SphereoidGeneratorConfig spheroid_generator_config;
+  //TODO
   CuboidGeneratorConfig cuboid_generator_config;
+  //TODO
   MembraneGeneratorConfig membrane_generator_config;
+
+  /**
+   * Parallelization strategy
+   */
   ParallelStrategy strategy;
 };
 

@@ -10,7 +10,7 @@
 #include "defs/containers/ParticleContainer.h"
 
 /**
- * Holds the Index Force. Index force acts on cuboid coordinates specified
+ * @brief Holds the Index Force. Index force acts on cuboid coordinates specified
  * before the simulation
  */
 class IndexForce {
@@ -28,13 +28,19 @@ class IndexForce {
   dvec3 force_values_{};
 
  public:
+  /**
+   * @brief Instantiate Index Force
+   * @param ids Vector of ids, which the force acts upon
+   * @param time Time until force is applied
+   * @param force_values force vector which is added to targeted particles
+   */
   explicit IndexForce(const std::vector<int>& ids, const double time,
                       const dvec3& force_values)
       : indeces_(ids), time_(time), force_values_(force_values) {}
   IndexForce() = default;
 
   /**
-   * @calculates the index force on the specified particle
+   * @brief Calculates the index force on the specified particle
    * @param p the particle on where the force is applied
    * @param sim_time the current time of the simulation
    * @return the force vector thats applied (0 if sime_time > time_)
@@ -42,7 +48,7 @@ class IndexForce {
   dvec3 applyForce(Particle& p, double sim_time) const;
 
   /**
-   * Returns the ids on which the force has to act
+   * @brief Returns the ids on which the force has to act
    * @return the particle ID indices of the force
    */
   [[nodiscard]] std::vector<int> getIndices() const { return indeces_; }

@@ -8,7 +8,7 @@
 #include "utils/SpdWrapper.h"
 
 /**
- * Writes to any csv file
+ * @brief Writes to any csv file
  */
 class CSVWriter {
   std::ofstream file_;
@@ -27,6 +27,10 @@ class CSVWriter {
     }
   }
 
+  /**
+   * @brief Destructor
+   * @note Closes open files
+   */
   ~CSVWriter() { closeFile(); }
 
   /**
@@ -47,7 +51,7 @@ class CSVWriter {
   }
 
   /**
-   * closes the specified file
+   * @brief closes the specified file
    */
   void closeFile() { file_.close(); }
 };

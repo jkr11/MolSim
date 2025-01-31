@@ -16,11 +16,29 @@
  */
 class VerletIntegrator {
  protected:
+  /**
+   * Vector of applied interactive forces
+   */
   std::vector<std::unique_ptr<InteractiveForce>> interactive_forces_;
+  /**
+   * Vector of applied singular forces
+   */
   std::vector<std::unique_ptr<SingularForce>> singular_forces_;
+  /**
+   * Vector of applied index forces
+   */
   std::vector<std::unique_ptr<IndexForce>> index_forces_;
+  /**
+   * Time step
+   */
   double delta_t_;
+  /**
+   * Current time for index force
+   */
   double current_time_;
+  /**
+   * Parallelization strategy used
+   */
   ParallelStrategy strategy_ = ParallelStrategy::STRATEGY_3;
 
  public:
@@ -31,7 +49,7 @@ class VerletIntegrator {
    * @param singular_forces singular forces acting on single particles globally
    * @param delta_t Delta time
    * @param strategy whether to use C18 or force buffer
-   * @param index_forces
+   * @param index_forces Index forces applied each step
    * @note Since this is an interface, it's invalid
    */
   VerletIntegrator(
@@ -46,6 +64,14 @@ class VerletIntegrator {
         current_time_(0),
         strategy_(strategy) {};
 
+  /**
+   * @brief Create Integrator object with Strategy 3 (no OpenMP)
+   * @param interactive_forces References to the type of force applied each
+   * iteration
+   * @param singular_forces singular forces acting on single particles globally
+   * @param index_forces Index forces applied each step
+   * @param delta_t Delta time
+   */
   explicit VerletIntegrator(
       std::vector<std::unique_ptr<InteractiveForce>>& interactive_forces,
       std::vector<std::unique_ptr<SingularForce>>& singular_forces,
