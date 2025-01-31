@@ -5,10 +5,9 @@ Final Assignment
 
 ## Dependencies
 
-- Cmake 3.24
+- Cmake 3.28.3
 - Doxygen 1.9.8 (`sudo apt install doxygen`)
 - Libxerces (`sudo apt install libxerces-c-dev`)
-
 ## Build
 
 ### Configuration
@@ -34,26 +33,26 @@ Final Assignment
   cmake -S . -B build -DBUILD_TESTS=ON 
 ```
 
-To build with Intel's C++ compiler (```icx```/```icpx```), set the following options:
+To build with Intel's C++ compiler (```icx```/```icpx```), set the following options (currently this is on the [`coolmuc_test`](https://github.com/jkr11/MolSim/tree/coolmuc_test) branch, but it works locally)
 
 ```bash
   cmake -S . -B build -DCMAKE_C_COMPILER=icx -DCMAKE_CXX_COMPILER=icpx
 ```
-
+for other compilers add the necessary compiler id to the options. 
 ```bash
   cd build/tests
   make -j $(nproc)
   ctest
 ```
 
-Using the build script in /script/
+Using the build script in `/script/`
 
 - Build the project using the provided build script by using source, add `-t` to also build and run tests, add `-b` to
-  enable the BENCHMARK cmake macro
+  enable the BENCHMARK cmake macro and `-p` to enable OpenMP.
 
 ```bash
   cd MolSim/scripts
-  source build <CMAKE_BUILD_TYPE= Release (default) | Debug | asan | asan-quiet>  [-t|--test] [-b|--benchmark]
+  source build <CMAKE_BUILD_TYPE= Release (default) | Debug | asan | asan-quiet>  [-t|--test] [-b|--benchmark] [-p|--parallel] 
 ```
 
 - Set the Input file by selecting the corresponding number during the script execution
@@ -79,7 +78,14 @@ Using the build script in /script/
 - `$INPUT` contains the location of the selected input file
 - Please note that `$BUILD` and `$INPUT` are only available if the scripts are executed via source.
 
-### Options
+### CMake Options
+```console
+  - ENABLE_BENCHMARK : enables benchmark mode with no printing of info and writing to files
+  - BUILD_TESTS : enables and builds the tests/ directory in the build directory
+  - ENABLE_OPENMP : enables OpenMP and support for multithreading
+```
+
+### Executable Options
 
   ```console
   Options:
