@@ -25,7 +25,6 @@ add_library(MolSimLib
         forces/IndexForce.h
 )
 
-
 target_link_libraries(MolSimLib
         PUBLIC
         spdlog::spdlog
