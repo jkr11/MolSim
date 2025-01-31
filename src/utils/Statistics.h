@@ -8,6 +8,9 @@
 #include "io/file/out/CSVWriter.h"
 #include "utils/ArrayUtils.h"
 
+/**
+ * @brief Class used to calculate density and velocity profile
+ */
 class Statistics {
  private:
   int x_bins_;
@@ -20,6 +23,13 @@ class Statistics {
   double bin_volume_;
 
  public:
+  /**
+   * @brief Initialize Statistics object
+   * @param x_bins
+   * @param y_bins
+   * @param container
+   * 
+   */
   Statistics(const int x_bins, const int y_bins, ParticleContainer& container,
              const std::string& density_profile_output_location,
              const std::string& velocity_profile_output_location)
@@ -39,6 +49,7 @@ class Statistics {
    * The bins can also be along the y axis at the same time for a checkerboard
    * pattern. The bins are from left to right (x-axis), and for the lines from
    * down to up (y-axis)
+   * @param time TODO
    */
   void writeStatistics(const double time) {
     std::vector<std::vector<Particle*>> bins(x_bins_ * y_bins_);
@@ -87,6 +98,9 @@ class Statistics {
     velocity_profile_writer_.writeLine(time, velocity_data);
   }
 
+  /**
+   * @brief Close all open files
+   */
   void closeFiles() {
     density_profile_writer_.closeFile();
     velocity_profile_writer_.closeFile();
