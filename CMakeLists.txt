@@ -18,8 +18,6 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
     add_compile_options(-xHost -ipo -qopenmp -O3 -fp-model fast=2)
 endif ()
 
-#add_compile_options(-xHost -O3 -fp-model fast=2)
-
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
 include(googletest)
 include(doxygen)

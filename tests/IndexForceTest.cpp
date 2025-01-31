@@ -10,7 +10,7 @@
 #include "debug/debug_print.h"
 #include "testUtil.h"
 
-/*
+/**
  * TruncatedLennardJones with distance >= sigma * c
  */
 TEST(IndexForce, single_index) {

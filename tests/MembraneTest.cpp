@@ -128,7 +128,6 @@ TEST(Membrane, LC3x3) {
   for (Particle& p : particles) {
     SpdWrapper::get()->info("Neighbours: {}", p.getNeighbours().size());
     for (const auto& [fst, snd] : p.getNeighbours()) {
-      // check for expired pointer (legacy from weak_ptr impl, maybe we go back
       ASSERT_TRUE(snd);
     }
   }
@@ -158,7 +157,11 @@ TEST(Membrane, LC3x3) {
   }
 }
 
-TEST(Membrane, LC4x4) {
+/**
+ * Tests various properties of the membrane structure on 4x4 particles using
+ * id's, also tests harmonic Force
+ */
+TEST(Membrane, LC4x4Harmonic) {
   constexpr LinkedCellsConfig linked_cells_config = {
       .domain = {20, 20, 20},
       .cutoff_radius = 4.0,
@@ -176,19 +179,8 @@ TEST(Membrane, LC4x4) {
   std::vector<Particle> particles;
 
   std::vector<std::unique_ptr<SingularForce>> singular_forces;
-  // singular_forces.push_back(std::make_unique<SingularGravity>(-0.001, 2));
   singular_forces.push_back(std::make_unique<HarmonicForce>(300, 2.2));
 
-  // std::vector<std::unique_ptr<InteractiveForce>> interactive_forces;
-  // interactive_forces.push_back(std::make_unique<TruncatedLennardJones>());
-
-  // std::vector<std::unique_ptr<IndexForce>> index_forces;
-  // IndexForceConfig index_force_config = {
-  //    .ids = {5},
-  //    .end_time = 15,
-  //    .force_values = {0, 0, 0.8},
-  // };
-  // index_forces.push_back(std::make_unique<IndexForce>());
   std::cout << "global id counter " << std::endl;
   MembraneGenerator membrane_generator({0, 0, 0}, {4, 4, 1}, 2.5, 1.0,
                                        {0, 0, 0}, 0.0, 1.0, 1.0, 1, true, {});

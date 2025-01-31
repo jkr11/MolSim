@@ -7,7 +7,7 @@
 // #include "io/file/in/xml/input.cxx"  // <- this is necessary at least on
 // clang
 #include "io/file/in/xml/input.hxx"
-#include "io/file/out/checkpoint-schema.cxx"
+#include "io/file/out/checkpoint-schema.cxx" // <- Same for this
 #include "io/file/out/checkpoint-schema.hxx"
 #include "spdlog/fmt/bundled/os.h"
 #include "testUtil.h"
