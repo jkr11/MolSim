@@ -37,8 +37,6 @@ if (ENABLE_OPENMP AND OpenMP_CXX_FOUND)
     target_link_libraries(MolSimLib PUBLIC OpenMP::OpenMP_CXX)
 endif ()
 
-target_link_libraries(MolSimLib PRIVATE xerces-c)
-
 target_compile_features(MolSimLib
         PUBLIC cxx_std_17
 )
