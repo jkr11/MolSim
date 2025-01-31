@@ -8,6 +8,7 @@ Final Assignment
 - Cmake 3.28.3
 - Doxygen 1.9.8 (`sudo apt install doxygen`)
 - Libxerces (`sudo apt install libxerces-c-dev`)
+
 ## Build
 
 ### Configuration
@@ -33,12 +34,15 @@ Final Assignment
   cmake -S . -B build -DBUILD_TESTS=ON 
 ```
 
-To build with Intel's C++ compiler (```icx```/```icpx```), set the following options (currently this is on the [`coolmuc_test`](https://github.com/jkr11/MolSim/tree/coolmuc_test) branch, but it works locally)
+To build with Intel's C++ compiler (```icx```/```icpx```), set the following options (currently this is on the [
+`coolmuc_test`](https://github.com/jkr11/MolSim/tree/coolmuc_test) branch, but it works locally)
 
 ```bash
   cmake -S . -B build -DCMAKE_C_COMPILER=icx -DCMAKE_CXX_COMPILER=icpx
 ```
-for other compilers add the necessary compiler id to the options. 
+
+for other compilers add the necessary compiler id to the options.
+
 ```bash
   cd build/tests
   make -j $(nproc)
@@ -79,6 +83,7 @@ Using the build script in `/script/`
 - Please note that `$BUILD` and `$INPUT` are only available if the scripts are executed via source.
 
 ### CMake Options
+
 ```console
   - ENABLE_BENCHMARK : enables benchmark mode with no printing of info and writing to files
   - BUILD_TESTS : enables and builds the tests/ directory in the build directory
@@ -100,21 +105,32 @@ Using the build script in `/script/`
   ```
 
 - Output is located in `./output/<current_time>`
-- Checkpoints as an input have to be explicitely stated in the input ```.xml``` file. I would recommend putting
-  checkpoint into `/input/`.
-A quick example for checkpointing in Assignment 4 task 3: (in `build/src`)
+- Checkpoints as an input have to be explicitely stated in the input ```.xml``` file. In order to verify against the
+  checkpoint schema, all checkpoint files must point to the valid schema. As this location is hardcoded, all checkpoints
+  work out of the box if they are in the `/input/` directory. If they are somewhere else, you have to adjust the schema
+  path in the header of the checkpoint file.
+
+- A quick example for checkpointing in Assignment 4 task 3: (in `build/src`)
+
 ```bash
   ./MolSim -f ../../input/week43checkpoint.xml -c ../../input/<name_of_your_choice.xml>
   ..... This eventually writes the checkpoint after running ----------
 ```
-the add the following to week43.xml: 
+
+the add the following to week43.xml:
+
 ```xml
+
 <checkpoint>
-    <name>../../input/<name_of_your_choice.xml></name>
+    <name>../../input/
+        <name_of_your_choice.xml>
+    </name>
     ...
 </checkpoint>
 ```
+
 and run
+
 ```bash
   ./MolSim -f ../../input/week43.xml
 ```
