@@ -102,11 +102,21 @@ Using the build script in `/script/`
 - Output is located in `./output/<current_time>`
 - Checkpoints as an input have to be explicitely stated in the input ```.xml``` file. I would recommend putting
   checkpoint into `/input/`.
-    - Example:
-
+A quick example for checkpointing in Assignment 4 task 3: (in `build/src`)
+```bash
+  ./MolSim -f ../../input/week43checkpoint.xml -c ../../input/<name_of_your_choice.xml>
+  ..... This eventually writes the checkpoint after running ----------
+```
+the add the following to week43.xml: 
 ```xml
-
-<checkpoint>../input/checkpoint.xml/</checkpoint>
+<checkpoint>
+    <name>../../input/<name_of_your_choice.xml></name>
+    ...
+</checkpoint>
+```
+and run
+```bash
+  ./MolSim -f ../../input/week43.xml
 ```
 
 - `--step_size` is relative to the passed simulation time and not the number of iterations
