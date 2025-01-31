@@ -16,8 +16,8 @@ SpheroidGenerator::SpheroidGenerator(const dvec3& origin, const int radius,
                                      const int type, const double mv,
                                      const bool two_d)
     : origin_(origin),
-      radius_(radius -
-             1),  // needs to be minus one because we consider the origin as one
+      radius_(radius - 1),  // needs to be minus one because we consider the
+                            // origin as one
       h_(h),
       m_(m),
       initial_velocity_(initial_velocity),
@@ -48,7 +48,8 @@ void SpheroidGenerator::generate(std::vector<Particle>& particles) {
   if (two_d_) {
     size = static_cast<int>(M_PI * std::pow((radius_ + h_) / h_, 2));
   } else {
-    size = static_cast<int>((4.0 / 3.0) * M_PI * std::pow((radius_ + h_) / h_, 3));
+    size =
+        static_cast<int>((4.0 / 3.0) * M_PI * std::pow((radius_ + h_) / h_, 3));
   }
   particles.reserve(size);
   DEBUG_PRINT("Reserved " + std::to_string(size));

@@ -8,7 +8,6 @@
 #include "utils/MaxwellBoltzmannDistribution.h"
 #include "utils/SpdWrapper.h"
 
-
 CuboidGenerator::CuboidGenerator(const dvec3 &corner,
                                  const std::array<int, 3> &dimensions,
                                  const double h, const double m,

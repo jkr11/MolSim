@@ -3,7 +3,6 @@
 //
 #include "VerletIntegrator.h"
 
-
 #include "../utils/ArrayUtils.h"
 #include "utils/SpdWrapper.h"
 

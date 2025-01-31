@@ -3,10 +3,11 @@
 //
 #include "XmlWriter.h"
 
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <sstream>
-#include <filesystem>
+
 #include "defs/Thermostat.h"
 #include "io/file/out/checkpoint-schema.hxx"
 
@@ -51,7 +52,6 @@ void XmlWriter::writeFile(ParticleContainer& particle_container,
 
     map[""].name = "";
     map[""].schema = "../src/io/file/out/checkpoint-schema.xsd";
-
 
     std::ostringstream file_name;
     CheckpointType checkpoint{xml_particles};

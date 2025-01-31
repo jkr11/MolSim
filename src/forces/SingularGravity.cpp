@@ -4,7 +4,7 @@
 #include "SingularGravity.h"
 
 SingularGravity::SingularGravity(const double g, const int axis)
-    : g_(g), axis_(axis) {};
+    : g_(g), axis_(axis){};
 
 dvec3 SingularGravity::applyForce(const Particle& p) const {
   dvec3 force{0.0, 0.0, 0.0};

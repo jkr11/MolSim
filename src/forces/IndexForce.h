@@ -10,8 +10,8 @@
 #include "defs/containers/ParticleContainer.h"
 
 /**
- * @brief Holds the Index Force. Index force acts on cuboid coordinates specified
- * before the simulation
+ * @brief Holds the Index Force. Index force acts on cuboid coordinates
+ * specified before the simulation
  */
 class IndexForce {
   /**

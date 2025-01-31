@@ -62,7 +62,7 @@ class VerletIntegrator {
         index_forces_(std::move(index_forces)),
         delta_t_(delta_t),
         current_time_(0),
-        strategy_(strategy) {};
+        strategy_(strategy){};
 
   /**
    * @brief Create Integrator object with Strategy 3 (no OpenMP)
@@ -81,7 +81,7 @@ class VerletIntegrator {
         singular_forces_(std::move(singular_forces)),
         index_forces_(std::move(index_forces)),
         delta_t_(delta_t),
-        current_time_(0) {};
+        current_time_(0){};
 
   /**
    * @brief Virtual destructor for all Integrator inheritors
