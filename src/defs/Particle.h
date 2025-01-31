@@ -176,7 +176,9 @@ class Particle final {
   [[nodiscard]] std::string toString() const;
 
   /**
-   * TODO
+   * @brief Copy assignment operator for the Particle class.
+   * @param other The Particle instance to copy from
+   * @return a reference to the current particle
    */
   Particle &operator=(const Particle &other) {
     if (this != &other) {
@@ -195,7 +197,10 @@ class Particle final {
   }
 
   /**
-   * TODO
+   * @brief Move assignment operator for Particle. Transfers the ownership of
+   * the neighbours vector
+   *
+   * @param other The Particle instance to move from
    */
   Particle &operator=(Particle &&other) noexcept {
     if (this != &other) {

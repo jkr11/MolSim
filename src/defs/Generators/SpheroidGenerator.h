@@ -42,7 +42,7 @@ class SpheroidGenerator final : public ParticleGenerator {
    */
   const int type_;
   /**
-   * TODO
+   * Mean velocity for brownian motion
    */
   double mv_;
   /**
@@ -61,7 +61,7 @@ class SpheroidGenerator final : public ParticleGenerator {
    * @param epsilon epsilon of generated particles
    * @param sigma sigma of generated particles
    * @param type type of generated particles
-   * @param mv TODO of generated particles
+   * @param mv brownian mean velocity
    * @param two_d whether generator is 2D or 3D
    */
   SpheroidGenerator(const dvec3 &origin, int radius, double h, double m,

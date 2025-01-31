@@ -38,17 +38,18 @@ class XmlReader {
   /**
    * @brief Reads a xml checkpoint file as specified in
    * MolSim/src/io/file/out/checkpoint-schema.xsd
-   * @param filepath path pointing to checkpoint // TODO default location
+   * @param filepath path pointing to checkpoint
    * @param particles particles to which the checkpoint is read
    */
   static void loadCheckpoint(const std::string& filepath,
                              std::vector<Particle>& particles);
 
   /**
-   * @brief TODO
-   * @param filepath TODO
-   * @param dimensions TODO
-   * @param particles TODO
+   * @brief Reads a checkpoint file
+   * @param filepath path pointing to checkpoint containing membrane
+   * @param dimensions the dimensions of the original membrane cuboid / membrane
+   * generator
+   * @param particles particles to which the checkpoint is read
    */
   static void loadCheckpointMembrane(const std::string& filepath,
                                      const ivec3& dimensions,
@@ -58,7 +59,7 @@ class XmlReader {
 /**
  * @brief validates that the number of bins are correct and not smaller than 1
  * and the output time is larger than 0
- * @param stats TODO
+ * @param stats Statistics config to validate
  */
 inline void validateStatisticsInput(const StatisticsConfig& stats) {
   if (stats.x_bins < 1 || stats.y_bins < 1) {
@@ -83,8 +84,8 @@ inline void validateStatisticsInput(const StatisticsConfig& stats) {
  * @param type the type of file you are checking (Input, checkpoint, etc)
  */
 inline void validatePath(const std::filesystem::path& path,
-                          const std::string& extension,
-                          const std::string& type) {
+                         const std::string& extension,
+                         const std::string& type) {
   if (!exists(path)) {
     throw std::runtime_error(type + " file not found: " + path.string());
   }

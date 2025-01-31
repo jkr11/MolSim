@@ -35,7 +35,7 @@ class LinkedCellsContainer final : public ParticleContainer {
   std::vector<std::vector<Particle*>> cells_;
 
   /**
-   * TODO
+   * saves the index that we have to locate in particles, so e.g. left or top
    */
   std::vector<std::vector<std::size_t>> c18_colours_;
 
@@ -523,7 +523,6 @@ class LinkedCellsContainer final : public ParticleContainer {
    */
   void initializeC18Schema() {
     for (auto start_offset : c_18_schema_) {
-
       std::vector<std::size_t> iterators;
       for (int cx = start_offset[0]; cx <= cell_count_[0]; cx += 2) {
         for (int cy = start_offset[1]; cy <= cell_count_[1]; cy += 3) {
@@ -540,7 +539,6 @@ class LinkedCellsContainer final : public ParticleContainer {
     }
   }
 };
-
 
 /**
  * @brief directions for better readability; implicitly cast

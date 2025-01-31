@@ -185,7 +185,12 @@ auto L2InnerProduct(const Container &c) {
                          [](auto a, auto b) { return a + b * b; });
 }
 
-// TODO
+/**
+ * @brief returns the signs of the vectors
+ * @tparam Container
+ * @param c
+ * @return vector of length of c containing the sings of the elements
+ */
 template <class Container>
 auto getSigns(const Container &c) {
   std::vector<int> signs;

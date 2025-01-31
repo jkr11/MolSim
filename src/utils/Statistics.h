@@ -25,11 +25,11 @@ class Statistics {
  public:
   /**
    * @brief Initialize Statistics object
-   * @param x_bins TODO
-   * @param y_bins TODO
-   * @param container TODO
-   * @param density_profile_output_location TODO
-   * @param velocity_profile_output_location TODO
+   * @param x_bins amount of x_bins
+   * @param y_bins amount of y_bins
+   * @param container holds the particles
+   * @param density_profile_output_location path to density csv
+   * @param velocity_profile_output_location path to velocity csv
    */
   Statistics(const int x_bins, const int y_bins, ParticleContainer& container,
              const std::string& density_profile_output_location,
@@ -50,7 +50,7 @@ class Statistics {
    * The bins can also be along the y axis at the same time for a checkerboard
    * pattern. The bins are from left to right (x-axis), and for the lines from
    * down to up (y-axis)
-   * @param time TODO
+   * @param time current time for indexing
    */
   void writeStatistics(const double time) {
     std::vector<std::vector<Particle*>> bins(x_bins_ * y_bins_);

@@ -183,7 +183,7 @@ struct ThermostatConfig {
  */
 struct StatisticsConfig {
   /**
-   * TODO ?
+   * Inicates whether to write statistics to a file
    */
   bool calc_stats{};
   /**
@@ -195,70 +195,28 @@ struct StatisticsConfig {
    */
   int y_bins{};
   /**
-   * TODO ?
+   * Periodicity of outputting to files
    */
   int output_interval{};
   /**
-   * TODO ?
+   * Path to the csv containing the velocity information
    */
   std::string velocity_output_location{};
   /**
-   * TODO ?
+   * Path to the csv containing the density information
    */
   std::string density_output_location{};
 };
 
-//TODO: delete?
-struct SphereoidGeneratorConfig {
-  dvec3 origin{};
-  const int radius{};
-  double h{};
-  double m{};
-  const dvec3 initial_velocity{};
-  double epsilon{};
-  double sigma{};
-  const int type{};
-  double mv{};
-  const bool two_d{};
-  SphereoidGeneratorConfig() = default;
-};
-
-//TODO: delete?
-struct CuboidGeneratorConfig {
-  dvec3 corner{};
-  ivec3 dimensions{};
-  double h{};
-  double m{};
-  const dvec3 initial_velocity{};
-  double mv{};
-  double epsilon{};
-  double sigma{};
-  const int type{};
-  const bool two_d{};
-  CuboidGeneratorConfig() = default;
-};
-
-//TODO: delete?
-struct MembraneGeneratorConfig {
-  dvec3 corner{};
-  ivec3 dimensions{};
-  double h{};
-  double m{};
-  const dvec3 initial_velocity{};
-  double mv{};
-  double epsilon{};
-  double sigma{};
-  const int type{};
-  const bool two_d{};
-  std::vector<int> ids{};
-  std::vector<ivec3> indeces{};
-};
-
 /**
- * @brief struct to hold command line arguments
+ * @brief Supertype for all Singular Forces
  */
 using SingularForceTypes =
     std::variant<SingularGravityConfig, HarmonicForceConfig>;
+
+/**
+ * @brief Supertype for all Interactive Forces
+ */
 using InteractiveForceTypes = std::variant<LennardJonesConfig, GravityConfig,
                                            TruncatedLennardJonesConfig>;
 
@@ -302,13 +260,6 @@ struct Arguments {
    * Statistics configuration
    */
   StatisticsConfig statistics_config;
-
-  //TODO
-  SphereoidGeneratorConfig spheroid_generator_config;
-  //TODO
-  CuboidGeneratorConfig cuboid_generator_config;
-  //TODO
-  MembraneGeneratorConfig membrane_generator_config;
 
   /**
    * Parallelization strategy

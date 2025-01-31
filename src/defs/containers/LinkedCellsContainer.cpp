@@ -246,7 +246,6 @@ void LinkedCellsContainer::singleIterator(
   }
 }
 
-// TODO: this is now unused => could be removed, are we allowed to? I guess
 void LinkedCellsContainer::pairIterator(
     const std::function<void(Particle &, Particle &)> &f) {
   // - as x, y, z are all increasing offsets point to all neighbours in
@@ -724,7 +723,7 @@ void LinkedCellsContainer::applyPeriodicBoundary(const size_t dimension) {
   // the right place
   const std::size_t problematic_dimension = dimension / 2;
   const std::size_t problematic_dimension_direction = dimension % 2;
-  // TODO #pragma omp parallel for schedule(static)
+
   for (const std::size_t cell_index : halo_direction_cells_[dimension]) {
     int counter = 0;
     for (auto it = cells_[cell_index].begin(); it < cells_[cell_index].end();
@@ -737,10 +736,8 @@ void LinkedCellsContainer::applyPeriodicBoundary(const size_t dimension) {
       const std::size_t should_be_index = dvec3ToCellIndex(new_pos);
 
       (*it)->setX(new_pos);
-      // TODO #pragma omp critical
       cells_[should_be_index].push_back(*it);
     }
-    // TODO #pragma omp critical
     {
       cells_[cell_index].clear();
       cells_[cell_index].shrink_to_fit();
@@ -753,7 +750,6 @@ void LinkedCellsContainer::applyPeriodicBoundary(const size_t dimension) {
   }
 
   // iterate over all 9 / 3 cells on the other end
-  // TODO #pragma omp parallel for schedule(static)
   for (const std::size_t cell_index : boundary_direction_cells_[dimension]) {
     ivec3 cell_coordinates = cellIndexToCoord(cell_index);
 
@@ -795,10 +791,8 @@ void LinkedCellsContainer::applyPeriodicBoundary(const size_t dimension) {
 
           const dvec3 applied_force = LennardJones::directionalForceWithOffset(
               *p, *q, accounted_particle_distance);
-          // TODO #pragma omp critical
           p->addF(applied_force);
 
-          // TODO #pragma omp critical
           q->subF(applied_force);
         }
       }
