@@ -10,7 +10,7 @@
 #include "containers/ParticleContainer.h"
 
 /**
- * adjusts the temperature of the system at a given periodic frequency
+ * @brief adjusts the temperature of the system at a given periodic frequency
  */
 class Thermostat {
  private:

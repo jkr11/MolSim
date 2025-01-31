@@ -421,14 +421,13 @@ void LinkedCellsContainer::computeInteractiveForcesForceBuffer(
 
   // for some reason parallelising this makes it slower, no matter which
   // approach is used
-  // #pragma omp parallel for collapse(2)
   for (size_t j = 0; j < particle_count_; j++) {
     for (int i = 1; i < num_threads; i++) {
-      // #pragma omp critical
-      { force_buffers[0][j] = force_buffers[0][j] + force_buffers[i][j]; }
+      {
+        force_buffers[0][j] = force_buffers[0][j] + force_buffers[i][j];
+      }
     }
   }
-  // #pragma omp barrier
 
 #pragma omp parallel for
   for (size_t i = 0; i < particles_.size(); ++i) {
@@ -685,10 +684,6 @@ void LinkedCellsContainer::applyReflectiveBoundary(const size_t dimension) {
                                 pos);  // if both of them are so small that
       // they would trigger the boundary, the
       // simulation itself is already broken
-      // SpdWrapper::get()->info(
-      //     "double dist: {} at [{}, {}, {}] adn v=[{}, {}, {}]",
-      //     double_dist_to_boundary, p->getX()[0], p->getX()[1], p->getX()[2],
-      //     p->getV()[0], p->getV()[1], p->getV()[2]);
       if (double_dist_to_boundary < sigma_factor * p->getSigma()) {
         const double force =
             LennardJones::simpleForce(*p, double_dist_to_boundary);
@@ -707,11 +702,6 @@ void LinkedCellsContainer::applyReflectiveBoundary(const size_t dimension) {
             "Applied Force=[{}, {}, {}] to Particle at [{}, {}, {}]",
             p->getF()[0], p->getF()[1], p->getF()[2], p->getX()[0],
             p->getX()[1], p->getX()[2]);
-
-        // SpdWrapper::get()->info(
-        //     "Applied Force=[{}, {}, {}] to Particle at [{}, {}, {}]",
-        //     p->getF()[0], p->getF()[1], p->getF()[2], p->getX()[0],
-        //     p->getX()[1], p->getX()[2]);
       }
     }
   }
@@ -771,10 +761,6 @@ void LinkedCellsContainer::applyPeriodicBoundary(const size_t dimension) {
 
       const auto adjacent_cell_index =
           cellCoordToIndex(adjacent_cell_coordinates);
-
-      // // account for the dimension that is checked
-      // particle_distance_offset[problematic_dimension] =
-      //     domain[problematic_dimension];
 
       // iterate over all pairs and calculate force
 
