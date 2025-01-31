@@ -24,7 +24,7 @@
 int main(const int argc, char* argv[]) {
   Arguments arguments = {};
 
-  auto [input_file, step_size, write_checkpoint] =
+  auto [input_file, step_size, checkpoint_path] =
       CLArgumentParser::parse(argc, argv);
 
   std::vector<Particle> particles;
@@ -210,8 +210,11 @@ int main(const int argc, char* argv[]) {
   }
 
   // Writes the finished simulations particle state into a checkpoint file
-  if (write_checkpoint) {
-    XmlWriter::writeFile(*container, "./output/test.xml");
+  // if (write_checkpoint) {
+  //  XmlWriter::writeFile(*container, "./output/test.xml");
+  //}
+  if (checkpoint_path) {
+    XmlWriter::writeFile(*container, checkpoint_path.value());
   }
 
 #ifdef BENCHMARK

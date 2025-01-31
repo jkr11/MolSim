@@ -24,8 +24,10 @@ TEST(Checkpoint, cuboid) {
   char arg0[] = "./MolSim";
   char arg1[] = "-f";
   char arg2[] = "../../tests/checkpoint_input_test.xml";
-  char* argv[] = {arg0, arg1, arg2};
-  auto [name, step, write_checkpoint] = CLArgumentParser::parse(3, argv);
+  char arg3[] = "-c";
+  char arg4[] = "../../input/checkpoint_test.xml";
+  char* argv[] = {arg0, arg1, arg2, arg3, arg4};
+  auto [name, step, checkpoint_path] = CLArgumentParser::parse(5, argv);
 
   Arguments arguments;
   std::vector<Particle> particles;
@@ -50,15 +52,14 @@ TEST(Checkpoint, cuboid) {
 
   std::cout << particles.size() << " particles" << std::endl;
 
-  XmlWriter::writeFile(*container, "../../input/checkpoint_test.xml");
+  XmlWriter::writeFile(*container, checkpoint_path.value());
 
   std::cout << "New file trying .... " << std::endl;
   char arg01[] = "MolSim";
   char arg11[] = "-f";
   char arg21[] = "../../tests/checkpoint_output_test.xml";
-  char arg31[] = "-c";
-  char* argv1[] = {arg01, arg11, arg21, arg31};
-  auto [name1, step1, write_checkpoint1] = CLArgumentParser::parse(4, argv1);
+  char* argv1[] = {arg01, arg11, arg21};
+  auto [name1, step1, write_checkpoint1] = CLArgumentParser::parse(3, argv1);
 
   Arguments arguments1;
   std::vector<Particle> particles1;
@@ -89,8 +90,10 @@ TEST(Checkpoint, membrane) {
   char arg0[] = "./MolSim";
   char arg1[] = "-f";
   char arg2[] = "../../tests/checkpoint_input_membrane_test.xml";
-  char* argv[] = {arg0, arg1, arg2};
-  auto [name, step, write_checkpoint] = CLArgumentParser::parse(3, argv);
+  char arg3[] = "-c";
+  char arg4[] = "../../input/checkpoint_membrane_test.xml";
+  char* argv[] = {arg0, arg1, arg2, arg3, arg4};
+  auto [name, step, checkpoint_path] = CLArgumentParser::parse(5, argv);
 
   Arguments arguments;
   std::vector<Particle> particles;
@@ -108,15 +111,15 @@ TEST(Checkpoint, membrane) {
 
   std::cout << particles.size() << " particles" << std::endl;
 
-  XmlWriter::writeFile(*container, "../../input/checkpoint_membrane_test.xml");
+  XmlWriter::writeFile(*container, checkpoint_path.value());
 
   std::cout << "New file trying .... " << std::endl;
   char arg01[] = "MolSim";
   char arg11[] = "-f";
   char arg21[] = "../../tests/checkpoint_output_membrane_test.xml";
-  char arg31[] = "-c";
-  char* argv1[] = {arg01, arg11, arg21, arg31};
-  auto [name1, step1, write_checkpoint1] = CLArgumentParser::parse(4, argv1);
+  // char arg31[] = "-c";
+  char* argv1[] = {arg01, arg11, arg21};
+  auto [name1, step1, write_checkpoint1] = CLArgumentParser::parse(3, argv1);
 
   Arguments arguments1;
   std::vector<Particle> particles1;
